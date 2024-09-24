@@ -3,17 +3,11 @@
     <template v-if="!isMobile">
       <!--全屏 -->
       <div class="nav-action-item" @click="toggle">
-        <svg-icon
-          :icon-class="isFullscreen ? 'fullscreen-exit' : 'fullscreen'"
-        />
+        <svg-icon :icon-class="isFullscreen ? 'fullscreen-exit' : 'fullscreen'" />
       </div>
 
       <!-- 布局大小 -->
-      <el-tooltip
-        :content="$t('sizeSelect.tooltip')"
-        effect="dark"
-        placement="bottom"
-      >
+      <el-tooltip :content="$t('sizeSelect.tooltip')" effect="dark" placement="bottom">
         <size-select class="nav-action-item" />
       </el-tooltip>
 
@@ -68,20 +62,18 @@
     <el-dropdown class="nav-action-item" trigger="click">
       <div class="flex-center h100% p10px">
         <img
-          :src="userStore.user.avatar + '?imageView2/1/w/80/h/80'"
+          :src="userStore.userInfo.avatar + '?imageView2/1/w/80/h/80'"
           class="rounded-full mr-10px w24px h24px"
         />
-        <span>{{ userStore.user.username }}</span>
+        <span>{{ userStore.userInfo.username }}</span>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <a
-            target="_blank"
-            href="https://gitee.com/youlaiorg/vue3-element-admin"
-          >
+          <el-dropdown-item divided @click="router.push('/mine')">个人中心</el-dropdown-item>
+          <a target="_blank" :href="adminSetting.repository">
             <el-dropdown-item>{{ $t("navbar.gitee") }}</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://juejin.cn/post/7228990409909108793">
+          <a target="_blank" :href="adminSetting.document">
             <el-dropdown-item>{{ $t("navbar.document") }}</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click="logout">
@@ -100,12 +92,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  useAppStore,
-  useTagsViewStore,
-  useUserStore,
-  useSettingsStore,
-} from "@/store";
+import { useAppStore, useTagsViewStore, useUserStore, useSettingsStore } from "@/store";
 import defaultSettings from "@/settings";
 import { DeviceEnum } from "@/enums/DeviceEnum";
 import { MessageTypeEnum, MessageTypeLabels } from "@/enums/MessageTypeEnum";
@@ -182,6 +169,11 @@ function logout() {
       });
   });
 }
+
+const adminSetting = {
+  repository: "https://github.com/ve-weiyi/ve-admin-vite",
+  document: "https://github.com/ve-weiyi/ve-admin-vite",
+};
 </script>
 <style lang="scss" scoped>
 .nav-action-item {

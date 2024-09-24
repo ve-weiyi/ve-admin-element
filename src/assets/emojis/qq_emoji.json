@@ -1,0 +1,870 @@
+{
+  "[惊讶]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/0@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/0@2x.gif"
+  },
+  "[害怕]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/1@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/1@2x.gif"
+  },
+  "[色]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/2@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/2@2x.gif"
+  },
+  "[发呆]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/3@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/3@2x.gif"
+  },
+  "[得意]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/4@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/4@2x.gif"
+  },
+  "[哭]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/5@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/5@2x.gif"
+  },
+  "[魅惑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/6@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/6@2x.gif"
+  },
+  "[闭嘴]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/7@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/7@2x.gif"
+  },
+  "[睡]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/8@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/8@2x.gif"
+  },
+  "[大哭]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/9@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/9@2x.gif"
+  },
+  "[尴尬]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/10@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/10@2x.gif"
+  },
+  "[怒]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/11@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/11@2x.gif"
+  },
+  "[调皮]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/12@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/12@2x.gif"
+  },
+  "[龇牙]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/13@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/13@2x.gif"
+  },
+  "[微笑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/14@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/14@2x.gif"
+  },
+  "[难过]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/15@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/15@2x.gif"
+  },
+  "[墨镜]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/16@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/16@2x.gif"
+  },
+  "[疯狂]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/18@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/18@2x.gif"
+  },
+  "[吐]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/19@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/19@2x.gif"
+  },
+  "[偷笑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/20@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/20@2x.gif"
+  },
+  "[可爱]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/21@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/21@2x.gif"
+  },
+  "[白眼]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/22@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/22@2x.gif"
+  },
+  "[傲慢]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/23@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/23@2x.gif"
+  },
+  "[饥饿]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/24@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/24@2x.gif"
+  },
+  "[困]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/25@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/25@2x.gif"
+  },
+  "[惊恐]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/26@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/26@2x.gif"
+  },
+  "[流汗]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/27@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/27@2x.gif"
+  },
+  "[憨笑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/28@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/28@2x.gif"
+  },
+  "[悠闲]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/29@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/29@2x.gif"
+  },
+  "[奋斗]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/30@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/30@2x.gif"
+  },
+  "[咒骂]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/31@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/31@2x.gif"
+  },
+  "[疑问]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/32@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/32@2x.gif"
+  },
+  "[嘘]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/33@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/33@2x.gif"
+  },
+  "[晕]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/34@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/34@2x.gif"
+  },
+  "[折磨]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/35@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/35@2x.gif"
+  },
+  "[衰]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/36@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/36@2x.gif"
+  },
+  "[骷髅]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/37@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/37@2x.gif"
+  },
+  "[敲打]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/38@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/38@2x.gif"
+  },
+  "[再见]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/39@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/39@2x.gif"
+  },
+  "[发抖]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/41@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/41@2x.gif"
+  },
+  "[爱情]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/42@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/42@2x.gif"
+  },
+  "[跳跳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/43@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/43@2x.gif"
+  },
+  "[猪]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/46@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/46@2x.gif"
+  },
+  "[拥抱]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/49@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/49@2x.gif"
+  },
+  "[蛋糕]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/53@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/53@2x.gif"
+  },
+  "[闪电]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/54@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/54@2x.gif"
+  },
+  "[炸弹]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/55@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/55@2x.gif"
+  },
+  "[刀]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/56@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/56@2x.gif"
+  },
+  "[足球]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/57@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/57@2x.gif"
+  },
+  "[大便]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/59@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/59@2x.gif"
+  },
+  "[茶]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/60@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/60@2x.gif"
+  },
+  "[米饭]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/61@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/61@2x.gif"
+  },
+  "[胶囊]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/62@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/62@2x.gif"
+  },
+  "[玫瑰]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/63@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/63@2x.gif"
+  },
+  "[凋谢]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/64@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/64@2x.gif"
+  },
+  "[爱心]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/66@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/66@2x.gif"
+  },
+  "[心碎]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/67@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/67@2x.gif"
+  },
+  "[礼物]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/69@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/69@2x.gif"
+  },
+  "[信]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/72@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/72@2x.gif"
+  },
+  "[太阳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/74@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/74@2x.gif"
+  },
+  "[月亮]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/75@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/75@2x.gif"
+  },
+  "[赞]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/76@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/76@2x.gif"
+  },
+  "[踩]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/77@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/77@2x.gif"
+  },
+  "[握手]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/78@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/78@2x.gif"
+  },
+  "[耶]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/79@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/79@2x.gif"
+  },
+  "[飞吻]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/85@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/85@2x.gif"
+  },
+  "[怄火]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/86@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/86@2x.gif"
+  },
+  "[西瓜]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/89@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/89@2x.gif"
+  },
+  "[下雨]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/90@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/90@2x.gif"
+  },
+  "[多云]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/91@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/91@2x.gif"
+  },
+  "[冷汗]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/96@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/96@2x.gif"
+  },
+  "[擦汗]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/97@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/97@2x.gif"
+  },
+  "[抠鼻]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/98@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/98@2x.gif"
+  },
+  "[鼓掌]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/99@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/99@2x.gif"
+  },
+  "[糗]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/100@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/100@2x.gif"
+  },
+  "[坏笑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/101@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/101@2x.gif"
+  },
+  "[左哼哼]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/102@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/102@2x.gif"
+  },
+  "[右哼哼]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/103@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/103@2x.gif"
+  },
+  "[哈欠]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/104@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/104@2x.gif"
+  },
+  "[鄙视]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/105@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/105@2x.gif"
+  },
+  "[委屈]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/106@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/106@2x.gif"
+  },
+  "[快哭了]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/107@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/107@2x.gif"
+  },
+  "[奸笑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/108@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/108@2x.gif"
+  },
+  "[左亲亲]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/109@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/109@2x.gif"
+  },
+  "[吓]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/110@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/110@2x.gif"
+  },
+  "[可怜]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/111@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/111@2x.gif"
+  },
+  "[菜刀]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/112@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/112@2x.gif"
+  },
+  "[咖啡]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/113@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/113@2x.gif"
+  },
+  "[篮球]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/114@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/114@2x.gif"
+  },
+  "[兵乒球]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/115@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/115@2x.gif"
+  },
+  "[吻]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/116@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/116@2x.gif"
+  },
+  "[瓢虫]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/117@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/117@2x.gif"
+  },
+  "[抱拳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/118@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/118@2x.gif"
+  },
+  "[勾引]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/119@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/119@2x.gif"
+  },
+  "[拳头]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/120@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/120@2x.gif"
+  },
+  "[差劲]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/121@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/121@2x.gif"
+  },
+  "[爱你]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/122@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/122@2x.gif"
+  },
+  "[NO]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/123@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/123@2x.gif"
+  },
+  "[OK]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/124@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/124@2x.gif"
+  },
+  "[转圈]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/125@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/125@2x.gif"
+  },
+  "[体操]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/126@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/126@2x.gif"
+  },
+  "[背影]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/127@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/127@2x.gif"
+  },
+  "[跳绳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/128@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/128@2x.gif"
+  },
+  "[投降]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/129@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/129@2x.gif"
+  },
+  "[汗水]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/130@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/130@2x.gif"
+  },
+  "[大叫]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/131@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/131@2x.gif"
+  },
+  "[加油]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/132@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/132@2x.gif"
+  },
+  "[右跳跳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/133@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/133@2x.gif"
+  },
+  "[左跳跳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/134@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/134@2x.gif"
+  },
+  "[囍]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/136@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/136@2x.gif"
+  },
+  "[鞭炮]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/137@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/137@2x.gif"
+  },
+  "[灯笼]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/138@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/138@2x.gif"
+  },
+  "[发]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/139@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/139@2x.gif"
+  },
+  "[话筒]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/140@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/140@2x.gif"
+  },
+  "[袋子]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/141@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/141@2x.gif"
+  },
+  "[短信]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/142@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/142@2x.gif"
+  },
+  "[帅]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/143@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/143@2x.gif"
+  },
+  "[礼花]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/144@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/144@2x.gif"
+  },
+  "[蜡烛]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/145@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/145@2x.gif"
+  },
+  "[爆筋]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/146@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/146@2x.gif"
+  },
+  "[棒棒糖]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/147@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/147@2x.gif"
+  },
+  "[奶嘴]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/148@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/148@2x.gif"
+  },
+  "[面]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/149@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/149@2x.gif"
+  },
+  "[香蕉]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/150@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/150@2x.gif"
+  },
+  "[飞机]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/151@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/151@2x.gif"
+  },
+  "[汽车]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/152@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/152@2x.gif"
+  },
+  "[153]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/153@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/153@2x.gif"
+  },
+  "[154]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/154@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/154@2x.gif"
+  },
+  "[155]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/155@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/155@2x.gif"
+  },
+  "[156]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/156@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/156@2x.gif"
+  },
+  "[157]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/157@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/157@2x.gif"
+  },
+  "[158]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/158@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/158@2x.gif"
+  },
+  "[159]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/159@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/159@2x.gif"
+  },
+  "[160]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/160@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/160@2x.gif"
+  },
+  "[161]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/161@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/161@2x.gif"
+  },
+  "[162]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/162@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/162@2x.gif"
+  },
+  "[163]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/163@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/163@2x.gif"
+  },
+  "[164]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/164@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/164@2x.gif"
+  },
+  "[165]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/165@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/165@2x.gif"
+  },
+  "[166]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/166@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/166@2x.gif"
+  },
+  "[167]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/167@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/167@2x.gif"
+  },
+  "[168]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/168@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/168@2x.gif"
+  },
+  "[抢]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/169@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/169@2x.gif"
+  },
+  "[青蛙]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/170@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/170@2x.gif"
+  },
+  "[171]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/171@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/171@2x.gif"
+  },
+  "[眨眼睛]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/172@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/172@2x.gif"
+  },
+  "[泪奔]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/173@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/173@2x.gif"
+  },
+  "[无奈]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/174@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/174@2x.gif"
+  },
+  "[卖萌]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/175@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/175@2x.gif"
+  },
+  "[小纠结]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/176@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/176@2x.gif"
+  },
+  "[喷血]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/177@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/177@2x.gif"
+  },
+  "[滑稽]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/178@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/178@2x.gif"
+  },
+  "[doge]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/179@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/179@2x.gif"
+  },
+  "[震惊]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/180@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/180@2x.gif"
+  },
+  "[戳戳]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/181@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/181@2x.gif"
+  },
+  "[笑哭]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/182@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/182@2x.gif"
+  },
+  "[我最美]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/183@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/183@2x.gif"
+  },
+  "[螃蟹]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/184@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/184@2x.gif"
+  },
+  "[羊]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/185@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/185@2x.gif"
+  },
+  "[栗子]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/186@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/186@2x.gif"
+  },
+  "[幽灵]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/187@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/187@2x.gif"
+  },
+  "[鸡蛋]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/188@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/188@2x.gif"
+  },
+  "[迷宫]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/189@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/189@2x.gif"
+  },
+  "[菊花]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/190@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/190@2x.gif"
+  },
+  "[香皂]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/191@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/191@2x.gif"
+  },
+  "[红包]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/192@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/192@2x.gif"
+  },
+  "[193]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/193@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/193@2x.gif"
+  },
+  "[194]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/194@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/194@2x.gif"
+  },
+  "[197]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/197@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/197@2x.gif"
+  },
+  "[198]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/198@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/198@2x.gif"
+  },
+  "[199]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/199@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/199@2x.gif"
+  },
+  "[200]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/200@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/200@2x.gif"
+  },
+  "[201]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/201@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/201@2x.gif"
+  },
+  "[202]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/202@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/202@2x.gif"
+  },
+  "[203]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/203@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/203@2x.gif"
+  },
+  "[204]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/204@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/204@2x.gif"
+  },
+  "[205]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/205@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/205@2x.gif"
+  },
+  "[206]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/206@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/206@2x.gif"
+  },
+  "[207]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/207@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/207@2x.gif"
+  },
+  "[208]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/208@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/208@2x.gif"
+  },
+  "[210]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/210@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/210@2x.gif"
+  },
+  "[211]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/211@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/211@2x.gif"
+  },
+  "[托腮]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/212@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/212@2x.gif"
+  },
+  "[245]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/245@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/245@2x.gif"
+  },
+  "[246]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/246@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/246@2x.gif"
+  },
+  "[247]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/247@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/247@2x.gif"
+  },
+  "[办公]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/260@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/260@2x.gif"
+  },
+  "[加班]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/261@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/261@2x.gif"
+  },
+  "[脑壳疼]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/262@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/262@2x.gif"
+  },
+  "[沧桑]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/263@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/263@2x.gif"
+  },
+  "[捂脸]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/264@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/264@2x.gif"
+  },
+  "[辣眼睛]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/265@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/265@2x.gif"
+  },
+  "[唔哟]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/266@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/266@2x.gif"
+  },
+  "[头秃]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/267@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/267@2x.gif"
+  },
+  "[问号脸]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/268@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/268@2x.gif"
+  },
+  "[暗中观察]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/269@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/269@2x.gif"
+  },
+  "[emm]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/270@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/270@2x.gif"
+  },
+  "[吃瓜]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/271@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/271@2x.gif"
+  },
+  "[呵呵哒]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/272@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/272@2x.gif"
+  },
+  "[柠檬]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/273@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/273@2x.gif"
+  },
+  "[南]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/274@2x.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/274@2x.gif"
+  },
+  "[newemoji_002]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_002.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_002.gif"
+  },
+  "[newemoji_003]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_003.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_003.gif"
+  },
+  "[newemoji_004]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_004.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_004.gif"
+  },
+  "[newemoji_005]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_005.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_005.gif"
+  },
+  "[newemoji_006]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_006.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_006.gif"
+  },
+  "[newemoji_007]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_007.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_007.gif"
+  },
+  "[newemoji_008]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_008.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_008.gif"
+  },
+  "[newemoji_009]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_009.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_009.gif"
+  },
+  "[newemoji_010]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_010.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_010.gif"
+  },
+  "[newemoji_011]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_011.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_011.gif"
+  },
+  "[newemoji_012]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_012.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_012.gif"
+  },
+  "[newemoji_013]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_013.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_013.gif"
+  },
+  "[newemoji_014]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_014.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_014.gif"
+  },
+  "[newemoji_015]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_015.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_015.gif"
+  },
+  "[newemoji_016]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_016.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_016.gif"
+  },
+  "[newemoji_017]": {
+    "normal": "https://static.veweiyi.cn/emoji/qq/newemoji_017.png",
+    "active": "https://static.veweiyi.cn/emoji/qq/newemoji_017.gif"
+  }
+}

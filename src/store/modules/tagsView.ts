@@ -158,6 +158,7 @@ export const useTagsViewStore = defineStore("tagsView", () => {
         if (index <= currIndex || item?.affix) {
           return true;
         }
+        return false;
       });
       resolve({
         visitedViews: [...visitedViews.value],

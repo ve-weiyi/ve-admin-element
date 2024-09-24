@@ -1,5 +1,5 @@
 import { hasAuth } from "@/plugins/permission";
-import { Directive, DirectiveBinding } from "vue";
+import type { Directive, DirectiveBinding } from "vue";
 
 /**
  * 按钮权限

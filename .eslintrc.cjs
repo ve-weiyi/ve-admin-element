@@ -51,6 +51,7 @@ module.exports = {
         math: "always",
       },
     ],
+    "vue/no-unused-vars": "warn",
 
     "@typescript-eslint/no-empty-function": "off", // 关闭空方法检查
     "@typescript-eslint/no-explicit-any": "off", // 关闭any类型的警告
@@ -59,16 +60,13 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-use-before-define": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": "off",
 
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         useTabs: false, // 不使用制表符
       },

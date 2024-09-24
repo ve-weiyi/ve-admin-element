@@ -60,14 +60,27 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       // 运行是否自动打开浏览器
       open: true,
       proxy: {
-        /** 代理前缀为 /dev-api 的请求  */
+        // 前缀
         [env.VITE_APP_BASE_API]: {
+          target: env.VITE_APP_API_URL, // 代理后的地址 =target/path
+          ws: true,
+          /** 是否允许跨域 */
           changeOrigin: true,
-          // 接口地址 例如：http://vapi.youlai.tech
-          target: env.VITE_APP_API_URL,
-          rewrite: (path) =>
-            path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+          rewrite: (path) => path.replace("", ""),
+          bypass(req, res, options) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log("proxyURL", proxyURL);
+            res.setHeader("x-req-proxyURL", proxyURL); // 设置响应头可以看到
+          },
         },
+        /** 代理前缀为 /dev-api 的请求  */
+        // [env.VITE_APP_BASE_API]: {
+        //   changeOrigin: true,
+        //   // 接口地址 例如：http://vapi.youlai.tech
+        //   target: env.VITE_APP_API_URL,
+        //   rewrite: (path) =>
+        //     path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+        // },
       },
     },
     plugins: [

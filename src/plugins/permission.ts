@@ -27,6 +27,7 @@ export function setupPermission() {
         const hasRoles =
           userStore.user.roles && userStore.user.roles.length > 0;
 
+        console.log("hasRoles", hasRoles);
         if (hasRoles) {
           // 如果未匹配到任何路由，跳转到404页面
           if (to.matched.length === 0) {
@@ -92,13 +93,14 @@ export function hasAuth(
 ) {
   const { roles, perms } = useUserStore().user;
 
-  // 超级管理员 拥有所有权限
-  if (type === "button" && roles.includes("ROOT")) {
-    return true;
-  }
-
-  const auths = type === "button" ? perms : roles;
-  return typeof value === "string"
-    ? auths.includes(value)
-    : value.some((perm) => auths.includes(perm));
+  return true;
+  // // 超级管理员 拥有所有权限
+  // if (type === "button" && roles.includes("ROOT")) {
+  //   return true;
+  // }
+  //
+  // const auths = type === "button" ? perms : roles;
+  // return typeof value === "string"
+  //   ? auths.includes(value)
+  //   : value.some((perm) => auths.includes(perm));
 }

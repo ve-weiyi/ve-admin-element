@@ -1,7 +1,8 @@
 import { RouteRecordRaw } from "vue-router";
 import { constantRoutes } from "@/router";
 import { store } from "@/store";
-import MenuAPI, { RouteVO } from "@/api/menu";
+import { getUserMenusApi } from "@/api/account";
+import { UserMenu } from "@/api/types";
 
 const modules = import.meta.glob("../../views/**/**.vue");
 const Layout = () => import("@/layout/index.vue");
@@ -17,9 +18,9 @@ export const usePermissionStore = defineStore("permission", () => {
    */
   function generateRoutes() {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      MenuAPI.getRoutes()
+      getUserMenusApi()
         .then((data) => {
-          const dynamicRoutes = transformRoutes(data);
+          const dynamicRoutes = transformRoutes(data.data.list);
           routes.value = constantRoutes.concat(dynamicRoutes);
           resolve(dynamicRoutes);
         })
@@ -52,10 +53,10 @@ export const usePermissionStore = defineStore("permission", () => {
 /**
  * 转换路由数据为组件
  */
-const transformRoutes = (routes: RouteVO[]) => {
+const transformRoutes = (routes: UserMenu[]) => {
   const asyncRoutes: RouteRecordRaw[] = [];
   routes.forEach((route) => {
-    const tmpRoute = { ...route } as RouteRecordRaw;
+    const tmpRoute = { ...route } as any as RouteRecordRaw;
     // 顶级目录，替换为 Layout 组件
     if (tmpRoute.component?.toString() == "Layout") {
       tmpRoute.component = Layout;
@@ -70,7 +71,7 @@ const transformRoutes = (routes: RouteVO[]) => {
     }
 
     if (tmpRoute.children) {
-      tmpRoute.children = transformRoutes(route.children);
+      tmpRoute.children = transformRoutes(route.children!);
     }
 
     asyncRoutes.push(tmpRoute);

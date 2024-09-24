@@ -1,27 +1,23 @@
-import AuthAPI, { type LoginData } from "@/api/auth";
-import UserAPI, { type UserInfo } from "@/api/user";
 import { resetRouter } from "@/router";
 import { store } from "@/store";
 import { TOKEN_KEY } from "@/enums/CacheEnum";
+import { LoginReq, UserInfoResp } from "@/api/types";
+import { loginApi, logoutApi } from "@/api/auth";
+import { getUserInfoApi } from "@/api/account";
 
 export const useUserStore = defineStore("user", () => {
-  const user = ref<UserInfo>({
+  const user = ref<UserInfoResp>(<UserInfoResp>{
     roles: [],
     perms: [],
   });
 
-  /**
-   * 登录
-   *
-   * @param {LoginData}
-   * @returns
-   */
-  function login(loginData: LoginData) {
+  // 登录
+  function login(loginData: LoginReq) {
     return new Promise<void>((resolve, reject) => {
-      AuthAPI.login(loginData)
+      loginApi(loginData)
         .then((data) => {
-          const { tokenType, accessToken } = data;
-          localStorage.setItem(TOKEN_KEY, tokenType + " " + accessToken); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          console.log("login", data);
+          localStorage.setItem(TOKEN_KEY, data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
           resolve();
         })
         .catch((error) => {
@@ -32,19 +28,19 @@ export const useUserStore = defineStore("user", () => {
 
   // 获取信息(用户昵称、头像、角色集合、权限集合)
   function getUserInfo() {
-    return new Promise<UserInfo>((resolve, reject) => {
-      UserAPI.getInfo()
+    return new Promise<UserInfoResp>((resolve, reject) => {
+      getUserInfoApi()
         .then((data) => {
           if (!data) {
             reject("Verification failed, please Login again.");
             return;
           }
-          if (!data.roles || data.roles.length <= 0) {
+          if (!data.data.roles || data.data.roles.length <= 0) {
             reject("getUserInfo: roles must be a non-null array!");
             return;
           }
-          Object.assign(user.value, { ...data });
-          resolve(data);
+          Object.assign(user.value, { ...data.data });
+          resolve(data.data);
         })
         .catch((error) => {
           reject(error);
@@ -55,7 +51,7 @@ export const useUserStore = defineStore("user", () => {
   // user logout
   function logout() {
     return new Promise<void>((resolve, reject) => {
-      AuthAPI.logout()
+      logoutApi()
         .then(() => {
           localStorage.setItem(TOKEN_KEY, "");
           location.reload(); // 清空路由

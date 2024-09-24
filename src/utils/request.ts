@@ -3,10 +3,20 @@ import { useUserStoreHook } from "@/store/modules/user";
 import { ResultEnum } from "@/enums/ResultEnum";
 import { TOKEN_KEY } from "@/enums/CacheEnum";
 import qs from "qs";
+import MD5 from "crypto-js/md5";
+
+function signWithSalt(message: string, salt: string): string {
+  const saltedMessage = salt + message;
+  return MD5(saltedMessage).toString();
+}
+
+function getTimestampInSeconds(): number {
+  return Math.floor(Date.now() / 1000);
+}
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: "/",
   timeout: 50000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
   paramsSerializer: (params) => {
@@ -14,12 +24,37 @@ const service = axios.create({
   },
 });
 
+const HeaderAuthorization = "Authorization";
+const HeaderUid = "Uid";
+const HeaderToken = "Token";
+const HeaderTerminal = "Terminal";
+const HeaderTimestamp = "Timestamp";
+
 // 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = localStorage.getItem(TOKEN_KEY);
-    if (accessToken) {
-      config.headers.Authorization = accessToken;
+    // 请求带token
+    const dv = "device_id";
+    const ts = getTimestampInSeconds().toString();
+    const tk = accessToken;
+    const uid = 3;
+    console.log("accessToken", accessToken);
+    if (tk) {
+      config.headers = Object.assign({}, config.headers, {
+        [HeaderAuthorization]: tk,
+        [HeaderUid]: uid,
+        [HeaderToken]: signWithSalt(dv, ts),
+        [HeaderTerminal]: dv,
+        [HeaderTimestamp]: ts,
+      });
+    } else {
+      // 未登录时的加密方式
+      config.headers = Object.assign({}, config.headers, {
+        [HeaderToken]: signWithSalt(dv, ts),
+        [HeaderTerminal]: dv,
+        [HeaderTimestamp]: ts,
+      });
     }
     return config;
   },
@@ -41,7 +76,7 @@ service.interceptors.response.use(
 
     const { code, data, msg } = response.data;
     if (code === ResultEnum.SUCCESS) {
-      return data;
+      return response.data;
     }
 
     ElMessage.error(msg || "系统出错");

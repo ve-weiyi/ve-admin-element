@@ -68,7 +68,7 @@
           <div class="input-wrapper">
             <svg-icon icon-class="captcha" class="mx-2" />
             <el-input
-              v-model="loginData.captchaCode"
+              v-model="loginData.verify_code"
               auto-complete="off"
               size="large"
               class="flex-1"
@@ -120,7 +120,6 @@ import { LocationQuery, useRoute } from "vue-router";
 
 // 内部依赖
 import { useSettingsStore, useUserStore } from "@/store";
-import AuthAPI, { type LoginData } from "@/api/auth";
 import router from "@/router";
 import defaultSettings from "@/settings";
 import { ThemeEnum } from "@/enums/ThemeEnum";
@@ -130,6 +129,7 @@ import type { FormInstance } from "element-plus";
 
 // 导入 login.scss 文件
 import "@/styles/login.scss";
+import { LoginReq } from "@/api/types";
 
 // 使用导入的依赖和库
 const userStore = useUserStore();
@@ -153,11 +153,12 @@ const captchaBase64 = ref();
 // 登录表单ref
 const loginFormRef = ref<FormInstance>();
 
-const loginData = ref<LoginData>({
-  username: "admin",
-  password: "123456",
-  captchaKey: "",
-  captchaCode: "",
+const loginData = ref<LoginReq>({
+  username: "admin@qq.com",
+  password: "admin@qq.com",
+  verify_code: "",
+  // captchaKey: "",
+  // captchaCode: "",
 });
 
 const loginRules = computed(() => {
@@ -181,22 +182,22 @@ const loginRules = computed(() => {
         trigger: "blur",
       },
     ],
-    captchaCode: [
-      {
-        required: true,
-        trigger: "blur",
-        message: t("login.message.captchaCode.required"),
-      },
-    ],
+    // captchaCode: [
+    //   {
+    //     required: true,
+    //     trigger: "blur",
+    //     message: t("login.message.captchaCode.required"),
+    //   },
+    // ],
   };
 });
 
 /** 获取验证码 */
 function getCaptcha() {
-  AuthAPI.getCaptcha().then((data) => {
-    loginData.value.captchaKey = data.captchaKey;
-    captchaBase64.value = data.captchaBase64;
-  });
+  // AuthAPI.getCaptcha().then((data) => {
+  //   loginData.value.captchaKey = data.captchaKey;
+  //   captchaBase64.value = data.captchaBase64;
+  // });
 }
 
 /** 登录表单提交 */

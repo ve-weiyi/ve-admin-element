@@ -49,6 +49,7 @@ export function setupPermission() {
             dynamicRoutes.forEach((route: RouteRecordRaw) =>
               router.addRoute(route)
             );
+            console.log("route", router.getRoutes());
             next({ ...to, replace: true });
           } catch (error) {
             // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数

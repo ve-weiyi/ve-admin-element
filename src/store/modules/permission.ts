@@ -60,9 +60,13 @@ const transformRoutes = (routes: UserMenu[]) => {
     // 顶级目录，替换为 Layout 组件
     if (tmpRoute.component?.toString() == "Layout") {
       tmpRoute.component = Layout;
+    } else if (tmpRoute.component?.toString().includes("layout")) {
+      tmpRoute.component = Layout;
     } else {
       // 其他菜单，根据组件路径动态加载组件
-      const component = modules[`../../views/${tmpRoute.component}.vue`];
+      // const component = modules[`../../views/${tmpRoute.component}.vue`];
+
+      const component = findComponent(route);
       if (component) {
         tmpRoute.component = component;
       } else {
@@ -78,6 +82,23 @@ const transformRoutes = (routes: UserMenu[]) => {
   });
 
   return asyncRoutes;
+};
+
+const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
+const findComponent = (v: UserMenu) => {
+  const modulesRoutesKeys = Object.keys(modulesRoutes);
+  // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
+  const index = v?.component
+    ? modulesRoutesKeys.findIndex((ev) => {
+        const component = v.component as any;
+        return ev.includes(component) || component.includes(ev);
+      })
+    : modulesRoutesKeys.findIndex((ev) => {
+        return ev.includes(v.path as any);
+      });
+
+  console.log("findComponent", v, modulesRoutesKeys[index]);
+  return modulesRoutes[modulesRoutesKeys[index]];
 };
 
 /**

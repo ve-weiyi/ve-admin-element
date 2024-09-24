@@ -12,22 +12,3 @@ interface PageResult<T> {
   page_size: number;
   total: number;
 }
-
-interface PageQuery {
-  page?: number;
-  page_size?: number;
-  // sorts?: Sort[];
-  // conditions?: Condition[];
-}
-
-interface Sort {
-  field: string;
-  order: string;
-}
-
-interface Condition {
-  field: string;
-  value?: any;
-  logic?: "and" | "or" | string;
-  operator?: "like" | "=" | ">" | "<" | string;
-}

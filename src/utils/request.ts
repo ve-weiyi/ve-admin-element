@@ -38,8 +38,7 @@ service.interceptors.request.use(
     const dv = "device_id";
     const ts = getTimestampInSeconds().toString();
     const tk = accessToken;
-    const uid = 3;
-    console.log("accessToken", accessToken);
+    const uid = 1;
     if (tk) {
       config.headers = Object.assign({}, config.headers, {
         [HeaderAuthorization]: tk,

@@ -1,3 +1,4 @@
+
 export interface AboutMe {
   content: string;
 }
@@ -35,7 +36,9 @@ export interface AlbumNewReq {
   status: number; // 状态值 1公开 2私密
 }
 
-export interface AlbumQuery extends PageQuery {}
+export interface AlbumQuery extends PageQuery {
+  album_name?: string; // 相册名
+}
 
 export interface ApiBackDTO {
   id?: number; // 主键id
@@ -204,9 +207,11 @@ export interface CommentReviewReq {
   is_review?: number;
 }
 
-export interface EmptyReq {}
+export interface EmptyReq {
+}
 
-export interface EmptyResp {}
+export interface EmptyResp {
+}
 
 export interface FriendBackDTO {
   id?: number; // id
@@ -251,28 +256,40 @@ export interface LoginResp {
 export interface MenuBackDTO {
   id?: number; // 主键
   parent_id: number; // 父id
-  title: string; // 菜单标题
-  type: number; // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
   path: string; // 路由地址
   name: string; // 路由名字
   component: string; // Layout组件
   redirect: string; // 路由重定向
-  meta: Meta; // meta配置
-  children: MenuBackDTO[];
+  meta: MenuMeta; // meta配置
+  type: number; // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+  children?: MenuBackDTO[];
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
-export interface MenuQuery extends PageQuery {
-  name?: string; // 路由名字
+export interface MenuMeta {
+  rank?: number; // 排序
+  title?: string; // 菜单标题
+  icon?: string; // 菜单图标
+  is_hidden?: number; // 是否隐藏
+  is_disable?: number; // 是否禁用
+  perms?: string; // 权限标识
 }
 
-export interface Meta {
-  title: string;
-  icon: string;
-  hidden: boolean;
-  always_show: boolean;
-  params: any;
+export interface MenuNewReq {
+  id?: number; // 主键
+  parent_id: number; // 父id
+  path: string; // 路由地址
+  name: string; // 路由名字
+  component: string; // Layout组件
+  redirect: string; // 路由重定向
+  meta: MenuMeta; // meta配置
+  type: number; // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+  children?: MenuNewReq[];
+}
+
+export interface MenuQuery extends PageQuery {
+  name?: string; // 路由名字
 }
 
 export interface OperationLogBackDTO {
@@ -283,10 +300,10 @@ export interface OperationLogBackDTO {
   ip_source: string; // 操作地址
   opt_module: string; // 操作模块
   opt_desc: string; // 操作描述
-  service_url: string; // 请求地址
-  service_method: string; // 请求方式
-  service_header: string; // 请求头参数
-  service_data: string; // 请求参数
+  request_url: string; // 请求地址
+  request_method: string; // 请求方式
+  request_header: string; // 请求头参数
+  request_data: string; // 请求参数
   response_data: string; // 返回数据
   response_status: number; // 响应状态码
   cost: string; // 耗时（ms）
@@ -294,7 +311,8 @@ export interface OperationLogBackDTO {
   updated_at: number; // 更新时间
 }
 
-export interface OperationLogQuery extends PageQuery {}
+export interface OperationLogQuery extends PageQuery {
+}
 
 export interface PageDTO {
   id?: number; // 页面ID
@@ -340,7 +358,8 @@ export interface PhotoQuery extends PageQuery {
   album_id?: number; // 相册id
 }
 
-export interface PingReq {}
+export interface PingReq {
+}
 
 export interface PingResp {
   env: string;
@@ -432,7 +451,7 @@ export interface Server {
 }
 
 export interface SyncMenuReq {
-  menus: MenuBackDTO[];
+  menus: MenuNewReq[];
 }
 
 export interface TagBackDTO {
@@ -599,22 +618,21 @@ export interface UserLoginHistory {
 export interface UserMenu {
   id?: number; // 主键
   parent_id: number; // 父id
-  title: string; // 菜单标题
-  type: number; // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
   path: string; // 路由地址
   name: string; // 路由名字
   component: string; // Layout组件
   redirect: string; // 路由重定向
   meta: UserMenuMeta; // meta配置
-  children: UserMenu[];
+  children?: UserMenu[];
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
 }
 
 export interface UserMenuMeta {
-  title: string;
-  icon: string;
-  hidden: boolean;
-  always_show: boolean;
-  params: any;
+  rank?: number; // 排序
+  title?: string; // 菜单标题
+  icon?: string; // 菜单图标
+  perms?: string; // 权限标识
 }
 
 export interface UserMenusResp {
@@ -622,6 +640,7 @@ export interface UserMenusResp {
 }
 
 export interface UserQuery extends PageQuery {
+  username?: string;
   nickname?: string;
 }
 

@@ -4,13 +4,17 @@
     <div class="flex-x-between mb-[10px]">
       <!-- 左侧工具栏 -->
       <div>
+        <a class="table-title">{{ contentConfig.pageTitle }}</a>
+      </div>
+      <!-- 右侧工具栏 -->
+      <div>
         <template v-for="item in toolbar" :key="item">
           <template v-if="typeof item === 'string'">
             <!-- 新增 -->
             <template v-if="item === 'add'">
               <el-button
                 v-hasPerm="[`${contentConfig.pageName}:${item}`]"
-                type="success"
+                type="primary"
                 icon="plus"
                 @click="handleToolbar(item)"
               >
@@ -26,7 +30,7 @@
                 :disabled="removeIds.length === 0"
                 @click="handleToolbar(item)"
               >
-                删除
+                批量删除
               </el-button>
             </template>
             <!-- 导入 -->
@@ -64,9 +68,6 @@
             </el-button>
           </template>
         </template>
-      </div>
-      <!-- 右侧工具栏 -->
-      <div>
         <template v-for="item in defaultToolbar" :key="item">
           <template v-if="typeof item === 'string'">
             <!-- 刷新 -->
@@ -192,6 +193,23 @@
             <template v-else-if="col.templet === 'list'">
               <template v-if="col.prop">
                 {{ (col.selectList ?? {})[scope.row[col.prop]] }}
+              </template>
+            </template>
+            <template v-else-if="col.templet === 'tag'">
+              <template v-if="col.prop">
+                <el-tag
+                  :type="
+                    col.tagOptions?.filter(
+                      (item) => item.value === scope.row[col.prop]
+                    )[0].type ?? 'info'
+                  "
+                >
+                  {{
+                    col.tagOptions?.filter(
+                      (item) => item.value === scope.row[col.prop]
+                    )[0].label ?? scope.row[col.prop]
+                  }}
+                </el-tag>
               </template>
             </template>
             <!-- 格式化显示链接 -->
@@ -341,8 +359,9 @@
     <!-- 分页 -->
     <template v-if="showPagination">
       <el-scrollbar>
-        <div class="mt-[12px]">
+        <div class="mt-[12px]" style="float: right">
           <el-pagination
+            v-if="pagination.total >= 0"
             v-bind="pagination"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -446,7 +465,9 @@
               :auto-upload="false"
               :on-exceed="handleFileExceed"
             >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <el-icon class="el-icon--upload">
+                <upload-filled />
+              </el-icon>
               <div class="el-upload__text">
                 <span>将文件拖到此处，或</span>
                 <em>点击上传</em>
@@ -573,14 +594,15 @@ const pagination = reactive(
 );
 // 分页相关的请求参数
 const request = props.contentConfig.request ?? {
-  pageName: "pageNum",
-  limitName: "pageSize",
+  pageName: "page",
+  limitName: "page_size",
 };
 
 // 行选中
 const selectionData = ref<IObject[]>([]);
 // 删除ID集合 用于批量删除
 const removeIds = ref<(number | string)[]>([]);
+
 function handleSelectionChange(selection: any[]) {
   selectionData.value = selection;
   removeIds.value = selection.map((item) => item[pk]);
@@ -622,11 +644,13 @@ cols.value.forEach((item) => {
     fields.push(item.prop);
   }
 });
+
 const enum ExportsOriginEnum {
   CURRENT = "current",
   SELECTED = "selected",
   REMOTE = "remote",
 }
+
 const exportsModalVisible = ref(false);
 const exportsFormRef = ref<FormInstance>();
 const exportsFormData = reactive({
@@ -639,10 +663,12 @@ const exportsFormRules: FormRules = {
   fields: [{ required: true, message: "请选择字段" }],
   origin: [{ required: true, message: "请选择数据源" }],
 };
+
 // 打开导出弹窗
 function handleOpenExportsModal() {
   exportsModalVisible.value = true;
 }
+
 // 导出确认
 const handleExportsSubmit = useThrottleFn(() => {
   exportsFormRef.value?.validate((valid: boolean) => {
@@ -652,6 +678,7 @@ const handleExportsSubmit = useThrottleFn(() => {
     }
   });
 }, 3000);
+
 // 关闭导出弹窗
 function handleCloseExportsModal() {
   exportsModalVisible.value = false;
@@ -660,6 +687,7 @@ function handleCloseExportsModal() {
     exportsFormRef.value?.clearValidate();
   });
 }
+
 // 导出
 function handleExports() {
   const filename = exportsFormData.filename
@@ -719,11 +747,13 @@ const importFormData = reactive<{
 const importFormRules: FormRules = {
   files: [{ required: true, message: "请选择文件" }],
 };
+
 // 打开导入弹窗
 function handleOpenImportModal(isFile: boolean = false) {
   importModalVisible.value = true;
   isFileImport = isFile;
 }
+
 // 覆盖前一个文件
 function handleFileExceed(files: File[]) {
   uploadRef.value!.clearFiles();
@@ -731,6 +761,7 @@ function handleFileExceed(files: File[]) {
   file.uid = genFileId();
   uploadRef.value!.handleStart(file);
 }
+
 // 下载导入模板
 function handleDownloadTemplate() {
   const importTemplate = props.contentConfig.importTemplate;
@@ -748,6 +779,7 @@ function handleDownloadTemplate() {
     ElMessage.error("未配置importTemplate");
   }
 }
+
 // 导入确认
 const handleImportSubmit = useThrottleFn(() => {
   importFormRef.value?.validate((valid: boolean) => {
@@ -760,6 +792,7 @@ const handleImportSubmit = useThrottleFn(() => {
     }
   });
 }, 3000);
+
 // 关闭导入弹窗
 function handleCloseImportModal() {
   importModalVisible.value = false;
@@ -768,6 +801,7 @@ function handleCloseImportModal() {
     importFormRef.value?.clearValidate();
   });
 }
+
 // 文件导入
 function handleImport() {
   const importAction = props.contentConfig.importAction;
@@ -781,6 +815,7 @@ function handleImport() {
     handleRefresh(true);
   });
 }
+
 // 导入
 function handleImports() {
   const importsAction = props.contentConfig.importsAction;
@@ -902,11 +937,15 @@ function handleModify(
   row: Record<string, any>
 ) {
   if (props.contentConfig.modifyAction) {
-    props.contentConfig.modifyAction({
-      [pk]: row[pk],
-      field: field,
-      value: value,
-    });
+    props.contentConfig
+      .modifyAction({
+        [pk]: row[pk],
+        field: field,
+        value: value,
+      })
+      .then(() => {
+        ElMessage.success("修改成功");
+      });
   } else {
     ElMessage.error("未配置modifyAction");
   }
@@ -917,6 +956,7 @@ function handleSizeChange(value: number) {
   pagination.pageSize = value;
   handleRefresh();
 }
+
 function handleCurrentChange(value: number) {
   pagination.currentPage = value;
   handleRefresh();
@@ -924,6 +964,7 @@ function handleCurrentChange(value: number) {
 
 // 远程数据筛选
 let filterParams: IObject = {};
+
 function handleFilterChange(newFilters: any) {
   const filters: IObject = {};
   for (const key in newFilters) {
@@ -947,6 +988,7 @@ function getFilterParams() {
 
 // 获取分页数据
 let lastFormData = {};
+
 function fetchPageData(formData: IObject = {}, isRestart = false) {
   loading.value = true;
   // 上一次搜索条件
@@ -980,6 +1022,7 @@ function fetchPageData(formData: IObject = {}, isRestart = false) {
       loading.value = false;
     });
 }
+
 fetchPageData();
 
 // 导出Excel
@@ -1020,4 +1063,13 @@ function saveXlsx(fileData: BlobPart, fileName: string) {
 defineExpose({ fetchPageData, exportPageData, getFilterParams });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+//表头加粗，显示card标题
+.table-title {
+  margin-top: 0;
+  margin-left: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #202a34;
+}
+</style>

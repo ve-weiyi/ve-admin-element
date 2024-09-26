@@ -128,8 +128,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 指定自定义组件位置(默认:src/components)
         dirs: ["src/components", "src/**/components"],
         // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)
-        dts: false,
-        // dts: "src/types/components.d.ts",
+        // dts: false,
+        dts: "src/types/components.d.ts",
       }),
       Icons({
         // 自动安装图标库

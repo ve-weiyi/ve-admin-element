@@ -70,6 +70,8 @@ export interface ISearchConfig {
 export interface IContentConfig<T = any> {
   // 页面名称(参与组成权限标识,如sys:user:xxx)
   pageName: string;
+  // 页面标题
+  pageTitle?: string;
   // table组件属性
   table?: Omit<TableProps<any>, "data">;
   // pagination组件属性
@@ -157,6 +159,7 @@ export interface IContentConfig<T = any> {
     templet?:
       | "image"
       | "list"
+      | "tag"
       | "url"
       | "switch"
       | "input"
@@ -169,6 +172,12 @@ export interface IContentConfig<T = any> {
     // image模板相关参数
     imageWidth?: number;
     imageHeight?: number;
+    // tag模板相关参数
+    tagOptions?: Array<{
+      value: string | number;
+      label: string;
+      type: "primary" | "success" | "info" | "warning" | "danger";
+    }>;
     // list模板相关参数
     selectList?: IObject;
     // switch模板相关参数

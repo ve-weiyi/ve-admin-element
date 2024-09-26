@@ -1,20 +1,9 @@
-import service from "@/utils/request";
-import {
-  IdsReq,
-  BatchResp,
-  EmptyReq,
-  IdReq,
-  MenuQuery,
-  PageResp,
-  SyncMenuReq,
-  MenuBackDTO,
-} from "./types";
+import request from "@/utils/request";
+import { MenuNewReq, MenuBackDTO, IdsReq, BatchResp, PageResp, EmptyReq, IdReq, MenuQuery, SyncMenuReq } from "./types";
 
 /** "创建菜单" */
-export function addMenuApi(
-  data?: MenuBackDTO
-): Promise<IApiResponse<MenuBackDTO>> {
-  return service({
+export function addMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackDTO>> {
+  return request({
     url: "/admin_api/v1/menu/add_menu",
     method: "post",
     data: data,
@@ -22,10 +11,8 @@ export function addMenuApi(
 }
 
 /** "批量删除菜单" */
-export function batchDeleteMenuApi(
-  data?: IdsReq
-): Promise<IApiResponse<BatchResp>> {
-  return service({
+export function batchDeleteMenuApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
+  return request({
     url: "/admin_api/v1/menu/batch_delete_menu",
     method: "delete",
     data: data,
@@ -33,10 +20,8 @@ export function batchDeleteMenuApi(
 }
 
 /** "清空菜单列表" */
-export function cleanMenuListApi(
-  data?: EmptyReq
-): Promise<IApiResponse<BatchResp>> {
-  return service({
+export function cleanMenuListApi(data?: EmptyReq): Promise<IApiResponse<BatchResp>> {
+  return request({
     url: "/admin_api/v1/menu/clean_menu_list",
     method: "post",
     data: data,
@@ -45,7 +30,7 @@ export function cleanMenuListApi(
 
 /** "删除菜单" */
 export function deleteMenuApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
-  return service({
+  return request({
     url: "/admin_api/v1/menu/delete_menu",
     method: "delete",
     data: data,
@@ -53,10 +38,8 @@ export function deleteMenuApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
 }
 
 /** "分页获取菜单列表" */
-export function findMenuListApi(
-  data?: MenuQuery
-): Promise<IApiResponse<PageResp>> {
-  return service({
+export function findMenuListApi(data?: MenuQuery): Promise<IApiResponse<PageResp>> {
+  return request({
     url: "/admin_api/v1/menu/find_menu_list",
     method: "post",
     data: data,
@@ -64,10 +47,8 @@ export function findMenuListApi(
 }
 
 /** "同步菜单列表" */
-export function syncMenuListApi(
-  data?: SyncMenuReq
-): Promise<IApiResponse<BatchResp>> {
-  return service({
+export function syncMenuListApi(data?: SyncMenuReq): Promise<IApiResponse<BatchResp>> {
+  return request({
     url: "/admin_api/v1/menu/sync_menu_list",
     method: "post",
     data: data,
@@ -75,10 +56,8 @@ export function syncMenuListApi(
 }
 
 /** "更新菜单" */
-export function updateMenuApi(
-  data?: MenuBackDTO
-): Promise<IApiResponse<MenuBackDTO>> {
-  return service({
+export function updateMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackDTO>> {
+  return request({
     url: "/admin_api/v1/menu/update_menu",
     method: "put",
     data: data,

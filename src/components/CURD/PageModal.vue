@@ -142,13 +142,18 @@
   <template v-else>
     <el-dialog
       v-model="modalVisible"
-      :align-center="true"
+      :align-center="false"
       :append-to-body="true"
       width="70vw"
       v-bind="modalConfig.dialog"
       style="padding-right: 0"
       @close="handleCloseModal"
     >
+      <template #header>
+        <div style="font-weight: bold">
+          {{ modalConfig.dialog.title }}
+        </div>
+      </template>
       <!-- 滚动 -->
       <el-scrollbar max-height="60vh">
         <!-- 表单 -->

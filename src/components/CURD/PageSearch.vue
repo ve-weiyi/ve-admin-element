@@ -11,6 +11,7 @@
           v-show="isExpand ? true : index < showNumber"
           :label="item.label"
           :prop="item.prop"
+          style="font-weight: bold"
         >
           <!-- Label -->
           <template #label v-if="item.tips">

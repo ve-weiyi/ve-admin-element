@@ -121,7 +121,7 @@ import {
   PhotoQuery,
 } from "@/api/types.ts";
 import "@/styles/table.scss";
-import RightToolbar from "@/components/RightToolBar/index.vue";
+import RightToolbar from "@/components/RightToolbar/index.vue";
 
 const photoFormRef = ref<FormInstance>();
 

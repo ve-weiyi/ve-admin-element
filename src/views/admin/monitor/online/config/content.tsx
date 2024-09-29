@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import { UserQuery } from "@/api/types";
-import { findOnlineUserListApi, updateUserStatusApi } from "@/api/account.ts";
+import { AccountQuery } from "@/api/types";
+import { findAccountOnlineListApi } from "@/api/account.ts";
 
-const contentConfig: IContentConfig<UserQuery> = {
+const contentConfig: IContentConfig<AccountQuery> = {
   pageName: "sys:user",
   pageTitle: "用户管理",
   table: {
@@ -16,21 +16,13 @@ const contentConfig: IContentConfig<UserQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: res.data.total,
       list: res.data.list || [],
     };
   },
-  modifyAction: function (data) {
-    console.log("修改请求", data);
-    return updateUserStatusApi({
-      user_id: data.user_id,
-      status: data.value as number,
-    });
-  },
-  indexAction: function (query: UserQuery) {
-    return findOnlineUserListApi(query);
+  indexAction: function (query: AccountQuery) {
+    return findAccountOnlineListApi(query);
   },
   pk: "user_id",
   toolbar: [],

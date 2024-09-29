@@ -3,7 +3,7 @@ import { store } from "@/store";
 import { TOKEN_KEY } from "@/enums/CacheEnum";
 import { LoginReq, UserInfoResp } from "@/api/types";
 import { loginApi, logoutApi } from "@/api/auth";
-import { getUserInfoApi } from "@/api/account";
+import { getUserInfoApi } from "@/api/user";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<UserInfoResp>(<UserInfoResp>{

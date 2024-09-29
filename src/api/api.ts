@@ -1,5 +1,15 @@
 import request from "@/utils/request";
-import { IdReq, ApiQuery, PageResp, ApiNewReq, ApiBackDTO, IdsReq, BatchResp, EmptyReq } from "./types";
+import {
+  ApiBackDTO,
+  ApiNewReq,
+  ApiQuery,
+  BatchResp,
+  EmptyReq,
+  IdReq,
+  IdsReq,
+  PageResp,
+  SyncApiReq,
+} from "./types";
 
 /** "分页获取api路由列表" */
 export function findApiListApi(data?: ApiQuery): Promise<IApiResponse<PageResp>> {
@@ -47,7 +57,7 @@ export function deleteApiApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
 }
 
 /** "同步api列表" */
-export function syncApiListApi(data?: EmptyReq): Promise<IApiResponse<BatchResp>> {
+export function syncApiListApi(data?: SyncApiReq): Promise<IApiResponse<BatchResp>> {
   return request({
     url: "/admin_api/v1/api/sync_api_list",
     method: "post",

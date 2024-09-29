@@ -7,19 +7,21 @@
         class="tag"
         rel="external nofollow"
         :style="'color:' + item.color + ';top: 0;left: 0;filter:none;'"
-        >{{ item.tag_name }}</a
       >
+        {{ item.tag_name }}
+      </a>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, reactive, watchEffect } from "vue";
+import { nextTick, onMounted, reactive } from "vue";
+
 const props = defineProps({
   tagList: {
     type: Array<any>,
-    default: []
-  }
+    default: [],
+  },
 });
 const config = reactive<any>({
   radius: 120,
@@ -42,13 +44,14 @@ const config = reactive<any>({
   sb: 0,
   cb: 0,
   sc: 0,
-  cc: 0
+  cc: 0,
 });
 
 // 生成随机数
 function getRandomNum() {
   return Math.floor(Math.random() * (255 + 1));
 }
+
 // 三角函数角度计算
 function sineCosine(a: number, b: number, c: number) {
   config.sa = Math.sin(a * config.dtr);
@@ -58,6 +61,7 @@ function sineCosine(a: number, b: number, c: number) {
   config.sc = Math.sin(c * config.dtr);
   config.cc = Math.cos(c * config.dtr);
 }
+
 // 设置初始定位
 function positionAll() {
   nextTick(() => {
@@ -102,6 +106,7 @@ function positionAll() {
     }
   });
 }
+
 // 坐标更新 让标签动起来
 function update() {
   nextTick(() => {
@@ -154,6 +159,7 @@ function update() {
     depthSort();
   });
 }
+
 function doPosition() {
   nextTick(() => {
     let l = config.oList.offsetWidth / 2;
@@ -170,6 +176,7 @@ function doPosition() {
     }
   });
 }
+
 function depthSort() {
   nextTick(() => {
     const aTmp = [];
@@ -190,6 +197,7 @@ function depthSort() {
     }
   });
 }
+
 // 生成随机颜色
 function query() {
   if (!Array.isArray(props.tagList)) {
@@ -208,6 +216,7 @@ function query() {
   });
   onReady();
 }
+
 // 生成标签云
 function onReady() {
   nextTick(() => {

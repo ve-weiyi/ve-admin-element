@@ -15,22 +15,6 @@ const searchConfig: ISearchConfig = {
         },
       },
     },
-    {
-      type: "select",
-      label: "留言状态",
-      prop: "status",
-      attrs: {
-        placeholder: "全部",
-        clearable: true,
-        style: {
-          width: "150px",
-        },
-      },
-      options: [
-        { label: "通过", value: 1 },
-        { label: "审核中", value: 0 },
-      ],
-    },
   ],
 };
 

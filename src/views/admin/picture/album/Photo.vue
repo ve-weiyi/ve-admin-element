@@ -248,7 +248,7 @@ import {
 } from "@/api/types.ts";
 import { compressImage, uploadFileLabel } from "@/utils/file.ts";
 import "@/styles/table.scss";
-import RightToolbar from "@/components/RightToolBar/index.vue";
+import RightToolbar from "@/components/RightToolbar/index.vue";
 
 const photoFormRef = ref<FormInstance>();
 const rules = reactive<FormRules>({

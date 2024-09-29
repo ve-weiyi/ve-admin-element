@@ -22,6 +22,20 @@
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
+        <template #table-top>
+          <!-- 表格菜单 -->
+          <div v-if="statusList.length !== 0" class="status-menu">
+            <span>状态</span>
+            <template v-for="item of statusList" :key="item.value">
+              <span
+                :class="isActive(item.value)"
+                @click="handleStatusCheck(item.value)"
+              >
+                {{ item.label }}
+              </span>
+            </template>
+          </div>
+        </template>
         <template #status="scope">
           <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
             {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
@@ -40,6 +54,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { recycleArticleApi } from "@/api/article.ts";
+import "@/styles/table.scss";
 
 const {
   searchRef,
@@ -109,4 +124,35 @@ function handleOperatClick(data: IOperatData) {
 
 // 切换示例
 const isA = ref(true);
+
+/** ******** start status menu **********/
+type StatusTag = {
+  value: string | number;
+  label: string;
+  condition: any;
+};
+
+const statusList: StatusTag[] = [
+  { value: "all", label: "全部", condition: { is_delete: 0 } },
+  { value: "public", label: "公开", condition: { is_delete: 0, status: 1 } },
+  { value: "private", label: "私密", condition: { is_delete: 0, status: 2 } },
+  { value: "draft", label: "草稿", condition: { is_delete: 0, status: 3 } },
+  { value: "delete", label: "回收站", condition: { is_delete: 1 } },
+];
+
+const status = ref<string | number>(
+  statusList.length > 0 ? statusList[0].value : 0
+);
+
+const isActive = (value: string | number) => {
+  return value == status.value ? "status-menu-active" : "status-menu-normal";
+};
+// 选择了状态
+const handleStatusCheck = (value: string | number) => {
+  status.value = value;
+  const conditions =
+    statusList.find((v) => v.value === status.value)?.condition || {};
+
+  handleQueryClick(conditions);
+};
 </script>

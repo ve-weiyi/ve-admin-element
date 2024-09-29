@@ -27,6 +27,11 @@
             {{ item.role_name }}
           </el-tag>
         </template>
+        <template #login_type="scope">
+          <el-tag v-if="scope.row.login_type === LoginTypeEnum.EMAIL" type="success">邮箱</el-tag>
+          <el-tag v-if="scope.row.login_type === LoginTypeEnum.PHONE" type="danger">手机</el-tag>
+          <el-tag v-if="scope.row.login_type === LoginTypeEnum.OAUTH" type="primary">第三方</el-tag>
+        </template>
       </page-content>
       <!-- 编辑 -->
       <page-modal
@@ -48,6 +53,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { logoutApi } from "@/api/auth.ts";
+import { LoginTypeEnum } from "@/enums/LoginTypeEnum.ts";
 
 const {
   searchRef,
@@ -78,14 +84,10 @@ function handleOperatClick(data: IOperatData) {
 
   switch (data.name) {
     case "reset_pwd":
-      ElMessageBox.prompt(
-        "请输入用户「" + data.row.username + "」的新密码",
-        "重置密码",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-        }
-      ).then(({ value }) => {
+      ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      }).then(({ value }) => {
         if (!value || value.length < 6) {
           ElMessage.warning("密码至少需要6位字符，请重新输入");
           return false;

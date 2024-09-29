@@ -3,22 +3,31 @@ import { RouteRecordRaw } from "vue-router";
 const Layout = () => import("@/layout/index.vue");
 
 export default {
-  path: "/mine",
-  name: "mine-management",
+  path: "/document",
+  name: "document",
   component: Layout,
-  redirect: "/mine/info",
+  redirect: "/document/api",
   meta: {
-    title: "个人中心",
-    icon: "el-icon-user",
-    rank: 90,
+    title: "接口文档",
+    icon: "api",
+    hidden: false,
     alwaysShow: true,
+    params: null,
+    rank: 90,
   },
   children: [
     {
-      path: "/mine/info",
-      component: () => import("@/views/admin/mine/Mine.vue"),
-      name: "/mine/info",
-      meta: { title: "个人信息"},
+      path: "/document/api",
+      component: () => import("@/views/admin/document/api/apifox.vue"),
+      name: "Apifox",
+      meta: {
+        title: "Apifox",
+        icon: "api",
+        hidden: false,
+        keepAlive: true,
+        alwaysShow: false,
+        params: null,
+      },
     },
     // {
     //   path: "/mine/info",

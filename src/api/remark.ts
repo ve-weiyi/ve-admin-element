@@ -1,5 +1,13 @@
 import request from "@/utils/request";
-import { IdReq, RemarkNewReq, RemarkBackDTO, RemarkQuery, PageResp, IdsReq, BatchResp } from "./types";
+import {
+  BatchResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  RemarkBackDTO,
+  RemarkNewReq,
+  RemarkQuery,
+} from "./types";
 
 /** "分页获取留言列表" */
 export function findRemarkListApi(data?: RemarkQuery): Promise<IApiResponse<PageResp>> {

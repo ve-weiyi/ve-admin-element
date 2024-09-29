@@ -22,20 +22,47 @@
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
+        <template #title="scope">
+          <template
+            v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')"
+          >
+            <el-icon style="vertical-align: -0.15em">
+              <component :is="scope.row.icon.replace('el-icon-', '')" />
+            </el-icon>
+          </template>
+          <template v-else-if="scope.row.icon">
+            <svg-icon :icon-class="scope.row.icon" />
+          </template>
+          <template v-else>
+            <svg-icon icon-class="menu" />
+          </template>
+          {{ scope.row.title }}
+        </template>
+        <template #type="scope">
+          <el-tag v-if="scope.row.type === MenuTypeEnum.CATEGORY" type="warning">
+            目录
+          </el-tag>
+          <el-tag v-if="scope.row.type === MenuTypeEnum.MENU" type="success">
+            菜单
+          </el-tag>
+          <el-tag v-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">
+            按钮
+          </el-tag>
+          <el-tag v-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">
+            外链
+          </el-tag>
+        </template>
+
         <template #icon="scope">
-          <svg-icon :icon-class="scope.row.meta.icon" />
+          <svg-icon :icon-class="scope.row.icon" />
         </template>
         <template #is_disable="scope">
-          <el-tag v-if="scope.row.meta.is_disable === 0">正常</el-tag>
-          <el-tag v-if="scope.row.meta.is_disable === 1" type="danger">
-            禁用
-          </el-tag>
+          <el-tag v-if="scope.row.is_disable === 0" type="success">正常</el-tag>
+          <el-tag v-if="scope.row.is_disable === 1" type="danger">禁用</el-tag>
         </template>
         <template #is_hidden="scope">
-          <el-tag v-if="scope.row.meta.is_hidden === 0">否</el-tag>
-          <el-tag v-if="scope.row.meta.is_hidden === 1" type="danger">
-            是
-          </el-tag>
+          <el-tag v-if="scope.row.is_hidden === 0" type="success">显示</el-tag>
+          <el-tag v-if="scope.row.is_hidden === 1" type="danger">隐藏</el-tag>
         </template>
       </page-content>
 
@@ -83,6 +110,7 @@ import log from "@/router/admin/log.ts";
 import mine from "@/router/admin/mine.ts";
 import picture from "@/router/admin/picture.ts";
 import website from "@/router/admin/website.ts";
+import { MenuTypeEnum } from "@/enums/MenuTypeEnum.ts";
 
 const {
   searchRef,
@@ -171,17 +199,35 @@ function Sync() {
     });
 }
 
-function convertMenu(menus: any[]) {
-  for (let i = 0; i < menus.length; i++) {
-    if (menus[i].component) {
-      menus[i].component = menus[i].component.toString();
-    }
-    if (menus[i].children) {
-      menus[i].children = convertMenu(menus[i].children);
-    }
-  }
+function convertMenu(menus: any[]): MenuNewReq[] {
+  let result: MenuNewReq[] = [];
+  menus?.forEach((menu) => {
+    const input = menu.component.toString();
+    const start = input.indexOf("/");
+    const end = input.indexOf(".");
 
-  return menus;
+    const item: MenuNewReq = {
+      parent_id: 0,
+      path: menu.path,
+      name: menu.name,
+      component: input.slice(start, end),
+      redirect: menu.redirect,
+      type: menu.children ? 0 : 1,
+      title: menu.meta.title,
+      icon: menu.meta.icon,
+      rank: menu.meta.rank,
+      perm: menu.meta.perm,
+      params: menu.meta.params,
+      keep_alive: menu.meta.keepAlive ? 1 : 0,
+      always_show: menu.meta.alwaysShow ? 1 : 0,
+      is_hidden: menu.meta.hidden ? 1 : 0,
+      is_disable: 0,
+      children: convertMenu(menu.children),
+    };
+
+    result.push(item);
+  });
+  return result;
 }
 
 // 其他工具栏
@@ -189,17 +235,7 @@ function handleToolbarClick(name: string) {
   console.log(name);
   switch (name) {
     case "addMenu":
-      menuForm.value = {
-        children: [],
-        component: "",
-        id: 0,
-        meta: {},
-        name: "",
-        parent_id: 0,
-        path: "",
-        redirect: "",
-        type: 0,
-      };
+      menuForm.value = null;
       addOrUpdate.value = true;
       break;
     case "syncMenu":
@@ -216,15 +252,7 @@ function handleOperatClick(data: IOperatData) {
   switch (data.name) {
     case "addSubMenu":
       menuForm.value = {
-        children: [],
-        component: "",
-        id: 0,
-        meta: {},
-        name: "",
         parent_id: data.row.id,
-        path: "",
-        redirect: "",
-        type: 0,
       };
       addOrUpdate.value = true;
       break;

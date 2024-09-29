@@ -257,7 +257,7 @@ interface VisitStats {
 }
 /** 加载访问统计数据 */
 const loadVisitStatsData = async () => {
-  const list: VisitStatsVO[] = []
+  const list: any[] = [];
 
   if (list) {
     const tagTypes: ("primary" | "success" | "warning")[] = [

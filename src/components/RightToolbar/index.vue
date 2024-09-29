@@ -13,24 +13,7 @@
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
         <el-button circle icon="Refresh" @click="refresh()" />
       </el-tooltip>
-      <el-tooltip
-        class="item"
-        effect="dark"
-        content="显隐列"
-        placement="top"
-        v-if="columns"
-      >
-        <el-button circle icon="Menu" @click="showColumn()" />
-      </el-tooltip>
     </el-row>
-    <el-dialog :title="title" v-model="open" append-to-body>
-      <el-transfer
-        :titles="['显示', '隐藏']"
-        v-model="value"
-        :data="columns"
-        @change="dataChange"
-      />
-    </el-dialog>
   </div>
 </template>
 
@@ -65,9 +48,6 @@ const open = ref(false);
 
 const style = computed(() => {
   const ret = {};
-  if (props.gutter) {
-    ret.marginRight = `${props.gutter / 2}px`;
-  }
   return ret;
 });
 
@@ -79,26 +59,6 @@ function toggleSearch() {
 // 刷新
 function refresh() {
   emits("queryTable");
-}
-
-// 右侧列表元素变化
-function dataChange(data) {
-  for (let item in props.columns) {
-    const key = props.columns[item].key;
-    props.columns[item].visible = !data.includes(key);
-  }
-}
-
-// 打开显隐列dialog
-function showColumn() {
-  open.value = true;
-}
-
-// 显隐列初始默认隐藏列
-for (let item in props.columns) {
-  if (props.columns[item].visible === false) {
-    value.value.push(parseInt(item));
-  }
 }
 </script>
 

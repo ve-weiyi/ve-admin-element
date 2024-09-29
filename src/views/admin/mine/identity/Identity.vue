@@ -185,7 +185,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getUserInfoApi } from "@/api/account.ts";
+import { getUserInfoApi } from "@/api/user.ts";
 import { ElMessage } from "element-plus";
 import { UserInfoResp } from "@/api/types.ts";
 import { useUserStore } from "@/store";

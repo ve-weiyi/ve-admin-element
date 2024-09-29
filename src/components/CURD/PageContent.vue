@@ -150,6 +150,7 @@
         </template>
       </div>
     </div>
+    <slot name="table-top"></slot>
     <!-- 列表 -->
     <el-table
       v-loading="loading"

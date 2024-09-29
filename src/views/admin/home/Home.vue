@@ -157,8 +157,8 @@ import ChinaMap from "./components/ChinaMap.vue";
 
 import { onMounted, reactive, ref } from "vue";
 import { getAdminHomeInfoApi } from "@/api/website.ts";
-import { ArticleStatisticsDTO, TagDTO, UserArea } from "@/api/types.ts";
-import { getUserAreaAnalysisApi } from "@/api/account.ts";
+import { ArticleStatisticsDTO, TagDTO, AccountArea } from "@/api/types.ts";
+import { findAccountAreaAnalysisApi } from "@/api/account.ts";
 import { useUserStore } from "@/store";
 
 const loading = ref(true);
@@ -170,7 +170,7 @@ const userCount = ref(0);
 const tagLoad = ref(false);
 const articleCount = ref(0);
 const articleStatisticsList = ref<ArticleStatisticsDTO[]>([]);
-const areaData = ref<UserArea[]>([]);
+const areaData = ref<AccountArea[]>([]);
 
 let userView = reactive({
   xAxis: {
@@ -350,7 +350,7 @@ const getList = () => {
 const type = ref(1);
 const listUserArea = () => {
   // 发送请求获取用户地域分布数据
-  getUserAreaAnalysisApi().then((res) => {
+  findAccountAreaAnalysisApi().then((res) => {
     // userAreaMap.series[0].data = res.data
     areaData.value = res.data.list;
   });

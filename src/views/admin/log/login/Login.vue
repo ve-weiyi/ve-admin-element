@@ -22,33 +22,10 @@
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
-        <template #is_review="scope">
-          <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'warning'">
-            {{ scope.row[scope.prop] == 1 ? "通过" : "审核中" }}
-          </el-tag>
-        </template>
-        <template #type="scope">
-          <el-tag
-            :type="
-              scope.row[scope.prop] == 1
-                ? 'success'
-                : scope.row[scope.prop] == 2
-                  ? 'warning'
-                  : scope.row[scope.prop] == 3
-                    ? 'danger'
-                    : 'info'
-            "
-          >
-            {{
-              scope.row[scope.prop] == 1
-                ? "文章"
-                : scope.row[scope.prop] == 2
-                  ? "友链"
-                  : scope.row[scope.prop] == 3
-                    ? "说说"
-                    : "其他"
-            }}
-          </el-tag>
+        <template #login_type="scope">
+          <el-tag v-if="scope.row.login_type === LoginTypeEnum.EMAIL" type="success">邮箱</el-tag>
+          <el-tag v-if="scope.row.login_type === LoginTypeEnum.PHONE" type="danger">手机</el-tag>
+          <el-tag v-if="scope.row.login_type === LoginTypeEnum.OAUTH" type="primary">第三方</el-tag>
         </template>
       </page-content>
     </template>
@@ -62,8 +39,7 @@ import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { updateCommentReviewApi } from "@/api/comment.ts";
-import { CommentReviewReq } from "@/api/types.ts";
+import { LoginTypeEnum } from "@/enums/LoginTypeEnum.ts";
 
 const {
   searchRef,
@@ -93,16 +69,6 @@ function handleOperatClick(data: IOperatData) {
   console.log(data);
 
   switch (data.name) {
-    case "review": {
-      const req: CommentReviewReq = {
-        id: data.row.id,
-        is_review: data.row.is_review == 1 ? 2 : 1,
-      };
-      updateCommentReviewApi(req).then(() => {
-        ElMessage.success("审核成功");
-        contentRef.value?.fetchPageData();
-      });
-    }
   }
 }
 

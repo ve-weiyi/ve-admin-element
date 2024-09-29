@@ -22,7 +22,7 @@
                 alt="img"
                 class="avatar"
               />
-              <i v-else class="el-icon-plus avatar-uploader-icon" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
           <el-form-item label="网站名称">
@@ -149,7 +149,7 @@
                     :src="websiteConfigForm.user_avatar"
                     class="avatar"
                   />
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -167,7 +167,7 @@
                     :src="websiteConfigForm.tourist_avatar"
                     class="avatar"
                   />
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -214,7 +214,7 @@
                     :src="websiteConfigForm.weixin_qr_code"
                     class="avatar"
                   />
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -232,7 +232,7 @@
                     :src="websiteConfigForm.alipay_qr_code"
                     class="avatar"
                   />
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -315,7 +315,6 @@ onMounted(() => {
 
 function getWebsiteConfig() {
   getWebsiteConfigApi().then((res) => {
-    console.log("res", res);
     websiteConfigForm.value = res.data;
   });
 }
@@ -363,11 +362,11 @@ function handleAlipaySuccess(response) {
 
 <style>
 .avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
 }
 
 .avatar-uploader .el-upload:hover {
@@ -375,17 +374,17 @@ function handleAlipaySuccess(response) {
 }
 
 .avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
   width: 120px;
   height: 120px;
+  font-size: 28px;
   line-height: 120px;
+  color: #8c939d;
   text-align: center;
 }
 
 .avatar {
+  display: block;
   width: 120px;
   height: 120px;
-  display: block;
 }
 </style>

@@ -1,11 +1,11 @@
 import type {
+  ColProps,
   DialogProps,
   DrawerProps,
   FormItemRule,
   FormProps,
   PaginationProps,
   TableProps,
-  ColProps,
 } from "element-plus";
 import PageContent from "./PageContent.vue";
 import PageForm from "./PageForm.vue";

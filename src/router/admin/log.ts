@@ -14,16 +14,16 @@ export default {
   },
   children: [
     {
-      path: "/log/operation",
-      component: () => import("@/views/admin/log/operation/Operation.vue"),
-      name: "/log/operation",
-      meta: { title: "操作日志", showParent: true, keepAlive: true },
-    },
-    {
       path: "/log/login",
       component: () => import("@/views/admin/log/login/Login.vue"),
       name: "/log/login",
-      meta: { title: "登录日志", showParent: true, keepAlive: true },
+      meta: { title: "登录日志", keepAlive: true },
+    },
+    {
+      path: "/log/operation",
+      component: () => import("@/views/admin/log/operation/Operation.vue"),
+      name: "/log/operation",
+      meta: { title: "操作日志", keepAlive: true },
     },
   ],
 } satisfies RouteRecordRaw;

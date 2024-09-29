@@ -27,7 +27,6 @@ export function setupPermission() {
         const hasRoles =
           userStore.user.roles && userStore.user.roles.length > 0;
 
-        console.log("hasRoles", hasRoles);
         if (hasRoles) {
           // 如果未匹配到任何路由，跳转到404页面
           if (to.matched.length === 0) {
@@ -49,7 +48,6 @@ export function setupPermission() {
             dynamicRoutes.forEach((route: RouteRecordRaw) =>
               router.addRoute(route)
             );
-            console.log("route", router.getRoutes());
             next({ ...to, replace: true });
           } catch (error) {
             // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数

@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { findUserLoginHistoryListApi } from "@/api/account.ts";
+import { getUserLoginHistoryListApi } from "@/api/user.ts";
 import { Column } from "element-plus";
 
 import "@/styles/table.scss";
@@ -73,7 +73,7 @@ const tableData = ref<any[]>([]);
 
 const getHistory = async () => {
   loading.value = true;
-  findUserLoginHistoryListApi({})
+  getUserLoginHistoryListApi({})
     .then((response) => {
       tableData.value = response.data.list || [];
     })

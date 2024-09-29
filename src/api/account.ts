@@ -1,100 +1,67 @@
 import request from "@/utils/request";
-import { PageResp, EmptyReq, UserApisResp, UpdateUserRolesReq, UserQuery, UserInfoResp, UserMenusResp, UserRolesResp, UserInfoReq, EmptyResp, UpdateUserStatusReq } from "./types";
+import {
+  AccountQuery,
+  EmptyResp,
+  PageResp,
+  UpdateAccountRolesReq,
+  UpdateAccountStatusReq,
+} from "./types";
 
-/** "查询在线用户列表" */
-export function findOnlineUserListApi(data?: UserQuery): Promise<IApiResponse<PageResp>> {
+/** "获取用户分布地区" */
+export function findAccountAreaAnalysisApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
-    url: "/admin_api/v1/user/find_online_user_list",
+    url: "/admin_api/v1/account/find_account_area_analysis",
     method: "post",
     data: data,
   });
 }
 
 /** "查询用户列表" */
-export function findUserListApi(data?: UserQuery): Promise<IApiResponse<PageResp>> {
+export function findAccountListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
-    url: "/admin_api/v1/user/find_user_list",
+    url: "/admin_api/v1/account/find_account_list",
     method: "post",
     data: data,
   });
 }
 
 /** "查询用户登录历史" */
-export function findUserLoginHistoryListApi(data?: UserQuery): Promise<IApiResponse<PageResp>> {
+export function findAccountLoginHistoryListApi(
+  data?: AccountQuery
+): Promise<IApiResponse<PageResp>> {
   return request({
-    url: "/admin_api/v1/user/find_user_login_history_list",
+    url: "/admin_api/v1/account/find_account_login_history_list",
     method: "post",
     data: data,
   });
 }
 
-/** "获取用户接口权限" */
-export function getUserApisApi(data?: EmptyReq): Promise<IApiResponse<UserApisResp>> {
+/** "查询在线用户列表" */
+export function findAccountOnlineListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
-    url: "/admin_api/v1/user/get_user_apis",
-    method: "get",
-    data: data,
-  });
-}
-
-/** "获取用户分布地区" */
-export function getUserAreaAnalysisApi(data?: EmptyReq): Promise<IApiResponse<PageResp>> {
-  return request({
-    url: "/admin_api/v1/user/get_user_area_analysis",
-    method: "post",
-    data: data,
-  });
-}
-
-/** "获取用户信息" */
-export function getUserInfoApi(data?: EmptyReq): Promise<IApiResponse<UserInfoResp>> {
-  return request({
-    url: "/admin_api/v1/user/get_user_info",
-    method: "get",
-    data: data,
-  });
-}
-
-/** "获取用户菜单权限" */
-export function getUserMenusApi(data?: EmptyReq): Promise<IApiResponse<UserMenusResp>> {
-  return request({
-    url: "/admin_api/v1/user/get_user_menus",
-    method: "get",
-    data: data,
-  });
-}
-
-/** "获取用户角色" */
-export function getUserRolesApi(data?: EmptyReq): Promise<IApiResponse<UserRolesResp>> {
-  return request({
-    url: "/admin_api/v1/user/get_user_roles",
-    method: "get",
-    data: data,
-  });
-}
-
-/** "修改用户信息" */
-export function updateUserInfoApi(data?: UserInfoReq): Promise<IApiResponse<EmptyResp>> {
-  return request({
-    url: "/admin_api/v1/user/update_user_info",
+    url: "/admin_api/v1/account/find_account_online_list",
     method: "post",
     data: data,
   });
 }
 
 /** "修改用户角色" */
-export function updateUserRolesApi(data?: UpdateUserRolesReq): Promise<IApiResponse<EmptyResp>> {
+export function updateAccountRolesApi(
+  data?: UpdateAccountRolesReq
+): Promise<IApiResponse<EmptyResp>> {
   return request({
-    url: "/admin_api/v1/user/update_user_roles",
+    url: "/admin_api/v1/account/update_account_roles",
     method: "post",
     data: data,
   });
 }
 
 /** "修改用户状态" */
-export function updateUserStatusApi(data?: UpdateUserStatusReq): Promise<IApiResponse<EmptyResp>> {
+export function updateAccountStatusApi(
+  data?: UpdateAccountStatusReq
+): Promise<IApiResponse<EmptyResp>> {
   return request({
-    url: "/admin_api/v1/user/update_user_status",
+    url: "/admin_api/v1/account/update_account_status",
     method: "post",
     data: data,
   });

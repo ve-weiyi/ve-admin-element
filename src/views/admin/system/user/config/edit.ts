@@ -1,16 +1,16 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import { UpdateUserRolesReq } from "@/api/types";
+import { UpdateAccountRolesReq } from "@/api/types";
 import { findRoleListApi } from "@/api/role.ts";
-import { updateUserRolesApi } from "@/api/account.ts";
+import { updateAccountRolesApi } from "@/api/account.ts";
 
 const roleOptions = [];
 findRoleListApi({}).then((res) => {
   res.data.list.forEach((item) => {
-    roleOptions.push({ label: item.role_comment, value: item.id });
+    roleOptions.push({ label: item.role_label, value: item.id });
   });
 });
 
-const modalConfig: IModalConfig<UpdateUserRolesReq> = {
+const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
   pageName: "sys:user",
   component: "dialog",
   dialog: {
@@ -20,7 +20,7 @@ const modalConfig: IModalConfig<UpdateUserRolesReq> = {
   },
   pk: "id",
   formAction: function (data) {
-    return updateUserRolesApi(data);
+    return updateAccountRolesApi(data);
   },
   beforeSubmit(data) {
     console.log("提交之前处理", data);

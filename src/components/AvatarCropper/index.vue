@@ -19,7 +19,7 @@
     class="avatar-uploader"
     :style="{
       width: width,
-      height: height
+      height: height,
     }"
   >
     <!--    <div>-->
@@ -30,7 +30,7 @@
     <div
       :style="{
         width: width,
-        height: height
+        height: height,
       }"
     >
       <img v-if="src" :src="src" class="avatar" alt="" />
@@ -109,8 +109,8 @@
         </el-row>
       </el-col>
       <el-col :span="4" :offset="8" style="margin-left: 22.3%">
-        <el-button type="primary" @click="determine(cropperBlob)"
-        >提 交
+        <el-button type="primary" @click="determine(cropperBlob)">
+          提 交
         </el-button>
       </el-col>
     </el-row>
@@ -132,7 +132,7 @@ import {
   Minus,
   Plus,
   RefreshLeft,
-  RefreshRight
+  RefreshRight,
 } from "@element-plus/icons-vue";
 
 const { proxy } = getCurrentInstance() as any;
@@ -141,33 +141,33 @@ const props = defineProps({
   src: {
     type: String,
     required: true,
-    default: ""
+    default: "",
   },
   multiple: {
     type: Boolean,
-    default: false
+    default: false,
   },
   fixed: {
     type: Boolean,
-    default: true
+    default: true,
   },
   width: {
     type: String,
-    default: "100px"
+    default: "100px",
   },
   height: {
     type: String,
-    default: "100px"
+    default: "100px",
   },
   /**width 和 height 都给的情况下不生效*/
   fixedNumber: {
     type: Array,
-    default: () => [5, 3]
+    default: () => [5, 3],
   },
   title: {
     type: String,
-    default: "上传图片"
-  }
+    default: "上传图片",
+  },
 });
 const emit = defineEmits(["onConfirm"]);
 
@@ -183,15 +183,15 @@ const options = reactive({
   fixedBox: false, // 固定截图框大小
   fixedNumber: props.fixedNumber,
   fixed: props.fixed,
-  centerBox: true
+  centerBox: true,
 });
 
 const previews = ref({
   url: "",
   img: {
     width: "200px",
-    height: "200px"
-  }
+    height: "200px",
+  },
 });
 /**裁剪后的图片的blob格式文件流 */
 const cropperBlob = ref<Blob>();
@@ -250,18 +250,18 @@ function onUpload(obj: UploadRequestOptions) {
 }
 
 // 实时预览事件
-const realTime = data => {
+const realTime = (data) => {
   previews.value.img = {
     width: data.w + "px",
-    height: data.h + "px"
+    height: data.h + "px",
   };
-  cropper.value.getCropBlob(blob => {
+  cropper.value.getCropBlob((blob) => {
     cropperBlob.value = blob;
     previews.value.url = URL.createObjectURL(blob);
   });
 };
 // 修改图片大小 正数为变大 负数变小
-const changeScale = num => {
+const changeScale = (num) => {
   num = num || 1;
   cropper.value.changeScale(num);
 };

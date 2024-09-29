@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import { RemarkQuery } from "@/api/types";
-import { findUserLoginHistoryListApi } from "@/api/account.ts";
+import { OperationLogQuery, RemarkQuery } from "@/api/types";
+import { batchDeleteOperationLogApi, findOperationLogListApi } from "@/api/operation_log.ts";
 
-const contentConfig: IContentConfig<RemarkQuery> = {
+const contentConfig: IContentConfig<OperationLogQuery> = {
   pageName: "sys:user",
   pageTitle: "留言管理",
   table: {
@@ -16,14 +16,20 @@ const contentConfig: IContentConfig<RemarkQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: res.data.total,
       list: res.data.list || [],
     };
   },
   indexAction: function (query: RemarkQuery) {
-    return findUserLoginHistoryListApi(query);
+    return findOperationLogListApi(query);
+  },
+  deleteAction: function (ids: string) {
+    const data = {
+      ids: [],
+    };
+    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
+    return batchDeleteOperationLogApi(data);
   },
   pk: "id",
   toolbar: ["delete"],
@@ -43,43 +49,83 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       sortable: true,
     },
     {
-      label: "头像",
-      align: "center",
-      prop: "avatar",
+      label: "用户id",
+      prop: "user_id",
       width: 80,
-      templet: "image",
+      align: "center",
     },
     {
-      label: "留言人",
+      label: "操作人",
       prop: "nickname",
-      width: 120,
-      align: "center",
-    },
-    {
-      label: "留言内容",
-      prop: "message_content",
-      minWidth: 200,
-      width: 0,
-      align: "center",
-    },
-    {
-      label: "状态",
-      prop: "is_review",
       width: 100,
       align: "center",
-      templet: "custom",
+    },
+    {
+      label: "操作模块",
+      prop: "opt_module",
+      width: 100,
+      align: "center",
+    },
+    {
+      label: "操作描述",
+      prop: "opt_desc",
+      width: 0,
+      minWidth: 120,
+      align: "center",
+    },
+    {
+      label: "请求方法",
+      prop: "request_method",
+      width: 100,
+      align: "center",
+      templet: "tag",
+      tagOptions: [
+        { value: "GET", label: "GET", type: "success" },
+        { value: "POST", label: "POST", type: "primary" },
+        { value: "PUT", label: "PUT", type: "warning" },
+        { value: "DELETE", label: "DELETE", type: "danger" },
+        { value: "NULL", label: "NULL", type: "info" },
+        { value: "", label: "NULL", type: "info" },
+      ],
+    },
+    {
+      label: "请求地址",
+      prop: "request_url",
+      width: 0,
+      minWidth: 200,
+      align: "center",
+    },
+    {
+      label: "响应数据",
+      prop: "response_data",
+      width: 300,
+      align: "center",
+      show: false,
+    },
+    {
+      label: "响应状态",
+      prop: "response_status",
+      width: 100,
+      align: "center",
+    },
+    {
+      label: "响应耗时",
+      prop: "cost",
+      width: 0,
+      minWidth: 120,
+      align: "center",
     },
     {
       label: "IP地址",
       prop: "ip_address",
-      width: 120,
+      width: 100,
       align: "center",
       show: false,
     },
     {
       label: "IP来源",
-      prop: "ip_address",
-      width: 120,
+      prop: "ip_source",
+      width: 100,
       align: "center",
       show: false,
     },
@@ -98,19 +144,7 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       fixed: "right",
       width: 160,
       templet: "tool",
-      operat: [
-        {
-          name: "review",
-          auth: "password:reset",
-          icon: "check",
-          text: "通过",
-          type: "success",
-          render(row) {
-            return row.is_review != 1;
-          },
-        },
-        "delete",
-      ],
+      operat: ["delete"],
     },
   ],
 };

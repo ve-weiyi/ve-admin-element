@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { TagQuery, PageResp, TagNewReq, TagBackDTO, IdsReq, BatchResp, IdReq } from "./types";
+import { BatchResp, IdReq, IdsReq, PageResp, TagBackDTO, TagNewReq, TagQuery } from "./types";
 
 /** "分页获取标签列表" */
 export function findTagListApi(data?: TagQuery): Promise<IApiResponse<PageResp>> {

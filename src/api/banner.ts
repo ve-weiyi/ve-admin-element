@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { BannerNewReq, BannerBackDTO, IdReq, BatchResp, BannerQuery, PageResp } from "./types";
+import { BannerBackDTO, BannerNewReq, BannerQuery, BatchResp, IdReq, PageResp } from "./types";
 
 /** "创建页面" */
 export function addBannerApi(data?: BannerNewReq): Promise<IApiResponse<BannerBackDTO>> {

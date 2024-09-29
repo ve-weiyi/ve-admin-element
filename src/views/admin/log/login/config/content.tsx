@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import { RemarkQuery } from "@/api/types";
-import { findUserLoginHistoryListApi } from "@/api/account.ts";
+import { AccountQuery } from "@/api/types";
+import { findAccountLoginHistoryListApi } from "@/api/account.ts";
 
-const contentConfig: IContentConfig<RemarkQuery> = {
+const contentConfig: IContentConfig<AccountQuery> = {
   pageName: "sys:user",
   pageTitle: "留言管理",
   table: {
@@ -16,14 +16,13 @@ const contentConfig: IContentConfig<RemarkQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: res.data.total,
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: RemarkQuery) {
-    return findUserLoginHistoryListApi(query);
+  indexAction: function (query: AccountQuery) {
+    return findAccountLoginHistoryListApi(query);
   },
   pk: "id",
   toolbar: ["delete"],
@@ -41,6 +40,7 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       width: 70,
       align: "center",
       sortable: true,
+      show: true,
     },
     {
       label: "头像",
@@ -50,22 +50,22 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       templet: "image",
     },
     {
-      label: "留言人",
+      label: "用户名",
+      prop: "username",
+      width: 160,
+      align: "center",
+    },
+    {
+      label: "昵称",
       prop: "nickname",
-      width: 120,
-      align: "center",
-    },
-    {
-      label: "留言内容",
-      prop: "message_content",
-      minWidth: 200,
       width: 0,
+      minWidth: 160,
       align: "center",
     },
     {
-      label: "状态",
-      prop: "is_review",
-      width: 100,
+      label: "登录类型",
+      prop: "login_type",
+      width: 120,
       align: "center",
       templet: "custom",
     },
@@ -74,21 +74,27 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       prop: "ip_address",
       width: 120,
       align: "center",
-      show: false,
     },
     {
       label: "IP来源",
       prop: "ip_address",
-      width: 120,
+      width: 0,
+      minWidth: 160,
       align: "center",
-      show: false,
     },
     {
-      label: "创建时间",
-      prop: "created_at",
-      width: 170,
+      label: "登录时间",
+      prop: "login_at",
+      width: 140,
       align: "center",
-      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+    },
+    {
+      label: "登出时间",
+      prop: "logout_out",
+      width: 140,
+      align: "center",
       templet: "date",
       dateFormat: "YYYY/MM/DD HH:mm:ss",
     },
@@ -98,19 +104,7 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       fixed: "right",
       width: 160,
       templet: "tool",
-      operat: [
-        {
-          name: "review",
-          auth: "password:reset",
-          icon: "check",
-          text: "通过",
-          type: "success",
-          render(row) {
-            return row.is_review != 1;
-          },
-        },
-        "delete",
-      ],
+      operat: ["delete"],
     },
   ],
 };

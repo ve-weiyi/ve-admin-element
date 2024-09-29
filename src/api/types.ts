@@ -1,6 +1,28 @@
-
 export interface AboutMe {
   content: string;
+}
+
+export interface AccountArea {
+  name: string;
+  value: number;
+}
+
+export interface AccountLoginHistory {
+  id?: number;
+  username: string; // 用户名
+  nickname: string; // 用户昵称
+  avatar: string; // 用户头像
+  login_type: string; // 登录类型
+  agent: string; // 代理
+  ip_address: string; // ip host
+  ip_source: string; // ip 源
+  login_at: number; // 登录时间
+  logout_at: number; // 登出时间
+}
+
+export interface AccountQuery extends PageQuery {
+  username?: string;
+  nickname?: string;
 }
 
 export interface AdminHomeInfo {
@@ -42,12 +64,12 @@ export interface AlbumQuery extends PageQuery {
 
 export interface ApiBackDTO {
   id?: number; // 主键id
+  parent_id: number; // 分组id
   name: string; // api名称
   path: string; // api路径
   method: string; // api请求方法
-  parent_id: number; // 分组id
   traceable: number; // 是否追溯操作记录 0需要，1是
-  status: number; // 状态 1开，2关
+  is_disable?: number; // 是否禁用 0否 1是
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   children: ApiBackDTO[];
@@ -55,16 +77,17 @@ export interface ApiBackDTO {
 
 export interface ApiNewReq {
   id?: number; // 主键id
+  parent_id: number; // 分组id
   name: string; // api名称
   path: string; // api路径
   method: string; // api请求方法
-  parent_id: number; // 分组id
   traceable: number; // 是否追溯操作记录 0需要，1是
-  status: number; // 状态 1开，2关
+  is_disable?: number; // 是否禁用 0否 1是
 }
 
 export interface ApiQuery extends PageQuery {
   name?: string; // api名称
+  path?: string; // api路径
   method?: string; // api请求方法
 }
 
@@ -207,11 +230,9 @@ export interface CommentReviewReq {
   is_review?: number;
 }
 
-export interface EmptyReq {
-}
+export interface EmptyReq {}
 
-export interface EmptyResp {
-}
+export interface EmptyResp {}
 
 export interface FriendBackDTO {
   id?: number; // id
@@ -253,43 +274,49 @@ export interface LoginResp {
   token?: Token;
 }
 
-export interface MenuBackDTO {
+export interface MenuBackDTO extends MenuMeta {
   id?: number; // 主键
-  parent_id: number; // 父id
-  path: string; // 路由地址
-  name: string; // 路由名字
-  component: string; // Layout组件
-  redirect: string; // 路由重定向
-  meta: MenuMeta; // meta配置
-  type: number; // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+  parent_id?: number; // 父id
+  path?: string; // 路由地址
+  name?: string; // 路由名字
+  component?: string; // Layout组件
+  redirect?: string; // 路由重定向
   children?: MenuBackDTO[];
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
 export interface MenuMeta {
-  rank?: number; // 排序
+  type?: number; // 菜单类型（0代表目录、1代表菜单、2代表按钮、3代表外链）
   title?: string; // 菜单标题
   icon?: string; // 菜单图标
+  rank?: number; // 排序
+  perm?: string; // 权限标识
+  params?: MenuMetaParams[]; // 参数
+  keep_alive?: number; // 是否缓存
+  always_show?: number; // 是否一直显示菜单
   is_hidden?: number; // 是否隐藏
   is_disable?: number; // 是否禁用
-  perms?: string; // 权限标识
 }
 
-export interface MenuNewReq {
+export interface MenuMetaParams {
+  key?: string;
+  value?: string;
+}
+
+export interface MenuNewReq extends MenuMeta {
   id?: number; // 主键
-  parent_id: number; // 父id
-  path: string; // 路由地址
-  name: string; // 路由名字
-  component: string; // Layout组件
-  redirect: string; // 路由重定向
-  meta: MenuMeta; // meta配置
-  type: number; // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+  parent_id?: number; // 父id
+  path?: string; // 路由地址
+  name?: string; // 路由名字
+  component?: string; // Layout组件
+  redirect?: string; // 路由重定向
   children?: MenuNewReq[];
 }
 
 export interface MenuQuery extends PageQuery {
   name?: string; // 路由名字
+  title?: string; // 菜单标题
 }
 
 export interface OperationLogBackDTO {
@@ -311,8 +338,7 @@ export interface OperationLogBackDTO {
   updated_at: number; // 更新时间
 }
 
-export interface OperationLogQuery extends PageQuery {
-}
+export interface OperationLogQuery extends PageQuery {}
 
 export interface PageDTO {
   id?: number; // 页面ID
@@ -358,8 +384,7 @@ export interface PhotoQuery extends PageQuery {
   album_id?: number; // 相册id
 }
 
-export interface PingReq {
-}
+export interface PingReq {}
 
 export interface PingResp {
   env: string;
@@ -413,8 +438,8 @@ export interface RestHeader {
 export interface RoleBackDTO {
   id?: number; // 主键id
   parent_id: number; // 父角色id
-  role_domain: string; // 角色域
   role_name: string; // 角色名
+  role_label: string; // 角色标签
   role_comment: string; // 角色备注
   is_disable: number; // 是否禁用  0否 1是
   is_default: number; // 是否默认角色 0否 1是
@@ -425,8 +450,8 @@ export interface RoleBackDTO {
 export interface RoleNewReq {
   id?: number; // 主键id
   parent_id: number; // 父角色id
-  role_domain: string; // 角色域
   role_name: string; // 角色名
+  role_label: string; // 角色标签
   role_comment: string; // 角色备注
   is_disable: number; // 是否禁用  0否 1是
   is_default: number; // 是否默认角色 0否 1是
@@ -434,6 +459,7 @@ export interface RoleNewReq {
 
 export interface RoleQuery extends PageQuery {
   role_name?: string; // 角色名
+  role_label?: string; // 角色标签
   is_disable?: number; // 是否禁用  0否 1是
 }
 
@@ -448,6 +474,10 @@ export interface Server {
   cpu: any;
   ram: any;
   disk: any;
+}
+
+export interface SyncApiReq {
+  api_file_path: string; // api文件路径
 }
 
 export interface SyncMenuReq {
@@ -518,6 +548,16 @@ export interface UniqueViewDTO {
   count: number; // 数量
 }
 
+export interface UpdateAccountRolesReq {
+  user_id: number;
+  role_ids: number[];
+}
+
+export interface UpdateAccountStatusReq {
+  user_id: number;
+  status: number; // 状态: -1删除 0正常 1禁用
+}
+
 export interface UpdateRoleApisReq {
   role_id: number;
   api_ids: number[];
@@ -526,16 +566,6 @@ export interface UpdateRoleApisReq {
 export interface UpdateRoleMenusReq {
   role_id: number;
   menu_ids: number[];
-}
-
-export interface UpdateUserRolesReq {
-  user_id: number;
-  role_ids: number[];
-}
-
-export interface UpdateUserStatusReq {
-  user_id: number;
-  status: number; // 状态: -1删除 0正常 1禁用
 }
 
 export interface UploadFileReq {
@@ -559,12 +589,10 @@ export interface UploadFileResp {
 
 export interface UserApi {
   id?: number; // 主键id
+  parent_id: number; // 父id
   name: string; // api名称
   path: string; // api路径
   method: string; // api请求方法
-  parent_id: number; // 分组id
-  traceable: number; // 是否追溯操作记录 0需要，1是
-  status: number; // 状态 1开，2关
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   children: UserApi[];
@@ -572,11 +600,6 @@ export interface UserApi {
 
 export interface UserApisResp {
   list: UserApi[];
-}
-
-export interface UserArea {
-  name: string;
-  value: number;
 }
 
 export interface UserInfoExt {
@@ -591,13 +614,13 @@ export interface UserInfoReq extends UserInfoExt {
 
 export interface UserInfoResp extends UserInfoExt {
   user_id: number; // 用户id
-  username: string;
-  nickname: string;
-  avatar: string;
+  username: string; // 用户名
+  nickname: string; // 用户昵称
+  avatar: string; // 用户头像
   email: string; // 用户邮箱
   phone: string; // 用户手机号
-  status: number;
-  login_type: string;
+  status: number; // 状态
+  login_type: string; // 登录方式
   ip_address: string; // ip host
   ip_source: string; // ip 源
   created_at: number;
@@ -612,8 +635,11 @@ export interface UserLoginHistory {
   agent: string; // 代理
   ip_address: string; // ip host
   ip_source: string; // ip 源
-  login_time: string; // 创建时间
+  login_at: number; // 登录时间
+  logout_at: number; // 登出时间
 }
+
+export interface UserLoginHistoryQuery extends PageQuery {}
 
 export interface UserMenu {
   id?: number; // 主键
@@ -629,25 +655,24 @@ export interface UserMenu {
 }
 
 export interface UserMenuMeta {
-  rank?: number; // 排序
-  title?: string; // 菜单标题
-  icon?: string; // 菜单图标
-  perms?: string; // 权限标识
+  title?: string;
+  icon?: string;
+  hidden?: boolean;
+  always_show?: boolean;
+  affix?: boolean;
+  keep_alive?: boolean;
+  breadcrumb?: boolean;
 }
 
 export interface UserMenusResp {
   list: UserMenu[];
 }
 
-export interface UserQuery extends PageQuery {
-  username?: string;
-  nickname?: string;
-}
-
 export interface UserRole {
   id?: number; // 主键id
-  role_domain: string; // 角色域
+  parent_id: number; // 父id
   role_name: string; // 角色名
+  role_label: string; // 角色标签
   role_comment: string; // 角色备注
 }
 

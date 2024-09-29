@@ -223,6 +223,7 @@ function toggleVisible() {
 function handleCloseTag(prop: string, tag: string) {
   inputTagMap[prop].data.splice(inputTagMap[prop].data.indexOf(tag), 1);
 }
+
 // 添加标签
 function handleInputConfirm(prop: string) {
   if (inputTagMap[prop].inputValue) {
@@ -231,6 +232,7 @@ function handleInputConfirm(prop: string) {
   inputTagMap[prop].inputVisible = false;
   inputTagMap[prop].inputValue = "";
 }
+
 // 显示标签输入框
 function handleShowInput(prop: string) {
   inputTagMap[prop].inputVisible = true;

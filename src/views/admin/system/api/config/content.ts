@@ -20,7 +20,6 @@ const contentConfig: IContentConfig<ApiQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: -1,
       list: res.data.list || [],
@@ -108,15 +107,22 @@ const contentConfig: IContentConfig<ApiQuery> = {
       ],
     },
     {
-      label: "是否默认",
+      label: "是否记录日志",
       prop: "traceable",
+      width: 120,
+      align: "center",
+      templet: "switch",
+      activeValue: 1,
+      inactiveValue: 0,
+    },
+    {
+      label: "是否禁用",
+      prop: "is_disable",
       width: 100,
       align: "center",
       templet: "switch",
       activeValue: 1,
       inactiveValue: 0,
-      activeText: "默认",
-      inactiveText: "非默认",
     },
     {
       label: "创建时间",

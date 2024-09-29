@@ -117,7 +117,7 @@
 
 <script lang="ts" setup>
 import { UserInfoResp } from "@/api/types.ts";
-import { getUserInfoApi, updateUserInfoApi } from "@/api/account.ts";
+import { getUserInfoApi, updateUserInfoApi } from "@/api/user.ts";
 import { useUserStore } from "@/store";
 import AvatarCropper from "@/components/AvatarCropper/index.vue";
 import { uploadFileApi } from "@/api/file.ts";

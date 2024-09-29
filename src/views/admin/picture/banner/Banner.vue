@@ -126,7 +126,7 @@ import "@/styles/table.scss";
 import { BannerBackDTO } from "@/api/types";
 import { findBannerListApi } from "@/api/banner.ts";
 import { useRoute, useRouter } from "vue-router";
-import RightToolbar from "@/components/RightToolBar/index.vue";
+import RightToolBar from "@/components/RightToolbar/index.vue";
 
 const route = useRoute();
 const router = useRouter();

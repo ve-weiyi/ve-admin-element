@@ -1,5 +1,15 @@
 import request from "@/utils/request";
-import { MenuNewReq, MenuBackDTO, IdsReq, BatchResp, PageResp, EmptyReq, IdReq, MenuQuery, SyncMenuReq } from "./types";
+import {
+  BatchResp,
+  EmptyReq,
+  IdReq,
+  IdsReq,
+  MenuBackDTO,
+  MenuNewReq,
+  MenuQuery,
+  PageResp,
+  SyncMenuReq,
+} from "./types";
 
 /** "创建菜单" */
 export function addMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackDTO>> {

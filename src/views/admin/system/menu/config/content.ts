@@ -20,7 +20,6 @@ const contentConfig: IContentConfig<MenuQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: -1,
       list: res.data.list || [],
@@ -81,60 +80,56 @@ const contentConfig: IContentConfig<MenuQuery> = {
       sortable: true,
       show: false,
     },
+    // {
+    //   label: "图标",
+    //   prop: "icon",
+    //   width: 80,
+    //   align: "center",
+    //   templet: "custom",
+    // },
     {
       label: "菜单名称",
-      prop: "meta.title",
+      prop: "title",
       width: 120,
-      align: "center",
-    },
-    {
-      label: "图标",
-      prop: "icon",
-      width: 80,
-      align: "center",
+      align: "left",
       templet: "custom",
-    },
-    {
-      label: "排序",
-      prop: "meta.rank",
-      width: 80,
-      align: "center",
     },
     {
       label: "类型",
       prop: "type",
       width: 100,
       align: "center",
-      templet: "tag",
-      tagOptions: [
-        {
-          value: 0,
-          label: "菜单",
-          type: "success",
-        },
-        {
-          value: 1,
-          label: "iframe",
-          type: "warning",
-        },
-        {
-          value: 2,
-          label: "外链",
-          type: "danger",
-        },
-        {
-          value: 3,
-          label: "按钮",
-          type: "info",
-        },
-      ],
+      templet: "custom",
     },
     {
-      label: "是否禁用",
-      prop: "is_disable",
+      label: "路由名称",
+      prop: "name",
+      width: 120,
+      align: "center",
+    },
+    {
+      label: "路由路径",
+      prop: "path",
+      width: 120,
+      align: "center",
+    },
+    {
+      label: "组件路径",
+      prop: "component",
+      width: 200,
+      align: "center",
+    },
+    {
+      label: "权限标识",
+      prop: "perm",
       width: 100,
       align: "center",
-      templet: "custom",
+    },
+    {
+      label: "排序",
+      prop: "rank",
+      width: 80,
+      align: "center",
     },
     {
       label: "是否隐藏",
@@ -144,16 +139,11 @@ const contentConfig: IContentConfig<MenuQuery> = {
       templet: "custom",
     },
     {
-      label: "权限标识",
-      prop: "meta.perms",
+      label: "是否禁用",
+      prop: "is_disable",
       width: 100,
       align: "center",
-    },
-    {
-      label: "组件路径",
-      prop: "component",
-      width: 250,
-      align: "center",
+      templet: "custom",
     },
     {
       label: "创建时间",
@@ -177,9 +167,6 @@ const contentConfig: IContentConfig<MenuQuery> = {
           icon: "plus",
           text: "添加",
           type: "success",
-          render(row) {
-            return row.type == 0;
-          },
         },
         {
           name: "editMenu",

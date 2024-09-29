@@ -75,13 +75,13 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <a
-            target="_blank"
-            href="https://gitee.com/youlaiorg/vue3-element-admin"
-          >
+          <el-dropdown-item divided @click="router.push('/mine')">
+            个人中心
+          </el-dropdown-item>
+          <a target="_blank" :href="adminSetting.repository">
             <el-dropdown-item>{{ $t("navbar.gitee") }}</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://juejin.cn/post/7228990409909108793">
+          <a target="_blank" :href="adminSetting.document">
             <el-dropdown-item>{{ $t("navbar.document") }}</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click="logout">
@@ -182,6 +182,11 @@ function logout() {
       });
   });
 }
+
+const adminSetting = {
+  repository: "https://github.com/ve-weiyi/ve-admin-vite",
+  document: "https://github.com/ve-weiyi/ve-admin-vite",
+};
 </script>
 <style lang="scss" scoped>
 .nav-action-item {

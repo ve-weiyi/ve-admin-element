@@ -16,7 +16,6 @@ const contentConfig: IContentConfig<TagQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: res.data.total,
       list: res.data.list || [],

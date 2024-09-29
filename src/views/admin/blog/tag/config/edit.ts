@@ -1,6 +1,4 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import { DeviceEnum } from "@/enums/DeviceEnum";
-import { useAppStore } from "@/store";
 import { TagNewReq } from "@/api/types";
 import { updateTagApi } from "@/api/tag.ts";
 

@@ -16,7 +16,6 @@ const contentConfig: IContentConfig<RoleQuery> = {
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
-    console.log("res", res);
     return {
       total: res.data.total,
       list: res.data.list || [],
@@ -56,6 +55,12 @@ const contentConfig: IContentConfig<RoleQuery> = {
     {
       label: "角色名称",
       prop: "role_name",
+      width: 0,
+      align: "center",
+    },
+    {
+      label: "角色标签",
+      prop: "role_label",
       width: 0,
       align: "center",
     },

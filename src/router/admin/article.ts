@@ -17,13 +17,13 @@ export default {
       path: "/article/publish",
       name: "article/publish",
       component: () => import("@/views/admin/blog/article/Write.vue"),
-      meta: { title: "发布文章" },
+      meta: { title: "发布文章", keepAlive: true },
     },
     {
       path: "/article/edit/:articleId",
       name: "article/edit",
       component: () => import("@/views/admin/blog/article/Write.vue"),
-      meta: { title: "查看文章", hidden: true },
+      meta: { title: "查看文章", keepAlive: true, hidden: true },
     },
     {
       path: "/article/list",

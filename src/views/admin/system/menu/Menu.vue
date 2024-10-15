@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData } from "@/components/CURD/types";
+import { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -231,9 +231,9 @@ function convertMenu(menus: any[]): MenuNewReq[] {
 }
 
 // 其他工具栏
-function handleToolbarClick(name: string) {
-  console.log(name);
-  switch (name) {
+function handleToolbarClick(data: ISelectedData) {
+  console.log(data.name);
+  switch (data.name) {
     case "addMenu":
       menuForm.value = null;
       addOrUpdate.value = true;

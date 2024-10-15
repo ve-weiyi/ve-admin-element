@@ -26,6 +26,12 @@ export interface IOperatData {
   $index: number;
 }
 
+export interface ISelectedData {
+  name: string;
+  selectionData: IObject[];
+  selectionIds: (number | string)[];
+}
+
 interface PageResult<T> {
   list: T;
   page: number;

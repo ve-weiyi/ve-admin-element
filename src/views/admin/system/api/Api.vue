@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData } from "@/components/CURD/types";
+import { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -111,9 +111,9 @@ function Sync() {
 }
 
 // 其他工具栏
-function handleToolbarClick(name: string) {
-  console.log(name);
-  switch (name) {
+function handleToolbarClick(data: ISelectedData) {
+  console.log(data.name);
+  switch (data.name) {
     case "addApi":
       break;
     case "syncApi":

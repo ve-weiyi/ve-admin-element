@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData } from "@/components/CURD/types";
+import { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -83,11 +83,8 @@ async function handleEditClick(row: IObject) {
 }
 
 // 其他工具栏
-function handleToolbarClick(name: string) {
-  console.log(name);
-  if (name === "custom1") {
-    ElMessage.success("点击了自定义1按钮");
-  }
+function handleToolbarClick(data: ISelectedData) {
+  console.log(data.name);
 }
 
 // 其他操作列

@@ -226,7 +226,7 @@ export interface CommentQuery extends PageQuery {
 }
 
 export interface CommentReviewReq {
-  id?: number;
+  ids?: number[];
   is_review?: number;
 }
 

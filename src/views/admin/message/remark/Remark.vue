@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IOperatData } from "@/components/CURD/types";
+import { IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -81,11 +81,8 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(name: string) {
-  console.log(name);
-  if (name === "custom1") {
-    ElMessage.success("点击了自定义1按钮");
-  }
+function handleToolbarClick(data: ISelectedData) {
+  console.log(data.name);
 }
 
 // 其他操作列

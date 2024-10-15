@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IOperatData } from "@/components/CURD/types";
+import { IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -81,10 +81,19 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(name: string) {
-  console.log(name);
-  if (name === "custom1") {
-    ElMessage.success("点击了自定义1按钮");
+function handleToolbarClick(data: ISelectedData) {
+  console.log(data.name);
+  switch (data.name) {
+    case "review": {
+      const req: CommentReviewReq = {
+        ids: data.selectionIds as number[],
+        is_review: 1,
+      };
+      updateCommentReviewApi(req).then(() => {
+        ElMessage.success("审核成功");
+        contentRef.value?.fetchPageData();
+      });
+    }
   }
 }
 
@@ -95,7 +104,7 @@ function handleOperatClick(data: IOperatData) {
   switch (data.name) {
     case "review": {
       const req: CommentReviewReq = {
-        id: data.row.id,
+        ids: [data.row.id],
         is_review: data.row.is_review == 1 ? 2 : 1,
       };
       updateCommentReviewApi(req).then(() => {

@@ -1,68 +1,62 @@
 import request from "@/utils/request";
-import {
-  AccountQuery,
-  EmptyResp,
-  PageResp,
-  UpdateAccountRolesReq,
-  UpdateAccountStatusReq,
-} from "./types";
+import { AccountQuery, EmptyResp, PageResp, UpdateAccountRolesReq, UpdateAccountStatusReq } from "./types";
 
-/** "获取用户分布地区" */
+/** 获取用户分布地区 */
 export function findAccountAreaAnalysisApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/account/find_account_area_analysis",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }
 
-/** "查询用户列表" */
+/** 查询用户列表 */
 export function findAccountListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/account/find_account_list",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }
 
-/** "查询用户登录历史" */
+/** 查询用户登录历史 */
 export function findAccountLoginHistoryListApi(
   data?: AccountQuery
 ): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/account/find_account_login_history_list",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }
 
-/** "查询在线用户列表" */
+/** 查询在线用户列表 */
 export function findAccountOnlineListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/account/find_account_online_list",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }
 
-/** "修改用户角色" */
+/** 修改用户角色 */
 export function updateAccountRolesApi(
   data?: UpdateAccountRolesReq
 ): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/account/update_account_roles",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }
 
-/** "修改用户状态" */
+/** 修改用户状态 */
 export function updateAccountStatusApi(
   data?: UpdateAccountStatusReq
 ): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/account/update_account_status",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }

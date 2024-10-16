@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { BatchResp, FriendBackDTO, FriendNewReq, FriendQuery, IdReq, IdsReq, PageResp } from "./types";
+import { IdReq, FriendQuery, PageResp, FriendNewReq, FriendBackDTO, IdsReq, BatchResp } from "./types";
 
 /** 分页获取友链列表 */
 export function findFriendListApi(data?: FriendQuery): Promise<IApiResponse<PageResp>> {

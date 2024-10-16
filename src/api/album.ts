@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { AlbumBackDTO, AlbumNewReq, AlbumQuery, BatchResp, IdReq, IdsReq, PageResp } from "./types";
+import { AlbumQuery, PageResp, AlbumNewReq, AlbumBackDTO, IdsReq, BatchResp, IdReq } from "./types";
 
 /** 分页获取相册列表 */
 export function findAlbumListApi(data?: AlbumQuery): Promise<IApiResponse<PageResp>> {

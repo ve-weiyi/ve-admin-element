@@ -14,7 +14,7 @@
         :auto-detect-code="true"
         placeholder="快编辑你的个人信息吧~"
         style="height: calc(100vh - 250px); margin-top: 2.25rem"
-        @onUploadImg="onUploadImg"
+        @on-upload-img="uploadImg"
       />
       <el-button
         class="edit-btn"
@@ -32,9 +32,9 @@ import { onMounted, ref } from "vue";
 import { ElNotification } from "element-plus";
 import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-import { uploadFileApi } from "@/api/file";
 import { getAboutMeApi, updateAboutMeApi } from "@/api/website";
 import { useRoute, useRouter } from "vue-router";
+import { uploadFile } from "@/utils/file.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -48,40 +48,22 @@ const getAbout = () => {
   });
 };
 
-const onUploadImg = async (files, callback) => {
+async function uploadImg(
+  files: Array<File>,
+  callback: (urls: string[]) => void
+) {
   const res = await Promise.all(
     files.map((file) => {
       return new Promise((rev, rej) => {
-        const data = {
-          label: "about",
-          file: file,
-          file_size: file.size,
-          file_md5: "",
-        };
-        uploadFileApi(data)
+        uploadFile(file, "about")
           .then((res) => rev(res))
           .catch((error) => rej(error));
       });
     })
   );
 
-  callback(res.map((item) => item.data.file_url));
-
-  // const formdata = new FormData()
-  // if (file.size / 1024 < 200) {
-  //   formdata.append("file", file)
-  //   axios.post("/api/admin/articles/images", formdata).then(({ data }) => {
-  //     mdRef.value.img2Url(pos, data.data)
-  //   })
-  // } else {
-  //   imageConversion.compressAccurately(file, 200).then((res) => {
-  //     formdata.append("file", new window.File([res], file.name, { type: file.type }))
-  //     axios.post("/api/admin/articles/images", formdata).then(({ data }) => {
-  //       mdRef.value.img2Url(pos, data.data)
-  //     })
-  //   })
-  // }
-};
+  callback(res.map((item: any) => item.data.file_url));
+}
 
 const updateAbout = () => {
   const data = {

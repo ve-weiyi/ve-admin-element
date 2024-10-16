@@ -1,16 +1,5 @@
 import request from "@/utils/request";
-import {
-  ArticleBackDTO,
-  ArticleNewReq,
-  ArticleQuery,
-  ArticleRecycleReq,
-  ArticleTopReq,
-  BatchResp,
-  EmptyResp,
-  IdReq,
-  IdsReq,
-  PageResp,
-} from "./types";
+import { IdsReq, EmptyResp, ArticleQuery, PageResp, ArticleNewReq, ArticleBackDTO, IdReq, BatchResp, ArticleRecycleReq, ArticleTopReq } from "./types";
 
 /** 添加文章 */
 export function addArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {

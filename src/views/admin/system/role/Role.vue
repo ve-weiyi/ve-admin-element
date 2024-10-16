@@ -52,7 +52,9 @@
         size="40%"
       >
         <template #header>
-          <a style="font-size: 20px; font-weight: bold">【{{ formData.role_label }}】权限设置</a>
+          <a style="font-size: 20px; font-weight: bold">
+            【{{ formData.role_label }}】权限设置
+          </a>
         </template>
         <el-tabs type="border-card">
           <el-tab-pane label="角色菜单权限">
@@ -106,10 +108,19 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import Tree from "./components/tree.vue";
-import { findRoleResourcesApi, updateRoleApisApi, updateRoleMenusApi } from "@/api/role.ts";
+import {
+  findRoleResourcesApi,
+  updateRoleApisApi,
+  updateRoleMenusApi,
+} from "@/api/role.ts";
 import { findApiListApi } from "@/api/api.ts";
 import { findMenuListApi } from "@/api/menu.ts";
-import { ApiBackDTO, MenuBackDTO, RoleBackDTO, RoleResourcesResp } from "@/api/types.ts";
+import {
+  ApiBackDTO,
+  MenuBackDTO,
+  RoleBackDTO,
+  RoleResourcesResp,
+} from "@/api/types.ts";
 
 const {
   searchRef,

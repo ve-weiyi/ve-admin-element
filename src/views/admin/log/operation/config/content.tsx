@@ -1,6 +1,9 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import { OperationLogQuery, RemarkQuery } from "@/api/types";
-import { batchDeleteOperationLogApi, findOperationLogListApi } from "@/api/operation_log.ts";
+import {
+  batchDeleteOperationLogApi,
+  findOperationLogListApi,
+} from "@/api/operation_log.ts";
 
 const contentConfig: IContentConfig<OperationLogQuery> = {
   pageName: "sys:user",
@@ -21,7 +24,7 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: RemarkQuery) {
+  indexAction: function (query) {
     return findOperationLogListApi(query);
   },
   deleteAction: function (ids: string) {

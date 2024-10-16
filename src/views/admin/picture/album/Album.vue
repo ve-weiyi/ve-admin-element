@@ -184,7 +184,7 @@ import {
   updateAlbumApi,
 } from "@/api/album.ts";
 import { AlbumNewReq, AlbumQuery } from "@/api/types.ts";
-import { compressImage, uploadFileLabel } from "@/utils/file.ts";
+import { compressImage, uploadFile } from "@/utils/file.ts";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
 const route = useRoute();
@@ -203,7 +203,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 
 function onUpload(options: UploadRequestOptions) {
   console.log("onUpload", options.filename);
-  return uploadFileLabel(options, "photo");
+  return uploadFile(options.file, "photo");
 }
 
 function afterUpload(res: any) {

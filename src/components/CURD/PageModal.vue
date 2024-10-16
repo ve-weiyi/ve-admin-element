@@ -18,7 +18,7 @@
         <el-row :gutter="20">
           <template v-for="item in formItems" :key="item.prop">
             <el-col v-show="!item.hidden" v-bind="item.col">
-              <el-form-item :label="item.label" :prop="item.prop">
+              <el-form-item :label="item.label" :prop="item.prop" style="font-weight: bold">
                 <!-- Label -->
                 <template #label v-if="item.tips">
                   <span>
@@ -168,7 +168,7 @@
           <el-row :gutter="20">
             <template v-for="item in formItems" :key="item.prop">
               <el-col v-show="!item.hidden" v-bind="item.col">
-                <el-form-item :label="item.label" :prop="item.prop">
+                <el-form-item :label="item.label" :prop="item.prop" style="font-weight: bold">
                   <!-- Label -->
                   <template #label v-if="item.tips">
                     <span>

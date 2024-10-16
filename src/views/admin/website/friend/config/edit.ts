@@ -1,19 +1,19 @@
 import type { IModalConfig } from "@/components/CURD/types";
 import { DeviceEnum } from "@/enums/DeviceEnum";
 import { useAppStore } from "@/store";
-import { TagNewReq } from "@/api/types";
-import { updateTagApi } from "@/api/tag.ts";
+import { FriendNewReq } from "@/api/types";
+import { updateFriendApi } from "@/api/friend";
 
-const modalConfig: IModalConfig<TagNewReq> = {
-  pageName: "sys:user",
+const modalConfig: IModalConfig<FriendNewReq> = {
+  pageName: "website:friend",
   component: "drawer",
   drawer: {
-    title: "修改标签",
+    title: "修改友链",
     size: useAppStore().device === DeviceEnum.MOBILE ? "80%" : 500,
   },
   pk: "id",
   formAction: function (data) {
-    return updateTagApi(data);
+    return updateFriendApi(data);
   },
   beforeSubmit(data) {
     console.log("提交之前处理", data);

@@ -111,7 +111,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, toRefs, watch } from "vue";
-import { compressImage, uploadFileLabel } from "@/utils/file.ts";
+import { compressImage, uploadFile } from "@/utils/file.ts";
 import EmojiList from "@/assets/emojis/qq_emoji.json";
 import Editor from "@/components/Editor/index.vue";
 import { addTalkApi, getTalkApi, updateTalkApi } from "@/api/talk.ts";
@@ -196,7 +196,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFileLabel(options, "talk");
+  return uploadFile(options.file, "talk");
 }
 
 function afterUpload(res: any) {

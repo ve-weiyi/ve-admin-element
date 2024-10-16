@@ -39,7 +39,10 @@
           {{ scope.row.title }}
         </template>
         <template #type="scope">
-          <el-tag v-if="scope.row.type === MenuTypeEnum.CATEGORY" type="warning">
+          <el-tag
+            v-if="scope.row.type === MenuTypeEnum.CATEGORY"
+            type="warning"
+          >
             目录
           </el-tag>
           <el-tag v-if="scope.row.type === MenuTypeEnum.MENU" type="success">

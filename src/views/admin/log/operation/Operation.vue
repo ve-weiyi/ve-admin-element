@@ -21,7 +21,7 @@
         @toolbar-click="handleToolbarClick"
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
-      ></page-content>
+      />
     </template>
   </div>
 </template>

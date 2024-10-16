@@ -220,7 +220,6 @@ import "md-editor-v3/lib/style.css";
 import { findCategoryListApi } from "@/api/category";
 import { findTagListApi } from "@/api/tag";
 import { addArticleApi, getArticleApi, updateArticleApi } from "@/api/article";
-import { uploadFileApi } from "@/api/file";
 import {
   ArticleBackDTO,
   ArticleNewReq,
@@ -228,7 +227,7 @@ import {
   TagBackDTO,
 } from "@/api/types";
 import { ElMessage, UploadRawFile, UploadRequestOptions } from "element-plus";
-import { compressImage, uploadFileLabel } from "@/utils/file.ts";
+import { compressImage, uploadFile } from "@/utils/file.ts";
 import { formatDate } from "@/utils/date.ts";
 
 const route = useRoute();
@@ -306,7 +305,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 
 function onUpload(options: UploadRequestOptions) {
   console.log("onUpload", options.filename);
-  return uploadFileLabel(options, "article");
+  return uploadFile(options.file, "article");
 }
 
 function afterUpload(response: any) {
@@ -321,28 +320,14 @@ async function uploadImg(
   const res = await Promise.all(
     files.map((file) => {
       return new Promise((rev, rej) => {
-        const data = {
-          label: "article",
-          file: file,
-          file_size: file.size,
-          file_md5: "",
-        };
-        imageConversion.compressAccurately(file, 200).then((res) => {
-          const data = {
-            label: "article",
-            file: res,
-            file_size: res.size,
-            file_md5: "",
-          };
-          uploadFileApi(data).then((res) => {
-            console.log("upload", res.data);
-            rev(res.data);
-          });
-        });
+        uploadFile(file, "article")
+          .then((res) => rev(res))
+          .catch((error) => rej(error));
       });
     })
   );
-  callback(res.map((item: any) => item.file_url));
+
+  callback(res.map((item: any) => item.data.file_url));
 }
 
 function saveArticleDraft() {

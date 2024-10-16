@@ -1,11 +1,11 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import { TagNewReq } from "@/api/types";
-import { addTagApi } from "@/api/tag.ts";
+import { FriendNewReq } from "@/api/types";
+import { addFriendApi } from "@/api/friend";
 
-const modalConfig: IModalConfig<TagNewReq> = {
-  pageName: "sys:user",
+const modalConfig: IModalConfig<FriendNewReq> = {
+  pageName: "website:friend",
   dialog: {
-    title: "新增用户",
+    title: "新增友链",
     width: 600,
     draggable: true,
   },
@@ -13,7 +13,7 @@ const modalConfig: IModalConfig<TagNewReq> = {
     labelWidth: 100,
   },
   formAction: function (data) {
-    return addTagApi(data);
+    return addFriendApi(data);
   },
   beforeSubmit(data) {
     console.log("提交之前处理", data);

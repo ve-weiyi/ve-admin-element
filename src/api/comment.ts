@@ -1,13 +1,5 @@
 import request from "@/utils/request";
-import {
-  BatchResp,
-  CommentBackDTO,
-  CommentQuery,
-  CommentReviewReq,
-  IdReq,
-  IdsReq,
-  PageResp,
-} from "./types";
+import { IdsReq, BatchResp, IdReq, CommentQuery, PageResp, CommentReviewReq } from "./types";
 
 /** 批量删除评论 */
 export function batchDeleteCommentApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {

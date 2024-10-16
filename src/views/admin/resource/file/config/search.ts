@@ -1,17 +1,17 @@
 import type { ISearchConfig } from "@/components/CURD/types";
 
 const searchConfig: ISearchConfig = {
-  pageName: "website:friend",
+  pageName: "sys:user",
   formItems: [
     {
       type: "input",
-      label: "链接名称",
-      prop: "link_name",
+      label: "文件路径",
+      prop: "file_path",
       attrs: {
         placeholder: "请输入",
         clearable: true,
         style: {
-          width: "200px",
+          width: "150px",
         },
       },
     },

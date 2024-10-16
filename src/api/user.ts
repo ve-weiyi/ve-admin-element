@@ -1,15 +1,5 @@
 import request from "@/utils/request";
-import {
-  EmptyReq,
-  EmptyResp,
-  PageResp,
-  UserApisResp,
-  UserInfoReq,
-  UserInfoResp,
-  UserLoginHistoryQuery,
-  UserMenusResp,
-  UserRolesResp,
-} from "./types";
+import { EmptyReq, UserApisResp, UserInfoResp, EmptyResp, UserLoginHistoryQuery, PageResp, UserMenusResp, UserRolesResp, UserInfoReq } from "./types";
 
 /** 获取用户接口权限 */
 export function getUserApisApi(data?: EmptyReq): Promise<IApiResponse<UserApisResp>> {
@@ -30,9 +20,7 @@ export function getUserInfoApi(data?: EmptyReq): Promise<IApiResponse<UserInfoRe
 }
 
 /** 查询用户登录历史 */
-export function getUserLoginHistoryListApi(
-  data?: UserLoginHistoryQuery
-): Promise<IApiResponse<PageResp>> {
+export function getUserLoginHistoryListApi(data?: UserLoginHistoryQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/user/get_user_login_history_list",
     method: "POST",

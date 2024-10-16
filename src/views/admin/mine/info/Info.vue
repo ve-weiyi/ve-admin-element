@@ -120,8 +120,8 @@ import { UserInfoResp } from "@/api/types.ts";
 import { getUserInfoApi, updateUserInfoApi } from "@/api/user.ts";
 import { useUserStore } from "@/store";
 import AvatarCropper from "@/components/AvatarCropper/index.vue";
-import { uploadFileApi } from "@/api/file.ts";
 import { ElMessage } from "element-plus";
+import { uploadFile } from "@/utils/file.ts";
 
 const userProfile = ref<UserInfoResp>(useUserStore().user);
 const userProfileForm = reactive<any>({});
@@ -178,13 +178,7 @@ const handleSubmit = async () => {
 };
 
 function confirmUpload(file: Blob) {
-  const data = {
-    label: "avatar",
-    file: file,
-    file_size: file.size,
-    file_md5: "",
-  };
-  uploadFileApi(data).then((response) => {
+  uploadFile(file, "avatar").then((response) => {
     console.log("confirmUpload", response);
     ElMessage.success(response.message);
     userProfile.value.avatar = response.data.file_url;

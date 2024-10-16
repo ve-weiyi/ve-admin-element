@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { AccountQuery, EmptyResp, PageResp, UpdateAccountRolesReq, UpdateAccountStatusReq } from "./types";
+import { UpdateAccountRolesReq, EmptyResp, UpdateAccountStatusReq, AccountQuery, PageResp } from "./types";
 
 /** 获取用户分布地区 */
 export function findAccountAreaAnalysisApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
@@ -20,9 +20,7 @@ export function findAccountListApi(data?: AccountQuery): Promise<IApiResponse<Pa
 }
 
 /** 查询用户登录历史 */
-export function findAccountLoginHistoryListApi(
-  data?: AccountQuery
-): Promise<IApiResponse<PageResp>> {
+export function findAccountLoginHistoryListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/account/find_account_login_history_list",
     method: "POST",
@@ -40,9 +38,7 @@ export function findAccountOnlineListApi(data?: AccountQuery): Promise<IApiRespo
 }
 
 /** 修改用户角色 */
-export function updateAccountRolesApi(
-  data?: UpdateAccountRolesReq
-): Promise<IApiResponse<EmptyResp>> {
+export function updateAccountRolesApi(data?: UpdateAccountRolesReq): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/account/update_account_roles",
     method: "POST",
@@ -51,9 +47,7 @@ export function updateAccountRolesApi(
 }
 
 /** 修改用户状态 */
-export function updateAccountStatusApi(
-  data?: UpdateAccountStatusReq
-): Promise<IApiResponse<EmptyResp>> {
+export function updateAccountStatusApi(data?: UpdateAccountStatusReq): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/account/update_account_status",
     method: "POST",

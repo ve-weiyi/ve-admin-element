@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { AboutMe, AdminHomeInfo, EmptyReq, EmptyResp, Server, WebsiteConfig } from "./types";
+import { EmptyReq, AdminHomeInfo, AboutMe, EmptyResp, WebsiteConfig, Server } from "./types";
 
 /** 获取后台首页信息 */
 export function getAdminHomeInfoApi(data?: EmptyReq): Promise<IApiResponse<AdminHomeInfo>> {

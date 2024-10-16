@@ -278,7 +278,7 @@ import { onMounted, ref } from "vue";
 import { ElMessage, UploadRawFile, UploadRequestOptions } from "element-plus";
 import { getWebsiteConfigApi, updateWebsiteConfigApi } from "@/api/website";
 import { WebsiteConfig } from "@/api/types.ts";
-import { uploadFileLabel } from "@/utils/file.ts";
+import { uploadFile } from "@/utils/file.ts";
 
 const websiteConfigForm = ref<WebsiteConfig>({
   website_avatar: "",
@@ -335,7 +335,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFileLabel(options, "website");
+  return uploadFile(options.file, "website");
 }
 
 function handleWebsiteAvatarSuccess(response) {

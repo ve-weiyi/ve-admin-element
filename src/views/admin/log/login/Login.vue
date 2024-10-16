@@ -23,9 +23,24 @@
         @filter-change="handleFilterChange"
       >
         <template #login_type="scope">
-          <el-tag v-if="scope.row.login_type === LoginTypeEnum.EMAIL" type="success">邮箱</el-tag>
-          <el-tag v-if="scope.row.login_type === LoginTypeEnum.PHONE" type="danger">手机</el-tag>
-          <el-tag v-if="scope.row.login_type === LoginTypeEnum.OAUTH" type="primary">第三方</el-tag>
+          <el-tag
+            v-if="scope.row.login_type === LoginTypeEnum.EMAIL"
+            type="success"
+          >
+            邮箱
+          </el-tag>
+          <el-tag
+            v-if="scope.row.login_type === LoginTypeEnum.PHONE"
+            type="danger"
+          >
+            手机
+          </el-tag>
+          <el-tag
+            v-if="scope.row.login_type === LoginTypeEnum.OAUTH"
+            type="primary"
+          >
+            第三方
+          </el-tag>
         </template>
       </page-content>
     </template>

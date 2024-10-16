@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { BatchResp, IdReq, PageResp, TalkBackDTO, TalkNewReq, TalkQuery } from "./types";
+import { IdReq, BatchResp, TalkQuery, PageResp, TalkNewReq, TalkBackDTO } from "./types";
 
 /** 分页获取说说列表 */
 export function findTalkListApi(data?: TalkQuery): Promise<IApiResponse<PageResp>> {

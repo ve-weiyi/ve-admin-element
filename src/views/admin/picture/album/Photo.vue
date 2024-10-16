@@ -246,7 +246,7 @@ import {
   PhotoNewReq,
   PhotoQuery,
 } from "@/api/types.ts";
-import { compressImage, uploadFileLabel } from "@/utils/file.ts";
+import { compressImage, uploadFile } from "@/utils/file.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
@@ -342,7 +342,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 
 function onUpload(options: UploadRequestOptions) {
   console.log("onUpload", options.filename);
-  return uploadFileLabel(options, "photo");
+  return uploadFile(options.file, "photo");
 }
 
 const afterUpload = (response: any) => {

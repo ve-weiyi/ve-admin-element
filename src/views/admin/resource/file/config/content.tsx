@@ -1,12 +1,12 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import { FriendQuery } from "@/api/types";
-import { batchDeleteFriendApi, findFriendListApi } from "@/api/friend.ts";
+import { FileFolderQuery } from "@/api/types";
+import { deletesFileFolderApi, findFileFolderListApi } from "@/api/file.ts";
 
-const contentConfig: IContentConfig<FriendQuery> = {
-  pageName: "website:friend",
-  pageTitle: "友链管理",
+const contentConfig: IContentConfig<FileFolderQuery> = {
+  pageName: "resource:file",
+  pageTitle: "文件管理",
   table: {
-    border: true,
+    border: false,
     highlightCurrentRow: true,
   },
   pagination: {
@@ -21,23 +21,28 @@ const contentConfig: IContentConfig<FriendQuery> = {
       list: res.data.list || [],
     };
   },
+  indexAction: function (query) {
+    return findFileFolderListApi(query);
+  },
   deleteAction: function (ids: string) {
     const data = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return batchDeleteFriendApi(data);
-  },
-  indexAction: function (params: FriendQuery) {
-    if (!params.sorts) {
-      params.sorts = [`id desc`];
-    }
-
-    return findFriendListApi(params);
+    return deletesFileFolderApi(data);
   },
   pk: "id",
-  toolbar: ["add", "delete"],
-  defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
+  toolbar: [
+    {
+      name: "addFolder",
+      icon: "plus",
+      text: "新增文件夹",
+      auth: "addFolder",
+      type: "primary",
+    },
+    "delete",
+  ],
+  defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
       type: "selection",
@@ -51,32 +56,38 @@ const contentConfig: IContentConfig<FriendQuery> = {
       width: 70,
       align: "center",
       sortable: true,
+      show: false,
     },
     {
-      label: "链接头像",
-      prop: "link_avatar",
-      width: 100,
+      label: "",
+      prop: "icon",
+      width: 80,
       align: "center",
-      templet: "image",
+      templet: "custom",
     },
     {
-      label: "链接名称",
-      prop: "link_name",
+      label: "文件夹路径",
+      prop: "file_path",
       width: 120,
       align: "center",
     },
     {
-      label: "链接地址",
-      prop: "link_address",
-      width: 150,
+      label: "文件夹名称",
+      prop: "folder_name",
+      width: 120,
       align: "center",
-      templet: "url",
     },
     {
-      label: "链接介绍",
-      prop: "link_intro",
-      minWidth: 200,
+      label: "文件夹描述",
+      prop: "folder_desc",
       width: 0,
+      minWidth: 200,
+      align: "center",
+    },
+    {
+      label: "创建者",
+      prop: "user_id",
+      width: 120,
       align: "center",
     },
     {
@@ -94,7 +105,19 @@ const contentConfig: IContentConfig<FriendQuery> = {
       fixed: "right",
       width: 160,
       templet: "tool",
-      operat: ["edit", "delete"],
+      operat: [
+        {
+          name: "review",
+          auth: "password:reset",
+          icon: "check",
+          text: "通过",
+          type: "success",
+          render(row) {
+            return row.is_review != 1;
+          },
+        },
+        "delete",
+      ],
     },
   ],
 };

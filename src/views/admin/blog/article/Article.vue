@@ -86,7 +86,6 @@ function handleToolbarClick(data: ISelectedData) {
   console.log(data.name);
 }
 
-
 const route = useRoute();
 const router = useRouter();
 

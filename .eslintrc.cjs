@@ -69,9 +69,10 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "off",
 
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         useTabs: false, // 不使用制表符
+        printWidth: 80,
       },
     ],
   },

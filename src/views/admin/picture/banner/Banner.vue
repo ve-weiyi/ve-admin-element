@@ -114,7 +114,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { compressImage, uploadFileLabel } from "@/utils/file.ts";
+import { compressImage, uploadFile } from "@/utils/file.ts";
 import axios from "axios";
 import {
   ElMessage,
@@ -202,7 +202,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFileLabel(options, "page");
+  return uploadFile(options.file, "page");
 }
 
 const afterUpload = (response) => {

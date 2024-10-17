@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { PageResp, IdsReq, BatchResp, IdReq, OperationLogQuery } from "./types";
+import { BatchResp, IdReq, IdsReq, OperationLogQuery, PageResp } from "./types";
 
 /** 批量删除操作记录 */
 export function batchDeleteOperationLogApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {

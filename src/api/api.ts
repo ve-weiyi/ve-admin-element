@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { BatchResp, EmptyReq, SyncApiReq, PageResp, ApiBackDTO, IdsReq, IdReq, ApiQuery, ApiNewReq } from "./types";
+import { ApiBackDTO, ApiNewReq, ApiQuery, BatchResp, EmptyReq, IdReq, IdsReq, PageResp, SyncApiReq } from "./types";
 
 /** 分页获取api路由列表 */
 export function findApiListApi(data?: ApiQuery): Promise<IApiResponse<PageResp>> {

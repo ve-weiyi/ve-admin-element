@@ -2,69 +2,17 @@
   <div class="app-container">
     <!-- 列表 -->
     <template v-if="isA">
-      <!-- 搜索 -->
-      <page-search
-        ref="searchRef"
-        :search-config="searchConfig"
-        @query-click="handleQueryClick"
-        @reset-click="handleResetClick"
-      />
-
       <!-- 列表 -->
       <page-content
         ref="contentRef"
         :content-config="contentConfig"
-        @add-click="handleAddClick"
-        @edit-click="handleEditClick"
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
-        <template #icon="scope">
-          <img
-            src="@/assets/dir.png"
-            style="width: 30px; cursor: pointer"
-            @click="onClickDir"
-          />
-        </template>
-      </page-content>
-
-      <!-- 新增 -->
-      <page-modal
-        ref="addModalRef"
-        :modal-config="addModalConfig"
-        @submit-click="handleSubmitClick"
-      />
-
-      <!-- 编辑 -->
-      <page-modal
-        ref="editModalRef"
-        :modal-config="editModalConfig"
-        @submit-click="handleSubmitClick"
-      />
-    </template>
-    <template v-else>
-      <!-- 搜索 -->
-      <page-search
-        ref="searchRef2"
-        :search-config="searchConfig2"
-        @query-click="handleQueryClick"
-        @reset-click="handleResetClick"
-      />
-      <page-content
-        ref="contentRef2"
-        :content-config="contentConfig2"
-        @add-click="handleAddClick"
-        @edit-click="handleEditClick"
-        @export-click="handleExportClick"
-        @search-click="handleSearchClick"
-        @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
-        @filter-change="handleFilterChange"
-      >
-        <template #table-top>
+        <template #table-header>
           <!-- 面包屑 -->
           <div class="breadcrumb-container">
             <div class="position">当前位置：</div>
@@ -80,8 +28,16 @@
           </div>
         </template>
         <template #icon="scope">
+          <img
+            v-if="scope.row.file_type === ''"
+            src="@/assets/dir.png"
+            class="article-cover"
+            style="cursor: pointer"
+            @click="handleOpen(scope.row)"
+          />
           <el-image
-            style="width: 100%; height: 100%"
+            v-else
+            class="article-cover"
             :src="scope.row.file_url"
             fit="cover"
           />
@@ -95,107 +51,126 @@
           {{ calculateFileSize(scope.row.file_size) }}
         </template>
       </page-content>
-
-      <!-- 导入弹窗 -->
-      <el-dialog
-        v-model="importModalVisible"
-        :align-center="true"
-        title="导入数据"
-        width="600px"
-        style="padding-right: 0"
-        @close="handleCloseImportModal"
-      >
-        <!-- 滚动 -->
-        <el-scrollbar max-height="60vh">
-          <!-- 表单 -->
-          <el-form
-            ref="importFormRef"
-            label-width="auto"
-            style="padding-right: var(--el-dialog-padding-primary)"
-            :model="importFormData"
-            :rules="importFormRules"
-          >
-            <el-form-item label="文件名" prop="files">
-              <el-upload
-                class="w-full"
-                ref="uploadRef"
-                v-model:file-list="importFormData.files"
-                accept=""
-                multiple
-                :drag="true"
-                :limit="10"
-                :auto-upload="false"
-                :on-exceed="handleFileExceed"
-              >
-                <el-icon class="el-icon--upload">
-                  <upload-filled />
-                </el-icon>
-                <div class="el-upload__text">
-                  <span>将文件拖到此处，或</span>
-                  <em>点击上传</em>
-                </div>
-                <template #tip>
-                  <div class="el-upload__tip">支持多个文件</div>
-                </template>
-              </el-upload>
-            </el-form-item>
-          </el-form>
-        </el-scrollbar>
-        <!-- 弹窗底部操作按钮 -->
-        <template #footer>
-          <div style="padding-right: var(--el-dialog-padding-primary)">
-            <el-button
-              type="primary"
-              :disabled="importFormData.files.length === 0"
-              @click="handleImportSubmit"
-            >
-              确 定
-            </el-button>
-            <el-button @click="handleCloseImportModal">取 消</el-button>
-          </div>
-        </template>
-      </el-dialog>
     </template>
+
+    <!-- 新建文件夹对话框 -->
+    <el-dialog
+      title="新建文件夹"
+      v-model="folderModalVisible"
+      width="500px"
+      append-to-body
+    >
+      <el-form
+        ref="folderFormRef"
+        label-width="100px"
+        :model="folderFormData"
+        :rules="folderFormRules"
+      >
+        <el-form-item label="文件夹路径" prop="file_path">
+          <el-input
+            disabled
+            v-model="folderFormData.file_path"
+            style="width: 250px"
+          />
+        </el-form-item>
+        <el-form-item label="文件夹名称" prop="file_name">
+          <el-input
+            placeholder="请输入文件夹名称"
+            v-model="folderFormData.file_name"
+            style="width: 250px"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitFolderForm">确 定</el-button>
+          <el-button @click="cancelFolderForm">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 导入弹窗 -->
+    <el-dialog
+      v-model="importModalVisible"
+      :align-center="true"
+      title="导入数据"
+      width="600px"
+      style="padding-right: 0"
+      @close="handleCloseImportModal"
+    >
+      <!-- 滚动 -->
+      <el-scrollbar max-height="60vh">
+        <!-- 表单 -->
+        <el-form
+          ref="importFormRef"
+          label-width="auto"
+          style="padding-right: var(--el-dialog-padding-primary)"
+          :model="importFormData"
+          :rules="importFormRules"
+        >
+          <el-form-item label="文件名" prop="files">
+            <el-upload
+              class="w-full"
+              ref="uploadRef"
+              v-model:file-list="importFormData.files"
+              accept=""
+              multiple
+              :drag="true"
+              :limit="10"
+              :auto-upload="false"
+              :on-exceed="handleFileExceed"
+            >
+              <el-icon class="el-icon--upload">
+                <upload-filled />
+              </el-icon>
+              <div class="el-upload__text">
+                <span>将文件拖到此处，或</span>
+                <em>点击上传</em>
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">支持多个文件</div>
+              </template>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </el-scrollbar>
+      <!-- 弹窗底部操作按钮 -->
+      <template #footer>
+        <div style="padding-right: var(--el-dialog-padding-primary)">
+          <el-button
+            type="primary"
+            :disabled="importFormData.files.length === 0"
+            @click="handleImportSubmit"
+          >
+            确 定
+          </el-button>
+          <el-button @click="handleCloseImportModal">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  IObject,
-  IOperatData,
-  ISelectedData,
-  type PageContentInstance,
-  type PageModalInstance,
-  type PageSearchInstance,
-} from "@/components/CURD/types";
+import { IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
-import addModalConfig from "./config/add";
-import contentConfig from "./config/content";
-import editModalConfig from "./config/edit";
-import searchConfig from "./config/search";
-import PageSearch from "@/components/CURD/PageSearch.vue";
-import PageModal from "@/components/CURD/PageModal.vue";
+import contentConfig from "./config/content.tsx";
 import PageContent from "@/components/CURD/PageContent.vue";
 
-import contentConfig2 from "./config2/content";
-import searchConfig2 from "./config2/search";
 import { ref } from "vue";
 import {
-  genFileId,
   type FormInstance,
   type FormRules,
+  genFileId,
   type UploadInstance,
   type UploadRawFile,
   type UploadUserFile,
 } from "element-plus";
 import { compressImage, multipleUploadFile } from "@/utils/file.ts";
-import { FileFolderBackDTO } from "@/api/types.ts";
+import { FileBackDTO, FileFolderNewReq } from "@/api/types.ts";
+import { addFileFolderApi } from "@/api/file.ts";
 
 const {
-  searchRef,
   contentRef,
-  addModalRef,
-  editModalRef,
   handleQueryClick,
   handleResetClick,
   // handleAddClick,
@@ -206,27 +181,16 @@ const {
   handleFilterChange,
 } = usePage();
 
-const searchRef2 = ref<PageSearchInstance>();
-const contentRef2 = ref<PageContentInstance>();
-
-// 新增
-async function handleAddClick() {
-  addModalRef.value?.setModalVisible();
-}
-
-// 编辑
-async function handleEditClick(row: IObject) {
-  editModalRef.value?.setModalVisible(row);
-}
-
 // 其他工具栏
 function handleToolbarClick(data: ISelectedData) {
   console.log(data.name);
   switch (data.name) {
     case "addFolder":
-      addModalRef.value?.setModalVisible();
+      folderFormData.file_path = filePath.value;
+      folderModalVisible.value = true;
       break;
     case "addFile":
+      importFormData.file_path = filePath.value;
       importModalVisible.value = true;
       break;
     case "return":
@@ -244,22 +208,46 @@ function handleOperatClick(data: IOperatData) {
 }
 
 // 切换示例
-const isA = ref(false);
+const isA = ref(true);
 
-function onClickDir() {
-  isA.value = !isA.value;
+const folderModalVisible = ref(false);
+const folderFormRef = ref<FormInstance>();
+const folderFormRules = reactive<FormRules>({
+  file_name: [{ required: true, message: "请输入文件夹名称", trigger: "blur" }],
+});
+const folderFormData = reactive<FileFolderNewReq>({
+  file_path: "",
+  file_name: "",
+});
 
+function submitFolderForm() {
+  folderFormRef.value?.validate((valid: boolean) => {
+    if (valid) {
+      console.log(folderFormData);
+      addFileFolderApi(folderFormData).then((res) => {
+        fetchPageData();
+        folderModalVisible.value = false;
+        ElMessage.success("新建文件夹成功");
+      });
+    }
+  });
+}
+
+function cancelFolderForm() {
+  folderModalVisible.value = false;
 }
 
 // 导入表单
-let isFileImport = false;
+
 const uploadRef = ref<UploadInstance>();
 const importModalVisible = ref(false);
 const importFormRef = ref<FormInstance>();
 const importFormData = reactive<{
   files: UploadUserFile[];
+  file_path: string;
 }>({
   files: [],
+  file_path: "",
 });
 const importFormRules: FormRules = {
   files: [{ required: true, message: "请选择文件" }],
@@ -301,8 +289,11 @@ async function handleImport() {
     })
   );
 
-  multipleUploadFile(res as Blob[], "files").then((res) => {
+  multipleUploadFile(res as Blob[], importFormData.file_path).then((res) => {
     console.log(res);
+    fetchPageData();
+    handleCloseImportModal();
+    ElMessage.success("文件上传成功");
   });
 }
 
@@ -339,13 +330,6 @@ const calculateFileSize = (size: number, isInteger = false) => {
     }
   }
 };
-const handleOpen = (row: FileFolderBackDTO) => {
-  router.push({
-    query: {
-      filePath: `${row.file_path === '/' ? '' : row.file_path}/${row.folder_name}`,
-    }
-  })
-};
 
 const router = useRouter();
 const route = useRoute();
@@ -376,11 +360,39 @@ const breadcrumbList = computed(() => {
   }
   return res;
 });
+
+function fetchPageData() {
+  const queryParams = {
+    file_path: filePath.value,
+  };
+  contentRef.value.fetchPageData(queryParams);
+}
+
+const handleOpen = (row: FileBackDTO) => {
+  console.log("open dir->", row);
+  router.push({
+    query: {
+      filePath: `${row.file_path === "/" ? "" : row.file_path}/${row.file_name}`,
+    },
+  });
+};
+
+watch(
+  () => filePath.value,
+  () => {
+    fetchPageData();
+  }
+);
+
+onMounted(() => {
+  fetchPageData();
+});
 </script>
 <style scoped>
 .article-cover {
   position: relative;
-  width: 100%;
+  width: 80%;
+  height: 80%;
   border-radius: 4px;
 }
 

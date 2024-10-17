@@ -12,3 +12,4 @@ src/assets
 .eslintrc.cjs
 .prettierrc.cjs
 .stylelintrc.cjs
+api

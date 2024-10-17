@@ -214,7 +214,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import * as imageConversion from "image-conversion";
 import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { findCategoryListApi } from "@/api/category";
@@ -305,7 +304,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 
 function onUpload(options: UploadRequestOptions) {
   console.log("onUpload", options.filename);
-  return uploadFile(options.file, "article");
+  return uploadFile(options.file, "/article");
 }
 
 function afterUpload(response: any) {

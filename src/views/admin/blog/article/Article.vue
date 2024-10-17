@@ -22,7 +22,7 @@
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
-        <template #table-top>
+        <template #table-header>
           <!-- 表格菜单 -->
           <div v-if="statusList.length !== 0" class="status-menu">
             <span>状态</span>

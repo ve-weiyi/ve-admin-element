@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { UpdateAccountRolesReq, EmptyResp, UpdateAccountStatusReq, AccountQuery, PageResp } from "./types";
+import { AccountQuery, EmptyResp, PageResp, UpdateAccountRolesReq, UpdateAccountStatusReq } from "./types";
 
 /** 获取用户分布地区 */
 export function findAccountAreaAnalysisApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {

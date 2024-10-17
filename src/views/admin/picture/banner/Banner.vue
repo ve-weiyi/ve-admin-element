@@ -126,7 +126,6 @@ import "@/styles/table.scss";
 import { BannerBackDTO } from "@/api/types";
 import { findBannerListApi } from "@/api/banner.ts";
 import { useRoute, useRouter } from "vue-router";
-import RightToolBar from "@/components/RightToolbar/index.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -202,11 +201,11 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFile(options.file, "page");
+  return uploadFile(options.file, "/page");
 }
 
 const afterUpload = (response) => {
-  pageForum.banner_cover = response.data;
+  pageForum.banner_cover = response.data.file_url;
 };
 
 const handleCommand = (command) => {

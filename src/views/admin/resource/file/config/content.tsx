@@ -1,8 +1,8 @@
-import type { IContentConfig } from "@/components/CURD/types";
-import { FileFolderQuery } from "@/api/types";
-import { deletesFileFolderApi, findFileFolderListApi } from "@/api/file.ts";
+import type { IContentConfig } from "@/components/CURD/types.ts";
+import { FileQuery } from "@/api/types.ts";
+import { deletesFileApi, findFileListApi } from "@/api/file.ts";
 
-const contentConfig: IContentConfig<FileFolderQuery> = {
+const contentConfig: IContentConfig<FileQuery> = {
   pageName: "resource:file",
   pageTitle: "文件管理",
   table: {
@@ -22,27 +22,48 @@ const contentConfig: IContentConfig<FileFolderQuery> = {
     };
   },
   indexAction: function (query) {
-    return findFileFolderListApi(query);
+    if (!query.file_path) {
+      query.file_path = "/";
+    }
+
+    return findFileListApi(query);
   },
   deleteAction: function (ids: string) {
     const data = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return deletesFileFolderApi(data);
+    return deletesFileApi(data);
   },
   pk: "id",
   toolbar: [
     {
       name: "addFolder",
       icon: "plus",
-      text: "新增文件夹",
+      text: "新增目录",
       auth: "addFolder",
+      type: "primary",
+    },
+    {
+      name: "addFile",
+      icon: "plus",
+      text: "上传文件",
+      auth: "addFile",
       type: "primary",
     },
     "delete",
   ],
-  defaultToolbar: ["refresh", "filter", "search"],
+  defaultToolbar: [
+    {
+      name: "return",
+      icon: "RefreshLeft",
+      title: "返回",
+      auth: "return",
+    },
+    "refresh",
+    "filter",
+    "search",
+  ],
   cols: [
     {
       type: "selection",
@@ -59,30 +80,39 @@ const contentConfig: IContentConfig<FileFolderQuery> = {
       show: false,
     },
     {
-      label: "",
+      label: "预览",
       prop: "icon",
       width: 80,
       align: "center",
       templet: "custom",
     },
     {
-      label: "文件夹路径",
+      label: "文件目录",
       prop: "file_path",
       width: 120,
       align: "center",
+      show: false,
     },
     {
-      label: "文件夹名称",
-      prop: "folder_name",
+      label: "文件名",
+      prop: "file_name",
+      width: 0,
+      minWidth: 200,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "文件类型",
+      prop: "file_type",
       width: 120,
       align: "center",
     },
     {
-      label: "文件夹描述",
-      prop: "folder_desc",
-      width: 0,
-      minWidth: 200,
+      label: "文件大小",
+      prop: "file_size",
+      width: 120,
       align: "center",
+      templet: "custom",
     },
     {
       label: "创建者",
@@ -107,13 +137,13 @@ const contentConfig: IContentConfig<FileFolderQuery> = {
       templet: "tool",
       operat: [
         {
-          name: "review",
-          auth: "password:reset",
-          icon: "check",
-          text: "通过",
-          type: "success",
+          name: "download",
+          auth: "download",
+          icon: "download",
+          text: "下载",
+          type: "primary",
           render(row) {
-            return row.is_review != 1;
+            return row.file_type != "";
           },
         },
         "delete",

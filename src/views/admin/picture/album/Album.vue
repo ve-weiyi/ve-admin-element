@@ -203,7 +203,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 
 function onUpload(options: UploadRequestOptions) {
   console.log("onUpload", options.filename);
-  return uploadFile(options.file, "photo");
+  return uploadFile(options.file, "/album");
 }
 
 function afterUpload(res: any) {

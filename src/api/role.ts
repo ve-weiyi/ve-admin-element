@@ -1,5 +1,17 @@
 import request from "@/utils/request";
-import { RoleResourcesResp, EmptyResp, UpdateRoleMenusReq, IdReq, PageResp, IdsReq, BatchResp, RoleQuery, UpdateRoleApisReq, RoleNewReq, RoleBackDTO } from "./types";
+import {
+  BatchResp,
+  EmptyResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  RoleBackDTO,
+  RoleNewReq,
+  RoleQuery,
+  RoleResourcesResp,
+  UpdateRoleApisReq,
+  UpdateRoleMenusReq,
+} from "./types";
 
 /** 创建角色 */
 export function addRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackDTO>> {

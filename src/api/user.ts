@@ -1,5 +1,15 @@
 import request from "@/utils/request";
-import { EmptyReq, UserApisResp, UserInfoResp, EmptyResp, UserLoginHistoryQuery, PageResp, UserMenusResp, UserRolesResp, UserInfoReq } from "./types";
+import {
+  EmptyReq,
+  EmptyResp,
+  PageResp,
+  UserApisResp,
+  UserInfoReq,
+  UserInfoResp,
+  UserLoginHistoryQuery,
+  UserMenusResp,
+  UserRolesResp,
+} from "./types";
 
 /** 获取用户接口权限 */
 export function getUserApisApi(data?: EmptyReq): Promise<IApiResponse<UserApisResp>> {

@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { LoginReq, LoginResp, EmptyReq, EmptyResp } from "./types";
+import { EmptyReq, EmptyResp, LoginReq, LoginResp } from "./types";
 
 /** 登录 */
 export function loginApi(data?: LoginReq): Promise<IApiResponse<LoginResp>> {

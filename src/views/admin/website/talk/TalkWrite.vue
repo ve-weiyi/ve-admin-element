@@ -196,7 +196,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFile(options.file, "talk");
+  return uploadFile(options.file, "/talk");
 }
 
 function afterUpload(res: any) {

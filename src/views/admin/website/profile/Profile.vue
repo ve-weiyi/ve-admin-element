@@ -335,7 +335,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFile(options.file, "website");
+  return uploadFile(options.file, "/website");
 }
 
 function handleWebsiteAvatarSuccess(response) {

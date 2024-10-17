@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { IdReq, CategoryQuery, PageResp, CategoryNewReq, CategoryBackDTO, IdsReq, BatchResp } from "./types";
+import { BatchResp, CategoryBackDTO, CategoryNewReq, CategoryQuery, IdReq, IdsReq, PageResp } from "./types";
 
 /** 分页获取文章分类列表 */
 export function findCategoryListApi(data?: CategoryQuery): Promise<IApiResponse<PageResp>> {

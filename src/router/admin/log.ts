@@ -4,7 +4,7 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/log",
-  name: "log-management", // router.push
+  name: "", // router.push
   component: Layout,
   redirect: "/log/operation",
   meta: {
@@ -16,13 +16,13 @@ export default {
     {
       path: "/log/login",
       component: () => import("@/views/admin/log/login/Login.vue"),
-      name: "/log/login",
+      name: "LogLogin",
       meta: { title: "登录日志", keepAlive: true },
     },
     {
       path: "/log/operation",
       component: () => import("@/views/admin/log/operation/Operation.vue"),
-      name: "/log/operation",
+      name: "LogOperation",
       meta: { title: "操作日志", keepAlive: true },
     },
   ],

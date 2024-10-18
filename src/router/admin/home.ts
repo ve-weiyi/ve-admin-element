@@ -4,7 +4,7 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/welcome",
-  name: "/welcome",
+  name: "",
   component: Layout,
   redirect: "/home",
   meta: {

@@ -107,29 +107,7 @@ export const constantRoutes: RouteRecordRaw[] = [
          ]
      }*/
 ];
-import home from "@/router/admin/home.ts";
-import document from "@/router/admin/document.ts";
-import article from "@/router/admin/article.ts";
-import message from "@/router/admin/message.ts";
-import resource from "@/router/admin/resource.ts";
-import system from "@/router/admin/system.ts";
-import monitor from "@/router/admin/monitor.ts";
-import log from "@/router/admin/log.ts";
-import mine from "@/router/admin/mine.ts";
-import picture from "@/router/admin/picture.ts";
-import website from "@/router/admin/website.ts";
-constantRoutes.push(home);
-constantRoutes.push(document);
-constantRoutes.push(article);
-constantRoutes.push(message);
-constantRoutes.push(picture);
-constantRoutes.push(resource);
-constantRoutes.push(system);
-constantRoutes.push(monitor);
-constantRoutes.push(log);
-constantRoutes.push(website);
-constantRoutes.push(mine);
-console.log("routes", constantRoutes);
+
 /**
  * 创建路由
  */

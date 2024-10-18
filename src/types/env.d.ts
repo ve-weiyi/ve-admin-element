@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   VITE_APP_API_URL: string;
   /** 是否开启 Mock 服务 */
   VITE_MOCK_DEV_SERVER: boolean;
+  /** 是否启用 Mock 菜单 */
+  VITE_USE_MOCK_MENU: string;
 }
 
 interface ImportMeta {

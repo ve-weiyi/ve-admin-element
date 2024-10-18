@@ -4,19 +4,19 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/system",
-  name: "system-management",
+  name: "",
   component: Layout,
   redirect: "/system/user",
   meta: {
     title: "系统管理",
     icon: "el-icon-setting",
-    rank: 30,
+    rank: 50,
   },
   children: [
     {
       path: "/system/user",
       component: () => import("@/views/admin/system/user/User.vue"),
-      name: "list",
+      name: "User",
       meta: { title: "用户列表" },
     },
     {

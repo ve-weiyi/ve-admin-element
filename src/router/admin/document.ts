@@ -4,9 +4,9 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/document",
-  name: "document",
+  name: "",
   component: Layout,
-  redirect: "/document/api",
+  redirect: "/document/apifox",
   meta: {
     title: "接口文档",
     icon: "api",
@@ -17,7 +17,7 @@ export default {
   },
   children: [
     {
-      path: "/document/api",
+      path: "/document/apifox",
       component: () => import("@/views/admin/document/api/apifox.vue"),
       name: "Apifox",
       meta: {
@@ -29,23 +29,5 @@ export default {
         params: null,
       },
     },
-    // {
-    //   path: "/mine/info",
-    //   component: () => import("@/views/admin/mine/info/Info.vue"),
-    //   name: "/mine/info",
-    //   meta: { title: "个人信息", keepAlive: true },
-    // },
-    // {
-    //   path: "/mine/identity",
-    //   component: () => import("@/views/admin/mine/identity/Identity.vue"),
-    //   name: "/mine/identity",
-    //   meta: { title: "身份认证", keepAlive: true },
-    // },
-    // {
-    //   path: "/mine/history",
-    //   component: () => import("@/views/admin/mine/history/History.vue"),
-    //   name: "/mine/history",
-    //   meta: { title: "登录历史", keepAlive: true },
-    // },
   ],
 } satisfies RouteRecordRaw;

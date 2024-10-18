@@ -4,7 +4,7 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/website",
-  name: "website-management",
+  name: "",
   component: Layout,
   redirect: "/website/profile",
   meta: {
@@ -22,13 +22,13 @@ export default {
     {
       path: "/website/talk",
       component: () => import("@/views/admin/website/talk/Talk.vue"),
-      name: "talk",
+      name: "Talk",
       meta: { title: "说说管理" },
     },
     {
       path: "/website/friend",
       component: () => import("@/views/admin/website/friend/Friend.vue"),
-      name: "friend",
+      name: "Friend",
       meta: { title: "友链管理" },
     },
     {

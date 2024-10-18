@@ -4,25 +4,25 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/user",
-  name: "monitor",
+  name: "",
   component: Layout,
   redirect: "/monitor/online",
   meta: {
     title: "系统监控",
     icon: "el-icon-monitor",
-    rank: 50,
+    rank: 90,
   },
   children: [
     {
       path: "/monitor/online",
       component: () => import("@/views/admin/monitor/online/Online.vue"),
-      name: "online",
+      name: "Online",
       meta: { title: "在线用户" },
     },
     {
       path: "/monitor/state",
       component: () => import("@/views/admin/monitor/state/State.vue"),
-      name: "state",
+      name: "State",
       meta: { title: "服务器状态" },
     },
   ],

@@ -104,16 +104,8 @@ import MenuForm from "./form.vue";
 import { MenuNewReq } from "@/api/types.ts";
 import { addMenuApi, syncMenuListApi, updateMenuApi } from "@/api/menu.ts";
 import { RouteRecordRaw } from "vue-router";
-import home from "@/router/admin/home.ts";
-import article from "@/router/admin/article.ts";
-import message from "@/router/admin/message.ts";
-import system from "@/router/admin/system.ts";
-import monitor from "@/router/admin/monitor.ts";
-import log from "@/router/admin/log.ts";
-import mine from "@/router/admin/mine.ts";
-import picture from "@/router/admin/picture.ts";
-import website from "@/router/admin/website.ts";
 import { MenuTypeEnum } from "@/enums/MenuTypeEnum.ts";
+import { usePermissionStore } from "@/store";
 
 const {
   searchRef,
@@ -166,16 +158,8 @@ const addOrUpdate = ref(false);
 const menuForm = ref<MenuNewReq>();
 
 function Sync() {
-  const constantRoutes = [];
-  constantRoutes.push(home);
-  constantRoutes.push(article);
-  constantRoutes.push(message);
-  constantRoutes.push(picture);
-  constantRoutes.push(system);
-  constantRoutes.push(monitor);
-  constantRoutes.push(log);
-  constantRoutes.push(website);
-  constantRoutes.push(mine);
+  const permissionStore = usePermissionStore();
+  const constantRoutes = permissionStore.getMockRoutes();
   console.log("dynamicMenus-->", constantRoutes);
   ElMessageBox.confirm(
     `确认要<strong>同步菜单列表到数据库吗</strong>`,
@@ -204,7 +188,7 @@ function Sync() {
 
 function convertMenu(menus: any[]): MenuNewReq[] {
   let result: MenuNewReq[] = [];
-  menus?.forEach((menu) => {
+  menus?.forEach((menu, index) => {
     const input = menu.component.toString();
     const start = input.indexOf("/");
     const end = input.indexOf(".");
@@ -218,7 +202,7 @@ function convertMenu(menus: any[]): MenuNewReq[] {
       type: menu.children ? 0 : 1,
       title: menu.meta.title,
       icon: menu.meta.icon,
-      rank: menu.meta.rank,
+      rank: index + 1,
       perm: menu.meta.perm,
       params: menu.meta.params,
       keep_alive: menu.meta.keepAlive ? 1 : 0,

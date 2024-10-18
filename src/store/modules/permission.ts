@@ -3,6 +3,17 @@ import { constantRoutes } from "@/router";
 import { store } from "@/store";
 import { getUserMenusApi } from "@/api/user";
 import { UserMenu } from "@/api/types";
+import home from "@/router/admin/home.ts";
+import article from "@/router/admin/article.ts";
+import message from "@/router/admin/message.ts";
+import picture from "@/router/admin/picture.ts";
+import resource from "@/router/admin/resource.ts";
+import system from "@/router/admin/system.ts";
+import log from "@/router/admin/log.ts";
+import website from "@/router/admin/website.ts";
+import monitor from "@/router/admin/monitor.ts";
+import document from "@/router/admin/document.ts";
+import mine from "@/router/admin/mine.ts";
 
 const modules = import.meta.glob("../../views/**/**.vue");
 const Layout = () => import("@/layout/index.vue");
@@ -18,17 +29,42 @@ export const usePermissionStore = defineStore("permission", () => {
    */
   function generateRoutes() {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      getUserMenusApi()
-        .then((data) => {
-          // const dynamicRoutes = transformRoutes(data.data.list);
-          const dynamicRoutes = [];
-          routes.value = constantRoutes.concat(dynamicRoutes);
-          resolve(dynamicRoutes);
-        })
-        .catch((error) => {
-          reject(error);
-        });
+      console.log("generateRoutes", import.meta.env.VITE_USE_MOCK_MENU);
+      if (import.meta.env.VITE_USE_MOCK_MENU == "true") {
+        const dynamicRoutes = getMockRoutes();
+        routes.value = constantRoutes.concat(dynamicRoutes);
+        console.log("use mock routes", dynamicRoutes);
+        resolve(dynamicRoutes);
+      } else {
+        getUserMenusApi()
+          .then((data) => {
+            const dynamicRoutes = transformRoutes(data.data.list);
+            // const dynamicRoutes = [];
+            routes.value = constantRoutes.concat(dynamicRoutes);
+            console.log("use user routes", dynamicRoutes);
+            resolve(dynamicRoutes);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
     });
+  }
+
+  function getMockRoutes(): RouteRecordRaw[] {
+    const dynamicRoutes = [];
+    dynamicRoutes.push(home);
+    dynamicRoutes.push(article);
+    dynamicRoutes.push(message);
+    dynamicRoutes.push(picture);
+    dynamicRoutes.push(resource);
+    dynamicRoutes.push(system);
+    dynamicRoutes.push(log);
+    dynamicRoutes.push(website);
+    dynamicRoutes.push(monitor);
+    dynamicRoutes.push(document);
+    dynamicRoutes.push(mine);
+    return dynamicRoutes;
   }
 
   /**
@@ -46,6 +82,7 @@ export const usePermissionStore = defineStore("permission", () => {
   return {
     routes,
     generateRoutes,
+    getMockRoutes,
     mixLeftMenus,
     setMixLeftMenus,
   };

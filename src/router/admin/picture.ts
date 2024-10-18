@@ -4,13 +4,13 @@ const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/picture",
-  name: "picture-management",
+  name: "",
   component: Layout,
-  redirect: "/picture/config",
+  redirect: "/picture/albums",
   meta: {
     title: "图片管理",
     icon: "el-icon-picture",
-    rank: 80,
+    rank: 30,
   },
   children: [
     {
@@ -27,14 +27,14 @@ export default {
     },
     {
       path: "/picture/photo/delete",
-      name: "Delete",
+      name: "PhotoDelete",
       component: () => import("@/views/admin/picture/album/Delete.vue"),
       meta: { title: "相片回收站", hidden: true },
     },
     {
       path: "/picture/banner",
       component: () => import("@/views/admin/picture/banner/Banner.vue"),
-      name: "Page",
+      name: "Banner",
       meta: { title: "页面管理" },
     },
   ],

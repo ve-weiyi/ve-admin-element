@@ -92,7 +92,7 @@ function handleOperatClick(data: IOperatData) {
   switch (data.name) {
     case "review": {
       const req: CommentReviewReq = {
-        id: data.row.id,
+        ids: [data.row.id],
         is_review: data.row.is_review == 1 ? 2 : 1,
       };
       updateCommentReviewApi(req).then(() => {

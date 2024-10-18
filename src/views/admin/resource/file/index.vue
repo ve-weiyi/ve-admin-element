@@ -108,28 +108,14 @@
           :rules="importFormRules"
         >
           <el-form-item label="文件名" prop="files">
-            <el-upload
+            <file-upload
               class="w-full"
-              ref="uploadRef"
-              v-model:file-list="importFormData.files"
-              accept=""
-              multiple
+              v-model="importFormData.files"
               :drag="true"
               :limit="10"
               :auto-upload="false"
-              :on-exceed="handleFileExceed"
-            >
-              <el-icon class="el-icon--upload">
-                <upload-filled />
-              </el-icon>
-              <div class="el-upload__text">
-                <span>将文件拖到此处，或</span>
-                <em>点击上传</em>
-              </div>
-              <template #tip>
-                <div class="el-upload__tip">支持多个文件</div>
-              </template>
-            </el-upload>
+              tip="支持多个文件"
+            />
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -155,17 +141,16 @@ import { IOperatData, ISelectedData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content.tsx";
 import PageContent from "@/components/CURD/PageContent.vue";
+import FileUpload from "@/components/Upload/FileUpload.vue";
 
 import { ref } from "vue";
 import {
   type FormInstance,
   type FormRules,
-  genFileId,
   type UploadInstance,
-  type UploadRawFile,
   type UploadUserFile,
 } from "element-plus";
-import { compressImage, multipleUploadFile } from "@/utils/file.ts";
+import { multipleUploadFile } from "@/utils/file.ts";
 import { FileBackDTO, FileFolderNewReq } from "@/api/types.ts";
 import { addFileFolderApi } from "@/api/file.ts";
 
@@ -253,14 +238,6 @@ const importFormRules: FormRules = {
   files: [{ required: true, message: "请选择文件" }],
 };
 
-// 覆盖前一个文件
-function handleFileExceed(files: File[]) {
-  uploadRef.value!.clearFiles();
-  const file = files[0] as UploadRawFile;
-  file.uid = genFileId();
-  uploadRef.value!.handleStart(file);
-}
-
 // 导入确认
 const handleImportSubmit = useThrottleFn(() => {
   importFormRef.value?.validate((valid: boolean) => {
@@ -279,17 +256,12 @@ function handleCloseImportModal() {
 
 // 文件导入
 async function handleImport() {
-  const res = await Promise.all(
+  multipleUploadFile(
     importFormData.files.map((file) => {
-      return new Promise((rev, rej) => {
-        compressImage(file.raw)
-          .then((blob) => rev(blob))
-          .catch((error) => rej(error));
-      });
-    })
-  );
-
-  multipleUploadFile(res as Blob[], importFormData.file_path).then((res) => {
+      return file.raw;
+    }),
+    importFormData.file_path
+  ).then((res) => {
     console.log(res);
     fetchPageData();
     handleCloseImportModal();

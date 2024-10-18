@@ -12,6 +12,10 @@ export function compressImage(rawFile: Blob) {
 }
 
 export function uploadFile(blob: Blob, path: string) {
+  if (!path.startsWith("/")) {
+    ElMessage.error("上传路径必须以'/'为前缀");
+  }
+
   const data = {
     file: blob,
     file_path: path,

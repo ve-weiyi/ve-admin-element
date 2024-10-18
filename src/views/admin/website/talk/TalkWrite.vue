@@ -5,9 +5,9 @@
       <!-- 输入框 -->
       <Editor
         ref="editorRef"
-        v-model="talk.content"
         class="editor-wrapper"
         placeholder="说点什么吧"
+        v-model:text="talk.content"
       />
       <!-- 操作菜单 -->
       <div class="operation-wrapper">
@@ -36,17 +36,17 @@
             </template>
           </el-popover>
           <!-- 图片上传 -->
-          <el-upload
-            :before-upload="beforeUpload"
-            :http-request="onUpload"
-            :on-success="afterUpload"
+          <multi-image-upload
+            v-show="uploadList.length > 0"
+            class="operation-btn"
+            v-model:file-list="uploadList"
             :show-file-list="false"
-            multiple
+            upload-path="/talk"
           >
-            <el-icon class="operation-btn">
+            <el-icon>
               <PictureFilled />
             </el-icon>
-          </el-upload>
+          </multi-image-upload>
         </div>
         <div class="flex-center">
           <!-- 是否置顶 -->
@@ -90,33 +90,25 @@
         </div>
       </div>
       <!-- 图片上传 -->
-      <el-upload
+      <multi-image-upload
         v-show="uploadList.length > 0"
-        :before-upload="beforeUpload"
-        :http-request="onUpload"
-        :on-success="afterUpload"
-        :on-remove="handleRemove"
-        :file-list="uploadList"
         class="talk-image-upload"
         list-type="picture-card"
-        multiple
-      >
-        <el-icon>
-          <Plus />
-        </el-icon>
-      </el-upload>
+        v-model:file-list="uploadList"
+        :show-file-list="true"
+        upload-path="/talk"
+      />
     </div>
   </el-card>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref, toRefs, watch } from "vue";
-import { compressImage, uploadFile } from "@/utils/file.ts";
 import EmojiList from "@/assets/emojis/qq_emoji.json";
 import Editor from "@/components/Editor/index.vue";
 import { addTalkApi, getTalkApi, updateTalkApi } from "@/api/talk.ts";
 import { TalkNewReq } from "@/api/types.ts";
-import { ElMessage, UploadRawFile, UploadRequestOptions } from "element-plus";
+import { ElMessage } from "element-plus";
 
 const props = defineProps({
   modelValue: {
@@ -162,6 +154,7 @@ watch(talkId, (newValue, oldValue) => {
 function findTalk(talkId: number) {
   if (talkId) {
     getTalkApi({ id: talkId }).then((res) => {
+      // Object.assign(talk, res.data);
       talk.value = res.data;
       if (res.data.img_list) {
         res.data.img_list.forEach((item) => {
@@ -184,34 +177,6 @@ function addEmoji(key, value) {
   console.log("talk.value.content", talk.value.content);
 }
 
-// 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
-function beforeUpload(rawFile: UploadRawFile) {
-  console.log("beforeUpload", rawFile.name, rawFile.size);
-
-  if (rawFile.size / 1024 < 500) {
-    return true;
-  }
-
-  return compressImage(rawFile);
-}
-
-function onUpload(options: UploadRequestOptions) {
-  return uploadFile(options.file, "/talk");
-}
-
-function afterUpload(res: any) {
-  console.log("afterUpload", res);
-  ElMessage.success(res.message);
-  uploadList.value.push({ url: res.data.file_url });
-}
-
-function handleRemove(file) {
-  const index = uploadList.value.findIndex((item) => item.url === file.url);
-  if (index !== -1) {
-    uploadList.value.splice(index, 1);
-  }
-}
-
 function saveOrUpdateTalk() {
   if (talk.value.content.trim() === "") {
     ElMessage.error("说说内容不能为空");
@@ -225,7 +190,7 @@ function saveOrUpdateTalk() {
     talk.value.img_list = imgList;
   }
 
-  console.log("talk.value", talk.value);
+  console.log("talk", talk);
   if (talk.value.id) {
     updateTalkApi(talk.value).then((res) => {
       editorRef.value.clear();

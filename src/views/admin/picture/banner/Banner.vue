@@ -110,7 +110,7 @@
         size="default"
       >
         <el-form-item label="页面名称">
-          <el-input v-model="formData.banner_name" style="width: 300px" />
+          <el-input v-model="formData.banner_name" style="width: 360px" />
         </el-form-item>
         <el-form-item label="页面标签">
           <el-input v-model="formData.banner_label" style="width: 360px" />
@@ -122,30 +122,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="页面封面" style="width: 360px">
-          <el-upload
+          <single-image-upload
             v-if="isUpload"
-            :before-upload="beforeUpload"
-            :http-request="onUpload"
-            :on-success="afterUpload"
-            :show-file-list="false"
-            class="upload-cover"
-            drag
-            multiple
-          >
-            <i v-if="!formData.banner_cover" class="el-icon-upload"></i>
-            <div v-if="!formData.banner_cover" class="el-upload__text">
-              将文件拖到此处，或
-              <em>点击上传</em>
-            </div>
-            <el-image
-              v-else
-              :src="formData.banner_cover"
-              class="page-cover"
-              fit="cover"
-              height="180px"
-              width="360px"
-            />
-          </el-upload>
+            v-model="formData.banner_cover"
+            accept="image/*"
+            upload-path="/banner"
+            height="180px"
+            width="360px"
+          />
           <el-input
             v-else
             v-model="formData.banner_cover"
@@ -180,8 +164,9 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElMessage, UploadRawFile, UploadRequestOptions } from "element-plus";
+import { ElMessage } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
+import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import {
   addBannerApi,
@@ -190,7 +175,6 @@ import {
   updateBannerApi,
 } from "@/api/banner.ts";
 import { BannerBackDTO, BannerNewReq, BannerQuery } from "@/api/types.ts";
-import { compressImage, uploadFile } from "@/utils/file.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -302,27 +286,6 @@ function confirmDelete() {
 
 function cancelDelete() {
   deleteModalVisible.value = false;
-}
-
-// 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
-function beforeUpload(rawFile: UploadRawFile) {
-  console.log("beforeUpload", rawFile.name, rawFile.size);
-
-  if (rawFile.size / 1024 < 500) {
-    return true;
-  }
-
-  return compressImage(rawFile);
-}
-
-function onUpload(options: UploadRequestOptions) {
-  console.log("onUpload", options.filename);
-  return uploadFile(options.file, "/album");
-}
-
-function afterUpload(res: any) {
-  console.log("afterUpload", res);
-  formData.value.banner_cover = res.data.file_url;
 }
 
 const checkDelete = () => {

@@ -156,49 +156,14 @@
         </template>
       </el-dialog>
       <!-- 上传对话框 -->
-      <el-dialog v-model="upload" title="上传照片" width="850px" append-to-body>
-        <div class="upload-container">
-          <el-upload
-            v-show="uploadList.length > 0"
-            class="avatar-uploader"
-            multiple
-            :before-upload="beforeUpload"
-            :http-request="onUpload"
-            :on-success="afterUpload"
-            :on-remove="handleRemove"
-            :on-preview="handlePictureCardPreview"
-            list-type="picture-card"
-            :file-list="uploadList"
-            accept="image/*"
-          >
-            <img class="avatar" />
-            <el-icon class="avatar-uploader-icon">
-              <Plus />
-            </el-icon>
-          </el-upload>
-          <div class="upload">
-            <el-upload
-              v-show="uploadList.length === 0"
-              drag
-              multiple
-              :before-upload="beforeUpload"
-              :http-request="onUpload"
-              :on-success="afterUpload"
-              :show-file-list="false"
-              accept="image/*"
-              style="width: 360px"
-            >
-              <el-icon class="el-icon--upload">
-                <upload-filled />
-              </el-icon>
-              <div class="el-upload__text">
-                将文件拖到此处，或
-                <em>点击上传</em>
-              </div>
-              <img width="360" />
-            </el-upload>
-          </div>
-        </div>
+      <el-dialog v-model="upload" title="上传照片" width="60%" append-to-body>
+        <multi-image-upload
+          class="upload-container"
+          list-type="picture-card"
+          v-model:file-list="uploadList"
+          :show-file-list="true"
+          upload-path="/photo"
+        />
         <template #footer>
           <div class="dialog-footer">
             <div>共上传{{ uploadList.length }}张照片</div>
@@ -215,27 +180,17 @@
           </div>
         </template>
       </el-dialog>
-      <!-- 图片预览 -->
-      <el-dialog v-model="dialogVisible" append-to-body>
-        <img :src="dialogImageUrl" style="max-width: 100%" />
-      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  FormInstance,
-  FormRules,
-  UploadFile,
-  UploadRawFile,
-  UploadRequestOptions,
-  UploadUserFile,
-} from "element-plus";
+import { FormInstance, FormRules, UploadUserFile } from "element-plus";
 import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getAlbumApi } from "@/api/album.ts";
 import {
+  addPhotoApi,
   batchDeletePhotoApi,
   findPhotoListApi,
   updatePhotoApi,
@@ -246,7 +201,6 @@ import {
   PhotoNewReq,
   PhotoQuery,
 } from "@/api/types.ts";
-import { compressImage, uploadFile } from "@/utils/file.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
@@ -264,7 +218,6 @@ const data = reactive({
   checkAll: false,
   isIndeterminate: false,
   dialogImageUrl: "",
-  dialogVisible: false,
   queryParams: {
     current: 1,
     size: 10,
@@ -285,7 +238,6 @@ const {
   checkAll,
   isIndeterminate,
   dialogImageUrl,
-  dialogVisible,
   queryParams,
   photoForm,
   photoIdList,
@@ -329,40 +281,6 @@ const handleCommand = (photo: PhotoBackDTO) => {
   update.value = true;
 };
 
-// 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
-function beforeUpload(rawFile: UploadRawFile) {
-  console.log("beforeUpload", rawFile.name, rawFile.size);
-
-  if (rawFile.size / 1024 < 500) {
-    return true;
-  }
-
-  return compressImage(rawFile);
-}
-
-function onUpload(options: UploadRequestOptions) {
-  console.log("onUpload", options.filename);
-  return uploadFile(options.file, "/photo");
-}
-
-const afterUpload = (response: any) => {
-  uploadList.value.push({
-    name: response.data.file_name,
-    url: response.data.file_url,
-  });
-};
-
-const handleRemove = (file: UploadFile) => {
-  uploadList.value.forEach((item, index) => {
-    if (item.url == file.url) {
-      uploadList.value.splice(index, 1);
-    }
-  });
-};
-const handlePictureCardPreview = (file: UploadFile) => {
-  dialogImageUrl.value = file.url!;
-  dialogVisible.value = true;
-};
 const handleMove = () => {};
 const handleDelete = () => {
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
@@ -386,25 +304,23 @@ const handleAdd = () => {
   let photoUrlList: string[] = [];
   if (uploadList.value.length > 0) {
     uploadList.value.forEach((item) => {
-      photoUrlList.push(item.url);
+      // photoUrlList.push(item.url);
+      let data: PhotoNewReq = {
+        album_id: albumId,
+        photo_name: "",
+        photo_desc: "",
+        photo_src: item.url,
+        is_delete: 0,
+      };
+
+      addPhotoApi(data).then((res) => {
+        ElMessage.success("添加照片成功");
+        uploadList.value = [];
+        getList();
+        upload.value = false;
+      });
     });
   }
-
-  // let data: Photo = {
-  //   album_id: 0
-  // };
-
-  // createPhotoApi({
-  //   albumId: Number(route.params.albumId),
-  //   photoUrlList: photoUrlList
-  // }).then(res => {
-  //   if (res.flag) {
-  //     notifySuccess(res.message);
-  //     uploadList.value = [];
-  //     getList();
-  //   }
-  //   upload.value = false;
-  // });
 };
 const submitForm = () => {
   photoFormRef.value?.validate((valid) => {
@@ -508,13 +424,6 @@ onMounted(() => {
   min-height: 400px;
   max-height: 600px;
   overflow: auto;
-
-  .upload {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
 }
 
 .dialog-footer {

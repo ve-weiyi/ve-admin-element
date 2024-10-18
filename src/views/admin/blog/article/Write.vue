@@ -163,26 +163,13 @@
             />
           </el-form-item>
           <el-form-item label="上传封面">
-            <el-upload
-              :http-request="onUpload"
-              :before-upload="beforeUpload"
-              :on-success="afterUpload"
-              class="upload-cover"
-              drag
-              multiple
-            >
-              <i v-if="article.article_cover == ''" class="el-icon-upload"></i>
-              <div v-if="article.article_cover == ''" class="el-upload__text">
-                将文件拖到此处，或
-                <em>点击上传</em>
-              </div>
-              <img
-                v-else
-                :src="article.article_cover"
-                height="180px"
-                width="360px"
-              />
-            </el-upload>
+            <single-image-upload
+              v-model="article.article_cover"
+              accept="image/*"
+              upload-path="/article"
+              height="180px"
+              width="360px"
+            />
           </el-form-item>
           <el-form-item label="置顶">
             <el-switch
@@ -195,8 +182,8 @@
           </el-form-item>
           <el-form-item label="发布形式">
             <el-radio-group v-model="article.status">
-              <el-radio :label="1">公开</el-radio>
-              <el-radio :label="2">私密</el-radio>
+              <el-radio :value="1">公开</el-radio>
+              <el-radio :value="2">私密</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -225,9 +212,10 @@ import {
   CategoryBackDTO,
   TagBackDTO,
 } from "@/api/types";
-import { ElMessage, UploadRawFile, UploadRequestOptions } from "element-plus";
-import { compressImage, uploadFile } from "@/utils/file.ts";
+import { ElMessage } from "element-plus";
+import { uploadFile } from "@/utils/file.ts";
 import { formatDate } from "@/utils/date.ts";
+import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -284,32 +272,6 @@ function openModel() {
   listCategories();
   listTags();
   addOrEdit.value = true;
-}
-
-// 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
-function beforeUpload(rawFile: UploadRawFile) {
-  console.log("beforeUpload", rawFile.name, rawFile.size);
-
-  // if (rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
-  //   console.log("只能上传jpg与png格式");
-  //   return false;
-  // }
-
-  if (rawFile.size / 1024 < 500) {
-    return true;
-  }
-
-  return compressImage(rawFile);
-}
-
-function onUpload(options: UploadRequestOptions) {
-  console.log("onUpload", options.filename);
-  return uploadFile(options.file, "/article");
-}
-
-function afterUpload(response: any) {
-  article.value.article_cover = response.data.file_url;
-  console.log("afterUpload", response, article.value.article_cover);
 }
 
 async function uploadImg(
@@ -526,7 +488,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  autoSaveArticle();
+  // autoSaveArticle();
 });
 </script>
 

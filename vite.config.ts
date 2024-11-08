@@ -1,6 +1,6 @@
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { UserConfig, ConfigEnv, loadEnv, defineConfig } from "vite";
+import { ConfigEnv, defineConfig, loadEnv, UserConfig } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
@@ -14,11 +14,11 @@ import mockDevServerPlugin from "vite-plugin-mock-dev-server";
 import UnoCSS from "unocss/vite";
 import { resolve } from "path";
 import {
-  name,
-  version,
-  engines,
   dependencies,
   devDependencies,
+  engines,
+  name,
+  version,
 } from "./package.json";
 
 /** @see  https://devtools-next.vuejs.org  */
@@ -35,6 +35,11 @@ const pathSrc = resolve(__dirname, "src");
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
   return {
+    /**
+     * 项目部署目录路径
+     * @description 见项目根目录下的 `config` 文件夹说明
+     */
+    base: env.VITE_BASE_URL,
     resolve: {
       alias: {
         "@": pathSrc,
@@ -54,12 +59,19 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
     },
     server: {
-      // 允许IP访问
-      host: "0.0.0.0",
-      // 应用端口 (默认:3000)
+      /** 是否开启 HTTPS */
+      // https: {},
+      /** 设置 host: true 才可以使用 Network 的形式，以 IP 访问项目 */
+      host: true, // host: "0.0.0.0"
+      /** 端口号 */
       port: Number(env.VITE_APP_PORT),
-      // 运行是否自动打开浏览器
-      open: true,
+      /** 是否自动打开浏览器 */
+      open: false,
+      /** 跨域设置允许 */
+      cors: true,
+      /** 端口被占用时，是否直接退出 */
+      strictPort: false,
+      /** 接口代理 */
       proxy: {
         // 前缀
         [env.VITE_APP_BASE_API]: {
@@ -220,7 +232,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     // 构建配置
     build: {
-      chunkSizeWarningLimit: 2000, // 消除打包大小超过500kb警告
+      /** 消除打包大小超过 2048kb 警告 */
+      chunkSizeWarningLimit: 2048,
+      /** 禁用 gzip 压缩大小报告.启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。*/
+      reportCompressedSize: true,
+      /** 打包文件的输出目录,默认值为 dist */
+      outDir: env.VITE_DIST_NAME,
+      /** 打包后静态资源目录 */
+      assetsDir: "assets",
       minify: "terser", // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
       terserOptions: {
         compress: {

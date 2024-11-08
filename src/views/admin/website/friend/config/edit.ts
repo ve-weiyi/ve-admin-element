@@ -30,7 +30,7 @@ const modalConfig: IModalConfig<FriendNewReq> = {
     },
     {
       label: "链接地址",
-      prop: "link_url",
+      prop: "link_address",
       rules: [{ required: true, message: "链接地址不能为空", trigger: "blur" }],
       type: "input",
       attrs: {
@@ -48,7 +48,7 @@ const modalConfig: IModalConfig<FriendNewReq> = {
     },
     {
       label: "链接描述",
-      prop: "link_desc",
+      prop: "link_intro",
       rules: [{ required: true, message: "链接描述不能为空", trigger: "blur" }],
       type: "input",
       attrs: {

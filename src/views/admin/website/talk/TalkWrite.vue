@@ -109,6 +109,7 @@ import Editor from "@/components/Editor/index.vue";
 import { addTalkApi, getTalkApi, updateTalkApi } from "@/api/talk.ts";
 import { TalkNewReq } from "@/api/types.ts";
 import { ElMessage } from "element-plus";
+import { TalkStatusEnum, TalkTopEnum } from "@/enums/TalkEnum.ts";
 
 const props = defineProps({
   modelValue: {
@@ -127,11 +128,11 @@ const emit = defineEmits(["onConfirm"]);
 // const route = useRoute();
 const emojiList = ref<any>(EmojiList);
 const talk = ref<TalkNewReq>({
-  content: "",
   id: 0,
+  content: "",
   img_list: [],
-  is_top: 0,
-  status: 0,
+  is_top: TalkTopEnum.NO,
+  status: TalkStatusEnum.PUBLIC,
 });
 const statusList = ref([
   { status: 1, desc: "公开" },

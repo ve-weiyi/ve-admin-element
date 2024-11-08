@@ -174,8 +174,8 @@
           <el-form-item label="置顶">
             <el-switch
               v-model="article.is_top"
-              :active-value="1"
-              :inactive-value="0"
+              :active-value="ArticleTopEnum.YES"
+              :inactive-value="ArticleTopEnum.NO"
               active-color="#13ce66"
               inactive-color="#cccccc"
             />
@@ -216,6 +216,7 @@ import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file.ts";
 import { formatDate } from "@/utils/date.ts";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
+import { ArticleTopEnum } from "@/enums/ArticleEnum.ts";
 
 const route = useRoute();
 const router = useRouter();

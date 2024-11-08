@@ -1,6 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import { ArticleQuery } from "@/api/types";
 import { findArticleListApi, topArticleApi } from "@/api/article";
+import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/ArticleEnum.ts";
 
 const contentConfig: IContentConfig<ArticleQuery> = {
   pageName: "sys:user",
@@ -113,8 +114,8 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       width: 100,
       align: "center",
       templet: "switch",
-      activeValue: 1,
-      inactiveValue: 0,
+      activeValue: ArticleTopEnum.YES,
+      inactiveValue: ArticleTopEnum.NO,
     },
     {
       label: "浏览量",
@@ -151,7 +152,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
           text: "编辑",
           type: "primary",
           render(row) {
-            return row.is_delete != 1;
+            return row.is_delete != ArticleDeleteEnum.YES;
           },
         },
         {
@@ -161,7 +162,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
           text: "回收",
           type: "danger",
           render(row) {
-            return row.is_delete != 1;
+            return row.is_delete != ArticleDeleteEnum.YES;
           },
         },
         {
@@ -171,7 +172,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
           text: "恢复",
           type: "success",
           render(row) {
-            return row.is_delete == 1;
+            return row.is_delete == ArticleDeleteEnum.YES;
           },
         },
         {
@@ -181,7 +182,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
           text: "删除",
           type: "info",
           render(row) {
-            return row.is_delete == 1;
+            return row.is_delete == ArticleDeleteEnum.YES;
           },
         },
       ],

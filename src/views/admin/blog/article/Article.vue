@@ -55,6 +55,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { recycleArticleApi } from "@/api/article.ts";
 import "@/styles/table.scss";
+import { ArticleDeleteEnum, ArticleStatusEnum } from "@/enums/ArticleEnum.ts";
 
 const {
   searchRef,
@@ -130,11 +131,36 @@ type StatusTag = {
 };
 
 const statusList: StatusTag[] = [
-  { value: "all", label: "全部", condition: { is_delete: 0 } },
-  { value: "public", label: "公开", condition: { is_delete: 0, status: 1 } },
-  { value: "private", label: "私密", condition: { is_delete: 0, status: 2 } },
-  { value: "draft", label: "草稿", condition: { is_delete: 0, status: 3 } },
-  { value: "delete", label: "回收站", condition: { is_delete: 1 } },
+  { value: "all", label: "全部", condition: {} },
+  {
+    value: "public",
+    label: "公开",
+    condition: {
+      is_delete: ArticleDeleteEnum.NO,
+      status: ArticleStatusEnum.PUBLIC,
+    },
+  },
+  {
+    value: "private",
+    label: "私密",
+    condition: {
+      is_delete: ArticleDeleteEnum.NO,
+      status: ArticleStatusEnum.PRIVATE,
+    },
+  },
+  {
+    value: "draft",
+    label: "草稿",
+    condition: {
+      is_delete: ArticleDeleteEnum.NO,
+      status: ArticleStatusEnum.DRAFT,
+    },
+  },
+  {
+    value: "delete",
+    label: "回收站",
+    condition: { is_delete: ArticleDeleteEnum.YES },
+  },
 ];
 
 const status = ref<string | number>(

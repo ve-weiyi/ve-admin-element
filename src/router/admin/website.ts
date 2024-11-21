@@ -20,6 +20,12 @@ export default {
       meta: { title: "网站设置" },
     },
     {
+      path: "/website/page",
+      component: () => import("@/views/admin/website/page/Page.vue"),
+      name: "Page",
+      meta: { title: "页面管理" },
+    },
+    {
       path: "/website/talk",
       component: () => import("@/views/admin/website/talk/Talk.vue"),
       name: "Talk",

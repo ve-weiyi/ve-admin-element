@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
+    <!-- 搜索栏 -->
     <el-card v-show="showSearch" shadow="never" class="mb-[10px]">
-      <!-- 搜索栏 -->
       <el-form :inline="true">
         <el-form-item label="页面名称">
           <el-input
-            v-model="queryParams.banner_name"
+            v-model="queryParams.page_name"
             style="width: 200px"
             placeholder="请输入页面名称"
             clearable
@@ -13,49 +13,30 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="refreshList">
-            搜索
-          </el-button>
+          <el-button type="primary" icon="Search" @click="refreshList">搜索</el-button>
           <el-button icon="Refresh" @click="resetSearch">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
+    <!-- 列表栏 -->
     <el-card class="main-card">
       <!-- 标题 -->
       <div class="table-title">{{ route.meta.title }}</div>
       <!-- 操作按钮 -->
       <el-row :gutter="10" style="margin-bottom: 8px">
         <el-col :span="1.5">
-          <el-button
-            icon="plus"
-            size="default"
-            type="primary"
-            @click="handleAdd()"
-          >
+          <el-button icon="plus" size="default" type="primary" @click="handleAdd()">
             新建页面
           </el-button>
-          <el-button
-            icon="delete"
-            size="default"
-            style="margin-right: 1rem"
-            text
-            type="primary"
-            @click="checkDelete"
-          >
-            回收站
-          </el-button>
         </el-col>
-        <right-toolbar
-          v-model:showSearch="showSearch"
-          @query-table="refreshList"
-        />
+        <right-toolbar v-model:showSearch="showSearch" @query-table="refreshList" />
       </el-row>
       <!-- 空状态 -->
       <el-empty v-if="!tableData" description="暂无页面" />
       <!-- 页面列表 -->
       <el-row v-loading="loading" :gutter="12" class="album-container">
         <el-col v-for="item in tableData" :key="item.id" :md="6">
-          <div class="album-item" @click="checkPhoto(item)">
+          <div class="album-item" @click="handleAdd(item)">
             <!-- 页面操作 -->
             <div class="album-operation">
               <el-dropdown>
@@ -74,12 +55,8 @@
                 </template>
               </el-dropdown>
             </div>
-            <el-image
-              :src="item.banner_cover"
-              class="album-cover"
-              fit="cover"
-            />
-            <div class="album-name">{{ item.banner_name }}</div>
+            <el-image :src="item.page_cover" class="album-cover" fit="cover" />
+            <div class="album-name">{{ item.page_name }}</div>
           </div>
         </el-col>
       </el-row>
@@ -103,36 +80,56 @@
           {{ dialogTitle }}
         </div>
       </template>
-      <el-form
-        ref="formRef"
-        :model="formData"
-        label-width="80px"
-        size="default"
-      >
+      <el-form ref="formRef" :model="formData" label-width="80px" size="default">
         <el-form-item label="页面名称">
-          <el-input v-model="formData.banner_name" style="width: 360px" />
+          <el-input v-model="formData.page_name" style="width: 360px" />
         </el-form-item>
         <el-form-item label="页面标签">
-          <el-input v-model="formData.banner_label" style="width: 360px" />
+          <el-input v-model="formData.page_label" style="width: 360px" />
         </el-form-item>
         <el-form-item label="封面">
-          <el-radio-group v-model="isUpload">
-            <el-radio :label="true">上传文件</el-radio>
-            <el-radio :label="false">填写链接</el-radio>
+          <el-radio-group v-model="uploadType">
+            <el-radio :label="0">上传文件</el-radio>
+            <el-radio :label="1">选择文件</el-radio>
+            <el-radio :label="2">填写链接</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="页面封面" style="width: 360px">
           <single-image-upload
-            v-if="isUpload"
-            v-model="formData.banner_cover"
+            v-if="uploadType === 0"
+            v-model="formData.page_cover"
             accept="image/*"
-            upload-path="/banner"
-            height="180px"
-            width="360px"
+            upload-path="/page"
+            height="100px"
+            width="270px"
           />
+          <el-select
+            v-if="uploadType === 1"
+            v-model="formData.page_cover"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="输入路径前缀"
+            remote-show-suffix
+            :remote-method="fetchFileList"
+            :loading="loading"
+            style="width: 240px"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+              <div class="flex items-center">
+                <img :src="item.value" size="6" />
+                <span>{{ item.label }}</span>
+              </div>
+            </el-option>
+          </el-select>
           <el-input
-            v-else
-            v-model="formData.banner_cover"
+            v-if="uploadType === 2"
+            v-model="formData.page_cover"
             placeholder="请输入图片链接"
           />
         </el-form-item>
@@ -168,13 +165,9 @@ import { ElMessage } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
-import {
-  addBannerApi,
-  deleteBannerApi,
-  findBannerListApi,
-  updateBannerApi,
-} from "@/api/banner.ts";
-import { BannerBackDTO, BannerNewReq, BannerQuery } from "@/api/types.ts";
+import { addPageApi, deletePageApi, findPageListApi, updatePageApi } from "@/api/page.ts";
+import { ListUploadFileReq, PageBackDTO, PageNewReq, PageQueryReq } from "@/api/types.ts";
+import { listUploadFileApi } from "@/api/file.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -182,11 +175,11 @@ const router = useRouter();
 const loading = ref(false);
 
 const showSearch = ref(false);
-const queryParams = ref<BannerQuery>({
+const queryParams = ref<PageQueryReq>({
   page: 1,
   page_size: 10,
 });
-const tableData = ref<BannerBackDTO[]>([]);
+const tableData = ref<PageBackDTO[]>([]);
 const total = ref(0);
 
 const handleSizeChange = (size: number) => {
@@ -199,7 +192,7 @@ const handleCurrentChange = (current: number) => {
 };
 
 function refreshList() {
-  findBannerListApi(queryParams.value).then((res) => {
+  findPageListApi(queryParams.value).then((res) => {
     tableData.value = res.data.list;
     total.value = res.data.total;
   });
@@ -216,16 +209,16 @@ onMounted(() => {
   refreshList();
 });
 
-const initFormData = <BannerNewReq>{
+const initFormData = <PageNewReq>{
   id: 0,
-  banner_name: "",
-  banner_label: "",
-  banner_cover: "",
+  page_name: "",
+  page_label: "",
+  page_cover: "",
 };
 
 const addModalVisible = ref(false);
-const formData = ref<BannerNewReq>({ ...initFormData });
-const isUpload = ref(true);
+const formData = ref<PageNewReq>({ ...initFormData });
+const uploadType = ref(0);
 
 const deleteModalVisible = ref(false);
 const deleteId = ref(0);
@@ -238,13 +231,13 @@ const dialogTitle = computed(() => {
   }
 });
 
-function handleAdd(data?: BannerBackDTO) {
+function handleAdd(data?: PageBackDTO) {
   if (data) {
     formData.value = data;
   } else {
     formData.value = { ...initFormData };
   }
-  isUpload.value = true;
+  uploadType.value = 0;
   addModalVisible.value = true;
 }
 
@@ -252,13 +245,13 @@ function confirmSave() {
   let data = formData.value;
   console.log("confirmSave", data);
   if (data.id == 0) {
-    addBannerApi(data).then((res) => {
+    addPageApi(data).then((res) => {
       addModalVisible.value = false;
       ElMessage.success("创建成功");
       refreshList();
     });
   } else {
-    updateBannerApi(data).then((res) => {
+    updatePageApi(data).then((res) => {
       addModalVisible.value = false;
       ElMessage.success("编辑成功");
       refreshList();
@@ -270,14 +263,14 @@ function cancelSave() {
   addModalVisible.value = false;
 }
 
-function handleDelete(data?: BannerBackDTO) {
+function handleDelete(data?: PageBackDTO) {
   deleteId.value = data.id;
   deleteModalVisible.value = true;
 }
 
 function confirmDelete() {
   console.log("confirmDelete", deleteId.value);
-  deleteBannerApi({ id: deleteId.value }).then((res) => {
+  deletePageApi({ id: deleteId.value }).then((res) => {
     deleteModalVisible.value = false;
     ElMessage.success("删除成功");
     refreshList();
@@ -288,12 +281,25 @@ function cancelDelete() {
   deleteModalVisible.value = false;
 }
 
-const checkDelete = () => {
-  router.push({ path: "/picture/photo/delete" });
-};
+const options = ref([]);
+const fetchFileList = (query: string) => {
+  if (query) {
+    loading.value = true;
+    let data: ListUploadFileReq = {
+      file_path: query,
+      limit: 10,
+    };
 
-const checkPhoto = (item) => {
-  router.push({ path: "/picture/albums/" + item.id });
+    listUploadFileApi(data).then((res) => {
+      loading.value = false;
+      options.value = [];
+      res.data.urls.forEach((item) => {
+        options.value.push({ value: item, label: item.split("/").pop() });
+      });
+    });
+  } else {
+    options.value = [];
+  }
 };
 </script>
 

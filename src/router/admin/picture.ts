@@ -11,6 +11,7 @@ export default {
     title: "图片管理",
     icon: "el-icon-picture",
     rank: 30,
+    alwaysShow: true,
   },
   children: [
     {
@@ -30,12 +31,6 @@ export default {
       name: "PhotoDelete",
       component: () => import("@/views/admin/picture/album/Delete.vue"),
       meta: { title: "相片回收站", hidden: true },
-    },
-    {
-      path: "/picture/banner",
-      component: () => import("@/views/admin/picture/banner/Banner.vue"),
-      name: "Banner",
-      meta: { title: "页面管理" },
     },
   ],
 } satisfies RouteRecordRaw;

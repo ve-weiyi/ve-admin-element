@@ -1,4 +1,3 @@
-
 export interface AboutMe {
   content: string;
 }
@@ -231,20 +230,13 @@ export interface CommentReviewReq {
   is_review?: number;
 }
 
-export interface EmptyReq {
-}
+export interface EmptyReq {}
 
-export interface EmptyResp {
-}
-
-export interface FileFolderNewReq {
-  file_path: string; // 文件路径
-  file_name: string; // 文件名称
-}
+export interface EmptyResp {}
 
 export interface FileBackDTO {
   id?: number; // 文件目录ID
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   file_path: string; // 文件路径
   file_name: string; // 文件名称
   file_type: string; // 文件类型
@@ -253,6 +245,11 @@ export interface FileBackDTO {
   file_url: string; // 上传路径
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+}
+
+export interface FileFolderNewReq {
+  file_path: string; // 文件路径
+  file_name: string; // 文件名称
 }
 
 export interface FileQuery extends PageQuery {
@@ -288,6 +285,15 @@ export interface IdReq {
 
 export interface IdsReq {
   ids: number[];
+}
+
+export interface ListUploadFileReq {
+  file_path?: string; // 文件路径
+  limit?: number; // 限制
+}
+
+export interface ListUploadFileResp {
+  urls: string[]; // 文件路径
 }
 
 export interface LoginReq {
@@ -352,7 +358,7 @@ export interface MultiUploadFileReq {
 
 export interface OperationLogBackDTO {
   id?: number; // 主键id
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   nickname: string; // 用户昵称
   ip_address: string; // 操作ip
   ip_source: string; // 操作地址
@@ -369,7 +375,17 @@ export interface OperationLogBackDTO {
   updated_at: number; // 更新时间
 }
 
-export interface OperationLogQuery extends PageQuery {
+export interface OperationLogQuery extends PageQuery {}
+
+export interface PageBackDTO {
+  id?: number; // 页面id
+  page_name: string; // 页面名
+  page_label: string; // 页面标签
+  page_cover: string; // 页面封面
+  is_carousel: number; // 是否轮播
+  carousel_covers: string[]; // 轮播封面
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
 }
 
 export interface PageDTO {
@@ -379,10 +395,23 @@ export interface PageDTO {
   page_cover: string; // 页面封面
 }
 
+export interface PageNewReq {
+  id?: number; // 页面id
+  page_name: string; // 页面名
+  page_label: string; // 页面标签
+  page_cover: string; // 页面封面
+  is_carousel: number; // 是否轮播
+  carousel_covers: string[]; // 轮播封面
+}
+
 export interface PageQuery {
   page?: number; // 当前页码
   page_size?: number; // 每页数量
   sorts?: string[]; // 排序
+}
+
+export interface PageQueryReq extends PageQuery {
+  page_name?: string; // 页面名
 }
 
 export interface PageResp {
@@ -416,8 +445,7 @@ export interface PhotoQuery extends PageQuery {
   album_id?: number; // 相册id
 }
 
-export interface PingReq {
-}
+export interface PingReq {}
 
 export interface PingResp {
   env: string;
@@ -541,7 +569,7 @@ export interface TagQuery extends PageQuery {
 
 export interface TalkBackDTO {
   id?: number; // 说说ID
-  user_id: number; // 用户ID
+  user_id: string; // 用户ID
   nickname: string; // 用户昵称
   avatar: string; // 用户头像
   content: string; // 说说内容
@@ -567,7 +595,7 @@ export interface TalkQuery extends PageQuery {
 }
 
 export interface Token {
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   token_type: string; // token类型,Bearer
   access_token: string; // 访问token,过期时间较短。2h
   expires_in: number; // 访问token过期时间
@@ -582,12 +610,12 @@ export interface UniqueViewDTO {
 }
 
 export interface UpdateAccountRolesReq {
-  user_id: number;
+  user_id: string;
   role_ids: number[];
 }
 
 export interface UpdateAccountStatusReq {
-  user_id: number;
+  user_id: string;
   status: number; // 状态: -1删除 0正常 1禁用
 }
 
@@ -632,7 +660,7 @@ export interface UserInfoReq extends UserInfoExt {
 }
 
 export interface UserInfoResp extends UserInfoExt {
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   username: string; // 用户名
   nickname: string; // 用户昵称
   avatar: string; // 用户头像
@@ -658,8 +686,7 @@ export interface UserLoginHistory {
   logout_at: number; // 登出时间
 }
 
-export interface UserLoginHistoryQuery extends PageQuery {
-}
+export interface UserLoginHistoryQuery extends PageQuery {}
 
 export interface UserMenu {
   id?: number; // 主键

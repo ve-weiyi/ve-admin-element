@@ -5,6 +5,8 @@ import {
   FileFolderNewReq,
   FileQuery,
   IdsReq,
+  ListUploadFileReq,
+  ListUploadFileResp,
   MultiUploadFileReq,
   PageResp,
   UploadFileReq,
@@ -20,7 +22,9 @@ export function findFileListApi(data?: FileQuery): Promise<IApiResponse<PageResp
 }
 
 /** 创建文件目录 */
-export function addFileFolderApi(data?: FileFolderNewReq): Promise<IApiResponse<FileBackDTO>> {
+export function addFileFolderApi(
+  data?: FileFolderNewReq
+): Promise<IApiResponse<FileBackDTO>> {
   return request({
     url: "/admin_api/v1/file/add_file_folder",
     method: "POST",
@@ -37,8 +41,21 @@ export function deletesFileApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> 
   });
 }
 
+/** 获取文件列表 */
+export function listUploadFileApi(
+  data?: ListUploadFileReq
+,): Promise<IApiResponse<ListUploadFileResp>> {
+  return request({
+    url: "/admin_api/v1/file/list_upload_file",
+    method: "POST",
+    data: data,
+  });
+}
+
 /** 上传文件列表 */
-export function multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackDTO[]>> {
+export function multiUploadFileApi(
+  data?: MultiUploadFileReq
+): Promise<IApiResponse<FileBackDTO[]>> {
   return request({
     url: "/admin_api/v1/file/multi_upload_file",
     method: "POST",

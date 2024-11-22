@@ -87,9 +87,7 @@
                 </div>
               </div>
               <template #reference>
-                <el-button plain size="small" type="success">
-                  添加分类
-                </el-button>
+                <el-button plain size="small" type="success">添加分类</el-button>
               </template>
             </el-popover>
           </el-form-item>
@@ -139,9 +137,7 @@
                 </el-tag>
               </div>
               <template #reference>
-                <el-button plain size="small" type="primary">
-                  添加标签
-                </el-button>
+                <el-button plain size="small" type="primary">添加标签</el-button>
               </template>
             </el-popover>
           </el-form-item>
@@ -157,10 +153,7 @@
           </el-form-item>
           <!-- 文章类型 -->
           <el-form-item v-if="article.article_type != 1" label="原文地址">
-            <el-input
-              v-model="article.original_url"
-              placeholder="请填写原文链接"
-            />
+            <el-input v-model="article.original_url" placeholder="请填写原文链接" />
           </el-form-item>
           <el-form-item label="上传封面">
             <single-image-upload
@@ -189,9 +182,7 @@
         </el-form>
         <template #footer>
           <el-button @click="addOrEdit = false">取 消</el-button>
-          <el-button type="danger" @click="saveOrUpdateArticle">
-            发 表
-          </el-button>
+          <el-button type="danger" @click="saveOrUpdateArticle">发 表</el-button>
         </template>
       </el-dialog>
     </el-card>
@@ -206,12 +197,7 @@ import "md-editor-v3/lib/style.css";
 import { findCategoryListApi } from "@/api/category";
 import { findTagListApi } from "@/api/tag";
 import { addArticleApi, getArticleApi, updateArticleApi } from "@/api/article";
-import {
-  ArticleBackDTO,
-  ArticleNewReq,
-  CategoryBackDTO,
-  TagBackDTO,
-} from "@/api/types";
+import { ArticleBackDTO, ArticleNewReq, CategoryBackDTO, TagBackDTO } from "@/api/types";
 import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file.ts";
 import { formatDate } from "@/utils/date.ts";
@@ -275,10 +261,7 @@ function openModel() {
   addOrEdit.value = true;
 }
 
-async function uploadImg(
-  files: Array<File>,
-  callback: (urls: string[]) => void
-) {
+async function uploadImg(files: Array<File>, callback: (urls: string[]) => void) {
   const res = await Promise.all(
     files.map((file) => {
       return new Promise((rev, rej) => {
@@ -475,7 +458,7 @@ const getArticle = (articleId: number) => {
 };
 
 onMounted(() => {
-  console.log("route.params.talkId", route.params.articleId);
+  console.log("route.params.articleId", route.params.articleId);
   if (route.params.articleId) {
     const articleId = parseInt(route.params.articleId as string); // 获取路由参数
     getArticle(Number(articleId));

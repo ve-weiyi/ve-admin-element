@@ -27,10 +27,7 @@
           <div v-if="statusList.length !== 0" class="status-menu">
             <span>状态</span>
             <template v-for="item of statusList" :key="item.value">
-              <span
-                :class="isActive(item.value)"
-                @click="handleStatusCheck(item.value)"
-              >
+              <span :class="isActive(item.value)" @click="handleStatusCheck(item.value)">
                 {{ item.label }}
               </span>
             </template>
@@ -85,6 +82,10 @@ async function handleEditClick(row: IObject) {
 // 其他工具栏
 function handleToolbarClick(data: ISelectedData) {
   console.log(data.name);
+  switch (data.name) {
+    case "writeArticle":
+      router.push({ path: `/article/publish` });
+  }
 }
 
 const route = useRoute();
@@ -163,9 +164,7 @@ const statusList: StatusTag[] = [
   },
 ];
 
-const status = ref<string | number>(
-  statusList.length > 0 ? statusList[0].value : 0
-);
+const status = ref<string | number>(statusList.length > 0 ? statusList[0].value : 0);
 
 const isActive = (value: string | number) => {
   return value == status.value ? "status-menu-active" : "status-menu-normal";
@@ -173,8 +172,7 @@ const isActive = (value: string | number) => {
 // 选择了状态
 const handleStatusCheck = (value: string | number) => {
   status.value = value;
-  const conditions =
-    statusList.find((v) => v.value === status.value)?.condition || {};
+  const conditions = statusList.find((v) => v.value === status.value)?.condition || {};
 
   handleQueryClick(conditions);
 };

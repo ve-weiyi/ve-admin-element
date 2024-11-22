@@ -7,111 +7,1085 @@ export {}
 
 declare module "vue" {
   export interface GlobalComponents {
-    AppLink: (typeof import("./../components/AppLink/index.vue"))["default"];
-    AppMain: (typeof import("./../layout/components/AppMain/index.vue"))["default"];
-    AvatarCropper: (typeof import("./../components/AvatarCropper/index.vue"))["default"];
-    Breadcrumb: (typeof import("./../components/Breadcrumb/index.vue"))["default"];
-    Calender: (typeof import("./../views/admin/home/components/Calender.vue"))["default"];
-    ChinaMap: (typeof import("./../views/admin/home/components/ChinaMap.vue"))["default"];
-    Echarts: (typeof import("./../components/Echarts/index.vue"))["default"];
-    Editor: (typeof import("./../components/Editor/index.vue"))["default"];
-    ElAlert: (typeof import("element-plus/es"))["ElAlert"];
-    ElAutocomplete: (typeof import("element-plus/es"))["ElAutocomplete"];
-    ElAutoResizer: (typeof import("element-plus/es"))["ElAutoResizer"];
-    ElAvatar: (typeof import("element-plus/es"))["ElAvatar"];
-    ElBacktop: (typeof import("element-plus/es"))["ElBacktop"];
-    ElBadge: (typeof import("element-plus/es"))["ElBadge"];
-    ElBreadcrumb: (typeof import("element-plus/es"))["ElBreadcrumb"];
-    ElBreadcrumbItem: (typeof import("element-plus/es"))["ElBreadcrumbItem"];
-    ElButton: (typeof import("element-plus/es"))["ElButton"];
-    ElCard: (typeof import("element-plus/es"))["ElCard"];
-    ElCheckbox: (typeof import("element-plus/es"))["ElCheckbox"];
-    ElCheckboxGroup: (typeof import("element-plus/es"))["ElCheckboxGroup"];
-    ElCol: (typeof import("element-plus/es"))["ElCol"];
-    ElColorPicker: (typeof import("element-plus/es"))["ElColorPicker"];
-    ElConfigProvider: (typeof import("element-plus/es"))["ElConfigProvider"];
-    ElDatePicker: (typeof import("element-plus/es"))["ElDatePicker"];
-    ElDescriptions: (typeof import("element-plus/es"))["ElDescriptions"];
-    ElDescriptionsItem: (typeof import("element-plus/es"))["ElDescriptionsItem"];
-    ElDialog: (typeof import("element-plus/es"))["ElDialog"];
-    ElDivider: (typeof import("element-plus/es"))["ElDivider"];
-    ElDrawer: (typeof import("element-plus/es"))["ElDrawer"];
-    ElDropdown: (typeof import("element-plus/es"))["ElDropdown"];
-    ElDropdownItem: (typeof import("element-plus/es"))["ElDropdownItem"];
-    ElDropdownMenu: (typeof import("element-plus/es"))["ElDropdownMenu"];
-    ElEmpty: (typeof import("element-plus/es"))["ElEmpty"];
-    ElForm: (typeof import("element-plus/es"))["ElForm"];
-    ElFormItem: (typeof import("element-plus/es"))["ElFormItem"];
-    ElIcon: (typeof import("element-plus/es"))["ElIcon"];
-    ElImage: (typeof import("element-plus/es"))["ElImage"];
-    ElImageViewer: (typeof import("element-plus/es"))["ElImageViewer"];
-    ElInput: (typeof import("element-plus/es"))["ElInput"];
-    ElInputNumber: (typeof import("element-plus/es"))["ElInputNumber"];
-    ElLink: (typeof import("element-plus/es"))["ElLink"];
-    ElMenu: (typeof import("element-plus/es"))["ElMenu"];
-    ElMenuItem: (typeof import("element-plus/es"))["ElMenuItem"];
-    ElOption: (typeof import("element-plus/es"))["ElOption"];
-    ElPagination: (typeof import("element-plus/es"))["ElPagination"];
-    ElPopover: (typeof import("element-plus/es"))["ElPopover"];
-    ElProgress: (typeof import("element-plus/es"))["ElProgress"];
-    ElRadio: (typeof import("element-plus/es"))["ElRadio"];
-    ElRadioGroup: (typeof import("element-plus/es"))["ElRadioGroup"];
-    ElRow: (typeof import("element-plus/es"))["ElRow"];
-    ElScrollbar: (typeof import("element-plus/es"))["ElScrollbar"];
-    ElSelect: (typeof import("element-plus/es"))["ElSelect"];
-    ElSkeleton: (typeof import("element-plus/es"))["ElSkeleton"];
-    ElSkeletonItem: (typeof import("element-plus/es"))["ElSkeletonItem"];
-    ElStatistic: (typeof import("element-plus/es"))["ElStatistic"];
-    ElSubMenu: (typeof import("element-plus/es"))["ElSubMenu"];
-    ElSwitch: (typeof import("element-plus/es"))["ElSwitch"];
-    ElTable: (typeof import("element-plus/es"))["ElTable"];
-    ElTableColumn: (typeof import("element-plus/es"))["ElTableColumn"];
-    ElTableV2: (typeof import("element-plus/es"))["ElTableV2"];
-    ElTabPane: (typeof import("element-plus/es"))["ElTabPane"];
-    ElTabs: (typeof import("element-plus/es"))["ElTabs"];
-    ElTag: (typeof import("element-plus/es"))["ElTag"];
-    ElText: (typeof import("element-plus/es"))["ElText"];
-    ElTooltip: (typeof import("element-plus/es"))["ElTooltip"];
-    ElTreeSelect: (typeof import("element-plus/es"))["ElTreeSelect"];
-    ElUpload: (typeof import("element-plus/es"))["ElUpload"];
-    ElWatermark: (typeof import("element-plus/es"))["ElWatermark"];
-    FileUpload: (typeof import("./../components/Upload/FileUpload.vue"))["default"];
-    GithubCorner: (typeof import("./../components/GithubCorner/index.vue"))["default"];
-    Hamburger: (typeof import("./../components/Hamburger/index.vue"))["default"];
-    IconSelect: (typeof import("./../components/IconSelect/index.vue"))["default"];
-    IEpArrowDown: (typeof import("~icons/ep/arrow-down"))["default"];
-    IEpArrowUp: (typeof import("~icons/ep/arrow-up"))["default"];
-    IEpBell: (typeof import("~icons/ep/bell"))["default"];
-    IEpBottom: (typeof import("~icons/ep/bottom"))["default"];
-    IEpClose: (typeof import("~icons/ep/close"))["default"];
-    IEpLock: (typeof import("~icons/ep/lock"))["default"];
-    IEpQuestionFilled: (typeof import("~icons/ep/question-filled"))["default"];
-    IEpTop: (typeof import("~icons/ep/top"))["default"];
-    IEpUser: (typeof import("~icons/ep/user"))["default"];
-    LangSelect: (typeof import("./../components/LangSelect/index.vue"))["default"];
-    LayoutSelect: (typeof import("./../layout/components/Settings/components/LayoutSelect.vue"))["default"];
-    MultiImageUpload: (typeof import("./../components/Upload/MultiImageUpload.vue"))["default"];
-    NavBar: (typeof import("./../layout/components/NavBar/index.vue"))["default"];
-    NavbarAction: (typeof import("./../layout/components/NavBar/components/NavbarAction.vue"))["default"];
-    PageContent: (typeof import("./../components/CURD/PageContent.vue"))["default"];
-    PageForm: (typeof import("./../components/CURD/PageForm.vue"))["default"];
-    PageModal: (typeof import("./../components/CURD/PageModal.vue"))["default"];
-    PageSearch: (typeof import("./../components/CURD/PageSearch.vue"))["default"];
-    RightToolbar: (typeof import("./../components/RightToolbar/index.vue"))["default"];
-    RouterLink: (typeof import("vue-router"))["RouterLink"];
-    RouterView: (typeof import("vue-router"))["RouterView"];
-    Settings: (typeof import("./../layout/components/Settings/index.vue"))["default"];
-    Sidebar: (typeof import("./../layout/components/Sidebar/index.vue"))["default"];
-    SidebarLogo: (typeof import("./../layout/components/Sidebar/components/SidebarLogo.vue"))["default"];
-    SidebarMenu: (typeof import("./../layout/components/Sidebar/components/SidebarMenu.vue"))["default"];
-    SidebarMenuItem: (typeof import("./../layout/components/Sidebar/components/SidebarMenuItem.vue"))["default"];
-    SidebarMenuItemTitle: (typeof import("./../layout/components/Sidebar/components/SidebarMenuItemTitle.vue"))["default"];
-    SidebarMixTopMenu: (typeof import("./../layout/components/Sidebar/components/SidebarMixTopMenu.vue"))["default"];
-    SingleImageUpload: (typeof import("./../components/Upload/SingleImageUpload.vue"))["default"];
-    SizeSelect: (typeof import("./../components/SizeSelect/index.vue"))["default"];
-    SvgIcon: (typeof import("./../components/SvgIcon/index.vue"))["default"];
-    TablePagination: (typeof import("./../components/VeTable/TablePagination.vue"))["default"];
-    TagCloud: (typeof import("./../components/TagCloud/index.vue"))["default"];
+    AppLink: (typeof import"./../components/AppLink/index.vue"")"
+    default;
+    "t;"
+    ];
+    AppMain: (typeof imp
+    "./../layout/components/AppMain/index.vue";
+    vu;
+    "default";
+    a;
+    ult;
+    "];;
+    AvatarCropper: (typeof
+    "./../components/AvatarCropper/index.vue";
+    ex;
+    "default";
+    d;
+    efault;
+    "];;
+    Breadcrumb: (type
+    "./../components/Breadcrumb/index.vue";
+    in;
+    "default"
+    );
+    ["default"];
+    Calender: (t
+    "./../views/admin/home/components/Calender.vue";
+    Ca;
+    "default";
+    e;
+    "))[";
+    default;
+    "];;
+    ChinaMap: "./../views/admin/home/components/ChinaMap.vue";
+    ts;
+    "default"
+    .;
+    vue;
+    "))[";
+    default;
+    "];;
+    Echar;
+    "./../components/Echarts/index.vue"
+    /
+    E;
+    "default";
+    d;
+    ex
+    .
+    vue;
+    "))[";
+    default;
+    "];;
+    E;
+    "./../components/Editor/index.vue";
+    en;
+    "default"
+    /;
+    index
+    .
+    vue;
+    "))[";
+    default;
+    "];;
+    "element-plus/es";
+    i;
+    "ElAlert";
+    e;
+    ment
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElAlert;
+    "];;
+    ElA;
+    "element-plus/es";
+    eo;
+    "ElAutocomplete";
+    t;
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElAutocomplete;
+    "];;
+    "element-plus/es";
+    ty;
+    "ElAutoResizer";
+    e;
+    ment
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElAutoResize;
+    "element-plus/es": "ElAvatar";
+    p;
+
+    ort(
+
+    "element-plus/es"
+    ))
+    ["ElAva"
+    element
+    -
+    plus
+    /
+    es;
+    "to";
+    ElBacktop;
+    "i;mport(";
+    element
+    -
+    plus
+    /
+    es;
+    "))[";
+    E;
+    "element-plus/es";
+    lB;
+    "ElBadge";
+    p;
+    eof;
+
+    import(
+
+    "element-plus/es"
+    ))
+    ["E"
+    element
+    -
+    plus
+    /
+    es;
+    "re";
+    ElBreadcrumb;
+    "o;f import(";
+    element
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElBread;
+    "element-plus/es";
+    ea;
+    "ElBreadcrumbItem";
+    f;
+
+    import(
+
+    "element-plus/es"
+    ))
+    [""
+    element
+    -
+    plus
+    /
+    es;
+    "];";
+    ElButton;
+    "t;on: (typeof import(";
+    element;
+    "element-plus/es";
+    tt;
+    "ElCard";
+    ElCard: (typeof import("elemen"
+    element
+    -
+    plus
+    /
+    es;
+    "ar";
+    ElCheckbox;
+    "h;eckbox: (typeof import(";
+    element
+    -
+    plus;
+    "element-plus/es";
+    x;
+    "";
+    ElCheckboxGroup;
+    "G;roup: (typeof import(";
+    elem;
+    "element-plus/es";
+    lC;
+    "ElCol";
+    G;
+    roup;
+    "];;
+    ElCol: (typeof import("element-plus/es"));
+    "ElColorPicker";
+    E;
+    lColorPicker: (typeof import("element"
+    element
+    -
+    plus
+    /
+    es;
+    "lo";
+    ElConfigProvider;
+    "o;nfigProvider: (typeof import(";
+    ele;
+    "element-plus/es";
+    El;
+    "ElDatePicker";
+    ";];;
+    ElDatePicker: (typeof import"element-plus/es"")"
+    ElDescriptions;
+    "];;;
+    ElDescriptions: (typeof import("e"
+    element
+    -
+    plus
+    /
+    es;
+    "[";
+    "ElDescriptionsItem";
+    ElDescriptionsItem: (typeof
+    "element-plus/es";
+    lu;
+    "ElDialog";
+    l;
+    DescriptionsItem;
+    "];;
+    ElDial;
+    "element-plus/es";
+
+    t(
+
+    "ElDivider";
+    u;
+    s
+    /
+    es;
+    "))[";
+    ElDialog;
+    "];;
+    ElDi;
+    "element-plus/es";
+    po;
+    "ElDrawer";
+    t;
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElDivider;
+    "];;
+    E;
+    "element-plus/es";
+    im;
+    "ElDropdown";
+    t;
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElDrawer;
+    "];;
+    ElDrop;
+    "element-plus/es";
+    or;
+    "ElDropdownItem";
+    e;
+    s;
+    "))[";
+    ElDropdown;
+    "];;
+    ElDropdownI;
+    "element-plus/es";
+    rt;
+    "ElDropdownMenu";
+    s;
+    "))[";
+    ElDropdownItem;
+    "];;
+    E;
+    "element-plus/es";
+    yp;
+    "ElEmpty";
+    t;
+
+    (
+
+    "element-plus/es"
+    ))
+    ["ElDro"
+    element
+    -
+    plus
+    /
+    es;
+    "El";
+    ElForm;
+    "t;ypeof import(";
+    element
+    -
+    plus
+    /
+    es;
+    ")";
+    element
+    -
+    plus
+    /
+    es;
+    " E";
+    ElFormItem;
+    "o;f import(";
+    element
+    -
+    plus
+    /
+    es;
+    ")";
+    element
+    -
+    plus
+    /
+    es;
+    "El";
+    ElIcon;
+    ":; (typeof import(";
+    element
+    -
+    plu;
+    "element-plus/es";
+    em;
+    "ElImage";
+    l;
+    Icon: (typeof import("element-plus"
+    element
+    -
+    plus
+    /
+    es;
+    ";
+    "ElImageViewer";
+    p;
+    eof;
+
+    import(
+
+    "element-plus/es";
+    "element-plus/es";
+    "ElInput";
+    e;
+    wer: (typeof import("element-plus/"
+    element
+    -
+    plus
+    /
+    es;
+    "we";
+    ElInputNumber;
+    "t;: (typeof import(";
+    element
+    -
+    p;
+    "element-plus/es";
+    t;
+    "";
+    ElLink;
+    "l;InputNumber: (typeof import";
+    element
+    -
+    plus
+    /
+    es;
+    ""
+    )
+    "ElMenu";
+    u;
+    tNumber;
+    "];;
+    ElLink: (typeof
+    "element-plus/es";
+    lu;
+    "ElMenuItem";
+    i;
+    nk;
+    "];;
+    ElMenu: (typeof imp
+    "element-plus/es"
+    /
+    e;
+    "ElOption";
+    n;
+    u;
+    "];;
+    ElMenuItem: (typeof impo
+    "element-plus/es";
+    es;
+    "ElPagination";
+    m;
+    "];;
+    ElOption: (typeof impo
+    "element-plus/es";
+    es;
+    "ElPopover";
+    o;
+    n;
+    "];;
+    ElPagination: (typeof
+    "element-plus/es";
+    lu;
+    "ElProgress";
+    a;
+    gination;
+    "];;
+    ElPopover: ("element-plus/es"
+    em;
+    "ElRadio";
+    e;
+    s;
+    "))[";
+    ElPopover;
+    "];;
+    ElProgress;
+    "element-plus/es";
+    "e";
+    ElRadioGroup;
+    "";
+    ))
+    ["ElProgress"];
+    ElRa;
+    "element-plus/es";
+    rt;
+    "ElRow";
+    n;
+    t
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElRadio;
+    "];;
+    ElR;
+    "element-plus/es";
+    f;
+    "ElScrollbar";
+    n;
+    t
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElRadioGroup;
+    "];";
+    element
+    -
+    plus
+    /
+    es;
+    "of";
+    ElSelect;
+    "l;ement-plus/es"
+    ))
+    ["ElRow"];
+    "element-plus/es";
+    eo;
+    "ElSkeleton";
+    e;
+    ment
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElScrollbar;
+    "];;
+    "element-plus/es";
+    f;
+    "ElSkeletonItem";
+    p;
+    lus
+    /
+    es;
+    "))[";
+    ElSelect;
+    "];;
+    ElSke;
+    "element-plus/es";
+    po;
+    "ElStatistic";
+    l;
+    us
+    /
+    es;
+    "))[";
+    ElSkeleton;
+    "];;
+    El;
+    "element-plus/es";
+    pe;
+    "ElSubMenu";
+    e;
+    lement
+    -
+    plus
+    /
+    es;
+    "))[";
+    ElSkeleton;
+    "element-plus/es";
+    ti;
+    "ElSwitch";
+    e;
+    of;
+
+    import(
+
+    "element-plus/es"
+    )
+    "element-plus/es";
+    "ElTable";
+    e;
+    nu: (typeof import("element-plus/e"
+    element
+    -
+    plus
+    /
+    es;
+    ";;
+    "ElTableColumn";
+    t;
+    ypeof;
+
+    import(
+
+    "element-plus/es";
+    "element-plus/es";
+    "ElTableV2";
+    t;
+    ypeof;
+
+    import(
+
+    "element-plus/es";
+    "element-plus/es";
+    "ElTabPane";
+    m;
+    n: (typeof import("element-"
+    element
+    -
+    plus
+    /
+    es;
+    "le";
+    ElTabs;
+    ";;;
+    ElTableV2: (typeof im
+    "element-plus/es";
+    s
+    /
+    "ElTag";
+    E;
+    lTableV2;
+    "];;
+    ElTabPane: "element-plus/es";
+    le;
+    "ElText";
+    s;
+    /es"))["ElTabPane"];
+    ElTab;
+
+    "element-plus/es"(
+
+    "";
+    ElTooltip;
+    "s;/es"
+    ))
+    ["ElTabs"];
+    ElTag: (typ
+    "element-plus/es";
+    nt;
+    "ElTreeSelect";
+    l;
+    Tag;
+    "];;
+    ElText: (typeof im
+    "element-plus/es";
+    s
+    /
+    "ElUpload";
+    e;
+    xt;
+    "];;
+    ElTooltip: (typeof imp
+    "element-plus/es"
+    /
+    e;
+    "ElWatermark";
+    i;
+    p;
+    "];;
+    ElTreeSelect: (typeof
+    "./../components/Upload/FileUpload.vue";
+    t;
+    "";
+    default;
+    "U;pload: (typeof import(";
+    element
+    -
+    pl;
+    "./../components/GithubCorner/index.vue";
+    ty;
+    "default";
+    r;
+
+    t(
+
+    "element-plus/es"
+    ))
+    ["ElWater".
+    /../
+    components
+    /
+    Hamburger
+    /
+    index
+    .
+    vue;
+    "t(";
+    default;
+    "p;onents/Upload/FileUpload.vue"
+    ))
+    "./../components/IconSelect/index.vue";
+    i;
+    "default"
+    .;./components/
+    GithubCorner
+    /
+    index
+    .
+    v;
+    "~icons/ep/arrow-down";
+    Ha;
+
+    "default"(;
+
+    typeof;
+
+    import(
+
+    "./../components/"
+    ~
+    icons
+    /
+    ep
+    /
+    arrow
+    -
+    up;
+    "))";
+    default;
+    "";
+    ];
+    IconSelect: (typeof i
+    "~icons/ep/bell";
+    on;
+    "default";
+    S;
+    elect
+    /
+    index
+    .
+    vue;
+    "))[";
+    default;
+    "];"
+    ~
+    icons
+    /
+    ep
+    /
+    bottom;
+    " (";
+    default;
+    "p;ort("
+    ~
+    icons
+    /
+    ep
+    /
+    arrow
+    -
+    down;
+    "))["
+    ~
+    icons
+    /
+    ep
+    /
+    close;
+    "Ep";
+    default;
+    "(;typeof import("
+    ~
+    icons
+    /
+    ep
+    /
+    arr;
+    "~icons/ep/lock";
+    t;
+    "";
+    default;
+    "p;Bell: (typeof import("
+    ~
+    icons
+    /
+    ep
+    /
+    bell;
+    ")"
+    ~
+    icons
+    /
+    ep
+    /
+    question
+    -
+    filled;
+    ": ";
+    default;
+    "m;port("
+    ~
+    icons
+    /
+    ep
+    /
+    bottom;
+    "))[";
+    "~icons/ep/top";
+    IE;
+    "default";
+    t;
+    ypeof;
+
+    import(
+
+    "~icons/ep/clos"
+    ~
+    icons
+    /
+    ep
+    /
+    user;
+    ";
+    "default";
+    k;
+    : (typeof import("~icons/ep/loc".
+    /../
+    components
+    /
+    LangSelect
+    /
+    index
+    .
+    vue;
+    ": ";
+    default;
+    "m;port("
+    ~
+    icons
+    /
+    ep
+    /
+    question
+    -
+    filled;
+    ")"
+    ./../
+    layout
+    /
+    components
+    /
+    Settings
+    /
+    components
+    /
+    LayoutSelect
+    .
+    vue;
+    "ef";
+    default;
+    " ;  IEpUser: (typeof import("
+    ~
+    icons
+    /
+    ep
+    /
+    "./../components/Upload/MultiImageUpload.vue";
+    mp;
+    "default"
+    /;
+    components
+    /
+    LangSelect
+    /
+    index;
+    "./../layout/components/NavBar/index.vue";
+    pe;
+
+    "default"(;
+
+    "./../layout/components/Settings/"
+    ./../
+    layout
+    /
+    components
+    /
+    NavBar
+    /
+    components
+    /
+    NavbarAction
+    .
+    vue;
+    "lo";
+    default;
+    "o;f import("
+    ./../
+    components
+    /
+    Upload;
+    "./../components/CURD/PageContent.vue";
+
+    "default"(;
+
+    typeof;
+
+    import(
+
+    "./../layout/co"
+    ./../
+    components
+    /
+    CURD
+    /
+    PageForm
+    .
+    vue;
+    "lt";
+    default;
+    "a;vbarAction: (typeof import("
+    ./"./../components/
+    CURD
+    /
+    PageModal
+    .
+    vue;
+    "ts";
+    default;
+    "t;ion.vue"
+    ))
+    ["default"];
+    Page;
+    "./../components/CURD/PageSearch.vue";
+    nt;
+    "default";
+    g;
+    eContent
+    .
+    vue;
+    "))[";
+    default;
+    "];;
+    P;
+    "./../components/RightToolbar/index.vue"
+    /
+    C;
+    "default";
+    o;
+    rm
+    .
+    vue;
+    "))[";
+    default;
+    "];;
+    PageM;
+    "vue-router";
+    f;
+    "RouterLink"
+    /;
+    components
+    /
+    CURD
+    /
+    PageModal
+    .
+    vue;
+    ")";
+    vue
+    -
+    router;
+    ";;
+    "RouterView";
+    c;
+    h: (typeof import("./../compo".
+    /../
+    layout
+    /
+    components
+    /
+    Settings
+    /
+    index
+    .
+    vue;
+    "  ";
+    default;
+    "b;ar: (typeof import("
+    ./../
+    com;
+    "./../layout/components/Sidebar/index.vue";
+    "]";
+    default;
+    "t;erLink: (typeof import(";
+    vue
+    -
+    rout;
+    "./../layout/components/Sidebar/components/SidebarLogo.vue";
+    ut;
+    "default";
+    u;
+    terView;
+    "];;
+    Settings: (typeof
+    "./../layout/components/Sidebar/components/SidebarMenu.vue";
+    ul;
+    "default";
+    S;
+    idebar: (typeof import("./../layout/".
+    /../
+    layout
+    /
+    components
+    /
+    Sidebar
+    /
+    components
+    /
+    SidebarMenuItem
+    .
+    vue;
+    "yp";
+    default;
+    "t;("
+    ./../
+    layout
+    /
+    components
+    /
+    Sidebar
+    /
+    componen;
+    "./../layout/components/Sidebar/components/SidebarMenuItemTitle.vue"
+    /.
+    "default";
+    c;
+    omponents
+    /
+    Sidebar
+    /
+    components
+    /
+    SidebarMe;
+    "./../layout/components/Sidebar/components/SidebarMixTopMenu.vue";
+    ay;
+    "default";
+    n;
+    ents
+    /
+    Sidebar
+    /
+    components
+    /
+    SidebarMenuIte;
+
+    "./../components/Upload/SingleImageUpload.vue"(
+
+    "default";
+    p;
+
+    ort(
+
+    "./../layout/components/Sid"
+    ./../
+    components
+    /
+    SizeSelect
+    /
+    index
+    .
+    vue;
+    "ue";
+    default;
+    "u;lt"
+    ];
+    SidebarMixTopMenu: "./../components/SvgIcon/index.vue";
+    en;
+    "default";
+    r;
+    /components/
+    SidebarMixTopMenu
+    .
+    vue;
+    "))"
+    ./../
+    components
+    /
+    VeTable
+    /
+    TablePagination
+    .
+    vue;
+    "mp";
+    default;
+    "/;components/Upload/SingleImage"
+    ./../
+    components
+    /
+    TagCloud
+    /
+    index
+    .
+    vue;
+    "le";
+    default;
+    "o;f import("
+    ./../
+    components
+    /
+    Siz;
+    "./../layout/components/TagsView/index.vue";
+    n: "default";
+    i;
+
+    mport(
+
+    "./../components/SvgIcon/index."
+    ./../
+    layout
+    /
+    components
+    /
+    Settings
+    /
+    components
+    /
+    ThemeColorPicker
+    .
+    vue;
+    "on";
+    default;
+    "b;le/TablePagination.vue"
+    ))
+    "./../views/admin/system/role/components/tree.vue";
+    mp;
+    "default";
+    g;
+    Cloud
+    /
+    index
+    .
+    vue;
+    "))[";
+    default;
+    "];;
     TagsView: (typeof import("./../layout/components/TagsView/index.vue"))["default"];
     ThemeColorPicker: (typeof import("./../layout/components/Settings/components/ThemeColorPicker.vue"))["default"];
     Tree: (typeof import("./../views/admin/system/role/components/tree.vue"))["default"];

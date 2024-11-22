@@ -35,7 +35,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
   pk: "id",
   toolbar: [
     {
-      name: "write",
+      name: "writeArticle",
       icon: "plus",
       text: "新增文章",
       auth: "write",

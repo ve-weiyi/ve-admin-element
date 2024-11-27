@@ -38,6 +38,16 @@
             {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
           </el-tag>
         </template>
+        <template #category_name="scope">
+          <el-tag type="success">
+            {{ scope.row[scope.prop] }}
+          </el-tag>
+        </template>
+        <template #tag_name_list="scope">
+          <el-tag v-for="item of scope.row[scope.prop]" type="primary">
+            {{ item }}
+          </el-tag>
+        </template>
       </page-content>
     </template>
   </div>

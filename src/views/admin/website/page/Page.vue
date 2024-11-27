@@ -87,51 +87,13 @@
         <el-form-item label="页面标签">
           <el-input v-model="formData.page_label" style="width: 360px" />
         </el-form-item>
-        <el-form-item label="封面">
+        <el-form-item label="上传封面">
           <el-radio-group v-model="uploadType">
-            <el-radio :label="0">上传文件</el-radio>
-            <el-radio :label="1">选择文件</el-radio>
-            <el-radio :label="2">填写链接</el-radio>
+            <el-radio label="upload">上传文件</el-radio>
+            <el-radio label="select">选择文件</el-radio>
+            <el-radio label="input">填写链接</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="页面封面" style="width: 360px">
-          <single-image-upload
-            v-if="uploadType === 0"
-            v-model="formData.page_cover"
-            accept="image/*"
-            upload-path="/page"
-            height="100px"
-            width="270px"
-          />
-          <el-select
-            v-if="uploadType === 1"
-            v-model="formData.page_cover"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="输入路径前缀"
-            remote-show-suffix
-            :remote-method="fetchFileList"
-            :loading="loading"
-            style="width: 240px"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-              <div class="flex items-center">
-                <img :src="item.value" size="6" />
-                <span>{{ item.label }}</span>
-              </div>
-            </el-option>
-          </el-select>
-          <el-input
-            v-if="uploadType === 2"
-            v-model="formData.page_cover"
-            placeholder="请输入图片链接"
-          />
+          <option-image-upload v-model="formData.page_cover" :upload-type="uploadType" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -163,11 +125,10 @@ import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
-import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import { addPageApi, deletePageApi, findPageListApi, updatePageApi } from "@/api/page.ts";
-import { ListUploadFileReq, PageBackDTO, PageNewReq, PageQueryReq } from "@/api/types.ts";
-import { listUploadFileApi } from "@/api/file.ts";
+import { PageBackDTO, PageNewReq, PageQueryReq } from "@/api/types.ts";
+import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -218,7 +179,7 @@ const initFormData = <PageNewReq>{
 
 const addModalVisible = ref(false);
 const formData = ref<PageNewReq>({ ...initFormData });
-const uploadType = ref(0);
+const uploadType = ref("upload");
 
 const deleteModalVisible = ref(false);
 const deleteId = ref(0);
@@ -237,7 +198,6 @@ function handleAdd(data?: PageBackDTO) {
   } else {
     formData.value = { ...initFormData };
   }
-  uploadType.value = 0;
   addModalVisible.value = true;
 }
 
@@ -280,27 +240,6 @@ function confirmDelete() {
 function cancelDelete() {
   deleteModalVisible.value = false;
 }
-
-const options = ref([]);
-const fetchFileList = (query: string) => {
-  if (query) {
-    loading.value = true;
-    let data: ListUploadFileReq = {
-      file_path: query,
-      limit: 10,
-    };
-
-    listUploadFileApi(data).then((res) => {
-      loading.value = false;
-      options.value = [];
-      res.data.urls.forEach((item) => {
-        options.value.push({ value: item, label: item.split("/").pop() });
-      });
-    });
-  } else {
-    options.value = [];
-  }
-};
 </script>
 
 <style scoped>

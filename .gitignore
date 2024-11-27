@@ -17,3 +17,4 @@ package-lock.json
 pnpm-lock.yaml
 stats.html
 /admin
+components.d.ts

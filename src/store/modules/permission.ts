@@ -29,7 +29,7 @@ export const usePermissionStore = defineStore("permission", () => {
    */
   function generateRoutes() {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      console.log("generateRoutes", import.meta.env.VITE_USE_MOCK_MENU);
+      // console.log("generateRoutes", import.meta.env.VITE_USE_MOCK_MENU);
       if (import.meta.env.VITE_USE_MOCK_MENU == "true") {
         const dynamicRoutes = getMockRoutes();
         routes.value = constantRoutes.concat(dynamicRoutes);
@@ -135,7 +135,7 @@ const findComponent = (v: UserMenu) => {
         return ev.includes(v.path as any);
       });
 
-  console.log("findComponent", v, modulesRoutesKeys[index]);
+  // console.log("findComponent", v, modulesRoutesKeys[index]);
   return modulesRoutes[modulesRoutesKeys[index]];
 };
 

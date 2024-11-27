@@ -156,12 +156,14 @@
             <el-input v-model="article.original_url" placeholder="请填写原文链接" />
           </el-form-item>
           <el-form-item label="上传封面">
-            <single-image-upload
+            <el-radio-group v-model="uploadType">
+              <el-radio label="upload">上传文件</el-radio>
+              <el-radio label="select">选择文件</el-radio>
+              <el-radio label="input">填写链接</el-radio>
+            </el-radio-group>
+            <option-image-upload
               v-model="article.article_cover"
-              accept="image/*"
-              upload-path="/article"
-              height="180px"
-              width="360px"
+              :upload-type="uploadType"
             />
           </el-form-item>
           <el-form-item label="置顶">
@@ -201,7 +203,7 @@ import { ArticleBackDTO, ArticleNewReq, CategoryBackDTO, TagBackDTO } from "@/ap
 import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file.ts";
 import { formatDate } from "@/utils/date.ts";
-import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
+import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
 import { ArticleTopEnum } from "@/enums/ArticleEnum.ts";
 
 const route = useRoute();
@@ -474,6 +476,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // autoSaveArticle();
 });
+
+const uploadType = ref("upload");
 </script>
 
 <style scoped>

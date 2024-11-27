@@ -101,12 +101,14 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       prop: "category_name",
       width: 100,
       align: "center",
+      templet: "custom",
     },
     {
       label: "标签",
       prop: "tag_name_list",
       width: 120,
       align: "center",
+      templet: "custom",
     },
     {
       label: "是否置顶",

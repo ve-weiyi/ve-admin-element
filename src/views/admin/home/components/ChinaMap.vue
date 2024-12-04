@@ -1,5 +1,5 @@
 <template>
-  <div ref="chartDom" :style="{ width: width, height: height }" />
+  <div ref="chartDom" :style="{ width: width, height: height }"></div>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +11,7 @@ import {
   nextTick,
   onBeforeUnmount,
   onMounted,
+  PropType,
   ref,
   watchEffect,
 } from "vue";
@@ -26,7 +27,8 @@ const props = defineProps({
   //   required: true
   // },
   values: {
-    type: Object,
+    type: Array as PropType<Array<{ name: string; value: number }>>,
+    required: true,
   },
   width: {
     type: String,
@@ -99,7 +101,7 @@ function newOptions() {
         roam: true,
         zoom: 1.2, // 控制地图的放大缩小
         geoIndex: 0,
-        data: [{ name: "广西", value: 1 }],
+        data: props.values,
         emphasis: {
           // 高亮状态下的多边形和标签样式
           // 控制地图滑过后的颜色

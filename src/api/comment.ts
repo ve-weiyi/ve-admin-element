@@ -1,5 +1,12 @@
 import request from "@/utils/request";
-import { IdsReq, BatchResp, IdReq, CommentQuery, PageResp, CommentReviewReq } from "./types";
+import {
+  BatchResp,
+  CommentQuery,
+  CommentReviewReq,
+  IdReq,
+  IdsReq,
+  PageResp,
+} from "./types";
 
 /** 批量删除评论 */
 export function batchDeleteCommentApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
@@ -20,7 +27,9 @@ export function deleteCommentApi(data?: IdReq): Promise<IApiResponse<BatchResp>>
 }
 
 /** 查询评论列表(后台) */
-export function findCommentBackListApi(data?: CommentQuery): Promise<IApiResponse<PageResp>> {
+export function findCommentBackListApi(
+  data?: CommentQuery
+): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/comment/find_comment_back_list",
     method: "POST",
@@ -29,7 +38,9 @@ export function findCommentBackListApi(data?: CommentQuery): Promise<IApiRespons
 }
 
 /** 更新评论审核状态 */
-export function updateCommentReviewApi(data?: CommentReviewReq): Promise<IApiResponse<BatchResp>> {
+export function updateCommentReviewApi(
+  data?: CommentReviewReq
+): Promise<IApiResponse<BatchResp>> {
   return request({
     url: "/admin_api/v1/comment/update_comment_review",
     method: "PUT",

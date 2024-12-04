@@ -30,7 +30,9 @@ export function getUserInfoApi(data?: EmptyReq): Promise<IApiResponse<UserInfoRe
 }
 
 /** 查询用户登录历史 */
-export function getUserLoginHistoryListApi(data?: UserLoginHistoryQuery): Promise<IApiResponse<PageResp>> {
+export function getUserLoginHistoryListApi(
+  data?: UserLoginHistoryQuery
+): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/user/get_user_login_history_list",
     method: "POST",

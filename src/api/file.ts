@@ -44,7 +44,7 @@ export function deletesFileApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> 
 /** 获取文件列表 */
 export function listUploadFileApi(
   data?: ListUploadFileReq
-,): Promise<IApiResponse<ListUploadFileResp>> {
+): Promise<IApiResponse<ListUploadFileResp>> {
   return request({
     url: "/admin_api/v1/file/list_upload_file",
     method: "POST",

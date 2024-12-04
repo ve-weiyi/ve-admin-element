@@ -12,9 +12,7 @@
             />
             <div>
               <p>{{ greetings }}</p>
-              <p class="text-sm text-gray">
-                今日天气晴朗，气温在15℃至25℃之间，东南风。
-              </p>
+              <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
             </div>
           </div>
         </el-col>
@@ -43,11 +41,7 @@
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-view">
-            <svg-icon
-              icon-class="uv"
-              size="4em"
-              class-tagName="card-panel-icon"
-            />
+            <svg-icon icon-class="uv" size="4em" class-tagName="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">访问量</div>
@@ -58,11 +52,7 @@
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon
-              icon-class="document"
-              size="3rem"
-              class-tagName="card-panel-icon"
-            />
+            <svg-icon icon-class="document" size="3rem" class-tagName="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">文章量</div>
@@ -73,11 +63,7 @@
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon
-              icon-class="user"
-              size="4em"
-              lass-tagName="card-panel-icon"
-            />
+            <svg-icon icon-class="user" size="4em" lass-tagName="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">用户量</div>
@@ -88,35 +74,31 @@
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon
-              icon-class="message"
-              size="4em"
-              class-tagName="card-panel-icon"
-            />
+            <svg-icon icon-class="message" size="4em" class-tagName="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">留言量</div>
-            <span class="card-panel-num">{{ messageCount }}</span>
+            <span class="card-panel-num">{{ remarkCount }}</span>
           </div>
         </div>
       </el-col>
     </el-row>
     <el-row class="data-card">
       <div class="title">一周访问量✨</div>
-      <Echarts :options="userView" height="350px" />
+      <Echarts :options="userViewOptions" height="350px" />
     </el-row>
 
     <el-row :gutter="32" style="margin-top: 32px">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <div class="title">文章浏览量排行🚀</div>
-          <Echarts :options="ariticleRank" height="350px" />
+          <Echarts :options="articleRankOptions" height="350px" />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <div class="title">文章分类统计🍉</div>
-          <Echarts :options="category" height="350px" />
+          <Echarts :options="categoryOptions" height="350px" />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -142,7 +124,7 @@
             <el-radio :value="2">游客</el-radio>
           </el-radio-group>
         </div>
-        <ChinaMap v-loading="loading" :data="areaData" />
+        <ChinaMap v-loading="loading" :values="areaData" />
       </div>
     </el-card>
   </div>
@@ -157,22 +139,26 @@ import ChinaMap from "./components/ChinaMap.vue";
 
 import { onMounted, reactive, ref } from "vue";
 import { getAdminHomeInfoApi } from "@/api/website.ts";
-import { ArticleStatisticsDTO, TagDTO, AccountArea } from "@/api/types.ts";
+import {
+  ArticleViewDTO,
+  TagDTO,
+  ArticleStatisticsDTO,
+  AccountArea,
+} from "@/api/types.ts";
 import { findAccountAreaAnalysisApi } from "@/api/account.ts";
 import { useUserStore } from "@/store";
 
 const loading = ref(true);
 
-const tagList = ref<TagDTO[]>([]);
 const viewCount = ref(0);
-const messageCount = ref(0);
+const remarkCount = ref(0);
 const userCount = ref(0);
-const tagLoad = ref(false);
 const articleCount = ref(0);
+
 const articleStatisticsList = ref<ArticleStatisticsDTO[]>([]);
 const areaData = ref<AccountArea[]>([]);
 
-let userView = reactive({
+let userViewOptions = reactive({
   xAxis: {
     data: [] as string[],
     boundaryGap: false,
@@ -238,7 +224,7 @@ let userView = reactive({
     },
   ],
 });
-let category = reactive({
+let categoryOptions = reactive({
   tooltip: {
     trigger: "item",
     formatter: "{a} <br/>{b} : {c} ({d}%)",
@@ -263,7 +249,7 @@ let category = reactive({
     },
   ],
 });
-let ariticleRank = reactive({
+let articleRankOptions = reactive({
   tooltip: {
     trigger: "axis",
     axisPointer: {
@@ -298,52 +284,69 @@ let ariticleRank = reactive({
     },
   ],
 });
+const tagList = ref<any[]>([]);
+const tagLoad = ref(false);
+
 const getList = () => {
   loading.value = true;
-  getAdminHomeInfoApi().then((res) => {
-    viewCount.value = res.data.views_count;
-    messageCount.value = res.data.message_count;
-    userCount.value = res.data.user_count;
-    articleCount.value = res.data.article_count;
-    articleStatisticsList.value = res.data.article_statistics_list;
-    if (res.data.category_list != null) {
-      res.data.category_list.forEach((item) => {
-        category.series[0].data.push({
-          value: item.id,
-          name: item.category_name,
-        });
-      });
-    }
-    if (res.data.tag_list != null) {
-      tagList.value = res.data.tag_list;
-      tagLoad.value = true;
-    }
-    if (res.data.article_view_rank_list != null) {
-      res.data.article_view_rank_list.forEach((item) => {
-        ariticleRank.series[0].data.push(item.count);
-        ariticleRank.xAxis.data.push(item.article_title);
-      });
-    }
-    if (res.data.unique_view_list != null) {
-      const x = [];
-      const y = [];
-      res.data.unique_view_list.forEach((item) => {
-        x.push(item.date);
-        y.push(item.count);
-      });
+  getAdminHomeInfoApi()
+    .then((res) => {
+      viewCount.value = res.data.view_count;
+      remarkCount.value = res.data.remark_count;
+      userCount.value = res.data.user_count;
+      articleCount.value = res.data.article_count;
 
-      userView.xAxis.data.push(...x);
-      userView.series[0].data.push(...y);
-    }
-    // if (res.data.userViewVOList != null) {
-    //   res.data.userViewVOList.forEach((item) => {
-    //     userView.xAxis.data.push(item.date);
-    //     userView.series[0].data.push(item.pv);
-    //     userView.series[1].data.push(item.uv);
-    //   });
-    // }
-    loading.value = false;
-  });
+      if (res.data.category_list != null) {
+        res.data.category_list.forEach((item) => {
+          categoryOptions.series[0].data.push({
+            value: item.article_count,
+            name: item.category_name,
+          });
+        });
+      }
+      if (res.data.tag_list != null) {
+        res.data.tag_list.forEach((item) => {
+          tagList.value.push({
+            tag_name: item.tag_name,
+          });
+        });
+        tagLoad.value = true;
+      }
+      if (res.data.article_view_ranks != null) {
+        res.data.article_view_ranks.forEach((item) => {
+          articleRankOptions.series[0].data.push(item.view_count);
+          articleRankOptions.xAxis.data.push(item.article_title);
+        });
+      }
+      if (res.data.article_statistics != null) {
+        articleStatisticsList.value = res.data.article_statistics;
+      }
+
+      if (res.data.user_visit_daliy != null) {
+        const x = [];
+        const y = [];
+        res.data.user_visit_daliy.forEach((item) => {
+          x.push(item.date);
+          y.push(item.count);
+        });
+
+        userViewOptions.xAxis.data.push(...x);
+        userViewOptions.series[0].data.push(...y);
+      }
+      // if (res.data.userViewVOList != null) {
+      //   res.data.userViewVOList.forEach((item) => {
+      //     userView.xAxis.data.push(item.date);
+      //     userView.series[0].data.push(item.pv);
+      //     userView.series[1].data.push(item.uv);
+      //   });
+      // }
+    })
+    .catch((e) => {
+      console.log("获取数据失败", e);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 // 切换用户/游客类型
@@ -352,7 +355,12 @@ const listUserArea = () => {
   // 发送请求获取用户地域分布数据
   findAccountAreaAnalysisApi().then((res) => {
     // userAreaMap.series[0].data = res.data
-    areaData.value = res.data.list;
+    res.data.list.forEach((item: AccountArea) => {
+      areaData.value.push({
+        name: item.name,
+        value: item.value,
+      });
+    });
   });
 };
 
@@ -403,30 +411,30 @@ const statisticData = ref([
 <style lang="scss" scoped>
 .title {
   font-size: 14px;
-  color: var(--el-text-color-secondary);
   font-weight: 700;
+  color: var(--el-text-color-secondary);
 }
 
 .data-card {
-  background: var(--el-bg-color-overlay);
   padding: 1rem;
+  background: var(--el-bg-color-overlay);
 }
 
 .dashboard-container {
+  position: relative;
   padding: 32px;
   background: var(--el-bg-color-page);
-  position: relative;
 
   .github-corner {
     position: absolute;
-    top: 0px;
-    border: 0;
+    top: 0;
     right: 0;
+    border: 0;
   }
 
   .chart-wrapper {
-    background: var(--el-bg-color-overlay);
     padding: 1rem;
+    background: var(--el-bg-color-overlay);
     //margin-bottom: 2rem;
   }
 }
@@ -439,15 +447,15 @@ const statisticData = ref([
   }
 
   .card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
     position: relative;
+    height: 108px;
     overflow: hidden;
+    font-size: 12px;
     color: #666;
+    cursor: pointer;
     background: var(--el-bg-color-overlay);
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.05);
+    border-color: rgb(0 0 0 / 5%);
+    box-shadow: 4px 4px 40px rgb(0 0 0 / 5%);
 
     &:hover {
       .card-panel-icon-wrapper {
@@ -489,23 +497,23 @@ const statisticData = ref([
 
     .card-panel-icon-wrapper {
       float: left;
-      margin: 14px 0 0 14px;
       padding: 16px;
-      transition: all 0.38s ease-out;
+      margin: 14px 0 0 14px;
       border-radius: 6px;
+      transition: all 0.38s ease-out;
     }
 
     .card-panel-description {
       float: right;
-      font-weight: bold;
       margin: 26px;
-      margin-left: 0px;
+      margin-left: 0;
+      font-weight: bold;
 
       .card-panel-text {
+        margin-bottom: 12px;
+        font-size: 16px;
         line-height: 18px;
         color: var(--el-text-color-secondary);
-        font-size: 16px;
-        margin-bottom: 12px;
       }
 
       .card-panel-num {
@@ -515,13 +523,13 @@ const statisticData = ref([
   }
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .chart-wrapper {
     padding: 8px;
   }
 }
 
-@media (max-width: 550px) {
+@media (width <= 550px) {
   .card-panel-description {
     display: none;
   }
@@ -534,8 +542,8 @@ const statisticData = ref([
 
     .svg-icon {
       display: block;
-      margin: 14px auto !important;
       float: none !important;
+      margin: 14px auto !important;
     }
   }
 }

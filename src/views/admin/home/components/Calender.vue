@@ -1,5 +1,5 @@
 <template>
-  <div ref="chartDom" :style="{ width: width, height: height }" />
+  <div ref="chartDom" :style="{ width: width, height: height }"></div>
 </template>
 
 <script setup lang="ts">
@@ -10,6 +10,7 @@ import {
   nextTick,
   onBeforeUnmount,
   onMounted,
+  PropType,
   ref,
   watchEffect,
 } from "vue";
@@ -26,8 +27,8 @@ const props = defineProps({
   values: {
     type: Array as () => { date?: string; count?: number }[],
     default: () => [
-      { date: "2022-01-18", count: 100 },
-      { date: "2022-01-19", count: 100 },
+      { date: "2024-01-18", count: 100 },
+      { date: "2024-01-19", count: 100 },
     ],
   },
   rangeColor: {
@@ -49,19 +50,23 @@ const props = defineProps({
 
 function newOptions() {
   const colorRange = ["#ebedf0", "#40c463", "#0be148", "#30a14e", "#216e39"];
-  const startYear = props.endDate.getFullYear() - 1;
-  const endYear = props.endDate.getFullYear();
   const rangeMin = 0;
   let rangeMax = 5;
 
-  const startDate = `${props.endDate.getFullYear() - 1}-${props.endDate.getMonth()}-${props.endDate.getDay()}`;
-  const endDate = `${props.endDate.getFullYear()}-${props.endDate.getMonth()}-${props.endDate.getDay()}`;
+  // const date = new Date(); // 获取当前日期时间
+
+  const year = props.endDate.getFullYear(); // 获取年份
+  const month = props.endDate.getMonth() + 1; // 获取月份（从0开始，所以需要+1）
+  const day = props.endDate.getDate(); // 获取日期
+
+  const startDate = `${year - 1}-${month}-${day}`;
+  const endDate = `${year}-${month}-${day}`;
 
   const data: [string, number][] = [];
-  const date = +echarts.time.parse(startDate);
+  const start = +echarts.time.parse(startDate);
   const end = +echarts.time.parse(endDate);
   const dayTime = 3600 * 24 * 1000;
-  for (let time = date; time < end; time += dayTime) {
+  for (let time = start; time < end; time += dayTime) {
     const key = echarts.time.format(time, "{yyyy}-{MM}-{dd}", false);
     const count = props.values.find((item) => item.date === key)?.count || 0;
     // Math.floor(Math.random() * rangeMax)]
@@ -75,7 +80,7 @@ function newOptions() {
     title: {
       top: 30,
       left: "center",
-      text: `${startYear}-${endYear}年每日代码提交次数`,
+      text: `${year - 1}-${year}年每日代码提交次数`,
     },
     tooltip: {
       trigger: "item", // 设置触发方式为项触发
@@ -87,6 +92,14 @@ function newOptions() {
     visualMap: {
       min: rangeMin,
       max: rangeMax,
+      splitNumber: 5,
+      pieces: [
+        { gte: 0, lt: 1 },
+        { gte: 1, lt: 2 },
+        { gte: 2, lt: 3 },
+        { gte: 3, lt: 4 },
+        { gte: 4, lt: 5 },
+      ],
       calculable: true, // 开启值域漫游，根据数据动态调整间隔
       type: "piecewise",
       orient: "horizontal",
@@ -96,9 +109,9 @@ function newOptions() {
       inRange: {
         color: colorRange,
       },
-      formatter: function (value) {
+      formatter: function (value, value2) {
         // 自定义单位显示
-        return value + " 次/日";
+        return `${value} 次/日`;
       },
     },
     calendar: {

@@ -13,7 +13,9 @@ import {
 } from "./types";
 
 /** 添加文章 */
-export function addArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {
+export function addArticleApi(
+  data?: ArticleNewReq
+): Promise<IApiResponse<ArticleBackDTO>> {
   return request({
     url: "/admin_api/v1/article/add_article",
     method: "POST",
@@ -58,7 +60,9 @@ export function getArticleApi(data?: IdReq): Promise<IApiResponse<ArticleBackDTO
 }
 
 /** 回收文章 */
-export function recycleArticleApi(data?: ArticleRecycleReq): Promise<IApiResponse<EmptyResp>> {
+export function recycleArticleApi(
+  data?: ArticleRecycleReq
+): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/article/recycle_article",
     method: "POST",
@@ -76,7 +80,9 @@ export function topArticleApi(data?: ArticleTopReq): Promise<IApiResponse<EmptyR
 }
 
 /** 保存文章 */
-export function updateArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {
+export function updateArticleApi(
+  data?: ArticleNewReq
+): Promise<IApiResponse<ArticleBackDTO>> {
   return request({
     url: "/admin_api/v1/article/update_article",
     method: "POST",

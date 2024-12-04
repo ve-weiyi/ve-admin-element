@@ -26,15 +26,15 @@ export interface AccountQuery extends PageQuery {
 }
 
 export interface AdminHomeInfo {
-  views_count: number; // 访问量
-  message_count: number; // 留言量
+  view_count: number; // 访问量
   user_count: number; // 用户量
   article_count: number; // 文章量
+  remark_count: number; // 留言量
   category_list: CategoryDTO[]; // 分类列表
   tag_list: TagDTO[]; // 标签列表
-  article_view_rank_list: ArticleViewRankDTO[]; // 文章浏览量排行
-  article_statistics_list: ArticleStatisticsDTO[]; // 每日文章生产量
-  unique_view_list: UniqueViewDTO[]; // 每日用户访问量
+  article_view_ranks: ArticleViewDTO[]; // 文章浏览量排行
+  article_statistics: ArticleStatisticsDTO[]; // 文章提交统计
+  user_visit_daliy: UserVisitDTO[]; // 用户每日访问量
 }
 
 export interface AlbumBackDTO {
@@ -146,43 +146,14 @@ export interface ArticleTopReq {
   is_top: number; // 是否置顶
 }
 
-export interface ArticleViewRankDTO {
+export interface ArticleViewDTO {
   id?: number; // 文章ID
   article_title: string; // 文章标题
-  count: number; // 数量
-}
-
-export interface BannerBackDTO {
-  id?: number; // 页面id
-  banner_name: string; // 页面名
-  banner_label: string; // 页面标签
-  banner_cover: string; // 页面封面
-  created_at: number; // 创建时间
-  updated_at: number; // 更新时间
-}
-
-export interface BannerNewReq {
-  id?: number; // 页面id
-  banner_name: string; // 页面名
-  banner_label: string; // 页面标签
-  banner_cover: string; // 页面封面
-}
-
-export interface BannerQuery extends PageQuery {
-  banner_name?: string; // 页面名
+  view_count: number; // 浏览量
 }
 
 export interface BatchResp {
   success_count: number;
-}
-
-export interface BlogHomeInfo {
-  article_count: number; // 文章数量
-  category_count: number; // 分类数量
-  tag_count: number; // 标签数量
-  views_count: string; // 访问量
-  website_config: WebsiteConfig; // 网站配置
-  page_list: PageDTO[]; // 页面列表
 }
 
 export interface CategoryBackDTO {
@@ -196,6 +167,7 @@ export interface CategoryBackDTO {
 export interface CategoryDTO {
   id?: number;
   category_name: string; // 分类名
+  article_count: number; // 文章数量
 }
 
 export interface CategoryNewReq {
@@ -388,20 +360,13 @@ export interface PageBackDTO {
   updated_at: number; // 更新时间
 }
 
-export interface PageDTO {
-  id?: number; // 页面ID
-  page_name: string; // 页面名称
-  page_label: string; // 页面标签
-  page_cover: string; // 页面封面
-}
-
 export interface PageNewReq {
   id?: number; // 页面id
   page_name: string; // 页面名
   page_label: string; // 页面标签
   page_cover: string; // 页面封面
-  is_carousel: number; // 是否轮播
-  carousel_covers: string[]; // 轮播封面
+  is_carousel?: number; // 是否轮播
+  carousel_covers?: string[]; // 轮播封面
 }
 
 export interface PageQuery {
@@ -556,6 +521,7 @@ export interface TagBackDTO {
 export interface TagDTO {
   id?: number; // 标签ID
   tag_name: string; // 标签名
+  article_count: number; // 文章数量
 }
 
 export interface TagNewReq {
@@ -602,11 +568,6 @@ export interface Token {
   refresh_token: string; // 刷新token,过期时间较长。30d
   refresh_expires_in: number; // 刷新token过期时间
   scope: string; // 作用域
-}
-
-export interface UniqueViewDTO {
-  date: string; // 日期
-  count: number; // 数量
 }
 
 export interface UpdateAccountRolesReq {
@@ -731,6 +692,11 @@ export interface UserRoleLabel {
 
 export interface UserRolesResp {
   list: UserRole[];
+}
+
+export interface UserVisitDTO {
+  date: string; // 日期
+  count: number; // 数量
 }
 
 export interface WebsiteConfig {

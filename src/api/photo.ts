@@ -1,8 +1,16 @@
 import request from "@/utils/request";
-import { PageQuery, PageResp, IdsReq, BatchResp, PhotoNewReq, PhotoBackDTO, IdReq } from "./types";
+import {
+  BatchResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  PhotoBackDTO,
+  PhotoNewReq,
+  PhotoQuery,
+} from "./types";
 
 /** 分页获取照片列表 */
-export function findPhotoListApi(data?: PageQuery): Promise<IApiResponse<PageResp>> {
+export function findPhotoListApi(data?: PhotoQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/photo/find_photo_list",
     method: "POST",

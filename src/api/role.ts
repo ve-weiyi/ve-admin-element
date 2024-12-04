@@ -50,7 +50,9 @@ export function findRoleListApi(data?: RoleQuery): Promise<IApiResponse<PageResp
 }
 
 /** 获取角色资源列表 */
-export function findRoleResourcesApi(data?: IdReq): Promise<IApiResponse<RoleResourcesResp>> {
+export function findRoleResourcesApi(
+  data?: IdReq
+): Promise<IApiResponse<RoleResourcesResp>> {
   return request({
     url: "/admin_api/v1/role/find_role_resources",
     method: "POST",
@@ -68,7 +70,9 @@ export function updateRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackD
 }
 
 /** 更新角色接口权限 */
-export function updateRoleApisApi(data?: UpdateRoleApisReq): Promise<IApiResponse<EmptyResp>> {
+export function updateRoleApisApi(
+  data?: UpdateRoleApisReq
+): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/role/update_role_apis",
     method: "POST",
@@ -77,7 +81,9 @@ export function updateRoleApisApi(data?: UpdateRoleApisReq): Promise<IApiRespons
 }
 
 /** 更新角色菜单权限 */
-export function updateRoleMenusApi(data?: UpdateRoleMenusReq): Promise<IApiResponse<EmptyResp>> {
+export function updateRoleMenusApi(
+  data?: UpdateRoleMenusReq
+): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/role/update_role_menus",
     method: "POST",

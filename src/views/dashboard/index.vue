@@ -12,9 +12,7 @@
             />
             <div>
               <p>{{ greetings }}</p>
-              <p class="text-sm text-gray">
-                今日天气晴朗，气温在15℃至25℃之间，东南风。
-              </p>
+              <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
             </div>
           </div>
         </el-col>
@@ -45,9 +43,7 @@
         <el-card shadow="never">
           <template #header>
             <div class="flex-x-between">
-              <span class="text-[var(--el-text-color-secondary)]">
-                在线用户
-              </span>
+              <span class="text-[var(--el-text-color-secondary)]">在线用户</span>
               <el-tag type="success" size="small">-</el-tag>
             </div>
           </template>
@@ -56,9 +52,7 @@
             <span class="text-lg">{{ onlineUserCount }}</span>
             <svg-icon icon-class="user" size="2em" />
           </div>
-          <div
-            class="flex-x-between mt-2 text-sm text-[var(--el-text-color-secondary)]"
-          >
+          <div class="flex-x-between mt-2 text-sm text-[var(--el-text-color-secondary)]">
             <span>总用户数</span>
             <span>5</span>
           </div>
@@ -87,10 +81,7 @@
 
               <div class="flex-x-between">
                 <el-skeleton-item variant="text" style="width: 30%" />
-                <el-skeleton-item
-                  variant="circle"
-                  style="width: 2em; height: 2em"
-                />
+                <el-skeleton-item variant="circle" style="width: 2em; height: 2em" />
               </div>
               <div class="mt-5 flex-x-between">
                 <el-skeleton-item variant="text" style="width: 50%" />
@@ -114,13 +105,7 @@
               <div class="flex-x-between mt-2">
                 <div class="flex-y-center">
                   <span class="text-lg">{{ item.todayCount }}</span>
-                  <span
-                    :class="[
-                      'text-xs',
-                      'ml-2',
-                      getGrowthRateClass(item.growthRate),
-                    ]"
-                  >
+                  <span :class="['text-xs', 'ml-2', getGrowthRateClass(item.growthRate)]">
                     <i-ep-top v-if="item.growthRate > 0" />
                     <i-ep-bottom v-else-if="item.growthRate < 0" />
                     {{ formatGrowthRate(item.growthRate) }}
@@ -162,11 +147,7 @@
           </template>
 
           <el-scrollbar height="400px">
-            <div
-              v-for="(item, index) in notices"
-              :key="index"
-              class="flex-y-center py-3"
-            >
+            <div v-for="(item, index) in notices" :key="index" class="flex-y-center py-3">
               <el-tag :type="getNoticeLevelTag(item.level)" size="small">
                 {{ getNoticeLabel(item.type) }}
               </el-tag>
@@ -188,6 +169,8 @@
 </template>
 
 <script setup lang="ts">
+import { getToken } from "@/utils/token.ts";
+
 defineOptions({
   name: "Dashboard",
   inheritAttrs: false,
@@ -197,7 +180,6 @@ import { Client } from "@stomp/stompjs";
 
 import { useUserStore } from "@/store/modules/user";
 import { NoticeTypeEnum, getNoticeLabel } from "@/enums/NoticeTypeEnum";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
 const userStore = useUserStore();
 
 const socketEndpoint = ref(import.meta.env.VITE_APP_WS_ENDPOINT);
@@ -361,8 +343,7 @@ const notices = ref([
   {
     level: 2,
     type: NoticeTypeEnum.SECURITY_ALERT,
-    title:
-      "请注意，近期有恶意软件通过即时通讯工具传播，请勿下载不明来源的文件。",
+    title: "请注意，近期有恶意软件通过即时通讯工具传播，请勿下载不明来源的文件。",
   },
   {
     level: 2,
@@ -395,7 +376,7 @@ function connectWebSocket() {
   stompClient = new Client({
     brokerURL: socketEndpoint.value,
     connectHeaders: {
-      Authorization: localStorage.getItem(TOKEN_KEY) || "",
+      Authorization: getToken() || "",
     },
     debug: (str) => {
       console.log(str);

@@ -1,9 +1,9 @@
 import { resetRouter } from "@/router";
 import { store } from "@/store";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
 import { LoginReq, UserInfoResp } from "@/api/types";
 import { loginApi, logoutApi } from "@/api/auth";
 import { getUserInfoApi } from "@/api/user";
+import { clearStorage, setToken, setUid } from "@/utils/token.ts";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<UserInfoResp>(<UserInfoResp>{
@@ -17,7 +17,8 @@ export const useUserStore = defineStore("user", () => {
       loginApi(loginData)
         .then((data) => {
           console.log("login", data);
-          localStorage.setItem(TOKEN_KEY, data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          setToken(data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          setUid(data.data.token?.user_id);
           resolve();
         })
         .catch((error) => {
@@ -53,7 +54,7 @@ export const useUserStore = defineStore("user", () => {
     return new Promise<void>((resolve, reject) => {
       logoutApi()
         .then(() => {
-          localStorage.setItem(TOKEN_KEY, "");
+          this.forceLogOut();
           location.reload(); // 清空路由
           resolve();
         })
@@ -63,10 +64,9 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  // remove token
-  function resetToken() {
+  function forceLogOut() {
     return new Promise<void>((resolve) => {
-      localStorage.setItem(TOKEN_KEY, "");
+      clearStorage();
       resetRouter();
       resolve();
     });
@@ -77,7 +77,7 @@ export const useUserStore = defineStore("user", () => {
     login,
     getUserInfo,
     logout,
-    resetToken,
+    forceLogOut,
   };
 });
 

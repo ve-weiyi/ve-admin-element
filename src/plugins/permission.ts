@@ -1,13 +1,9 @@
-import {
-  NavigationGuardNext,
-  RouteLocationNormalized,
-  RouteRecordRaw,
-} from "vue-router";
+import { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 
 import NProgress from "@/utils/nprogress";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
 import router from "@/router";
 import { usePermissionStore, useUserStore } from "@/store";
+import { getToken } from "@/utils/token.ts";
 
 export function setupPermission() {
   // 白名单路由
@@ -15,7 +11,7 @@ export function setupPermission() {
 
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
-    const hasToken = localStorage.getItem(TOKEN_KEY);
+    const hasToken = getToken();
 
     if (hasToken) {
       if (to.path === "/login") {
@@ -24,8 +20,7 @@ export function setupPermission() {
         NProgress.done();
       } else {
         const userStore = useUserStore();
-        const hasRoles =
-          userStore.user.roles && userStore.user.roles.length > 0;
+        const hasRoles = userStore.user.roles && userStore.user.roles.length > 0;
 
         if (hasRoles) {
           // 如果未匹配到任何路由，跳转到404页面
@@ -33,8 +28,7 @@ export function setupPermission() {
             next(from.name ? { name: from.name } : "/404");
           } else {
             // 如果路由参数中有 title，覆盖路由元信息中的 title
-            const title =
-              (to.params.title as string) || (to.query.title as string);
+            const title = (to.params.title as string) || (to.query.title as string);
             if (title) {
               to.meta.title = title;
             }
@@ -45,13 +39,11 @@ export function setupPermission() {
           try {
             await userStore.getUserInfo();
             const dynamicRoutes = await permissionStore.generateRoutes();
-            dynamicRoutes.forEach((route: RouteRecordRaw) =>
-              router.addRoute(route)
-            );
+            dynamicRoutes.forEach((route: RouteRecordRaw) => router.addRoute(route));
             next({ ...to, replace: true });
           } catch (error) {
             // 移除 token 并重定向到登录页，携带当前页面路由作为跳转参数
-            await userStore.resetToken();
+            await userStore.forceLogOut();
             redirectToLogin(to, next);
             NProgress.done();
           }
@@ -75,10 +67,7 @@ export function setupPermission() {
 }
 
 /** 重定向到登录页 */
-function redirectToLogin(
-  to: RouteLocationNormalized,
-  next: NavigationGuardNext
-) {
+function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext) {
   const params = new URLSearchParams(to.query as Record<string, string>);
   const queryString = params.toString();
   const redirect = queryString ? `${to.path}?${queryString}` : to.path;
@@ -86,10 +75,7 @@ function redirectToLogin(
 }
 
 /** 判断是否有权限 */
-export function hasAuth(
-  value: string | string[],
-  type: "button" | "role" = "button"
-) {
+export function hasAuth(value: string | string[], type: "button" | "role" = "button") {
   const { roles, perms } = useUserStore().user;
 
   return true;

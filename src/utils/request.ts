@@ -1,69 +1,71 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { useUserStoreHook } from "@/store/modules/user";
-import { ResultEnum } from "@/enums/ResultEnum";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
+import axios, {
+  type AxiosError,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
 import qs from "qs";
 import MD5 from "crypto-js/md5";
+import { useUserStore } from "@/store";
+import { getToken, getUid } from "./token";
 
-function signWithSalt(message: string, salt: string): string {
-  const saltedMessage = salt + message;
-  return MD5(saltedMessage).toString();
+const HeaderUid = "Uid";
+const HeaderToken = "Token";
+const HeaderAuthorization = "Authorization";
+
+const HeaderXAuthToken = "X-Auth-Token";
+const HeaderTerminal = "Terminal";
+const HeaderTimestamp = "Timestamp";
+
+function addUserToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+  config.headers = Object.assign({}, config.headers, {
+    [HeaderUid]: getUid(),
+    [HeaderAuthorization]: getToken(),
+  });
+
+  return config;
 }
 
-function getTimestampInSeconds(): number {
-  return Math.floor(Date.now() / 1000);
+function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+  const dv = getUid();
+  const ts = Math.floor(Date.now() / 1000).toString();
+  config.headers = Object.assign({}, config.headers, {
+    [HeaderTerminal]: dv,
+    [HeaderTimestamp]: ts,
+    [HeaderXAuthToken]: MD5(dv + ts).toString(),
+  });
+
+  return config;
 }
 
-// 创建 axios 实例
-const service = axios.create({
-  baseURL: "/",
-  timeout: 50000,
-  headers: { "Content-Type": "application/json;charset=utf-8" },
+const requests = axios.create({
+  baseURL: "",
+  timeout: 10000,
+  withCredentials: false, // 禁用 Cookie
+  // 请求头
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+  },
   paramsSerializer: (params) => {
     return qs.stringify(params);
   },
 });
 
-const HeaderAuthorization = "Authorization";
-const HeaderUid = "Uid";
-const HeaderToken = "Token";
-const HeaderTerminal = "Terminal";
-const HeaderTimestamp = "Timestamp";
-
 // 请求拦截器
-service.interceptors.request.use(
+requests.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const accessToken = localStorage.getItem(TOKEN_KEY);
     // 请求带token
-    const dv = "device_id";
-    const ts = getTimestampInSeconds().toString();
-    const tk = accessToken;
-    const uid = 1;
-    if (tk) {
-      config.headers = Object.assign({}, config.headers, {
-        [HeaderAuthorization]: tk,
-        [HeaderUid]: uid,
-        [HeaderToken]: signWithSalt(dv, ts),
-        [HeaderTerminal]: dv,
-        [HeaderTimestamp]: ts,
-      });
-    } else {
-      // 未登录时的加密方式
-      config.headers = Object.assign({}, config.headers, {
-        [HeaderToken]: signWithSalt(dv, ts),
-        [HeaderTerminal]: dv,
-        [HeaderTimestamp]: ts,
-      });
-    }
+    addUserToken(config);
+    addTimeToken(config);
+
     return config;
   },
-  (error: any) => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
 
-// 响应拦截器
-service.interceptors.response.use(
+// 配置响应拦截器
+requests.interceptors.response.use(
   (response: AxiosResponse) => {
     // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
     if (
@@ -73,36 +75,43 @@ service.interceptors.response.use(
       return response;
     }
 
-    const { code, data, msg } = response.data;
-    if (code === ResultEnum.SUCCESS) {
-      return response.data;
-    }
+    const { code, data, message } = response.data;
 
-    ElMessage.error(msg || "系统出错");
-    return Promise.reject(new Error(msg || "Error"));
-  },
-  (error: any) => {
-    // 异常处理
-    if (error.response.data) {
-      const { code, msg } = error.response.data;
-      if (code === ResultEnum.TOKEN_INVALID) {
-        ElNotification({
-          title: "提示",
-          message: "您的会话已过期，请重新登录",
-          type: "info",
-        });
-        useUserStoreHook()
-          .resetToken()
-          .then(() => {
-            location.reload();
-          });
-      } else {
-        ElMessage.error(msg || "系统出错");
-      }
+    // 接口错误码
+    switch (code) {
+      case 200:
+        break;
+      case 401:
+        ElMessage.error("用户未登录");
+        return Promise.reject(message);
+      case 403:
+        const userStore = useUserStore();
+        userStore.forceLogOut();
+
+        ElMessage.error(message);
+        return Promise.reject(message);
+      case 500:
+        ElMessage.error(message);
+        return Promise.reject(message);
+      default:
+        ElMessage.error(message || "系统出错");
+        return Promise.reject(new Error(message || "Error"));
     }
-    return Promise.reject(error.message);
+    return response.data;
+  },
+  (error: AxiosError) => {
+    let { message } = error;
+    if (message == "Network Error") {
+      message = "后端接口连接异常";
+    } else if (message.includes("timeout")) {
+      message = "系统接口请求超时";
+    } else if (message.includes("Request failed with status code")) {
+      message = "系统接口" + message.substring(message.length - 3) + "异常";
+    }
+    ElMessage.error(message);
+    return Promise.reject(error);
   }
 );
 
-// 导出 axios 实例
-export default service;
+// 对外暴露
+export default requests;

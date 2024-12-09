@@ -1,8 +1,8 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import { RoleNewReq } from "@/api/types";
-import { addRoleApi } from "@/api/role.ts";
+import { ApiNewReq } from "@/api/types";
+import { addApiApi } from "@/api/api.ts";
 
-const modalConfig: IModalConfig<RoleNewReq> = {
+const modalConfig: IModalConfig<ApiNewReq> = {
   pageName: "sys:user",
   dialog: {
     title: "新增用户",
@@ -13,7 +13,7 @@ const modalConfig: IModalConfig<RoleNewReq> = {
     labelWidth: 100,
   },
   formAction: function (data) {
-    return addRoleApi(data);
+    return addApiApi(data);
   },
   beforeSubmit(data) {
     console.log("提交之前处理", data);

@@ -21,6 +21,17 @@ export function findFileListApi(data?: FileQuery): Promise<IApiResponse<PageResp
   });
 }
 
+/** 获取文件列表 */
+export function listUploadFileApi(
+  data?: ListUploadFileReq
+): Promise<IApiResponse<ListUploadFileResp>> {
+  return request({
+    url: "/admin_api/v1/file/list_upload_file",
+    method: "POST",
+    data: data,
+  });
+}
+
 /** 创建文件目录 */
 export function addFileFolderApi(
   data?: FileFolderNewReq
@@ -37,17 +48,6 @@ export function deletesFileApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> 
   return request({
     url: "/admin_api/v1/file/deletes_file",
     method: "DELETE",
-    data: data,
-  });
-}
-
-/** 获取文件列表 */
-export function listUploadFileApi(
-  data?: ListUploadFileReq
-): Promise<IApiResponse<ListUploadFileResp>> {
-  return request({
-    url: "/admin_api/v1/file/list_upload_file",
-    method: "POST",
     data: data,
   });
 }

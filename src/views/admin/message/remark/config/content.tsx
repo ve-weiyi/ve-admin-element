@@ -87,14 +87,15 @@ const contentConfig: IContentConfig<RemarkQuery> = {
     {
       label: "IP地址",
       prop: "ip_address",
-      width: 120,
+      width: 140,
       align: "center",
       show: false,
     },
     {
       label: "IP来源",
       prop: "ip_address",
-      width: 120,
+      width: 0,
+      minWidth: 160,
       align: "center",
       show: false,
     },

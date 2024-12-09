@@ -21,36 +21,7 @@
         @toolbar-click="handleToolbarClick"
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
-      >
-        <template #is_review="scope">
-          <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'warning'">
-            {{ scope.row[scope.prop] == 1 ? "通过" : "审核中" }}
-          </el-tag>
-        </template>
-        <template #type="scope">
-          <el-tag
-            :type="
-              scope.row[scope.prop] == 1
-                ? 'success'
-                : scope.row[scope.prop] == 2
-                  ? 'warning'
-                  : scope.row[scope.prop] == 3
-                    ? 'danger'
-                    : 'info'
-            "
-          >
-            {{
-              scope.row[scope.prop] == 1
-                ? "文章"
-                : scope.row[scope.prop] == 2
-                  ? "友链"
-                  : scope.row[scope.prop] == 3
-                    ? "说说"
-                    : "其他"
-            }}
-          </el-tag>
-        </template>
-      </page-content>
+      />
     </template>
   </div>
 </template>
@@ -62,8 +33,6 @@ import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { updateRemarkReviewApi } from "@/api/remark.ts";
-import { RemarkReviewReq } from "@/api/types.ts";
 
 const {
   searchRef,
@@ -90,16 +59,6 @@ function handleOperatClick(data: IOperatData) {
   console.log(data);
 
   switch (data.name) {
-    case "review": {
-      const req: RemarkReviewReq = {
-        ids: [data.row.id],
-        is_review: data.row.is_review == 1 ? 2 : 1,
-      };
-      updateRemarkReviewApi(req).then(() => {
-        ElMessage.success("审核成功");
-        contentRef.value?.fetchPageData();
-      });
-    }
   }
 }
 

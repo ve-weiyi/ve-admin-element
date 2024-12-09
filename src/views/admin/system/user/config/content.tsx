@@ -44,9 +44,9 @@ const contentConfig: IContentConfig<AccountQuery> = {
     {
       label: "用户id",
       prop: "user_id",
-      width: 90,
+      width: 120,
       align: "center",
-      sortable: true,
+      show: false,
     },
     {
       label: "头像",
@@ -91,21 +91,20 @@ const contentConfig: IContentConfig<AccountQuery> = {
       activeValue: 1,
       inactiveValue: 0,
       activeText: "禁用",
-      inactiveText: "启用",
+      inactiveText: "正常",
     },
     {
       label: "IP地址",
       prop: "ip_address",
-      width: 120,
+      width: 140,
       align: "center",
-      show: false,
     },
     {
       label: "IP来源",
       prop: "ip_source",
-      width: 120,
+      width: 0,
+      minWidth: 160,
       align: "center",
-      show: false,
     },
     {
       label: "创建时间",

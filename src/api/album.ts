@@ -5,7 +5,6 @@ import {
   AlbumQuery,
   BatchResp,
   IdReq,
-  IdsReq,
   PageResp,
 } from "./types";
 
@@ -13,6 +12,15 @@ import {
 export function findAlbumListApi(data?: AlbumQuery): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/admin_api/v1/album/find_album_list",
+    method: "POST",
+    data: data,
+  });
+}
+
+/** 查询相册 */
+export function getAlbumApi(data?: IdReq): Promise<IApiResponse<AlbumBackDTO>> {
+  return request({
+    url: "/admin_api/v1/album/get_album",
     method: "POST",
     data: data,
   });
@@ -27,29 +35,11 @@ export function addAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackD
   });
 }
 
-/** 批量删除相册 */
-export function batchDeleteAlbumApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-  return request({
-    url: "/admin_api/v1/album/batch_delete_album",
-    method: "DELETE",
-    data: data,
-  });
-}
-
 /** 删除相册 */
 export function deleteAlbumApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
   return request({
     url: "/admin_api/v1/album/delete_album",
     method: "DELETE",
-    data: data,
-  });
-}
-
-/** 查询相册 */
-export function getAlbumApi(data?: IdReq): Promise<IApiResponse<AlbumBackDTO>> {
-  return request({
-    url: "/admin_api/v1/album/get_album",
-    method: "POST",
     data: data,
   });
 }

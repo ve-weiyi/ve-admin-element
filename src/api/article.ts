@@ -12,6 +12,15 @@ import {
   PageResp,
 } from "./types";
 
+/** 查询文章列表 */
+export function findArticleListApi(data?: ArticleQuery): Promise<IApiResponse<PageResp>> {
+  return request({
+    url: "/admin_api/v1/article/find_article_list",
+    method: "POST",
+    data: data,
+  });
+}
+
 /** 添加文章 */
 export function addArticleApi(
   data?: ArticleNewReq
@@ -36,15 +45,6 @@ export function deleteArticleApi(data?: IdReq): Promise<IApiResponse<BatchResp>>
 export function exportArticleListApi(data?: IdsReq): Promise<IApiResponse<EmptyResp>> {
   return request({
     url: "/admin_api/v1/article/export_article_list",
-    method: "POST",
-    data: data,
-  });
-}
-
-/** 查询文章列表 */
-export function findArticleListApi(data?: ArticleQuery): Promise<IApiResponse<PageResp>> {
-  return request({
-    url: "/admin_api/v1/article/find_article_list",
     method: "POST",
     data: data,
   });

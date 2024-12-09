@@ -13,6 +13,26 @@ import {
   UpdateRoleMenusReq,
 } from "./types";
 
+/** 分页获取角色列表 */
+export function findRoleListApi(data?: RoleQuery): Promise<IApiResponse<PageResp>> {
+  return request({
+    url: "/admin_api/v1/role/find_role_list",
+    method: "POST",
+    data: data,
+  });
+}
+
+/** 获取角色资源列表 */
+export function findRoleResourcesApi(
+  data?: IdReq
+): Promise<IApiResponse<RoleResourcesResp>> {
+  return request({
+    url: "/admin_api/v1/role/find_role_resources",
+    method: "POST",
+    data: data,
+  });
+}
+
 /** 创建角色 */
 export function addRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackDTO>> {
   return request({
@@ -36,26 +56,6 @@ export function deleteRoleApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
   return request({
     url: "/admin_api/v1/role/delete_role",
     method: "DELETE",
-    data: data,
-  });
-}
-
-/** 分页获取角色列表 */
-export function findRoleListApi(data?: RoleQuery): Promise<IApiResponse<PageResp>> {
-  return request({
-    url: "/admin_api/v1/role/find_role_list",
-    method: "POST",
-    data: data,
-  });
-}
-
-/** 获取角色资源列表 */
-export function findRoleResourcesApi(
-  data?: IdReq
-): Promise<IApiResponse<RoleResourcesResp>> {
-  return request({
-    url: "/admin_api/v1/role/find_role_resources",
-    method: "POST",
     data: data,
   });
 }

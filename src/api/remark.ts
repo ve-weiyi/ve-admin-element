@@ -1,5 +1,12 @@
 import request from "@/utils/request";
-import { BatchResp, IdReq, IdsReq, PageResp, RemarkBackDTO, RemarkNewReq, RemarkQuery } from "./types";
+import {
+  BatchResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  RemarkQuery,
+  RemarkReviewReq,
+} from "./types";
 
 /** 分页获取留言列表 */
 export function findRemarkListApi(data?: RemarkQuery): Promise<IApiResponse<PageResp>> {
@@ -29,9 +36,11 @@ export function deleteRemarkApi(data?: IdReq): Promise<IApiResponse<BatchResp>> 
 }
 
 /** 更新留言 */
-export function updateRemarkApi(data?: RemarkNewReq): Promise<IApiResponse<RemarkBackDTO>> {
+export function updateRemarkReviewApi(
+  data?: RemarkReviewReq
+): Promise<IApiResponse<BatchResp>> {
   return request({
-    url: "/admin_api/v1/remark/update_remark",
+    url: "/admin_api/v1/remark/update_remark_review",
     method: "PUT",
     data: data,
   });

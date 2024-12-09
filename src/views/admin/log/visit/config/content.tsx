@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import { OperationLogQuery } from "@/api/types";
-import { deletesOperationLogApi, findOperationLogListApi } from "@/api/operation_log.ts";
+import { VisitLogQuery } from "@/api/types";
+import { deletesVisitLogApi, findVisitLogListApi } from "@/api/visit_log.ts";
 
-const contentConfig: IContentConfig<OperationLogQuery> = {
+const contentConfig: IContentConfig<VisitLogQuery> = {
   pageName: "sys:user",
   pageTitle: "留言管理",
   table: {
@@ -22,14 +22,14 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
     };
   },
   indexAction: function (query) {
-    return findOperationLogListApi(query);
+    return findVisitLogListApi(query);
   },
   deleteAction: function (ids: string) {
     const data = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return deletesOperationLogApi(data);
+    return deletesVisitLogApi(data);
   },
   pk: "id",
   toolbar: ["delete"],
@@ -69,56 +69,8 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
       templet: "image",
     },
     {
-      label: "操作模块",
-      prop: "opt_module",
-      width: 120,
-      align: "center",
-    },
-    {
-      label: "操作描述",
-      prop: "opt_desc",
-      width: 0,
-      minWidth: 120,
-      align: "center",
-    },
-    {
-      label: "请求方法",
-      prop: "request_method",
-      width: 100,
-      align: "center",
-      templet: "tag",
-      tagOptions: [
-        { value: "GET", label: "GET", type: "success" },
-        { value: "POST", label: "POST", type: "primary" },
-        { value: "PUT", label: "PUT", type: "warning" },
-        { value: "DELETE", label: "DELETE", type: "danger" },
-        { value: "NULL", label: "NULL", type: "info" },
-        { value: "", label: "NULL", type: "info" },
-      ],
-    },
-    {
-      label: "请求地址",
-      prop: "request_uri",
-      width: 0,
-      minWidth: 200,
-      align: "center",
-    },
-    {
-      label: "响应数据",
-      prop: "response_data",
-      width: 300,
-      align: "center",
-      show: false,
-    },
-    {
-      label: "响应状态",
-      prop: "response_status",
-      width: 100,
-      align: "center",
-    },
-    {
-      label: "响应耗时",
-      prop: "cost",
+      label: "页面",
+      prop: "page",
       width: 0,
       minWidth: 120,
       align: "center",
@@ -128,7 +80,6 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
       prop: "ip_address",
       width: 140,
       align: "center",
-      show: false,
     },
     {
       label: "IP来源",
@@ -136,7 +87,20 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
       width: 0,
       minWidth: 160,
       align: "center",
-      show: false,
+    },
+    {
+      label: "操作系统",
+      prop: "os",
+      width: 0,
+      minWidth: 200,
+      align: "center",
+    },
+    {
+      label: "浏览器",
+      prop: "browser",
+      width: 0,
+      minWidth: 140,
+      align: "center",
     },
     {
       label: "创建时间",

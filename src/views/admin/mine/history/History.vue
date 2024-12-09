@@ -21,11 +21,21 @@
   </el-card>
 </template>
 
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import { getUserLoginHistoryListApi } from "@/api/user.ts";
 import { Column } from "element-plus";
 
 import "@/styles/table.scss";
+
+const LoginMethod = {
+  email: "邮箱",
+  phone: "手机",
+  wechat: "微信",
+  qq: "QQ",
+  github: "Github",
+  gitee: "Gitee",
+  weibo: "微博",
+};
 
 const loading = ref<boolean>(false);
 const columns = ref<Column<any>[]>([
@@ -37,7 +47,7 @@ const columns = ref<Column<any>[]>([
     width: 80,
     cellRenderer: (scope: any): any => {
       const { rowData } = scope;
-      return `<div>{LoginMethod[rowData.login_type]}</div>`;
+      return <div>{LoginMethod[rowData.login_type]}</div>;
     },
   },
   {

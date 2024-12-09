@@ -25,5 +25,11 @@ export default {
       name: "LogOperation",
       meta: { title: "操作日志", keepAlive: true },
     },
+    {
+      path: "/log/visit",
+      component: () => import("@/views/admin/log/visit/Visit.vue"),
+      name: "LogVisit",
+      meta: { title: "浏览日志", keepAlive: true },
+    },
   ],
 } satisfies RouteRecordRaw;

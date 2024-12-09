@@ -56,7 +56,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { syncApiListApi } from "@/api/api.ts";
+import { cleanApiListApi, syncApiListApi } from "@/api/api.ts";
 
 const {
   searchRef,
@@ -84,25 +84,21 @@ async function handleEditClick(row: IObject) {
 }
 
 function Sync() {
-  ElMessageBox.confirm(
-    `确认要<strong>同步接口列表到数据库吗</strong>`,
-    "系统提示",
-    {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning",
-      dangerouslyUseHTMLString: true,
-      draggable: true,
-    }
-  )
-    .then(() => {
+  ElMessageBox.prompt(`确认要<strong>同步接口列表到数据库吗</strong>`, "系统提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "info",
+    inputPlaceholder: "请输入swagger.json地址(url或本地路径)",
+    inputErrorMessage: ".json后缀",
+    dangerouslyUseHTMLString: true,
+    draggable: true,
+  })
+    .then(({ value }) => {
+      // "service/api/admin/proto/admin.api"
       syncApiListApi({
-        api_file_path: "service/api/admin/proto/admin.api",
+        api_file_path: value || "service/api/admin/docs/admin.json",
       }).then((res) => {
-        ElMessage.success("同步成功");
-        //根据检索条件刷新列表数据
-        const queryParams = searchRef.value?.getQueryParams();
-        contentRef.value?.fetchPageData(queryParams, true);
+        ElMessage.success("同步成功,请稍后刷新列表");
       });
     })
     .catch(() => {
@@ -118,6 +114,14 @@ function handleToolbarClick(data: ISelectedData) {
       break;
     case "syncApi":
       Sync();
+      break;
+    case "clearApi":
+      cleanApiListApi().then((res) => {
+        ElMessage.success("清空成功");
+        //根据检索条件刷新列表数据
+        const queryParams = searchRef.value?.getQueryParams();
+        contentRef.value?.fetchPageData(queryParams, true);
+      });
       break;
     default:
       break;

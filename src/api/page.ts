@@ -8,6 +8,15 @@ import {
   PageResp,
 } from "./types";
 
+/** 分页获取页面列表 */
+export function findPageListApi(data?: PageQueryReq): Promise<IApiResponse<PageResp>> {
+  return request({
+    url: "/admin_api/v1/page/find_page_list",
+    method: "POST",
+    data: data,
+  });
+}
+
 /** 创建页面 */
 export function addPageApi(data?: PageNewReq): Promise<IApiResponse<PageBackDTO>> {
   return request({
@@ -22,15 +31,6 @@ export function deletePageApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
   return request({
     url: "/admin_api/v1/page/delete_page",
     method: "DELETE",
-    data: data,
-  });
-}
-
-/** 分页获取页面列表 */
-export function findPageListApi(data?: PageQueryReq): Promise<IApiResponse<PageResp>> {
-  return request({
-    url: "/admin_api/v1/page/find_page_list",
-    method: "POST",
     data: data,
   });
 }

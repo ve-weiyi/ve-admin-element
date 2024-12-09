@@ -1,5 +1,24 @@
 import request from "@/utils/request";
-import { BatchResp, EmptyReq, IdReq, IdsReq, MenuBackDTO, MenuNewReq, MenuQuery, PageResp, SyncMenuReq } from "./types";
+import {
+  BatchResp,
+  EmptyReq,
+  IdReq,
+  IdsReq,
+  MenuBackDTO,
+  MenuNewReq,
+  MenuQuery,
+  PageResp,
+  SyncMenuReq,
+} from "./types";
+
+/** 分页获取菜单列表 */
+export function findMenuListApi(data?: MenuQuery): Promise<IApiResponse<PageResp>> {
+  return request({
+    url: "/admin_api/v1/menu/find_menu_list",
+    method: "POST",
+    data: data,
+  });
+}
 
 /** 创建菜单 */
 export function addMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackDTO>> {
@@ -33,15 +52,6 @@ export function deleteMenuApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
   return request({
     url: "/admin_api/v1/menu/delete_menu",
     method: "DELETE",
-    data: data,
-  });
-}
-
-/** 分页获取菜单列表 */
-export function findMenuListApi(data?: MenuQuery): Promise<IApiResponse<PageResp>> {
-  return request({
-    url: "/admin_api/v1/menu/find_menu_list",
-    method: "POST",
     data: data,
   });
 }

@@ -332,13 +332,13 @@ export interface OperationLogBackDTO {
   id?: number; // 主键id
   user_id: string; // 用户id
   nickname: string; // 用户昵称
+  avatar: string; // 用户头像
   ip_address: string; // 操作ip
   ip_source: string; // 操作地址
   opt_module: string; // 操作模块
   opt_desc: string; // 操作描述
-  request_url: string; // 请求地址
+  request_uri: string; // 请求地址
   request_method: string; // 请求方式
-  request_header: string; // 请求头参数
   request_data: string; // 请求参数
   response_data: string; // 返回数据
   response_status: number; // 响应状态码
@@ -434,14 +434,14 @@ export interface RemarkBackDTO {
   updated_at: number; // 更新时间
 }
 
-export interface RemarkNewReq {
-  id?: number; // 主键id
-  is_review: number; // 是否审核
-}
-
 export interface RemarkQuery extends PageQuery {
   nickname?: string; // 昵称
   is_review?: number; // 是否审核
+}
+
+export interface RemarkReviewReq {
+  ids?: number[];
+  is_review: number; // 是否审核
 }
 
 export interface Response {
@@ -697,6 +697,24 @@ export interface UserRolesResp {
 export interface UserVisitDTO {
   date: string; // 日期
   count: number; // 数量
+}
+
+export interface VisitLogBackDTO {
+  id?: number; // 主键id
+  user_id: string; // 用户id
+  nickname: string; // 用户昵称
+  avatar: string; // 用户头像
+  ip_address: string; // 操作ip
+  ip_source: string; // 操作地址
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  page: string; // 页面
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
+}
+
+export interface VisitLogQuery extends PageQuery {
+  keywords?: string; // 关键字
 }
 
 export interface WebsiteConfig {

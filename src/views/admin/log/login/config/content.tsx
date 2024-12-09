@@ -72,12 +72,12 @@ const contentConfig: IContentConfig<AccountQuery> = {
     {
       label: "IP地址",
       prop: "ip_address",
-      width: 120,
+      width: 140,
       align: "center",
     },
     {
       label: "IP来源",
-      prop: "ip_address",
+      prop: "ip_source",
       width: 0,
       minWidth: 160,
       align: "center",

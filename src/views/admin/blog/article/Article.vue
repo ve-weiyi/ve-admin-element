@@ -60,7 +60,7 @@ import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { recycleArticleApi } from "@/api/article.ts";
+import { deleteArticleApi, recycleArticleApi } from "@/api/article.ts";
 import "@/styles/table.scss";
 import { ArticleDeleteEnum, ArticleStatusEnum } from "@/enums/ArticleEnum.ts";
 
@@ -117,6 +117,7 @@ function handleOperatClick(data: IOperatData) {
         data.row.is_delete = 1;
         ElMessage.success("回收成功");
       });
+      break;
     case "restoreArticle":
       recycleArticleApi({
         id: data.row.id,
@@ -125,7 +126,14 @@ function handleOperatClick(data: IOperatData) {
         data.row.is_delete = 0;
         ElMessage.success("恢复成功");
       });
+      break;
     case "removeArticle":
+      deleteArticleApi({
+        id: data.row.id,
+      }).then(() => {
+        ElMessage.success("删除成功");
+      });
+      break;
     default:
       break;
   }

@@ -5,7 +5,7 @@ const searchConfig: ISearchConfig = {
   formItems: [
     {
       type: "input",
-      label: "操作描述",
+      label: "页面",
       prop: "keywords",
       attrs: {
         placeholder: "请输入",

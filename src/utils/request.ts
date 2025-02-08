@@ -84,11 +84,13 @@ requests.interceptors.response.use(
       case 401:
         ElMessage.error("用户未登录");
         return Promise.reject(message);
-      case 403:
+      case 402:
         const userStore = useUserStore();
         userStore.forceLogOut();
-
-        ElMessage.error(message);
+        ElMessage.error("用户登录过期");
+        return Promise.reject(message);
+      case 403:
+        ElMessage.error("无权限访问");
         return Promise.reject(message);
       case 500:
         ElMessage.error(message);

@@ -139,12 +139,7 @@ import ChinaMap from "./components/ChinaMap.vue";
 
 import { onMounted, reactive, ref } from "vue";
 import { getAdminHomeInfoApi } from "@/api/website.ts";
-import {
-  ArticleViewDTO,
-  TagDTO,
-  ArticleStatisticsDTO,
-  AccountArea,
-} from "@/api/types.ts";
+import { AccountArea, ArticleStatisticsDTO } from "@/api/types.ts";
 import { findAccountAreaAnalysisApi } from "@/api/account.ts";
 import { useUserStore } from "@/store";
 
@@ -325,7 +320,7 @@ const getList = () => {
       if (res.data.user_visit_daliy != null) {
         const x = [];
         const y = [];
-        res.data.user_visit_daliy.forEach((item) => {
+        res.data.user_visit_daliy.reverse().forEach((item) => {
           x.push(item.date);
           y.push(item.count);
         });

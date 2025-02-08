@@ -19,12 +19,48 @@ const modalConfig: IModalConfig<RoleNewReq> = {
   },
   formItems: [
     {
-      label: "标签名",
-      prop: "tag_name",
-      rules: [{ required: true, message: "标签名不能为空", trigger: "blur" }],
+      label: "角色标识",
+      prop: "role_name",
+      rules: [{ required: true, message: "角色标识不能为空", trigger: "blur" }],
       type: "input",
       attrs: {
-        placeholder: "请输入标签名",
+        placeholder: "角色标识",
+      },
+    },
+    {
+      label: "角色标签",
+      prop: "role_label",
+      rules: [{ required: true, message: "角色标签不能为空", trigger: "blur" }],
+      type: "input",
+      attrs: {
+        placeholder: "角色标签",
+      },
+    },
+    {
+      label: "角色备注",
+      prop: "role_comment",
+      rules: [{ required: true, message: "角色备注不能为空", trigger: "blur" }],
+      type: "input",
+      attrs: {
+        placeholder: "角色备注",
+      },
+    },
+    {
+      label: "是否默认角色",
+      prop: "is_default",
+      type: "switch",
+      attrs: {
+        "active-value": 1,
+        "inactive-value": 0,
+      },
+    },
+    {
+      label: "是否禁用",
+      prop: "is_disable",
+      type: "switch",
+      attrs: {
+        "active-value": 1,
+        "inactive-value": 0,
       },
     },
   ],

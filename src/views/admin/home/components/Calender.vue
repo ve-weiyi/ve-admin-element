@@ -66,7 +66,7 @@ function newOptions() {
   const start = +echarts.time.parse(startDate);
   const end = +echarts.time.parse(endDate);
   const dayTime = 3600 * 24 * 1000;
-  for (let time = start; time < end; time += dayTime) {
+  for (let time = start; time <= end; time += dayTime) {
     const key = echarts.time.format(time, "{yyyy}-{MM}-{dd}", false);
     const count = props.values.find((item) => item.date === key)?.count || 0;
     // Math.floor(Math.random() * rangeMax)]

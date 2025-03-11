@@ -1,27 +1,27 @@
-import AuthAPI, { type LoginData } from "@/api/auth";
-import UserAPI, { type UserInfo } from "@/api/user";
-import { resetRouter } from "@/router";
 import { store } from "@/store";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
+import { usePermissionStoreHook } from "@/store/modules/permission";
+import { useDictStoreHook } from "@/store/modules/dict";
+
+import AuthAPI, { type LoginFormData } from "@/api/auth";
+import UserAPI, { type UserInfo } from "@/api/system/user";
+
+import { setAccessToken, clearToken } from "@/utils/auth";
 
 export const useUserStore = defineStore("user", () => {
-  const user = ref<UserInfo>({
-    roles: [],
-    perms: [],
-  });
+  const userInfo = useStorage<UserInfo>("userInfo", {} as UserInfo);
 
   /**
    * 登录
    *
-   * @param {LoginData}
+   * @param {LoginFormData}
    * @returns
    */
-  function login(loginData: LoginData) {
+  function login(loginData: LoginFormData) {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.login(loginData)
         .then((data) => {
-          const { tokenType, accessToken } = data;
-          localStorage.setItem(TOKEN_KEY, tokenType + " " + accessToken); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          const { accessToken } = data;
+          setAccessToken(accessToken);
           resolve();
         })
         .catch((error) => {
@@ -30,7 +30,11 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  // 获取信息(用户昵称、头像、角色集合、权限集合)
+  /**
+   * 获取用户信息
+   *
+   * @returns {UserInfo} 用户信息
+   */
   function getUserInfo() {
     return new Promise<UserInfo>((resolve, reject) => {
       UserAPI.getInfo()
@@ -39,11 +43,7 @@ export const useUserStore = defineStore("user", () => {
             reject("Verification failed, please Login again.");
             return;
           }
-          if (!data.roles || data.roles.length <= 0) {
-            reject("getUserInfo: roles must be a non-null array!");
-            return;
-          }
-          Object.assign(user.value, { ...data });
+          Object.assign(userInfo.value, { ...data });
           resolve(data);
         })
         .catch((error) => {
@@ -52,13 +52,14 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  // user logout
+  /**
+   * 登出
+   */
   function logout() {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.logout()
         .then(() => {
-          localStorage.setItem(TOKEN_KEY, "");
-          location.reload(); // 清空路由
+          resetUserSession();
           resolve();
         })
         .catch((error) => {
@@ -67,21 +68,26 @@ export const useUserStore = defineStore("user", () => {
     });
   }
 
-  // remove token
-  function resetToken() {
+  /**
+   * 重置用户会话
+   *
+   * @returns
+   */
+  function resetUserSession() {
     return new Promise<void>((resolve) => {
-      localStorage.setItem(TOKEN_KEY, "");
-      resetRouter();
+      clearToken();
+      usePermissionStoreHook().resetRouter();
+      useDictStoreHook().clearDictionaryCache();
       resolve();
     });
   }
 
   return {
-    user,
-    login,
+    userInfo,
     getUserInfo,
+    login,
     logout,
-    resetToken,
+    resetUserSession,
   };
 });
 

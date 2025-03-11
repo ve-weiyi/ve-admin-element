@@ -58,8 +58,6 @@ declare global {
     version: string;
     /** 是否显示设置 */
     showSettings: boolean;
-    /** 是否固定头部 */
-    fixedHeader: boolean;
     /** 是否显示多标签导航 */
     tagsView: boolean;
     /** 是否显示侧边栏Logo */
@@ -81,7 +79,7 @@ declare global {
   }
 
   /**
-   * 组件数据源
+   * 下拉选项数据类型
    */
   interface OptionType {
     /** 值 */

@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, IdReq, IdsReq, PageResp, RemarkQuery, RemarkReviewReq } from "./types";
 
 export const RemarkAPI = {
+
   /** 批量删除留言 */
   batchDeleteRemarkApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -10,7 +11,7 @@ export const RemarkAPI = {
       data: data,
     });
   },
-  
+
   /** 删除留言 */
   deleteRemarkApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const RemarkAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取留言列表 */
   findRemarkListApi(data?: RemarkQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -28,7 +29,7 @@ export const RemarkAPI = {
       data: data,
     });
   },
-  
+
   /** 更新留言 */
   updateRemarkReviewApi(data?: RemarkReviewReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -37,5 +38,4 @@ export const RemarkAPI = {
       data: data,
     });
   },
-  
 };

@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, IdsReq, OperationLogQuery, PageResp } from "./types";
 
 export const OperationLogAPI = {
+
   /** 删除操作记录 */
   deletesOperationLogApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -10,7 +11,7 @@ export const OperationLogAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取操作记录列表 */
   findOperationLogListApi(data?: OperationLogQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -19,5 +20,4 @@ export const OperationLogAPI = {
       data: data,
     });
   },
-  
 };

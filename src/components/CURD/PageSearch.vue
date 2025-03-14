@@ -1,9 +1,9 @@
 <template>
   <el-card
-    shadow="never"
-    class="mb-[10px]"
     v-show="visible"
     v-hasPerm="[`${searchConfig.pageName}:query`]"
+    shadow="never"
+    class="mb-[10px]"
   >
     <el-form ref="queryFormRef" :model="queryParams" :inline="true">
       <template v-for="(item, index) in formItems" :key="item.prop">
@@ -11,10 +11,9 @@
           v-show="isExpand ? true : index < showNumber"
           :label="item.label"
           :prop="item.prop"
-          style="font-weight: bold"
         >
           <!-- Label -->
-          <template #label v-if="item.tips">
+          <template v-if="item.tips" #label>
             <span>
               {{ item.label }}
               <el-tooltip
@@ -42,8 +41,8 @@
             <div class="flex-center">
               <el-tag
                 v-for="tag in inputTagMap[item.prop].data"
-                class="mr-2"
                 :key="tag"
+                class="mr-2"
                 :closable="true"
                 v-bind="inputTagMap[item.prop].tagAttrs"
                 @close="handleCloseTag(item.prop, tag)"
@@ -52,9 +51,7 @@
               </el-tag>
               <template v-if="inputTagMap[item.prop].inputVisible">
                 <el-input
-                  :ref="
-                    (el: HTMLElement) => (inputTagMap[item.prop].inputRef = el)
-                  "
+                  :ref="(el: HTMLElement) => (inputTagMap[item.prop].inputRef = el)"
                   v-model="inputTagMap[item.prop].inputValue"
                   v-bind="inputTagMap[item.prop].inputAttrs"
                   @keyup.enter="handleInputConfirm(item.prop)"
@@ -81,24 +78,16 @@
           </template>
           <!-- TreeSelect 树形选择 -->
           <template v-else-if="item.type === 'tree-select'">
-            <el-tree-select
-              v-model="queryParams[item.prop]"
-              v-bind="item.attrs"
-            />
+            <el-tree-select v-model="queryParams[item.prop]" v-bind="item.attrs" />
           </template>
           <!-- DatePicker 日期选择器 -->
           <template v-else-if="item.type === 'date-picker'">
-            <el-date-picker
-              v-model="queryParams[item.prop]"
-              v-bind="item.attrs"
-            />
+            <el-date-picker v-model="queryParams[item.prop]" v-bind="item.attrs" />
           </template>
         </el-form-item>
       </template>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery">
-          搜索
-        </el-button>
+        <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
         <el-button icon="refresh" @click="handleReset">重置</el-button>
         <!-- 展开/收起 -->
         <el-link
@@ -110,11 +99,15 @@
         >
           <template v-if="isExpand">
             收起
-            <i-ep-arrow-up />
+            <el-icon>
+              <ArrowUp />
+            </el-icon>
           </template>
           <template v-else>
             展开
-            <i-ep-arrow-down />
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
           </template>
         </el-link>
       </el-form-item>
@@ -223,7 +216,6 @@ function toggleVisible() {
 function handleCloseTag(prop: string, tag: string) {
   inputTagMap[prop].data.splice(inputTagMap[prop].data.indexOf(tag), 1);
 }
-
 // 添加标签
 function handleInputConfirm(prop: string) {
   if (inputTagMap[prop].inputValue) {
@@ -232,7 +224,6 @@ function handleInputConfirm(prop: string) {
   inputTagMap[prop].inputVisible = false;
   inputTagMap[prop].inputValue = "";
 }
-
 // 显示标签输入框
 function handleShowInput(prop: string) {
   inputTagMap[prop].inputVisible = true;

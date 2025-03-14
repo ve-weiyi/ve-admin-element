@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, IdReq, IdsReq, PageResp, TagBackDTO, TagNewReq, TagQuery } from "./types";
 
 export const TagAPI = {
+
   /** 创建标签 */
   addTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const TagAPI = {
       data: data,
     });
   },
-  
+
   /** 批量删除标签 */
   batchDeleteTagApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const TagAPI = {
       data: data,
     });
   },
-  
+
   /** 删除标签 */
   deleteTagApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -28,7 +29,7 @@ export const TagAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取标签列表 */
   findTagListApi(data?: TagQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -37,7 +38,7 @@ export const TagAPI = {
       data: data,
     });
   },
-  
+
   /** 更新标签 */
   updateTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackDTO>> {
     return request({
@@ -46,5 +47,4 @@ export const TagAPI = {
       data: data,
     });
   },
-  
 };

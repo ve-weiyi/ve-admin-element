@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, FileBackDTO, FileFolderNewReq, FileQuery, IdsReq, ListUploadFileReq, ListUploadFileResp, MultiUploadFileReq, PageResp, UploadFileReq } from "./types";
 
 export const FileAPI = {
+
   /** 创建文件目录 */
   addFileFolderApi(data?: FileFolderNewReq): Promise<IApiResponse<FileBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const FileAPI = {
       data: data,
     });
   },
-  
+
   /** 删除文件列表 */
   deletesFileApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const FileAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取文件列表 */
   findFileListApi(data?: FileQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -28,7 +29,7 @@ export const FileAPI = {
       data: data,
     });
   },
-  
+
   /** 获取文件列表 */
   listUploadFileApi(data?: ListUploadFileReq): Promise<IApiResponse<ListUploadFileResp>> {
     return request({
@@ -37,7 +38,7 @@ export const FileAPI = {
       data: data,
     });
   },
-  
+
   /** 上传文件列表 */
   multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackDTO[]>> {
     return request({
@@ -46,7 +47,7 @@ export const FileAPI = {
       data: data,
     });
   },
-  
+
   /** 上传文件 */
   uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackDTO>> {
     return request({
@@ -55,5 +56,4 @@ export const FileAPI = {
       data: data,
     });
   },
-  
 };

@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { AlbumBackDTO, AlbumNewReq, AlbumQuery, BatchResp, IdReq, PageResp } from "./types";
 
 export const AlbumAPI = {
+
   /** 创建相册 */
   addAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const AlbumAPI = {
       data: data,
     });
   },
-  
+
   /** 删除相册 */
   deleteAlbumApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const AlbumAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取相册列表 */
   findAlbumListApi(data?: AlbumQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -28,7 +29,7 @@ export const AlbumAPI = {
       data: data,
     });
   },
-  
+
   /** 查询相册 */
   getAlbumApi(data?: IdReq): Promise<IApiResponse<AlbumBackDTO>> {
     return request({
@@ -37,7 +38,7 @@ export const AlbumAPI = {
       data: data,
     });
   },
-  
+
   /** 更新相册 */
   updateAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackDTO>> {
     return request({
@@ -46,5 +47,4 @@ export const AlbumAPI = {
       data: data,
     });
   },
-  
 };

@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { ArticleBackDTO, ArticleNewReq, ArticleQuery, ArticleRecycleReq, ArticleTopReq, BatchResp, EmptyResp, IdReq, IdsReq, PageResp } from "./types";
 
 export const ArticleAPI = {
+
   /** 添加文章 */
   addArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 删除文章 */
   deleteArticleApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 导出文章列表 */
   exportArticleListApi(data?: IdsReq): Promise<IApiResponse<EmptyResp>> {
     return request({
@@ -28,7 +29,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 查询文章列表 */
   findArticleListApi(data?: ArticleQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -37,7 +38,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 查询文章 */
   getArticleApi(data?: IdReq): Promise<IApiResponse<ArticleBackDTO>> {
     return request({
@@ -46,7 +47,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 回收文章 */
   recycleArticleApi(data?: ArticleRecycleReq): Promise<IApiResponse<EmptyResp>> {
     return request({
@@ -55,7 +56,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 置顶文章 */
   topArticleApi(data?: ArticleTopReq): Promise<IApiResponse<EmptyResp>> {
     return request({
@@ -64,7 +65,7 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
+
   /** 保存文章 */
   updateArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {
     return request({
@@ -73,5 +74,4 @@ export const ArticleAPI = {
       data: data,
     });
   },
-  
 };

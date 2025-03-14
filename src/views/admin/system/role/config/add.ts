@@ -21,7 +21,7 @@ const modalConfig: IModalConfig<RoleNewReq> = {
   formItems: [
     {
       label: "角色标识",
-      prop: "role_name",
+      prop: "role_key",
       rules: [{ required: true, message: "角色标识不能为空", trigger: "blur" }],
       type: "input",
       attrs: {

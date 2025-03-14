@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { ApiBackDTO, ApiNewReq, ApiQuery, BatchResp, EmptyReq, IdReq, IdsReq, PageResp, SyncApiReq } from "./types";
 
 export const ApiAPI = {
+
   /** 创建api路由 */
   addApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
+
   /** 批量删除api路由 */
   batchDeleteApiApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
+
   /** 清空接口列表 */
   cleanApiListApi(data?: EmptyReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -28,7 +29,7 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
+
   /** 删除api路由 */
   deleteApiApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -37,7 +38,7 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取api路由列表 */
   findApiListApi(data?: ApiQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -46,7 +47,7 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
+
   /** 同步api列表 */
   syncApiListApi(data?: SyncApiReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -55,7 +56,7 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
+
   /** 更新api路由 */
   updateApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackDTO>> {
     return request({
@@ -64,5 +65,4 @@ export const ApiAPI = {
       data: data,
     });
   },
-  
 };

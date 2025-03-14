@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, IdReq, IdsReq, PageResp, PhotoBackDTO, PhotoNewReq, PhotoQuery } from "./types";
 
 export const PhotoAPI = {
+
   /** 批量删除照片 */
   batchDeletePhotoApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -10,7 +11,7 @@ export const PhotoAPI = {
       data: data,
     });
   },
-  
+
   /** 创建照片 */
   addPhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackDTO>> {
     return request({
@@ -19,7 +20,7 @@ export const PhotoAPI = {
       data: data,
     });
   },
-  
+
   /** 删除照片 */
   deletePhotoApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -28,7 +29,7 @@ export const PhotoAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取照片列表 */
   findPhotoListApi(data?: PhotoQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -37,7 +38,7 @@ export const PhotoAPI = {
       data: data,
     });
   },
-  
+
   /** 更新照片 */
   updatePhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackDTO>> {
     return request({
@@ -46,5 +47,4 @@ export const PhotoAPI = {
       data: data,
     });
   },
-  
 };

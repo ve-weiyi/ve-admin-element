@@ -14,3 +14,13 @@ function clearToken() {
 }
 
 export { getAccessToken, setAccessToken, clearToken };
+
+const UID_KEY: string = "Uid";
+
+export function getUid() {
+  return localStorage.getItem(UID_KEY);
+}
+
+export function setUid(uid: string) {
+  return localStorage.setItem(UID_KEY, uid);
+}

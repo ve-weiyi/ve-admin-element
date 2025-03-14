@@ -1,14 +1,14 @@
 import { store } from "@/store";
 import { usePermissionStoreHook } from "@/store/modules/permission.store";
-import { useDictStoreHook } from "@/store/modules/dict.store";
 
-import AuthAPI, { type LoginFormData } from "@/api/auth.api";
-import UserAPI, { type UserInfo } from "@/api/system/user.api";
+import type { LoginReq, UserInfoResp } from "@/api/types";
+import { AuthAPI } from "@/api/auth";
+import { UserAPI } from "@/api/user";
 
-import { setAccessToken, clearToken } from "@/utils/auth";
+import { clearToken, setAccessToken, setUid } from "@/utils/auth";
 
 export const useUserStore = defineStore("user", () => {
-  const userInfo = useStorage<UserInfo>("userInfo", {} as UserInfo);
+  const userInfo = useStorage<UserInfoResp>("userInfo", {} as UserInfoResp);
 
   /**
    * 登录
@@ -16,12 +16,13 @@ export const useUserStore = defineStore("user", () => {
    * @param {LoginFormData}
    * @returns
    */
-  function login(loginData: LoginFormData) {
+  function login(loginData: LoginReq) {
     return new Promise<void>((resolve, reject) => {
-      AuthAPI.login(loginData)
+      AuthAPI.loginApi(loginData)
         .then((data) => {
-          const { accessToken } = data;
-          setAccessToken(accessToken);
+          console.log("login", data);
+          setAccessToken(data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          setUid(data.data.token?.user_id);
           resolve();
         })
         .catch((error) => {
@@ -36,15 +37,15 @@ export const useUserStore = defineStore("user", () => {
    * @returns {UserInfo} 用户信息
    */
   function getUserInfo() {
-    return new Promise<UserInfo>((resolve, reject) => {
-      UserAPI.getInfo()
+    return new Promise<UserInfoResp>((resolve, reject) => {
+      UserAPI.getUserInfoApi()
         .then((data) => {
           if (!data) {
             reject("Verification failed, please Login again.");
             return;
           }
-          Object.assign(userInfo.value, { ...data });
-          resolve(data);
+          Object.assign(userInfo.value, { ...data.data });
+          resolve(data.data);
         })
         .catch((error) => {
           reject(error);
@@ -57,14 +58,16 @@ export const useUserStore = defineStore("user", () => {
    */
   function logout() {
     return new Promise<void>((resolve, reject) => {
-      AuthAPI.logout()
+      AuthAPI.logoutApi()
         .then(() => {
           clearSessionAndCache();
+          location.reload();
           resolve();
         })
         .catch((error) => {
           reject(error);
-        });
+        })
+        .finally(() => {});
     });
   }
 
@@ -75,7 +78,6 @@ export const useUserStore = defineStore("user", () => {
     return new Promise<void>((resolve) => {
       clearToken();
       usePermissionStoreHook().resetRouter();
-      useDictStoreHook().clearDictCache();
       resolve();
     });
   }

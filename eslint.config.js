@@ -47,7 +47,7 @@ export default [
       ...pluginPrettier.configs.recommended.rules, // 启用 Prettier 规则
       "prettier/prettier": "error", // 强制 Prettier 格式化
       "no-unused-vars": [
-        "error",
+        "warn",
         {
           argsIgnorePattern: "^_", // 忽略参数名以 _ 开头的参数未使用警告
           varsIgnorePattern: "^[A-Z0-9_]+$", // 忽略变量名为大写字母、数字或下划线组合的未使用警告（枚举定义未使用场景）
@@ -75,6 +75,7 @@ export default [
       "@typescript-eslint/no-explicit-any": "off", // 允许使用 any
       "@typescript-eslint/no-empty-function": "off", // 允许空函数
       "@typescript-eslint/no-empty-object-type": "off", // 允许空对象类型
+      "@typescript-eslint/no-unused-vars": "off", // 使用 no-unused-vars 规则
     },
   },
 

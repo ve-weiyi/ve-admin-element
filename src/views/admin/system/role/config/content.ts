@@ -54,7 +54,7 @@ const contentConfig: IContentConfig<RoleQuery> = {
     },
     {
       label: "角色名称",
-      prop: "role_name",
+      prop: "role_key",
       width: 0,
       align: "center",
     },

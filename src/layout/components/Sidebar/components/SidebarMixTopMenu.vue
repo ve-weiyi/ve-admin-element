@@ -58,7 +58,7 @@ appStore.activeTopMenu(activeTopMenuPath);
 const handleMenuSelect = (routePath: string) => {
   appStore.activeTopMenu(routePath); // 设置激活的顶部菜单
   permissionStore.setMixedLayoutLeftRoutes(routePath); // 更新左侧菜单
-  navigateToFirstLeftMenu(permissionStore.mixedLayoutLeftRoutes); // 跳转到左侧第一个菜单
+  navigateToFirstLeftMenu(permissionStore.mixedLayoutLeftRoutes as RouteRecordRaw[]); // 跳转到左侧第一个菜单
 };
 
 /**

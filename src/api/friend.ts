@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, FriendBackDTO, FriendNewReq, FriendQuery, IdReq, IdsReq, PageResp } from "./types";
 
 export const FriendAPI = {
+
   /** 创建友链 */
   addFriendApi(data?: FriendNewReq): Promise<IApiResponse<FriendBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const FriendAPI = {
       data: data,
     });
   },
-  
+
   /** 批量删除友链 */
   batchDeleteFriendApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const FriendAPI = {
       data: data,
     });
   },
-  
+
   /** 删除友链 */
   deleteFriendApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -28,7 +29,7 @@ export const FriendAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取友链列表 */
   findFriendListApi(data?: FriendQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -37,7 +38,7 @@ export const FriendAPI = {
       data: data,
     });
   },
-  
+
   /** 更新友链 */
   updateFriendApi(data?: FriendNewReq): Promise<IApiResponse<FriendBackDTO>> {
     return request({
@@ -46,5 +47,4 @@ export const FriendAPI = {
       data: data,
     });
   },
-  
 };

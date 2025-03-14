@@ -29,10 +29,7 @@
             </el-icon>
           </template>
           <template v-else-if="scope.row.icon">
-            <svg-icon :icon-class="scope.row.icon" />
-          </template>
-          <template v-else>
-            <svg-icon icon-class="menu" />
+            <div :class="`i-svg:${scope.row.icon}`" />
           </template>
           {{ scope.row.title }}
         </template>
@@ -41,10 +38,6 @@
           <el-tag v-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
           <el-tag v-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">按钮</el-tag>
           <el-tag v-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
-        </template>
-
-        <template #icon="scope">
-          <svg-icon :icon-class="scope.row.icon" />
         </template>
         <template #is_disable="scope">
           <el-tag v-if="scope.row.is_disable === 0" type="success">正常</el-tag>

@@ -3,7 +3,21 @@ import { constantRoutes } from "@/router";
 import { store } from "@/store";
 import router from "@/router";
 
-import MenuAPI, { type RouteVO } from "@/api/system/menu.api";
+import { UserAPI } from "@/api/user";
+import type { UserMenu } from "@/api/types";
+
+import home from "@/router/admin/home";
+import article from "@/router/admin/article";
+import message from "@/router/admin/message";
+import picture from "@/router/admin/picture";
+import resource from "@/router/admin/resource";
+import system from "@/router/admin/system";
+import log from "@/router/admin/log";
+import website from "@/router/admin/website";
+import monitor from "@/router/admin/monitor";
+import document from "@/router/admin/document";
+import mine from "@/router/admin/mine";
+
 const modules = import.meta.glob("../../views/**/**.vue");
 const Layout = () => import("@/layout/index.vue");
 
@@ -16,23 +30,47 @@ export const usePermissionStore = defineStore("permission", () => {
   const isRoutesLoaded = ref(false);
 
   /**
-   * 获取后台动态路由数据，解析并注册到全局路由
-   *
-   * @returns Promise<RouteRecordRaw[]> 解析后的动态路由列表
+   * 生成动态路由
    */
   function generateRoutes() {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      MenuAPI.getRoutes()
+      UserAPI.getUserMenusApi()
         .then((data) => {
-          const dynamicRoutes = parseDynamicRoutes(data);
+          const dynamicRoutes = transformRoutes(data.data.list);
+          // const dynamicRoutes = [];
           routes.value = [...constantRoutes, ...dynamicRoutes];
           isRoutesLoaded.value = true;
+          console.log("use user routes", dynamicRoutes);
           resolve(dynamicRoutes);
         })
         .catch((error) => {
-          reject(error);
+          // reject(error);
+          console.log("generateRoutes", import.meta.env.VITE_USE_MOCK_MENU);
+          if (import.meta.env.VITE_USE_MOCK_MENU == "true") {
+            const dynamicRoutes = getMockRoutes();
+            routes.value = [...constantRoutes, ...dynamicRoutes];
+            isRoutesLoaded.value = true;
+            console.log("use mock routes", dynamicRoutes);
+            resolve(dynamicRoutes);
+          }
         });
     });
+  }
+
+  function getMockRoutes(): RouteRecordRaw[] {
+    const dynamicRoutes = [];
+    dynamicRoutes.push(home);
+    dynamicRoutes.push(article);
+    dynamicRoutes.push(message);
+    dynamicRoutes.push(picture);
+    dynamicRoutes.push(resource);
+    dynamicRoutes.push(system);
+    dynamicRoutes.push(log);
+    dynamicRoutes.push(website);
+    dynamicRoutes.push(monitor);
+    dynamicRoutes.push(document);
+    dynamicRoutes.push(mine);
+    return dynamicRoutes;
   }
 
   /**
@@ -69,43 +107,67 @@ export const usePermissionStore = defineStore("permission", () => {
     mixedLayoutLeftRoutes,
     isRoutesLoaded,
     generateRoutes,
+    getMockRoutes,
     setMixedLayoutLeftRoutes,
     resetRouter,
   };
 });
 
 /**
- * 解析后端返回的路由数据并转换为 Vue Router 兼容的路由配置
- *
- * @param rawRoutes 后端返回的原始路由数据
- * @returns 解析后的路由配置数组
+ * 转换路由数据为组件
  */
-const parseDynamicRoutes = (rawRoutes: RouteVO[]): RouteRecordRaw[] => {
-  const parsedRoutes: RouteRecordRaw[] = [];
+const transformRoutes = (routes: UserMenu[]) => {
+  const asyncRoutes: RouteRecordRaw[] = [];
+  routes.forEach((route) => {
+    const tmpRoute = { ...route } as any as RouteRecordRaw;
+    // 顶级目录，替换为 Layout 组件
+    if (tmpRoute.component?.toString() == "Layout") {
+      tmpRoute.component = Layout;
+    } else if (tmpRoute.component?.toString().includes("layout")) {
+      tmpRoute.component = Layout;
+    } else {
+      // 其他菜单，根据组件路径动态加载组件
+      // const component = modules[`../../views/${tmpRoute.component}.vue`];
 
-  rawRoutes.forEach((route) => {
-    const normalizedRoute = { ...route } as RouteRecordRaw;
-
-    // 处理组件路径
-    normalizedRoute.component =
-      normalizedRoute.component?.toString() === "Layout"
-        ? Layout
-        : modules[`../../views/${normalizedRoute.component}.vue`] ||
-          modules["../../views/error-page/404.vue"];
-
-    // 递归解析子路由
-    if (normalizedRoute.children) {
-      normalizedRoute.children = parseDynamicRoutes(route.children);
+      const component = findComponent(route);
+      if (component) {
+        tmpRoute.component = component;
+      } else {
+        tmpRoute.component = modules[`../../views/error-page/404.vue`];
+      }
     }
 
-    parsedRoutes.push(normalizedRoute);
+    if (tmpRoute.children) {
+      tmpRoute.children = transformRoutes(route.children!);
+    }
+
+    asyncRoutes.push(tmpRoute);
   });
 
-  return parsedRoutes;
+  return asyncRoutes;
 };
+
 /**
- * 在组件外使用 Pinia store 实例 @see https://pinia.vuejs.org/core-concepts/outside-component-usage.html
+ * 在组件外使用 Pinia store 实例
+ * @see https://pinia.vuejs.org/core-concepts/outside-component-usage.html
  */
 export function usePermissionStoreHook() {
   return usePermissionStore(store);
 }
+
+const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
+const findComponent = (v: UserMenu) => {
+  const modulesRoutesKeys = Object.keys(modulesRoutes);
+  // 对后端传component组件路径和不传做兼容（如果后端传component组件路径，那么path可以随便写，如果不传，component组件路径会跟path保持一致）
+  const index = v?.component
+    ? modulesRoutesKeys.findIndex((ev) => {
+        const component = v.component as any;
+        return ev.includes(component) || component.includes(ev);
+      })
+    : modulesRoutesKeys.findIndex((ev) => {
+        return ev.includes(v.path as any);
+      });
+
+  // console.log("findComponent", v, modulesRoutesKeys[index]);
+  return modulesRoutes[modulesRoutesKeys[index]];
+};

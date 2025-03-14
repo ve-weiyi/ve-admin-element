@@ -24,7 +24,7 @@
       >
         <template #roles="scope">
           <el-tag v-for="(item, index) in scope.row[scope.prop]">
-            {{ item.role_name }}
+            {{ item.role_key }}
           </el-tag>
         </template>
       </page-content>

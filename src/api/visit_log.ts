@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, IdsReq, PageResp, VisitLogQuery } from "./types";
 
 export const VisitLogAPI = {
+
   /** 删除操作记录 */
   deletesVisitLogApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -10,7 +11,7 @@ export const VisitLogAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取操作记录列表 */
   findVisitLogListApi(data?: VisitLogQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -19,5 +20,4 @@ export const VisitLogAPI = {
       data: data,
     });
   },
-  
 };

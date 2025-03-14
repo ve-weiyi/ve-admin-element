@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, CategoryBackDTO, CategoryNewReq, CategoryQuery, IdReq, IdsReq, PageResp } from "./types";
 
 export const CategoryAPI = {
+
   /** 创建文章分类 */
   addCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const CategoryAPI = {
       data: data,
     });
   },
-  
+
   /** 批量删除文章分类 */
   batchDeleteCategoryApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const CategoryAPI = {
       data: data,
     });
   },
-  
+
   /** 删除文章分类 */
   deleteCategoryApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -28,7 +29,7 @@ export const CategoryAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取文章分类列表 */
   findCategoryListApi(data?: CategoryQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -37,7 +38,7 @@ export const CategoryAPI = {
       data: data,
     });
   },
-  
+
   /** 更新文章分类 */
   updateCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackDTO>> {
     return request({
@@ -46,5 +47,4 @@ export const CategoryAPI = {
       data: data,
     });
   },
-  
 };

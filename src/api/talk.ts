@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, IdReq, PageResp, TalkBackDTO, TalkNewReq, TalkQuery } from "./types";
 
 export const TalkAPI = {
+
   /** 创建说说 */
   addTalkApi(data?: TalkNewReq): Promise<IApiResponse<TalkBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const TalkAPI = {
       data: data,
     });
   },
-  
+
   /** 删除说说 */
   deleteTalkApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const TalkAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取说说列表 */
   findTalkListApi(data?: TalkQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -28,7 +29,7 @@ export const TalkAPI = {
       data: data,
     });
   },
-  
+
   /** 查询说说 */
   getTalkApi(data?: IdReq): Promise<IApiResponse<TalkBackDTO>> {
     return request({
@@ -37,7 +38,7 @@ export const TalkAPI = {
       data: data,
     });
   },
-  
+
   /** 更新说说 */
   updateTalkApi(data?: TalkNewReq): Promise<IApiResponse<TalkBackDTO>> {
     return request({
@@ -46,5 +47,4 @@ export const TalkAPI = {
       data: data,
     });
   },
-  
 };

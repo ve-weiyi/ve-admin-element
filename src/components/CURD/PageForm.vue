@@ -1,17 +1,11 @@
 <template>
-  <el-form
-    ref="formRef"
-    label-width="auto"
-    v-bind="form"
-    :model="formData"
-    :rules="formRules"
-  >
+  <el-form ref="formRef" label-width="auto" v-bind="form" :model="formData" :rules="formRules">
     <el-row :gutter="20">
       <template v-for="item in formItems" :key="item.prop">
         <el-col v-show="!item.hidden" v-bind="item.col">
           <el-form-item :label="item.label" :prop="item.prop">
             <!-- Label -->
-            <template #label v-if="item.tips">
+            <template v-if="item.tips" #label>
               <span>
                 {{ item.label }}
                 <el-tooltip
@@ -48,10 +42,7 @@
             </template>
             <!-- Checkbox 多选框 -->
             <template v-else-if="item.type === 'checkbox'">
-              <el-checkbox-group
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              >
+              <el-checkbox-group v-model="formData[item.prop]" v-bind="item.attrs">
                 <template v-for="option in item.options" :key="option.value">
                   <el-checkbox v-bind="option" />
                 </template>
@@ -59,24 +50,15 @@
             </template>
             <!-- Input Number 数字输入框 -->
             <template v-else-if="item.type === 'input-number'">
-              <el-input-number
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              />
+              <el-input-number v-model="formData[item.prop]" v-bind="item.attrs" />
             </template>
             <!-- TreeSelect 树形选择 -->
             <template v-else-if="item.type === 'tree-select'">
-              <el-tree-select
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              />
+              <el-tree-select v-model="formData[item.prop]" v-bind="item.attrs" />
             </template>
             <!-- DatePicker 日期选择器 -->
             <template v-else-if="item.type === 'date-picker'">
-              <el-date-picker
-                v-model="formData[item.prop]"
-                v-bind="item.attrs"
-              />
+              <el-date-picker v-model="formData[item.prop]" v-bind="item.attrs" />
             </template>
             <!-- Text 文本 -->
             <template v-else-if="item.type === 'text'">
@@ -87,9 +69,9 @@
               <slot
                 :name="item.slotName ?? item.prop"
                 :prop="item.prop"
-                :formData="formData"
+                :form-data="formData"
                 :attrs="item.attrs"
-              ></slot>
+              />
             </template>
           </el-form-item>
         </el-col>
@@ -101,7 +83,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from "element-plus";
 import { reactive, ref, watch, watchEffect } from "vue";
-import type { IObject, IPageForm } from "./types";
+import { IObject, IPageForm } from "./types";
 
 // 定义接收的属性
 const props = withDefaults(defineProps<IPageForm>(), {
@@ -155,11 +137,11 @@ function getFormData(key?: string) {
 // 设置表单值
 function setFormData(data: IObject) {
   for (const key in formData) {
-    if (formData.hasOwnProperty(key) && key in data) {
+    if (Object.prototype.hasOwnProperty.call(formData, key) && key in data) {
       formData[key] = data[key];
     }
   }
-  if (data?.hasOwnProperty(props.pk)) {
+  if (Object.prototype.hasOwnProperty.call(data, props.pk)) {
     formData[props.pk] = data[props.pk];
   }
 }

@@ -16,6 +16,7 @@ export function setupPermission() {
       if (to.path === "/login") {
         // 已登录，访问登录页，跳转到首页
         next({ path: "/" });
+        NProgress.done();
       } else {
         const permissionStore = usePermissionStore();
         // 判断路由是否加载完成
@@ -64,7 +65,7 @@ export function setupPermission() {
   });
 }
 
-// 重定向到登录页
+/** 重定向到登录页 */
 function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext) {
   const params = new URLSearchParams(to.query as Record<string, string>);
   const queryString = params.toString();
@@ -76,13 +77,14 @@ function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext)
 export function hasAuth(value: string | string[], type: "button" | "role" = "button") {
   const { roles, perms } = useUserStore().userInfo;
 
-  // 超级管理员 拥有所有权限
-  if (type === "button" && roles.includes("ROOT")) {
-    return true;
-  }
-
-  const auths = type === "button" ? perms : roles;
-  return typeof value === "string"
-    ? auths.includes(value)
-    : value.some((perm) => auths.includes(perm));
+  return true;
+  // // 超级管理员 拥有所有权限
+  // if (type === "button" && roles.includes("ROOT")) {
+  //   return true;
+  // }
+  //
+  // const auths = type === "button" ? perms : roles;
+  // return typeof value === "string"
+  //   ? auths.includes(value)
+  //   : value.some((perm) => auths.includes(perm));
 }

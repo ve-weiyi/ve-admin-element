@@ -2,6 +2,7 @@ import request from "@/utils/request";
 import type { BatchResp, EmptyResp, IdReq, IdsReq, PageResp, RoleBackDTO, RoleNewReq, RoleQuery, RoleResourcesResp, UpdateRoleApisReq, UpdateRoleMenusReq } from "./types";
 
 export const RoleAPI = {
+
   /** 创建角色 */
   addRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackDTO>> {
     return request({
@@ -10,7 +11,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 批量删除角色 */
   batchDeleteRoleApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -19,7 +20,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 删除角色 */
   deleteRoleApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -28,7 +29,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 分页获取角色列表 */
   findRoleListApi(data?: RoleQuery): Promise<IApiResponse<PageResp>> {
     return request({
@@ -37,7 +38,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 获取角色资源列表 */
   findRoleResourcesApi(data?: IdReq): Promise<IApiResponse<RoleResourcesResp>> {
     return request({
@@ -46,7 +47,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 更新角色 */
   updateRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackDTO>> {
     return request({
@@ -55,7 +56,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 更新角色接口权限 */
   updateRoleApisApi(data?: UpdateRoleApisReq): Promise<IApiResponse<EmptyResp>> {
     return request({
@@ -64,7 +65,7 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
+
   /** 更新角色菜单权限 */
   updateRoleMenusApi(data?: UpdateRoleMenusReq): Promise<IApiResponse<EmptyResp>> {
     return request({
@@ -73,5 +74,4 @@ export const RoleAPI = {
       data: data,
     });
   },
-  
 };

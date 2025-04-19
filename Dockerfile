@@ -4,8 +4,8 @@ FROM node:20-alpine AS build-stage
 # 设置工作目录
 WORKDIR /app
 
-# 复制 package.json 和 pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+# 复制 package.json
+COPY package.json ./
 
 # 安装 pnpm
 RUN npm install -g pnpm

@@ -6,8 +6,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: ve-blog-element:latest  # 设置新的镜像名称和标签
-    container_name: ve-blog-element
+    image: ve-admin-element:latest  # 设置新的镜像名称和标签
+    container_name: ve-admin-element
     restart: always
     ports:
-      - "8888:80"
+      - "9421:80"

@@ -56,7 +56,7 @@ defineOptions({
 
 import path from "path-browserify";
 import { isExternal } from "@/utils/index";
-import { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 
 const props = defineProps({
   /**

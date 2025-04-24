@@ -35,7 +35,7 @@
 import { usePermissionStore, useAppStore } from "@/store";
 import { translateRouteTitle } from "@/utils/i18n";
 import variables from "@/styles/variables.module.scss";
-import { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 
 const appStore = useAppStore();
 const permissionStore = usePermissionStore();
@@ -56,10 +56,10 @@ const mixTopMenus = ref<RouteRecordRaw[]>([]);
  */
 const handleMenuSelect = (routePath: string) => {
   appStore.activeTopMenu(routePath);
-  permissionStore.setMixLeftMenus(routePath);
+  permissionStore.setMixedLayoutLeftRoutes(routePath);
   // 获取左侧菜单集合，默认跳转到第一个菜单
-  const mixLeftMenus = permissionStore.mixLeftMenus;
-  goToFirstMenu(mixLeftMenus);
+  const mixLeftMenus = permissionStore.mixedLayoutLeftRoutes;
+  goToFirstMenu(mixLeftMenus as RouteRecordRaw[]);
 };
 
 /**

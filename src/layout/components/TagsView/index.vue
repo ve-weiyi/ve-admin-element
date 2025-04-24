@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter, RouteRecordRaw } from "vue-router";
+import { useRoute, useRouter, type RouteRecordRaw } from "vue-router";
 import { resolve } from "path-browserify";
 import { translateRouteTitle } from "@/utils/i18n";
 
@@ -143,7 +143,7 @@ function filterAffixTags(routes: RouteRecordRaw[], basePath = "/") {
 }
 
 function initTags() {
-  const tags: TagView[] = filterAffixTags(permissionStore.routes);
+  const tags: TagView[] = filterAffixTags(permissionStore.routes as any);
   affixTags.value = tags;
   for (const tag of tags) {
     // Must have tag name

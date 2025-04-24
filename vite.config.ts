@@ -1,6 +1,6 @@
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { UserConfig, ConfigEnv, loadEnv, defineConfig } from "vite";
+import { type ConfigEnv, type UserConfig, defineConfig, loadEnv } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
@@ -13,13 +13,7 @@ import mockDevServerPlugin from "vite-plugin-mock-dev-server";
 
 import UnoCSS from "unocss/vite";
 import { resolve } from "path";
-import {
-  name,
-  version,
-  engines,
-  dependencies,
-  devDependencies,
-} from "./package.json";
+import { dependencies, devDependencies, engines, name, version } from "./package.json";
 
 /** @see  https://devtools-next.vuejs.org  */
 import VueDevTools from "vite-plugin-vue-devtools";
@@ -35,6 +29,11 @@ const pathSrc = resolve(__dirname, "src");
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
   return {
+    /**
+     * 项目部署目录路径
+     * @description 见项目根目录下的 `config` 文件夹说明
+     */
+    base: env.VITE_BASE_URL,
     resolve: {
       alias: {
         "@": pathSrc,
@@ -45,6 +44,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         // 定义全局 SCSS 变量
         scss: {
+          api: "modern-compiler", // or 'modern'
           javascriptEnabled: true,
           additionalData: `
             @use "@/styles/variables.scss" as *;
@@ -53,21 +53,41 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
     },
     server: {
-      // 允许IP访问
-      host: "0.0.0.0",
-      // 应用端口 (默认:3000)
+      /** 是否开启 HTTPS */
+      // https: {},
+      /** 设置 host: true 才可以使用 Network 的形式，以 IP 访问项目 */
+      host: true, // host: "0.0.0.0"
+      /** 端口号 */
       port: Number(env.VITE_APP_PORT),
-      // 运行是否自动打开浏览器
-      open: true,
+      /** 是否自动打开浏览器 */
+      open: false,
+      /** 跨域设置允许 */
+      cors: true,
+      /** 端口被占用时，是否直接退出 */
+      strictPort: false,
+      /** 接口代理 */
       proxy: {
-        /** 代理前缀为 /dev-api 的请求  */
+        // 前缀
         [env.VITE_APP_BASE_API]: {
+          target: env.VITE_APP_API_URL, // 代理后的地址 =target/path
+          ws: true,
+          /** 是否允许跨域 */
           changeOrigin: true,
-          // 接口地址 例如：http://vapi.youlai.tech
-          target: env.VITE_APP_API_URL,
-          rewrite: (path) =>
-            path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+          rewrite: (path) => path.replace("", ""),
+          bypass(req, res, options) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log("proxyURL", proxyURL);
+            res.setHeader("x-req-proxyURL", proxyURL); // 设置响应头可以看到
+          },
         },
+        /** 代理前缀为 /dev-api 的请求  */
+        // [env.VITE_APP_BASE_API]: {
+        //   changeOrigin: true,
+        //   // 接口地址 例如：http://vapi.youlai.tech
+        //   target: env.VITE_APP_API_URL,
+        //   rewrite: (path) =>
+        //     path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+        // },
       },
     },
     plugins: [
@@ -119,8 +139,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 指定自定义组件位置(默认:src/components)
         dirs: ["src/components", "src/**/components"],
         // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)
-        dts: false,
-        // dts: "src/types/components.d.ts",
+        // dts: false,
+        dts: "src/types/components.d.ts",
       }),
       Icons({
         // 自动安装图标库
@@ -206,7 +226,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     // 构建配置
     build: {
-      chunkSizeWarningLimit: 2000, // 消除打包大小超过500kb警告
+      /** 消除打包大小超过 2048kb 警告 */
+      chunkSizeWarningLimit: 2048,
+      /** 禁用 gzip 压缩大小报告.启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。*/
+      reportCompressedSize: true,
+      /** 打包文件的输出目录,默认值为 dist */
+      outDir: env.VITE_DIST_NAME,
+      /** 打包后静态资源目录 */
+      assetsDir: "assets",
       minify: "terser", // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
       terserOptions: {
         compress: {
@@ -232,9 +259,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             const info = assetInfo.name.split(".");
             let extType = info[info.length - 1];
             // console.log('文件信息', assetInfo.name)
-            if (
-              /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)
-            ) {
+            if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
               extType = "media";
             } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/.test(assetInfo.name)) {
               extType = "img";

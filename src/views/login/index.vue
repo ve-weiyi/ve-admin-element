@@ -18,12 +18,7 @@
         <el-tag class="ml-2 absolute-rt">{{ defaultSettings.version }}</el-tag>
       </div>
 
-      <el-form
-        ref="loginFormRef"
-        :model="loginData"
-        :rules="loginRules"
-        class="login-form"
-      >
+      <el-form ref="loginFormRef" :model="loginData" :rules="loginRules" class="login-form">
         <!-- 用户名 -->
         <el-form-item prop="username">
           <div class="input-wrapper">
@@ -40,11 +35,7 @@
         </el-form-item>
 
         <!-- 密码 -->
-        <el-tooltip
-          :visible="isCapslock"
-          :content="$t('login.capsLock')"
-          placement="right"
-        >
+        <el-tooltip :visible="isCapslock" :content="$t('login.capsLock')" placement="right">
           <el-form-item prop="password">
             <div class="input-wrapper">
               <i-ep-lock class="mx-2" />
@@ -68,7 +59,7 @@
           <div class="input-wrapper">
             <svg-icon icon-class="captcha" class="mx-2" />
             <el-input
-              v-model="loginData.captchaCode"
+              v-model="loginData.captcha_code"
               auto-complete="off"
               size="large"
               class="flex-1"
@@ -76,11 +67,7 @@
               @keyup.enter="handleLoginSubmit"
             />
 
-            <el-image
-              @click="getCaptcha"
-              :src="captchaBase64"
-              class="captcha-image"
-            />
+            <el-image @click="getCaptcha" :src="captchaBase64" class="captcha-image" />
           </div>
         </el-form-item>
 
@@ -105,10 +92,7 @@
 
     <!-- ICP备案 -->
     <div class="icp-info" v-show="icpVisible">
-      <p>
-        Copyright © 2021 - 2024 youlai.tech All Rights Reserved. 有来技术
-        版权所有
-      </p>
+      <p>Copyright © 2021 - 2024 youlai.tech All Rights Reserved. 有来技术 版权所有</p>
       <p>皖ICP备20006496号-3</p>
     </div>
   </div>
@@ -116,11 +100,10 @@
 
 <script setup lang="ts">
 // 外部库和依赖
-import { LocationQuery, useRoute } from "vue-router";
+import { type LocationQuery, useRoute } from "vue-router";
 
 // 内部依赖
 import { useSettingsStore, useUserStore } from "@/store";
-import AuthAPI, { type LoginData } from "@/api/auth";
 import router from "@/router";
 import defaultSettings from "@/settings";
 import { ThemeEnum } from "@/enums/ThemeEnum";
@@ -130,6 +113,7 @@ import type { FormInstance } from "element-plus";
 
 // 导入 login.scss 文件
 import "@/styles/login.scss";
+import type { LoginReq } from "@/api/types";
 
 // 使用导入的依赖和库
 const userStore = useUserStore();
@@ -153,11 +137,13 @@ const captchaBase64 = ref();
 // 登录表单ref
 const loginFormRef = ref<FormInstance>();
 
-const loginData = ref<LoginData>({
-  username: "admin",
-  password: "123456",
-  captchaKey: "",
-  captchaCode: "",
+const loginData = ref<LoginReq>({
+  username: "admin@qq.com",
+  password: "admin@qq.com",
+  captcha_key: "",
+  captcha_code: "",
+  // captchaKey: "",
+  // captchaCode: "",
 });
 
 const loginRules = computed(() => {
@@ -181,22 +167,22 @@ const loginRules = computed(() => {
         trigger: "blur",
       },
     ],
-    captchaCode: [
-      {
-        required: true,
-        trigger: "blur",
-        message: t("login.message.captchaCode.required"),
-      },
-    ],
+    // captchaCode: [
+    //   {
+    //     required: true,
+    //     trigger: "blur",
+    //     message: t("login.message.captchaCode.required"),
+    //   },
+    // ],
   };
 });
 
 /** 获取验证码 */
 function getCaptcha() {
-  AuthAPI.getCaptcha().then((data) => {
-    loginData.value.captchaKey = data.captchaKey;
-    captchaBase64.value = data.captchaBase64;
-  });
+  // AuthAPI.getCaptcha().then((data) => {
+  //   loginData.value.captchaKey = data.captchaKey;
+  //   captchaBase64.value = data.captchaBase64;
+  // });
 }
 
 /** 登录表单提交 */
@@ -241,8 +227,7 @@ function parseRedirect(): {
 
 /** 主题切换 */
 const toggleTheme = () => {
-  const newTheme =
-    settingsStore.theme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK;
+  const newTheme = settingsStore.theme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK;
   settingsStore.changeTheme(newTheme);
 };
 

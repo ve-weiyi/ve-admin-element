@@ -58,17 +58,11 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       sortable: true,
     },
     {
-      label: "头像",
-      align: "center",
-      prop: "avatar",
-      width: 80,
-      templet: "image",
-    },
-    {
       label: "留言人",
-      prop: "nickname",
-      width: 120,
+      prop: "user",
+      width: 200,
       align: "center",
+      templet: "custom",
     },
     {
       label: "留言内容",

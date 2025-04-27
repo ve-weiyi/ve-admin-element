@@ -89,22 +89,20 @@ const contentConfig: IContentConfig<FileQuery> = {
     {
       label: "文件目录",
       prop: "file_path",
-      width: 120,
-      align: "center",
-      show: false,
+      width: 140,
+      align: "left",
     },
     {
       label: "文件名",
       prop: "file_name",
-      width: 0,
       minWidth: 200,
-      align: "center",
+      align: "left",
       templet: "custom",
     },
     {
       label: "文件类型",
       prop: "file_type",
-      width: 120,
+      width: 80,
       align: "center",
     },
     {
@@ -116,9 +114,10 @@ const contentConfig: IContentConfig<FileQuery> = {
     },
     {
       label: "创建者",
-      prop: "user_id",
+      prop: "creator",
       width: 120,
-      align: "center",
+      align: "left",
+      templet: "custom",
     },
     {
       label: "创建时间",

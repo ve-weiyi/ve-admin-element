@@ -27,6 +27,16 @@
             </el-breadcrumb>
           </div>
         </template>
+        <template #creator="scope">
+          <div v-if="scope.row[scope.prop]" style="display: flex; align-items: center; gap: 8px">
+            <el-image
+              :src="scope.row[scope.prop].avatar"
+              :preview-teleported="true"
+              :style="`width: ${scope.imageWidth ?? 40}px; height: ${scope.imageHeight ?? 40}px`"
+            />
+            <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
+          </div>
+        </template>
         <template #icon="scope">
           <img
             v-if="scope.row.file_type === ''"
@@ -256,6 +266,9 @@ async function handleImport() {
 }
 
 const calculateFileSize = (size: number, isInteger = false) => {
+  if (size === 0) {
+    return "--";
+  }
   const B = 1024;
   const KB = Math.pow(1024, 2);
   const MB = Math.pow(1024, 3);

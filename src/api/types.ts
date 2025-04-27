@@ -1,15 +1,14 @@
-
 export interface AboutMe {
-  content: string; 
+  content: string;
 }
 
 export interface AccountArea {
-  name: string; 
-  value: number; 
+  name: string;
+  value: number;
 }
 
 export interface AccountLoginHistory {
-  id?: number; 
+  id?: number;
   username: string; // 用户名
   nickname: string; // 用户昵称
   avatar: string; // 用户头像
@@ -22,8 +21,8 @@ export interface AccountLoginHistory {
 }
 
 export interface AccountQuery extends PageQuery {
-  username?: string; 
-  nickname?: string; 
+  username?: string;
+  nickname?: string;
 }
 
 export interface AdminHomeInfo {
@@ -73,7 +72,7 @@ export interface ApiBackDTO {
   is_disable?: number; // 是否禁用 0否 1是
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  children: ApiBackDTO[]; 
+  children: ApiBackDTO[];
 }
 
 export interface ApiNewReq {
@@ -129,7 +128,7 @@ export interface ArticleQuery extends PageQuery {
   is_delete?: number; // 是否删除
   status?: number; // 状态值 1 公开 2 私密 3 草稿 4 已删除
   category_name?: string; // 文章分类名
-  tag_name?: string; 
+  tag_name?: string;
 }
 
 export interface ArticleRecycleReq {
@@ -154,7 +153,7 @@ export interface ArticleViewDTO {
 }
 
 export interface BatchResp {
-  success_count: number; 
+  success_count: number;
 }
 
 export interface BindUserEmailReq {
@@ -163,21 +162,21 @@ export interface BindUserEmailReq {
 }
 
 export interface CategoryBackDTO {
-  id?: number; 
+  id?: number;
   category_name: string; // 分类名
-  article_count: number; 
+  article_count: number;
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
 export interface CategoryDTO {
-  id?: number; 
+  id?: number;
   category_name: string; // 分类名
   article_count: number; // 文章数量
 }
 
 export interface CategoryNewReq {
-  id?: number; 
+  id?: number;
   category_name: string; // 分类名
 }
 
@@ -189,30 +188,29 @@ export interface CommentBackDTO {
   id: number; // 评论ID
   type: number; // 评论类型 1.文章 2.友链 3.说说
   topic_title: string; // 评论主题
-  avatar: string; // 用户头像
-  nickname: string; // 用户昵称
-  to_nickname: string; // 被回复人昵称
+  user_id: string; // 用户ID
+  reply_user_id: string; // 回复用户ID
   comment_content: string; // 评论内容
   is_review: number; // 是否审核 0.未审核 1.已审核
   created_at: number; // 创建时间
+  user?: UserInfo; // 用户信息
+  reply_user?: UserInfo; // 回复用户信息
 }
 
 export interface CommentQuery extends PageQuery {
   avatar?: string; // 用户头像
-  is_review?: number; 
+  is_review?: number;
   type?: number; // 评论类型 1.文章 2.友链 3.说说
 }
 
 export interface CommentReviewReq {
-  ids?: number[]; 
-  is_review?: number; 
+  ids?: number[];
+  is_review?: number;
 }
 
-export interface EmptyReq {
-}
+export interface EmptyReq {}
 
-export interface EmptyResp {
-}
+export interface EmptyResp {}
 
 export interface FileBackDTO {
   id?: number; // 文件目录ID
@@ -225,6 +223,7 @@ export interface FileBackDTO {
   file_url: string; // 上传路径
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+  creator?: UserInfo; // 创建人
 }
 
 export interface FileFolderNewReq {
@@ -260,11 +259,11 @@ export interface FriendQuery extends PageQuery {
 }
 
 export interface IdReq {
-  id: number; 
+  id: number;
 }
 
 export interface IdsReq {
-  ids: number[]; 
+  ids: number[];
 }
 
 export interface ListUploadFileReq {
@@ -277,14 +276,14 @@ export interface ListUploadFileResp {
 }
 
 export interface LoginReq {
-  username: string; 
-  password: string; 
+  username: string;
+  password: string;
   captcha_key?: string; // 验证码key
   captcha_code?: string; // 验证码
 }
 
 export interface LoginResp {
-  token?: Token; 
+  token?: Token;
 }
 
 export interface MenuBackDTO extends MenuMeta {
@@ -294,7 +293,7 @@ export interface MenuBackDTO extends MenuMeta {
   name?: string; // 路由名字
   component?: string; // Layout组件
   redirect?: string; // 路由重定向
-  children?: MenuBackDTO[]; 
+  children?: MenuBackDTO[];
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -313,8 +312,8 @@ export interface MenuMeta {
 }
 
 export interface MenuMetaParams {
-  key?: string; 
-  value?: string; 
+  key?: string;
+  value?: string;
 }
 
 export interface MenuNewReq extends MenuMeta {
@@ -324,7 +323,7 @@ export interface MenuNewReq extends MenuMeta {
   name?: string; // 路由名字
   component?: string; // Layout组件
   redirect?: string; // 路由重定向
-  children?: MenuNewReq[]; 
+  children?: MenuNewReq[];
 }
 
 export interface MenuQuery extends PageQuery {
@@ -350,8 +349,6 @@ export interface OauthLoginUrlResp {
 export interface OperationLogBackDTO {
   id?: number; // 主键id
   user_id: string; // 用户id
-  nickname: string; // 用户昵称
-  avatar: string; // 用户头像
   ip_address: string; // 操作ip
   ip_source: string; // 操作地址
   opt_module: string; // 操作模块
@@ -364,10 +361,10 @@ export interface OperationLogBackDTO {
   cost: string; // 耗时（ms）
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+  user?: UserInfo; // 用户信息
 }
 
-export interface OperationLogQuery extends PageQuery {
-}
+export interface OperationLogQuery extends PageQuery {}
 
 export interface PageBackDTO {
   id?: number; // 页面id
@@ -400,10 +397,10 @@ export interface PageQueryReq extends PageQuery {
 }
 
 export interface PageResp {
-  page: number; 
-  page_size: number; 
-  total: number; 
-  list: any; 
+  page: number;
+  page_size: number;
+  total: number;
+  list: any;
 }
 
 export interface PhotoBackDTO {
@@ -430,28 +427,26 @@ export interface PhotoQuery extends PageQuery {
   album_id?: number; // 相册id
 }
 
-export interface PingReq {
-}
+export interface PingReq {}
 
 export interface PingResp {
-  env: string; 
-  name: string; 
-  version: string; 
-  runtime: string; 
-  description: string; 
-  rpc_status: string[]; 
+  env: string;
+  name: string;
+  version: string;
+  runtime: string;
+  description: string;
+  rpc_status: string[];
 }
 
 export interface RegisterReq {
-  username: string; 
-  password: string; 
+  username: string;
+  password: string;
   verify_code: string; // 验证码
 }
 
 export interface RemarkBackDTO {
   id?: number; // 主键id
-  nickname: string; // 昵称
-  avatar: string; // 头像
+  user_id: string; // 用户ID
   message_content: string; // 留言内容
   ip_address: string; // 用户ip
   ip_source: string; // 用户地址
@@ -459,6 +454,7 @@ export interface RemarkBackDTO {
   is_review: number; // 是否审核
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
+  user?: UserInfo; // 用户信息
 }
 
 export interface RemarkQuery extends PageQuery {
@@ -467,31 +463,31 @@ export interface RemarkQuery extends PageQuery {
 }
 
 export interface RemarkReviewReq {
-  ids?: number[]; 
+  ids?: number[];
   is_review: number; // 是否审核
 }
 
 export interface ResetPasswordReq {
-  username: string; 
-  password: string; 
+  username: string;
+  password: string;
   verify_code: string; // 验证码
 }
 
 export interface Response {
-  code: number; 
-  message: string; 
-  data: any; 
-  trace_id: string; 
+  code: number;
+  message: string;
+  data: any;
+  trace_id: string;
 }
 
 export interface RestHeader {
-  header_country?: string; 
-  header_language?: string; 
-  header_timezone?: string; 
-  header_app_name?: string; 
-  header_x_user_id?: string; 
-  header_x_auth_token?: string; 
-  header_terminal_id?: string; 
+  header_country?: string;
+  header_language?: string;
+  header_timezone?: string;
+  header_app_name?: string;
+  header_x_user_id?: string;
+  header_x_auth_token?: string;
+  header_terminal_id?: string;
 }
 
 export interface RoleBackDTO {
@@ -523,16 +519,16 @@ export interface RoleQuery extends PageQuery {
 }
 
 export interface RoleResourcesResp {
-  role_id: number; 
-  api_ids: number[]; 
-  menu_ids: number[]; 
+  role_id: number;
+  api_ids: number[];
+  menu_ids: number[];
 }
 
 export interface Server {
-  os: any; 
-  cpu: any; 
-  ram: any; 
-  disk: any; 
+  os: any;
+  cpu: any;
+  ram: any;
+  disk: any;
 }
 
 export interface SyncApiReq {
@@ -540,7 +536,7 @@ export interface SyncApiReq {
 }
 
 export interface SyncMenuReq {
-  menus: MenuNewReq[]; 
+  menus: MenuNewReq[];
 }
 
 export interface TagBackDTO {
@@ -558,7 +554,7 @@ export interface TagDTO {
 }
 
 export interface TagNewReq {
-  id?: number; 
+  id?: number;
   tag_name: string; // 标签名
 }
 
@@ -569,8 +565,6 @@ export interface TagQuery extends PageQuery {
 export interface TalkBackDTO {
   id?: number; // 说说ID
   user_id: string; // 用户ID
-  nickname: string; // 用户昵称
-  avatar: string; // 用户头像
   content: string; // 说说内容
   img_list: string[]; // 图片URL列表
   is_top: number; // 是否置顶
@@ -579,6 +573,7 @@ export interface TalkBackDTO {
   comment_count: number; // 评论量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+  user?: UserInfo; // 用户信息
 }
 
 export interface TalkNewReq {
@@ -604,28 +599,28 @@ export interface Token {
 }
 
 export interface UpdateAccountPasswordReq {
-  user_id: string; 
-  password: string; 
+  user_id: string;
+  password: string;
 }
 
 export interface UpdateAccountRolesReq {
-  user_id: string; 
-  role_ids: number[]; 
+  user_id: string;
+  role_ids: number[];
 }
 
 export interface UpdateAccountStatusReq {
-  user_id: string; 
+  user_id: string;
   status: number; // 状态: -1删除 0正常 1禁用
 }
 
 export interface UpdateRoleApisReq {
-  role_id: number; 
-  api_ids: number[]; 
+  role_id: number;
+  api_ids: number[];
 }
 
 export interface UpdateRoleMenusReq {
-  role_id: number; 
-  menu_ids: number[]; 
+  role_id: number;
+  menu_ids: number[];
 }
 
 export interface UploadFileReq {
@@ -641,15 +636,22 @@ export interface UserApi {
   method: string; // api请求方法
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  children: UserApi[]; 
+  children: UserApi[];
 }
 
 export interface UserApisResp {
-  list: UserApi[]; 
+  list: UserApi[];
 }
 
 export interface UserEmailReq {
-  username: string; 
+  username: string;
+}
+
+export interface UserInfo {
+  user_id: string;
+  username: string;
+  avatar: string;
+  nickname: string;
 }
 
 export interface UserInfoExt {
@@ -673,14 +675,14 @@ export interface UserInfoResp extends UserInfoExt {
   login_type: string; // 登录方式
   ip_address: string; // ip host
   ip_source: string; // ip 源
-  created_at: number; 
-  updated_at: number; 
-  roles: UserRoleLabel[]; 
-  perms: UserApi[]; 
+  created_at: number;
+  updated_at: number;
+  roles: UserRoleLabel[];
+  perms: UserApi[];
 }
 
 export interface UserLoginHistory {
-  id?: number; 
+  id?: number;
   login_type: string; // 登录类型
   agent: string; // 代理
   ip_address: string; // ip host
@@ -689,8 +691,7 @@ export interface UserLoginHistory {
   logout_at: number; // 登出时间
 }
 
-export interface UserLoginHistoryQuery extends PageQuery {
-}
+export interface UserLoginHistoryQuery extends PageQuery {}
 
 export interface UserMenu {
   id?: number; // 主键
@@ -700,23 +701,23 @@ export interface UserMenu {
   component: string; // Layout组件
   redirect: string; // 路由重定向
   meta: UserMenuMeta; // meta配置
-  children?: UserMenu[]; 
+  children?: UserMenu[];
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
 export interface UserMenuMeta {
-  title?: string; 
-  icon?: string; 
-  hidden?: boolean; 
-  always_show?: boolean; 
-  affix?: boolean; 
-  keep_alive?: boolean; 
-  breadcrumb?: boolean; 
+  title?: string;
+  icon?: string;
+  hidden?: boolean;
+  always_show?: boolean;
+  affix?: boolean;
+  keep_alive?: boolean;
+  breadcrumb?: boolean;
 }
 
 export interface UserMenusResp {
-  list: UserMenu[]; 
+  list: UserMenu[];
 }
 
 export interface UserRole {
@@ -728,13 +729,13 @@ export interface UserRole {
 }
 
 export interface UserRoleLabel {
-  role_id: number; 
-  role_key: string; 
-  role_label: string; 
+  role_id: number;
+  role_key: string;
+  role_label: string;
 }
 
 export interface UserRolesResp {
-  list: UserRole[]; 
+  list: UserRole[];
 }
 
 export interface UserVisitDTO {
@@ -745,8 +746,6 @@ export interface UserVisitDTO {
 export interface VisitLogBackDTO {
   id?: number; // 主键id
   user_id: string; // 用户id
-  nickname: string; // 用户昵称
-  avatar: string; // 用户头像
   ip_address: string; // 操作ip
   ip_source: string; // 操作地址
   os: string; // 操作系统
@@ -754,6 +753,7 @@ export interface VisitLogBackDTO {
   page: string; // 页面
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+  user?: UserInfo; // 用户信息
 }
 
 export interface VisitLogQuery extends PageQuery {

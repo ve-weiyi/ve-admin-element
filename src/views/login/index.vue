@@ -83,7 +83,7 @@
         </el-tooltip>
 
         <!-- 验证码 -->
-        <el-form-item prop="captchaCode">
+        <el-form-item v-show="false" prop="captchaCode">
           <div class="input-wrapper">
             <div class="i-svg:captcha mx-2" />
 

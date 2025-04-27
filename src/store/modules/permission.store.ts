@@ -133,7 +133,7 @@ const transformRoutes = (routes: UserMenu[]) => {
       if (component) {
         tmpRoute.component = component;
       } else {
-        tmpRoute.component = modules[`../../views/error-page/404.vue`];
+        tmpRoute.component = modules[`../../views/error/404.vue`];
       }
     }
 

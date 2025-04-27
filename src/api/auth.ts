@@ -1,70 +1,105 @@
 import request from "@/utils/request";
+import type { BindUserEmailReq, EmptyReq, EmptyResp, LoginReq, LoginResp, OauthLoginReq, OauthLoginUrlResp, RegisterReq, ResetPasswordReq, UserEmailReq } from "./types";
 
-class AuthAPI {
-  /** 登录 接口*/
-  static login(data: LoginData) {
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("password", data.password);
-    formData.append("captchaKey", data.captchaKey);
-    formData.append("captchaCode", data.captchaCode);
-    return request<any, LoginResult>({
-      url: "/api/v1/auth/login",
-      method: "post",
-      data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  }
+export const AuthAPI = {
 
-  /** 注销 接口*/
-  static logout() {
+  /** 登录 */
+  loginApi(data?: LoginReq): Promise<IApiResponse<LoginResp>> {
     return request({
-      url: "/api/v1/auth/logout",
-      method: "delete",
+      url: "/admin_api/v1/login",
+      method: "POST",
+      data: data,
     });
-  }
+  },
 
-  /** 获取验证码 接口*/
-  static getCaptcha() {
-    return request<any, CaptchaResult>({
-      url: "/api/v1/auth/captcha",
-      method: "get",
+  /** 第三方登录授权地址 */
+  oauthAuthorizeUrlApi(data?: OauthLoginReq): Promise<IApiResponse<OauthLoginUrlResp>> {
+    return request({
+      url: "/admin_api/v1/oauth_authorize_url",
+      method: "POST",
+      data: data,
     });
-  }
-}
+  },
 
-export default AuthAPI;
+  /** 第三方登录 */
+  oauthLoginApi(data?: OauthLoginReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin_api/v1/oauth_login",
+      method: "POST",
+      data: data,
+    });
+  },
 
-/** 登录请求参数 */
-export interface LoginData {
-  /** 用户名 */
-  username: string;
-  /** 密码 */
-  password: string;
-  /** 验证码缓存key */
-  captchaKey: string;
-  /** 验证码 */
-  captchaCode: string;
-}
+  /** 注册 */
+  registerApi(data?: RegisterReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/register",
+      method: "POST",
+      data: data,
+    });
+  },
 
-/** 登录响应 */
-export interface LoginResult {
-  /** 访问token */
-  accessToken?: string;
-  /** 过期时间(单位：毫秒) */
-  expires?: number;
-  /** 刷新token */
-  refreshToken?: string;
-  /** token 类型 */
-  tokenType?: string;
-}
+  /** 发送注册账号邮件 */
+  sendRegisterEmailApi(data?: UserEmailReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/send_register_email",
+      method: "POST",
+      data: data,
+    });
+  },
 
-/** 验证码响应 */
-export interface CaptchaResult {
-  /** 验证码缓存key */
-  captchaKey: string;
-  /** 验证码图片Base64字符串 */
-  captchaBase64: string;
-}
+  /** 重置密码 */
+  resetPasswordApi(data?: ResetPasswordReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/reset_password",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 发送重置密码邮件 */
+  sendResetEmailApi(data?: UserEmailReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/send_reset_email",
+      method: "POST",
+      data: data,
+    });
+  },
+
+
+  /** 绑定邮箱 */
+  bindUserEmailApi(data?: BindUserEmailReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/bind_user_email",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 注销 */
+  logoffApi(data?: EmptyReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/logoff",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 登出 */
+  logoutApi(data?: EmptyReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/logout",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 发送绑定邮箱验证码 */
+  sendBindEmailApi(data?: UserEmailReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/send_bind_email",
+      method: "POST",
+      data: data,
+    });
+  },
+};

@@ -1,38 +1,59 @@
 import request from "@/utils/request";
+import type { EmptyReq, EmptyResp, PageResp, UserApisResp, UserInfoReq, UserInfoResp, UserLoginHistoryQuery, UserMenusResp, UserRolesResp } from "./types";
 
-class UserAPI {
-  /**
-   * 获取当前登录用户信息
-   *
-   * @returns 登录用户昵称、头像信息，包括角色和权限
-   */
-  static getInfo() {
-    return request<any, UserInfo>({
-      url: "/api/v1/users/me",
-      method: "get",
+export const UserAPI = {
+
+  /** 获取用户接口权限 */
+  getUserApisApi(data?: EmptyReq): Promise<IApiResponse<UserApisResp>> {
+    return request({
+      url: "/admin_api/v1/user/get_user_apis",
+      method: "GET",
+      data: data,
     });
-  }
-}
+  },
 
-export default UserAPI;
+  /** 获取用户信息 */
+  getUserInfoApi(data?: EmptyReq): Promise<IApiResponse<UserInfoResp>> {
+    return request({
+      url: "/admin_api/v1/user/get_user_info",
+      method: "GET",
+      data: data,
+    });
+  },
 
-/** 登录用户信息 */
-export interface UserInfo {
-  /** 用户ID */
-  userId?: number;
+  /** 查询用户登录历史 */
+  getUserLoginHistoryListApi(data?: UserLoginHistoryQuery): Promise<IApiResponse<PageResp>> {
+    return request({
+      url: "/admin_api/v1/user/get_user_login_history_list",
+      method: "POST",
+      data: data,
+    });
+  },
 
-  /** 用户名 */
-  username?: string;
+  /** 获取用户菜单权限 */
+  getUserMenusApi(data?: EmptyReq): Promise<IApiResponse<UserMenusResp>> {
+    return request({
+      url: "/admin_api/v1/user/get_user_menus",
+      method: "GET",
+      data: data,
+    });
+  },
 
-  /** 昵称 */
-  nickname?: string;
+  /** 获取用户角色 */
+  getUserRolesApi(data?: EmptyReq): Promise<IApiResponse<UserRolesResp>> {
+    return request({
+      url: "/admin_api/v1/user/get_user_roles",
+      method: "GET",
+      data: data,
+    });
+  },
 
-  /** 头像URL */
-  avatar?: string;
-
-  /** 角色 */
-  roles: string[];
-
-  /** 权限 */
-  perms: string[];
-}
+  /** 修改用户信息 */
+  updateUserInfoApi(data?: UserInfoReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/update_user_info",
+      method: "POST",
+      data: data,
+    });
+  },
+};

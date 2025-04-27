@@ -266,8 +266,10 @@
               <template v-if="col.prop">
                 {{
                   scope.row[col.prop]
-                    ? useDateFormat(scope.row[col.prop], col.dateFormat ?? "YYYY-MM-DD HH:mm:ss")
-                        .value
+                    ? useDateFormat(
+                        scope.row[col.prop] * 1000,
+                        col.dateFormat ?? "YYYY-MM-DD HH:mm:ss"
+                      ).value
                     : ""
                 }}
               </template>

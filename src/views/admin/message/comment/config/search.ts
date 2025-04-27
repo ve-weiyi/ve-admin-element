@@ -26,6 +26,7 @@ const searchConfig: ISearchConfig = {
           width: "150px",
         },
       },
+      initialValue: 0,
       options: [
         { label: "文章", value: 1 },
         { label: "友链", value: 2 },
@@ -43,6 +44,7 @@ const searchConfig: ISearchConfig = {
           width: "150px",
         },
       },
+      initialValue: 0,
       options: [
         { label: "通过", value: 1 },
         { label: "审核中", value: 0 },

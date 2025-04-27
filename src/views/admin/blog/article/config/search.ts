@@ -50,6 +50,7 @@ const searchConfig: ISearchConfig = {
           width: "100px",
         },
       },
+      initialValue: 0,
       options: [
         { label: "原创", value: 1 },
         { label: "转载", value: 2 },

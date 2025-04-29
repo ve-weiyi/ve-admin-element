@@ -147,23 +147,23 @@ function Sync() {
         ElMessage.success("同步成功,请稍后刷新列表");
       });
     })
-    .catch(() => {
-      ElMessage.warning("同步取消");
+    .catch((err) => {
+      ElMessage.warning("同步出现错误" + err);
     });
 }
 
 function convertMenu(menus: any[]): MenuNewReq[] {
   let result: MenuNewReq[] = [];
   menus?.forEach((menu, index) => {
-    const input = menu.component.toString();
-    const start = input.indexOf("/");
-    const end = input.indexOf(".");
+    const input = menu.component?.toString();
+    const start = input?.indexOf("/");
+    const end = input?.indexOf(".");
 
     const item: MenuNewReq = {
       parent_id: 0,
       path: menu.path,
       name: menu.name,
-      component: input.slice(start, end),
+      component: input?.slice(start, end),
       redirect: menu.redirect,
       type: menu.children ? MenuTypeEnum.CATALOG : MenuTypeEnum.MENU,
       title: menu.meta.title,

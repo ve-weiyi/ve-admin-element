@@ -155,8 +155,8 @@ import { ElMessage } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
-import { AlbumAPI } from "@/api/album";
-import type { AlbumBackDTO, AlbumNewReq, AlbumQuery } from "@/api/types";
+import { AlbumAPI } from "@/api/album.ts";
+import type { AlbumBackDTO, AlbumNewReq, AlbumQuery } from "@/api/types.ts";
 
 const route = useRoute();
 const router = useRouter();

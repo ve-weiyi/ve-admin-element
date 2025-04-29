@@ -365,14 +365,14 @@ function saveArticle(article: ArticleNewReq) {
 onMounted(() => {
   CategoryAPI.findCategoryListApi({
     page: 1,
-    page_size: 20
+    page_size: 20,
   }).then((res) => {
     categoryList.value = res.data.list;
   });
 
   TagAPI.findTagListApi({
     page: 1,
-    page_size: 20
+    page_size: 20,
   }).then((res) => {
     tagList.value = res.data.list;
   });

@@ -7,6 +7,7 @@ import { useResizeObserver } from "@vueuse/core";
 import * as echarts from "echarts";
 import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 import type { PropType } from "vue";
+
 const chartDom = ref<HTMLElement>();
 const myChart = ref<echarts.EChartsType>();
 

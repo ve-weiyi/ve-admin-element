@@ -45,10 +45,6 @@ const columns = ref<Column<any>[]>([
     dataKey: "login_type",
     align: "center",
     width: 80,
-    cellRenderer: (scope: any): any => {
-      const { rowData } = scope;
-      return <div>{LoginMethod[rowData.login_type]}</div>;
-    },
   },
   {
     key: "deviceType",

@@ -169,9 +169,9 @@
 import type { FormInstance, FormRules, UploadUserFile } from "element-plus";
 import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useRoute } from "vue-router";
-import { AlbumAPI } from "@/api/album";
-import { PhotoAPI } from "@/api/photo";
-import type { AlbumBackDTO, PhotoBackDTO, PhotoNewReq, PhotoQuery } from "@/api/types";
+import { AlbumAPI } from "@/api/album.ts";
+import { PhotoAPI } from "@/api/photo.ts";
+import type { AlbumBackDTO, PhotoBackDTO, PhotoNewReq, PhotoQuery } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 

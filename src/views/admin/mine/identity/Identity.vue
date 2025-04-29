@@ -318,7 +318,7 @@ const handleSubmit = async () => {
 
 /** 加载用户信息 */
 const loadUserProfile = async () => {
-  const data = await  UserAPI.getUserInfoApi();
+  const data = await UserAPI.getUserInfoApi();
   userProfile.value = data.data;
 };
 

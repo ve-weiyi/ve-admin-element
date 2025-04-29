@@ -95,6 +95,7 @@ export default [
       ...pluginVue.configs.recommended.rules, // Vue 推荐规则
       "vue/no-v-html": "off", // 允许 v-html
       "vue/multi-word-component-names": "off", // 允许单个单词组件名
+      "no-unused-vars": "warn", // 设置未使用变量为警告级别
     },
   },
 ];

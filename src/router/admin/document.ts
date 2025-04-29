@@ -29,5 +29,17 @@ export default {
         params: null,
       },
     },
+    {
+      path: "/document/doc",
+      component: () => import("@/views/admin/document/doc/internal-doc.vue"),
+      name: "InternalDoc",
+      meta: {
+        title: "博客前台",
+        icon: "document",
+        hidden: false,
+        alwaysShow: false,
+        params: null,
+      },
+    },
   ],
 } satisfies RouteRecordRaw;

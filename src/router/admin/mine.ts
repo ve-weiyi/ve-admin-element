@@ -12,13 +12,14 @@ export default {
     icon: "el-icon-user",
     rank: 100,
     alwaysShow: true,
+    hidden: true,
   },
   children: [
     {
       path: "/mine/info",
       component: () => import("@/views/admin/mine/Mine.vue"),
       name: "Mine",
-      meta: { title: "个人信息" },
+      meta: { title: "个人信息", hidden: true },
     },
     // {
     //   path: "/mine/info",

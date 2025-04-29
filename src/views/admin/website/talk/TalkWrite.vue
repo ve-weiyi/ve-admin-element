@@ -197,7 +197,7 @@ function saveOrUpdateTalk() {
       emit("onConfirm");
     });
   }
-  return true
+  return true;
 }
 
 const dropdownTitle = computed(() => {

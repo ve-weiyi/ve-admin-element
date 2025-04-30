@@ -2,42 +2,22 @@ export interface AboutMe {
   content: string;
 }
 
-export interface AccountArea {
-  name: string;
-  value: number;
-}
-
-export interface AccountLoginHistory {
-  id?: number;
-  username: string; // 用户名
-  nickname: string; // 用户昵称
-  avatar: string; // 用户头像
-  login_type: string; // 登录类型
-  agent: string; // 代理
-  ip_address: string; // ip host
-  ip_source: string; // ip 源
-  login_at: number; // 登录时间
-  logout_at: number; // 登出时间
-}
-
 export interface AccountQuery extends PageQuery {
   username?: string;
   nickname?: string;
 }
 
 export interface AdminHomeInfo {
-  view_count: number; // 访问量
   user_count: number; // 用户量
   article_count: number; // 文章量
   remark_count: number; // 留言量
-  category_list: CategoryDTO[]; // 分类列表
-  tag_list: TagDTO[]; // 标签列表
-  article_view_ranks: ArticleViewDTO[]; // 文章浏览量排行
-  article_statistics: ArticleStatisticsDTO[]; // 文章提交统计
-  user_visit_daliy: UserVisitDTO[]; // 用户每日访问量
+  category_list: CategoryVO[]; // 分类列表
+  tag_list: TagVO[]; // 标签列表
+  article_view_ranks: ArticleViewVO[]; // 文章浏览量排行
+  article_statistics: ArticleStatisticsVO[]; // 文章提交统计
 }
 
-export interface AlbumBackDTO {
+export interface AlbumBackVO {
   id?: number; // 主键
   album_name: string; // 相册名
   album_desc: string; // 相册描述
@@ -62,7 +42,7 @@ export interface AlbumQuery extends PageQuery {
   album_name?: string; // 相册名
 }
 
-export interface ApiBackDTO {
+export interface ApiBackVO {
   id?: number; // 主键id
   parent_id: number; // 分组id
   name: string; // api名称
@@ -72,7 +52,7 @@ export interface ApiBackDTO {
   is_disable?: number; // 是否禁用 0否 1是
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  children: ApiBackDTO[];
+  children: ApiBackVO[];
 }
 
 export interface ApiNewReq {
@@ -91,7 +71,7 @@ export interface ApiQuery extends PageQuery {
   method?: string; // api请求方法
 }
 
-export interface ArticleBackDTO {
+export interface ArticleBackVO {
   id?: number; // 文章ID
   article_cover: string; // 文章缩略图
   article_title: string; // 标题
@@ -136,7 +116,7 @@ export interface ArticleRecycleReq {
   is_delete: number; // 是否删除
 }
 
-export interface ArticleStatisticsDTO {
+export interface ArticleStatisticsVO {
   date: string; // 日期
   count: number; // 数量
 }
@@ -146,7 +126,7 @@ export interface ArticleTopReq {
   is_top: number; // 是否置顶
 }
 
-export interface ArticleViewDTO {
+export interface ArticleViewVO {
   id?: number; // 文章ID
   article_title: string; // 文章标题
   view_count: number; // 浏览量
@@ -161,18 +141,12 @@ export interface BindUserEmailReq {
   verify_code: string; // 验证码
 }
 
-export interface CategoryBackDTO {
+export interface CategoryBackVO {
   id?: number;
   category_name: string; // 分类名
   article_count: number;
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface CategoryDTO {
-  id?: number;
-  category_name: string; // 分类名
-  article_count: number; // 文章数量
 }
 
 export interface CategoryNewReq {
@@ -184,7 +158,13 @@ export interface CategoryQuery extends PageQuery {
   category_name?: string; // 分类名
 }
 
-export interface CommentBackDTO {
+export interface CategoryVO {
+  id?: number;
+  category_name: string; // 分类名
+  article_count: number; // 文章数量
+}
+
+export interface CommentBackVO {
   id: number; // 评论ID
   type: number; // 评论类型 1.文章 2.友链 3.说说
   topic_title: string; // 评论主题
@@ -212,7 +192,7 @@ export interface EmptyReq {}
 
 export interface EmptyResp {}
 
-export interface FileBackDTO {
+export interface FileBackVO {
   id?: number; // 文件目录ID
   user_id: string; // 用户id
   file_path: string; // 文件路径
@@ -236,7 +216,7 @@ export interface FileQuery extends PageQuery {
   file_type?: string; // 文件类型
 }
 
-export interface FriendBackDTO {
+export interface FriendBackVO {
   id?: number; // id
   link_name: string; // 链接名
   link_avatar: string; // 链接头像
@@ -258,6 +238,34 @@ export interface FriendQuery extends PageQuery {
   link_name?: string; // 链接名
 }
 
+export interface GetUserAreaStatsReq {
+  user_type?: number; // 用户类型: 0注册用户 1游客
+}
+
+export interface GetUserAreaStatsResp {
+  user_areas: UserAreaVO[]; // 用户分布地区
+  tourist_areas: UserAreaVO[]; // 游客分布地区
+}
+
+export interface GetVisitStatsResp {
+  today_uv_count: number; // 今日访客数(UV)
+  total_uv_count: number; // 总访客数
+  uv_growth_rate: number; // 访客数同比增长率（相对于昨天同一时间段的增长率）
+  today_pv_count: number; // 今日浏览量(PV)
+  total_pv_count: number; // 总浏览量
+  pv_growth_rate: number; // 同比增长率（相对于昨天同一时间段的增长率）
+}
+
+export interface GetVisitTrendReq {
+  start_date: string; // 开始日期
+  end_date?: string; // 结束日期
+}
+
+export interface GetVisitTrendResp {
+  uv_trend: VisitTrendVO[]; // 访客数趋势
+  pv_trend: VisitTrendVO[]; // 浏览量趋势
+}
+
 export interface IdReq {
   id: number;
 }
@@ -275,6 +283,20 @@ export interface ListUploadFileResp {
   urls: string[]; // 文件路径
 }
 
+export interface LoginLogBackVO {
+  id?: number;
+  user_id: string; // 用户id
+  login_type: string; // 登录类型
+  agent: string; // 代理
+  ip_address: string; // ip host
+  ip_source: string; // ip 源
+  login_at: number; // 登录时间
+  logout_at: number; // 登出时间
+  user?: UserInfo; // 用户信息
+}
+
+export interface LoginLogQuery extends PageQuery {}
+
 export interface LoginReq {
   username: string;
   password: string;
@@ -286,14 +308,14 @@ export interface LoginResp {
   token?: Token;
 }
 
-export interface MenuBackDTO extends MenuMeta {
+export interface MenuBackVO extends MenuMeta {
   id?: number; // 主键
   parent_id?: number; // 父id
   path?: string; // 路由地址
   name?: string; // 路由名字
   component?: string; // Layout组件
   redirect?: string; // 路由重定向
-  children?: MenuBackDTO[];
+  children?: MenuBackVO[];
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -346,7 +368,7 @@ export interface OauthLoginUrlResp {
   url: string; // 授权地址
 }
 
-export interface OperationLogBackDTO {
+export interface OperationLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
   ip_address: string; // 操作ip
@@ -366,7 +388,7 @@ export interface OperationLogBackDTO {
 
 export interface OperationLogQuery extends PageQuery {}
 
-export interface PageBackDTO {
+export interface PageBackVO {
   id?: number; // 页面id
   page_name: string; // 页面名
   page_label: string; // 页面标签
@@ -403,7 +425,7 @@ export interface PageResp {
   list: any;
 }
 
-export interface PhotoBackDTO {
+export interface PhotoBackVO {
   id?: number; // 主键
   album_id: number; // 相册id
   photo_name: string; // 照片名
@@ -444,7 +466,7 @@ export interface RegisterReq {
   verify_code: string; // 验证码
 }
 
-export interface RemarkBackDTO {
+export interface RemarkBackVO {
   id?: number; // 主键id
   user_id: string; // 用户ID
   message_content: string; // 留言内容
@@ -490,7 +512,7 @@ export interface RestHeader {
   header_terminal_id?: string;
 }
 
-export interface RoleBackDTO {
+export interface RoleBackVO {
   id?: number; // 主键id
   parent_id: number; // 父角色id
   role_key: string; // 角色名
@@ -539,18 +561,12 @@ export interface SyncMenuReq {
   menus: MenuNewReq[];
 }
 
-export interface TagBackDTO {
+export interface TagBackVO {
   id?: number; // 标签ID
   tag_name: string; // 标签名
   article_count: number; // 文章数量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface TagDTO {
-  id?: number; // 标签ID
-  tag_name: string; // 标签名
-  article_count: number; // 文章数量
 }
 
 export interface TagNewReq {
@@ -562,7 +578,13 @@ export interface TagQuery extends PageQuery {
   tag_name?: string; // 标签名
 }
 
-export interface TalkBackDTO {
+export interface TagVO {
+  id?: number; // 标签ID
+  tag_name: string; // 标签名
+  article_count: number; // 文章数量
+}
+
+export interface TalkBackVO {
   id?: number; // 说说ID
   user_id: string; // 用户ID
   content: string; // 说说内容
@@ -641,6 +663,11 @@ export interface UserApi {
 
 export interface UserApisResp {
   list: UserApi[];
+}
+
+export interface UserAreaVO {
+  name: string;
+  value: number;
 }
 
 export interface UserEmailReq {
@@ -738,12 +765,7 @@ export interface UserRolesResp {
   list: UserRole[];
 }
 
-export interface UserVisitDTO {
-  date: string; // 日期
-  count: number; // 数量
-}
-
-export interface VisitLogBackDTO {
+export interface VisitLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
   ip_address: string; // 操作ip
@@ -758,6 +780,11 @@ export interface VisitLogBackDTO {
 
 export interface VisitLogQuery extends PageQuery {
   keywords?: string; // 关键字
+}
+
+export interface VisitTrendVO {
+  date: string; // 日期
+  count: number; // 数量
 }
 
 export interface WebsiteConfig {

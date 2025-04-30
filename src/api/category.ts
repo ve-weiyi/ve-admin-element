@@ -1,10 +1,17 @@
 import request from "@/utils/request";
-import type { BatchResp, CategoryBackDTO, CategoryNewReq, CategoryQuery, IdReq, IdsReq, PageResp } from "./types";
+import type {
+  BatchResp,
+  CategoryBackVO,
+  CategoryNewReq,
+  CategoryQuery,
+  IdReq,
+  IdsReq,
+  PageResp,
+} from "./types";
 
 export const CategoryAPI = {
-
   /** 创建文章分类 */
-  addCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackDTO>> {
+  addCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackVO>> {
     return request({
       url: "/admin_api/v1/category/add_category",
       method: "POST",
@@ -40,7 +47,7 @@ export const CategoryAPI = {
   },
 
   /** 更新文章分类 */
-  updateCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackDTO>> {
+  updateCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackVO>> {
     return request({
       url: "/admin_api/v1/category/update_category",
       method: "PUT",

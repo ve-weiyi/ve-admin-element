@@ -2,7 +2,6 @@ import request from "@/utils/request";
 import type { BatchResp, IdReq, IdsReq, PageResp, RemarkQuery, RemarkReviewReq } from "./types";
 
 export const RemarkAPI = {
-
   /** 批量删除留言 */
   batchDeleteRemarkApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({

@@ -1,10 +1,21 @@
 import request from "@/utils/request";
-import type { BatchResp, EmptyResp, IdReq, IdsReq, PageResp, RoleBackDTO, RoleNewReq, RoleQuery, RoleResourcesResp, UpdateRoleApisReq, UpdateRoleMenusReq } from "./types";
+import type {
+  BatchResp,
+  EmptyResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  RoleBackVO,
+  RoleNewReq,
+  RoleQuery,
+  RoleResourcesResp,
+  UpdateRoleApisReq,
+  UpdateRoleMenusReq,
+} from "./types";
 
 export const RoleAPI = {
-
   /** 创建角色 */
-  addRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackDTO>> {
+  addRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackVO>> {
     return request({
       url: "/admin_api/v1/role/add_role",
       method: "POST",
@@ -49,7 +60,7 @@ export const RoleAPI = {
   },
 
   /** 更新角色 */
-  updateRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackDTO>> {
+  updateRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackVO>> {
     return request({
       url: "/admin_api/v1/role/update_role",
       method: "PUT",

@@ -22,6 +22,16 @@
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
+        <template #user="scope">
+          <div v-if="scope.row[scope.prop]" style="display: flex; align-items: center; gap: 8px">
+            <el-image
+              :src="scope.row[scope.prop].avatar"
+              :preview-teleported="true"
+              :style="`width: ${scope.imageWidth ?? 40}px; height: ${scope.imageHeight ?? 40}px`"
+            />
+            <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
+          </div>
+        </template>
         <template #login_type="scope">
           <el-tag v-if="scope.row.login_type === LoginTypeEnum.EMAIL" type="success">邮箱</el-tag>
           <el-tag v-if="scope.row.login_type === LoginTypeEnum.PHONE" type="danger">手机</el-tag>
@@ -66,6 +76,8 @@ function handleOperatClick(data: IOperatData) {
   console.log(data);
 
   switch (data.name) {
+    default:
+      break;
   }
 }
 

@@ -2,7 +2,6 @@ import request from "@/utils/request";
 import type { BatchResp, IdsReq, PageResp, VisitLogQuery } from "./types";
 
 export const VisitLogAPI = {
-
   /** 删除操作记录 */
   deletesVisitLogApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({

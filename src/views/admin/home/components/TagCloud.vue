@@ -114,12 +114,10 @@ function update() {
     let b;
     if (config.active) {
       a =
-        (-Math.min(Math.max(-config.mouseY, -config.size), config.size) /
-          config.radius) *
+        (-Math.min(Math.max(-config.mouseY, -config.size), config.size) / config.radius) *
         config.tspeed;
       b =
-        (Math.min(Math.max(-config.mouseX, -config.size), config.size) /
-          config.radius) *
+        (Math.min(Math.max(-config.mouseX, -config.size), config.size) / config.radius) *
         config.tspeed;
     } else {
       a = config.lasta * 0.98;
@@ -134,10 +132,8 @@ function update() {
     sineCosine(a, b, c);
     for (let j = 0; j < config.mcList.length; j++) {
       let rx1 = config.mcList[j].cx;
-      let ry1 =
-        config.mcList[j].cy * config.ca + config.mcList[j].cz * -config.sa;
-      let rz1 =
-        config.mcList[j].cy * config.sa + config.mcList[j].cz * config.ca;
+      let ry1 = config.mcList[j].cy * config.ca + config.mcList[j].cz * -config.sa;
+      let rz1 = config.mcList[j].cy * config.sa + config.mcList[j].cz * config.ca;
       let rx2 = rx1 * config.cb + rz1 * config.sb;
       let ry2 = ry1;
       let rz2 = rx1 * -config.sb + rz1 * config.cb;
@@ -148,8 +144,7 @@ function update() {
       config.mcList[j].cy = ry3;
       config.mcList[j].cz = rz3;
       let per = config.d / (config.d + rz3);
-      config.mcList[j].x =
-        config.howElliptical * rx3 * per - config.howElliptical * 2;
+      config.mcList[j].x = config.howElliptical * rx3 * per - config.howElliptical * 2;
       config.mcList[j].y = ry3 * per;
       config.mcList[j].scale = per;
       config.mcList[j].alpha = per;
@@ -165,12 +160,9 @@ function doPosition() {
     let l = config.oList.offsetWidth / 2;
     let t = config.oList.offsetHeight / 2;
     for (let i = 0; i < config.mcList.length; i++) {
-      config.oA[i].style.left =
-        config.mcList[i].cx + l - config.mcList[i].offsetWidth / 2 + "px";
-      config.oA[i].style.top =
-        config.mcList[i].cy + t - config.mcList[i].offsetHeight / 2 + "px";
-      config.oA[i].style.fontSize =
-        Math.ceil((12 * config.mcList[i].scale) / 2) + 8 + "px";
+      config.oA[i].style.left = config.mcList[i].cx + l - config.mcList[i].offsetWidth / 2 + "px";
+      config.oA[i].style.top = config.mcList[i].cy + t - config.mcList[i].offsetHeight / 2 + "px";
+      config.oA[i].style.fontSize = Math.ceil((12 * config.mcList[i].scale) / 2) + 8 + "px";
       // config.oA[i].style.filter = "alpha(opacity=" + 100 * config.mcList[i].alpha + ")";
       config.oA[i].style.opacity = config.mcList[i].alpha;
     }
@@ -205,14 +197,7 @@ function query() {
   }
   // 给tagList添加随机颜色
   props.tagList.forEach((item: any) => {
-    item.color =
-      "rgb(" +
-      getRandomNum() +
-      "," +
-      getRandomNum() +
-      "," +
-      getRandomNum() +
-      ")";
+    item.color = "rgb(" + getRandomNum() + "," + getRandomNum() + "," + getRandomNum() + ")";
   });
   onReady();
 }
@@ -238,12 +223,8 @@ function onReady() {
     };
     config.oList.onmousemove = (event: any) => {
       const oEvent: any = window.event || event;
-      config.mouseX =
-        oEvent.clientX -
-        (config.oList.offsetLeft + config.oList.offsetWidth / 2);
-      config.mouseY =
-        oEvent.clientY -
-        (config.oList.offsetTop + config.oList.offsetHeight / 2);
+      config.mouseX = oEvent.clientX - (config.oList.offsetLeft + config.oList.offsetWidth / 2);
+      config.mouseY = oEvent.clientY - (config.oList.offsetTop + config.oList.offsetHeight / 2);
       config.mouseX /= 5;
       config.mouseY /= 5;
     };

@@ -73,7 +73,7 @@ function newOptions() {
     title: {
       top: 30,
       left: "center",
-      text: `${year - 1}-${year}年每日代码提交次数`,
+      text: `${year - 1}-${year}年每日文章提交次数`,
     },
     tooltip: {
       trigger: "item", // 设置触发方式为项触发

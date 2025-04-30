@@ -1,30 +1,18 @@
 import request from "@/utils/request";
-import type { AccountQuery, EmptyResp, PageResp, UpdateAccountPasswordReq, UpdateAccountRolesReq, UpdateAccountStatusReq } from "./types";
+import type {
+  AccountQuery,
+  EmptyResp,
+  PageResp,
+  UpdateAccountPasswordReq,
+  UpdateAccountRolesReq,
+  UpdateAccountStatusReq,
+} from "./types";
 
 export const AccountAPI = {
-
-  /** 获取用户分布地区 */
-  findAccountAreaAnalysisApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
-    return request({
-      url: "/admin_api/v1/account/find_account_area_analysis",
-      method: "POST",
-      data: data,
-    });
-  },
-
   /** 查询用户列表 */
   findAccountListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin_api/v1/account/find_account_list",
-      method: "POST",
-      data: data,
-    });
-  },
-
-  /** 查询用户登录历史 */
-  findAccountLoginHistoryListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
-    return request({
-      url: "/admin_api/v1/account/find_account_login_history_list",
       method: "POST",
       data: data,
     });

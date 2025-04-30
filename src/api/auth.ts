@@ -1,8 +1,18 @@
 import request from "@/utils/request";
-import type { BindUserEmailReq, EmptyReq, EmptyResp, LoginReq, LoginResp, OauthLoginReq, OauthLoginUrlResp, RegisterReq, ResetPasswordReq, UserEmailReq } from "./types";
+import type {
+  BindUserEmailReq,
+  EmptyReq,
+  EmptyResp,
+  LoginReq,
+  LoginResp,
+  OauthLoginReq,
+  OauthLoginUrlResp,
+  RegisterReq,
+  ResetPasswordReq,
+  UserEmailReq,
+} from "./types";
 
 export const AuthAPI = {
-
   /** 登录 */
   loginApi(data?: LoginReq): Promise<IApiResponse<LoginResp>> {
     return request({
@@ -65,7 +75,6 @@ export const AuthAPI = {
       data: data,
     });
   },
-
 
   /** 绑定邮箱 */
   bindUserEmailApi(data?: BindUserEmailReq): Promise<IApiResponse<EmptyResp>> {

@@ -2,7 +2,6 @@ import request from "@/utils/request";
 import type { BatchResp, CommentQuery, CommentReviewReq, IdReq, IdsReq, PageResp } from "./types";
 
 export const CommentAPI = {
-
   /** 批量删除评论 */
   batchDeleteCommentApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({

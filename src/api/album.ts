@@ -1,10 +1,9 @@
 import request from "@/utils/request";
-import type { AlbumBackDTO, AlbumNewReq, AlbumQuery, BatchResp, IdReq, PageResp } from "./types";
+import type { AlbumBackVO, AlbumNewReq, AlbumQuery, BatchResp, IdReq, PageResp } from "./types";
 
 export const AlbumAPI = {
-
   /** 创建相册 */
-  addAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackDTO>> {
+  addAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackVO>> {
     return request({
       url: "/admin_api/v1/album/add_album",
       method: "POST",
@@ -31,7 +30,7 @@ export const AlbumAPI = {
   },
 
   /** 查询相册 */
-  getAlbumApi(data?: IdReq): Promise<IApiResponse<AlbumBackDTO>> {
+  getAlbumApi(data?: IdReq): Promise<IApiResponse<AlbumBackVO>> {
     return request({
       url: "/admin_api/v1/album/get_album",
       method: "POST",
@@ -40,7 +39,7 @@ export const AlbumAPI = {
   },
 
   /** 更新相册 */
-  updateAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackDTO>> {
+  updateAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackVO>> {
     return request({
       url: "/admin_api/v1/album/update_album",
       method: "PUT",

@@ -156,7 +156,7 @@ import RightToolbar from "@/components/RightToolbar/index.vue";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import { AlbumAPI } from "@/api/album.ts";
-import type { AlbumBackDTO, AlbumNewReq, AlbumQuery } from "@/api/types.ts";
+import type { AlbumBackVO, AlbumNewReq, AlbumQuery } from "@/api/types.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -168,7 +168,7 @@ const queryParams = ref<AlbumQuery>({
   page: 1,
   page_size: 10,
 });
-const tableData = ref<AlbumBackDTO[]>([]);
+const tableData = ref<AlbumBackVO[]>([]);
 const total = ref(0);
 
 const handleSizeChange = (size: number) => {
@@ -222,7 +222,7 @@ const dialogTitle = computed(() => {
   }
 });
 
-function handleAdd(data?: AlbumBackDTO) {
+function handleAdd(data?: AlbumBackVO) {
   if (data) {
     formData.value = data;
   } else {
@@ -254,7 +254,7 @@ function cancelSave() {
   addModalVisible.value = false;
 }
 
-function handleDelete(data?: AlbumBackDTO) {
+function handleDelete(data?: AlbumBackVO) {
   deleteId.value = data.id;
   deleteModalVisible.value = true;
 }

@@ -187,7 +187,7 @@ import "md-editor-v3/lib/style.css";
 import { CategoryAPI } from "@/api/category";
 import { TagAPI } from "@/api/tag";
 import { ArticleAPI } from "@/api/article";
-import type { ArticleBackDTO, ArticleNewReq, CategoryBackDTO, TagBackDTO } from "@/api/types";
+import type { ArticleBackVO, ArticleNewReq, CategoryBackVO, TagBackVO } from "@/api/types";
 import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file";
 import { formatDate } from "@/utils/date";
@@ -196,7 +196,7 @@ import { ArticleTopEnum } from "@/enums/ArticleEnum";
 
 const route = useRoute();
 const router = useRouter();
-const article = ref<ArticleBackDTO>({
+const article = ref<ArticleBackVO>({
   id: 0,
   article_title: formatDate(new Date(), "YYYY-MM-DD"),
   article_content: "",
@@ -220,8 +220,8 @@ const addOrEdit = ref(false);
 const autoSave = ref(true);
 const categoryName = ref("");
 const tagName = ref("");
-const categoryList = ref<CategoryBackDTO[]>([]);
-const tagList = ref<TagBackDTO[]>([]);
+const categoryList = ref<CategoryBackVO[]>([]);
+const tagList = ref<TagBackVO[]>([]);
 const typeList = ref([
   {
     type: 1,
@@ -416,7 +416,7 @@ function searchTags(keywords: string, cb: any) {
   });
 }
 
-function handleSelectTag(item: TagBackDTO) {
+function handleSelectTag(item: TagBackVO) {
   addTag(item.tag_name);
 }
 
@@ -440,7 +440,7 @@ function removeTag(name: string) {
   }
 }
 
-const tagClass = (item: TagBackDTO) => {
+const tagClass = (item: TagBackVO) => {
   const index = article.value.tag_name_list.indexOf(item.tag_name);
   return index !== -1 ? "tag-item-select" : "tag-item";
 };

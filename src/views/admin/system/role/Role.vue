@@ -109,7 +109,7 @@ import Tree from "./components/tree.vue";
 import { RoleAPI } from "@/api/role";
 import { ApiAPI } from "@/api/api";
 import { MenuAPI } from "@/api/menu";
-import type { ApiBackDTO, MenuBackDTO, RoleBackDTO, RoleResourcesResp } from "@/api/types";
+import type { ApiBackVO, MenuBackVO, RoleBackVO, RoleResourcesResp } from "@/api/types";
 
 const {
   searchRef,
@@ -157,11 +157,11 @@ function handleOperatClick(data: IOperatData) {
 // 切换示例
 const isA = ref(true);
 
-const menuList = ref<MenuBackDTO[]>();
-const apiList = ref<ApiBackDTO[]>();
+const menuList = ref<MenuBackVO[]>();
+const apiList = ref<ApiBackVO[]>();
 
 const drawer = ref(false);
-const formData = ref<RoleBackDTO>();
+const formData = ref<RoleBackVO>();
 const roleResources = ref<RoleResourcesResp>();
 const menuTree = ref();
 const apiTree = ref();
@@ -185,7 +185,7 @@ const openDrawer = (v: any) => {
   }
 
   console.log("row", v);
-  formData.value = v as RoleBackDTO;
+  formData.value = v as RoleBackVO;
   RoleAPI.findRoleResourcesApi({
     id: v.id,
   }).then((res) => {

@@ -1,10 +1,9 @@
 import request from "@/utils/request";
-import type { BatchResp, IdReq, IdsReq, PageResp, TagBackDTO, TagNewReq, TagQuery } from "./types";
+import type { BatchResp, IdReq, IdsReq, PageResp, TagBackVO, TagNewReq, TagQuery } from "./types";
 
 export const TagAPI = {
-
   /** 创建标签 */
-  addTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackDTO>> {
+  addTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackVO>> {
     return request({
       url: "/admin_api/v1/tag/add_tag",
       method: "POST",
@@ -40,7 +39,7 @@ export const TagAPI = {
   },
 
   /** 更新标签 */
-  updateTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackDTO>> {
+  updateTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackVO>> {
     return request({
       url: "/admin_api/v1/tag/update_tag",
       method: "PUT",

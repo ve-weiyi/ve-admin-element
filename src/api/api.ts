@@ -1,10 +1,19 @@
 import request from "@/utils/request";
-import type { ApiBackDTO, ApiNewReq, ApiQuery, BatchResp, EmptyReq, IdReq, IdsReq, PageResp, SyncApiReq } from "./types";
+import type {
+  ApiBackVO,
+  ApiNewReq,
+  ApiQuery,
+  BatchResp,
+  EmptyReq,
+  IdReq,
+  IdsReq,
+  PageResp,
+  SyncApiReq,
+} from "./types";
 
 export const ApiAPI = {
-
   /** 创建api路由 */
-  addApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackDTO>> {
+  addApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackVO>> {
     return request({
       url: "/admin_api/v1/api/add_api",
       method: "POST",
@@ -58,7 +67,7 @@ export const ApiAPI = {
   },
 
   /** 更新api路由 */
-  updateApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackDTO>> {
+  updateApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackVO>> {
     return request({
       url: "/admin_api/v1/api/update_api",
       method: "PUT",

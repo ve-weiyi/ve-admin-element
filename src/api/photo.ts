@@ -1,8 +1,15 @@
 import request from "@/utils/request";
-import type { BatchResp, IdReq, IdsReq, PageResp, PhotoBackDTO, PhotoNewReq, PhotoQuery } from "./types";
+import type {
+  BatchResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  PhotoBackVO,
+  PhotoNewReq,
+  PhotoQuery,
+} from "./types";
 
 export const PhotoAPI = {
-
   /** 批量删除照片 */
   batchDeletePhotoApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -13,7 +20,7 @@ export const PhotoAPI = {
   },
 
   /** 创建照片 */
-  addPhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackDTO>> {
+  addPhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackVO>> {
     return request({
       url: "/admin_api/v1/photo/add_photo",
       method: "POST",
@@ -40,7 +47,7 @@ export const PhotoAPI = {
   },
 
   /** 更新照片 */
-  updatePhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackDTO>> {
+  updatePhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackVO>> {
     return request({
       url: "/admin_api/v1/photo/update_photo",
       method: "PUT",

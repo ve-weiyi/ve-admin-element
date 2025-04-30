@@ -147,7 +147,7 @@ import {
   type UploadUserFile,
 } from "element-plus";
 import { multipleUploadFile } from "@/utils/file";
-import type { FileBackDTO, FileFolderNewReq } from "@/api/types";
+import type { FileBackVO, FileFolderNewReq } from "@/api/types";
 import { FileAPI } from "@/api/file";
 
 const {
@@ -339,7 +339,7 @@ function fetchPageData() {
   contentRef.value.fetchPageData(queryParams);
 }
 
-const handleOpen = (row: FileBackDTO) => {
+const handleOpen = (row: FileBackVO) => {
   console.log("open dir->", row);
   router.push({
     query: {

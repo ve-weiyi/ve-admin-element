@@ -103,7 +103,7 @@ import { computed, onMounted, reactive, ref, toRefs } from "vue";
 import Talk from "./TalkWrite.vue";
 import VeTablePagination from "@/components/VeTable/TablePagination.vue";
 import { TalkAPI } from "@/api/talk";
-import type { TalkQuery, TalkBackDTO } from "@/api/types";
+import type { TalkQuery, TalkBackVO } from "@/api/types";
 import { useRoute, useRouter } from "vue-router";
 import "@/styles/table.scss";
 import { formatDateTime } from "@/utils/date";
@@ -119,7 +119,7 @@ const data = reactive({
   },
   searchData: {} as any,
   orderData: {} as any,
-  tableData: [] as Array<TalkBackDTO>,
+  tableData: [] as Array<TalkBackVO>,
   formData: {} as any,
 });
 

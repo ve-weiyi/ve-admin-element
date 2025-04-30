@@ -1,10 +1,20 @@
 import request from "@/utils/request";
-import type { ArticleBackDTO, ArticleNewReq, ArticleQuery, ArticleRecycleReq, ArticleTopReq, BatchResp, EmptyResp, IdReq, IdsReq, PageResp } from "./types";
+import type {
+  ArticleBackVO,
+  ArticleNewReq,
+  ArticleQuery,
+  ArticleRecycleReq,
+  ArticleTopReq,
+  BatchResp,
+  EmptyResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+} from "./types";
 
 export const ArticleAPI = {
-
   /** 添加文章 */
-  addArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {
+  addArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackVO>> {
     return request({
       url: "/admin_api/v1/article/add_article",
       method: "POST",
@@ -40,7 +50,7 @@ export const ArticleAPI = {
   },
 
   /** 查询文章 */
-  getArticleApi(data?: IdReq): Promise<IApiResponse<ArticleBackDTO>> {
+  getArticleApi(data?: IdReq): Promise<IApiResponse<ArticleBackVO>> {
     return request({
       url: "/admin_api/v1/article/get_article",
       method: "POST",
@@ -67,7 +77,7 @@ export const ArticleAPI = {
   },
 
   /** 保存文章 */
-  updateArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackDTO>> {
+  updateArticleApi(data?: ArticleNewReq): Promise<IApiResponse<ArticleBackVO>> {
     return request({
       url: "/admin_api/v1/article/update_article",
       method: "POST",

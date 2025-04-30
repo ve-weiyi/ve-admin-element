@@ -171,7 +171,7 @@ import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useRoute } from "vue-router";
 import { AlbumAPI } from "@/api/album.ts";
 import { PhotoAPI } from "@/api/photo.ts";
-import type { AlbumBackDTO, PhotoBackDTO, PhotoNewReq, PhotoQuery } from "@/api/types.ts";
+import type { AlbumBackVO, PhotoBackVO, PhotoNewReq, PhotoQuery } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
@@ -197,8 +197,8 @@ const data = reactive({
   photoForm: {} as PhotoNewReq,
   photoIdList: [] as number[],
   selectPhotoIdList: [] as number[],
-  photoList: [] as PhotoBackDTO[],
-  albumInfo: {} as AlbumBackDTO,
+  photoList: [] as PhotoBackVO[],
+  albumInfo: {} as AlbumBackVO,
   uploadList: [] as UploadUserFile[],
 });
 const {
@@ -245,7 +245,7 @@ const handleCheckedPhotoChange = (value: number[]) => {
   checkAll.value = checkedCount === photoIdList.value.length;
   isIndeterminate.value = checkedCount > 0 && checkedCount < photoIdList.value.length;
 };
-const handleCommand = (photo: PhotoBackDTO) => {
+const handleCommand = (photo: PhotoBackVO) => {
   photoFormRef.value?.resetFields();
   photoForm.value = photo;
   update.value = true;

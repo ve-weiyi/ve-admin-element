@@ -1,10 +1,19 @@
 import request from "@/utils/request";
-import type { BatchResp, EmptyReq, IdReq, IdsReq, MenuBackDTO, MenuNewReq, MenuQuery, PageResp, SyncMenuReq } from "./types";
+import type {
+  BatchResp,
+  EmptyReq,
+  IdReq,
+  IdsReq,
+  MenuBackVO,
+  MenuNewReq,
+  MenuQuery,
+  PageResp,
+  SyncMenuReq,
+} from "./types";
 
 export const MenuAPI = {
-
   /** 创建菜单 */
-  addMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackDTO>> {
+  addMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackVO>> {
     return request({
       url: "/admin_api/v1/menu/add_menu",
       method: "POST",
@@ -58,7 +67,7 @@ export const MenuAPI = {
   },
 
   /** 更新菜单 */
-  updateMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackDTO>> {
+  updateMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackVO>> {
     return request({
       url: "/admin_api/v1/menu/update_menu",
       method: "PUT",

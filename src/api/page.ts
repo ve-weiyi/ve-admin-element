@@ -1,10 +1,9 @@
 import request from "@/utils/request";
-import type { BatchResp, IdReq, PageBackDTO, PageNewReq, PageQueryReq, PageResp } from "./types";
+import type { BatchResp, IdReq, PageBackVO, PageNewReq, PageQueryReq, PageResp } from "./types";
 
 export const PageAPI = {
-
   /** 创建页面 */
-  addPageApi(data?: PageNewReq): Promise<IApiResponse<PageBackDTO>> {
+  addPageApi(data?: PageNewReq): Promise<IApiResponse<PageBackVO>> {
     return request({
       url: "/admin_api/v1/page/add_page",
       method: "POST",
@@ -31,7 +30,7 @@ export const PageAPI = {
   },
 
   /** 更新页面 */
-  updatePageApi(data?: PageNewReq): Promise<IApiResponse<PageBackDTO>> {
+  updatePageApi(data?: PageNewReq): Promise<IApiResponse<PageBackVO>> {
     return request({
       url: "/admin_api/v1/page/update_page",
       method: "PUT",

@@ -2,7 +2,7 @@
 import { nextTick, onMounted, reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import IconSelect from "@/components/IconSelect/index.vue";
-import type { MenuBackDTO, MenuNewReq } from "@/api/types";
+import type { MenuBackVO, MenuNewReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 import { MenuTypeEnum } from "@/enums/MenuTypeEnum";
 
@@ -32,7 +32,7 @@ const menuFormRules = reactive<FormRules>({
 
 const menuOptions = ref<OptionType[]>([]);
 
-function pushMenuOptions(list: MenuBackDTO[]): OptionType[] {
+function pushMenuOptions(list: MenuBackVO[]): OptionType[] {
   let ops = [];
   list.forEach((item) => {
     const op: OptionType = {

@@ -1,10 +1,20 @@
 import request from "@/utils/request";
-import type { BatchResp, FileBackDTO, FileFolderNewReq, FileQuery, IdsReq, ListUploadFileReq, ListUploadFileResp, MultiUploadFileReq, PageResp, UploadFileReq } from "./types";
+import type {
+  BatchResp,
+  FileBackVO,
+  FileFolderNewReq,
+  FileQuery,
+  IdsReq,
+  ListUploadFileReq,
+  ListUploadFileResp,
+  MultiUploadFileReq,
+  PageResp,
+  UploadFileReq,
+} from "./types";
 
 export const FileAPI = {
-
   /** 创建文件目录 */
-  addFileFolderApi(data?: FileFolderNewReq): Promise<IApiResponse<FileBackDTO>> {
+  addFileFolderApi(data?: FileFolderNewReq): Promise<IApiResponse<FileBackVO>> {
     return request({
       url: "/admin_api/v1/file/add_file_folder",
       method: "POST",
@@ -40,7 +50,7 @@ export const FileAPI = {
   },
 
   /** 上传文件列表 */
-  multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackDTO[]>> {
+  multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackVO[]>> {
     return request({
       url: "/admin_api/v1/file/multi_upload_file",
       method: "POST",
@@ -49,7 +59,7 @@ export const FileAPI = {
   },
 
   /** 上传文件 */
-  uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackDTO>> {
+  uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackVO>> {
     return request({
       url: "/admin_api/v1/file/upload_file",
       method: "POST",

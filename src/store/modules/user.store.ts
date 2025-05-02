@@ -8,13 +8,10 @@ import { UserAPI } from "@/api/user";
 import { clearToken, setAccessToken, setUid } from "@/utils/auth";
 
 export const useUserStore = defineStore("user", () => {
-  const userInfo = useStorage<UserInfoResp>("userInfo", {} as UserInfoResp);
+  const userInfo = useStorage<UserInfoResp>("userInfo", <UserInfoResp>{});
 
   /**
    * 登录
-   *
-   * @param {LoginFormData}
-   * @returns
    */
   function login(loginData: LoginReq) {
     return new Promise<void>((resolve, reject) => {
@@ -33,8 +30,6 @@ export const useUserStore = defineStore("user", () => {
 
   /**
    * 获取用户信息
-   *
-   * @returns {UserInfo} 用户信息
    */
   function getUserInfo() {
     return new Promise<UserInfoResp>((resolve, reject) => {

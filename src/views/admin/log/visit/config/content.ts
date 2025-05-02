@@ -63,10 +63,30 @@ const contentConfig: IContentConfig<VisitLogQuery> = {
       templet: "custom",
     },
     {
+      label: "访客标识",
+      prop: "terminal_id",
+      width: 150,
+      align: "center",
+    },
+    {
       label: "页面",
-      prop: "page",
+      prop: "page_name",
       width: 0,
       minWidth: 120,
+      align: "center",
+    },
+    {
+      label: "操作系统",
+      prop: "os",
+      width: 0,
+      minWidth: 160,
+      align: "center",
+    },
+    {
+      label: "浏览器",
+      prop: "browser",
+      width: 0,
+      minWidth: 140,
       align: "center",
     },
     {
@@ -86,7 +106,7 @@ const contentConfig: IContentConfig<VisitLogQuery> = {
       label: "操作系统",
       prop: "os",
       width: 0,
-      minWidth: 200,
+      minWidth: 160,
       align: "center",
     },
     {

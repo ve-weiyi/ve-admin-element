@@ -14,7 +14,7 @@ export const LoginLogAPI = {
   /** 查询登录日志 */
   findLoginLogListApi(data?: LoginLogQuery): Promise<IApiResponse<PageResp>> {
     return request({
-      url: "/admin_api/v1/user/find_login_history_list",
+      url: "/admin_api/v1/user/find_login_log_list",
       method: "POST",
       data: data,
     });

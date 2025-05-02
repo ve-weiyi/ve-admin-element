@@ -52,8 +52,8 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { UserAPI } from "@/api/user";
 import { LoginTypeEnum } from "@/enums/LoginTypeEnum";
+import { AccountAPI } from "@/api/account.ts";
 
 const {
   searchRef,
@@ -89,9 +89,12 @@ function handleOperatClick(data: IOperatData) {
           ElMessage.warning("密码至少需要6位字符，请重新输入");
           return;
         }
-        // UserAPI.resetPasswordApi(data.row.id, value).then(() => {
-        //   ElMessage.success("密码重置成功，新密码是：" + value);
-        // });
+        AccountAPI.updateAccountPasswordApi({
+          user_id: data.row.user_id,
+          password: value,
+        }).then(() => {
+          ElMessage.success("密码重置成功，新密码是：" + value);
+        });
       });
   }
 }

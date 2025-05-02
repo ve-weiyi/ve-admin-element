@@ -1,5 +1,10 @@
 <template>
   <el-card>
+    <template #header>
+      <div class="card-header">
+        <span>安全设置</span>
+      </div>
+    </template>
     <!-- 账户密码 -->
     <el-row>
       <el-col :span="16">
@@ -158,8 +163,14 @@
 <script lang="ts" setup>
 import { UserAPI } from "@/api/user";
 import { ElMessage } from "element-plus";
-import type { UserInfoResp } from "@/api/types";
+import {
+  UpdateUserBindEmailReq,
+  UpdateUserBindPhoneReq,
+  UpdateUserPasswordReq,
+  UserInfoResp,
+} from "@/api/types";
 import { useUserStore } from "@/store";
+import { AuthAPI } from "@/api/auth.ts";
 
 const userProfile = ref<UserInfoResp>(useUserStore().userInfo);
 
@@ -176,15 +187,15 @@ const dialog = reactive({
   type: "" as DialogType, // 修改账号资料,修改密码、绑定手机、绑定邮箱
 });
 
-const passwordChangeForm = reactive<any>({});
-const mobileBindingForm = reactive<any>({});
-const emailBindingForm = reactive<any>({});
+const passwordChangeForm = reactive<UpdateUserPasswordReq>(<UpdateUserPasswordReq>{});
+const mobileUpdateForm = reactive<UpdateUserBindPhoneReq>(<UpdateUserBindPhoneReq>{});
+const emailUpdateForm = reactive<UpdateUserBindEmailReq>(<UpdateUserBindEmailReq>{});
 
 const mobileCountdown = ref(0);
-const mobileTimer = ref<NodeJS.Timeout | null>(null);
+const mobileTimer = ref();
 
 const emailCountdown = ref(0);
-const emailTimer = ref<NodeJS.Timeout | null>(null);
+const emailTimer = ref();
 
 // 修改密码校验规则
 const passwordChangeRules = {
@@ -240,23 +251,27 @@ const handleOpenDialog = (type: DialogType) => {
 };
 
 /**
- *  发送验证码
- *
- * @param contactType 联系方式类型 MOBILE: 手机号码  EMAIL: 邮箱
+ * 发送手机验证码
  */
-const handleSendVerificationCode = async (contactType: string) => {
-  if (contactType === "MOBILE") {
-    if (!mobileBindingForm.phone) {
-      ElMessage.error("请输入手机号");
-      return;
-    }
-    // 验证手机号格式
-    const reg = /^1[3-9]\d{9}$/;
-    if (!reg.test(mobileBindingForm.phone)) {
-      ElMessage.error("手机号格式不正确");
-      return;
-    }
+function handleSendMobileCode() {
+  if (!mobileUpdateForm.phone) {
+    ElMessage.error("请输入手机号");
+    return;
+  }
+  // 验证手机号格式
+  const reg = /^1[3-9]\d{9}$/;
+  if (!reg.test(mobileUpdateForm.phone)) {
+    ElMessage.error("手机号格式不正确");
+    return;
+  }
+  // 发送短信验证码
+  AuthAPI.sendPhoneVerifyCodeApi({
+    phone: mobileUpdateForm.phone,
+    type: "bind_phone",
+  }).then(() => {
+    ElMessage.success("验证码发送成功");
 
+    // 倒计时 60s 重新发送
     mobileCountdown.value = 60;
     mobileTimer.value = setInterval(() => {
       if (mobileCountdown.value > 0) {
@@ -265,18 +280,31 @@ const handleSendVerificationCode = async (contactType: string) => {
         clearInterval(mobileTimer.value!);
       }
     }, 1000);
-  } else if (contactType === "EMAIL") {
-    if (!emailBindingForm.email) {
-      ElMessage.error("请输入邮箱");
-      return;
-    }
-    // 验证邮箱格式
-    const reg = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
-    if (!reg.test(emailBindingForm.email)) {
-      ElMessage.error("邮箱格式不正确");
-      return;
-    }
+  });
+}
 
+/**
+ * 发送邮箱验证码
+ */
+function handleSendEmailCode() {
+  if (!emailUpdateForm.email) {
+    ElMessage.error("请输入邮箱");
+    return;
+  }
+  // 验证邮箱格式
+  const reg = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
+  if (!reg.test(emailUpdateForm.email)) {
+    ElMessage.error("邮箱格式不正确");
+    return;
+  }
+
+  // 发送邮箱验证码
+  AuthAPI.sendEmailVerifyCodeApi({
+    email: emailUpdateForm.email,
+    type: "bind_email",
+  }).then(() => {
+    ElMessage.success("验证码发送成功");
+    // 倒计时 60s 重新发送
     emailCountdown.value = 60;
     emailTimer.value = setInterval(() => {
       if (emailCountdown.value > 0) {
@@ -285,30 +313,30 @@ const handleSendVerificationCode = async (contactType: string) => {
         clearInterval(emailTimer.value!);
       }
     }, 1000);
-  }
-};
+  });
+}
 
 /**
  * 提交表单
  */
 const handleSubmit = async () => {
   if (dialog.type === DialogType.PASSWORD) {
-    if (passwordChangeForm.newPassword !== passwordChangeForm.confirmPassword) {
+    if (passwordChangeForm.new_password !== passwordChangeForm.confirm_password) {
       ElMessage.error("两次输入的密码不一致");
       return;
     }
-    UserAPI.getUserInfoApi(passwordChangeForm).then(() => {
+    UserAPI.updateUserPasswordApi(passwordChangeForm).then(() => {
       ElMessage.success("密码修改成功");
       dialog.visible = false;
     });
   } else if (dialog.type === DialogType.MOBILE) {
-    UserAPI.getUserInfoApi(mobileBindingForm).then(() => {
+    UserAPI.updateUserBindPhoneApi(mobileUpdateForm).then(() => {
       ElMessage.success("手机号绑定成功");
       dialog.visible = false;
       loadUserProfile();
     });
   } else if (dialog.type === DialogType.EMAIL) {
-    UserAPI.getUserInfoApi(emailBindingForm).then(() => {
+    UserAPI.updateUserBindEmailApi(emailUpdateForm).then(() => {
       ElMessage.success("邮箱绑定成功");
       dialog.visible = false;
       loadUserProfile();
@@ -318,8 +346,7 @@ const handleSubmit = async () => {
 
 /** 加载用户信息 */
 const loadUserProfile = async () => {
-  const data = await UserAPI.getUserInfoApi();
-  userProfile.value = data.data;
+  userProfile.value = await useUserStore().getUserInfo();
 };
 
 onMounted(async () => {
@@ -332,4 +359,36 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.info-card,
+.security-card {
+  margin-bottom: 20px;
+
+  .card-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+  }
+}
+
+.security-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+
+  .security-info {
+    .security-title {
+      margin-bottom: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--el-text-color-primary);
+    }
+
+    .security-desc {
+      font-size: 14px;
+      color: var(--el-text-color-secondary);
+    }
+  }
+}
+</style>

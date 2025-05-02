@@ -262,8 +262,7 @@ export interface GetVisitTrendReq {
 }
 
 export interface GetVisitTrendResp {
-  uv_trend: VisitTrendVO[]; // 访客数趋势
-  pv_trend: VisitTrendVO[]; // 浏览量趋势
+  visit_trend: VisitTrendVO[]; // 访客数和浏览量趋势
 }
 
 export interface IdReq {
@@ -287,7 +286,9 @@ export interface LoginLogBackVO {
   id?: number;
   user_id: string; // 用户id
   login_type: string; // 登录类型
-  agent: string; // 代理
+  app_name: string; // 应用名称
+  os: string; // 操作系统
+  browser: string; // 浏览器
   ip_address: string; // ip host
   ip_source: string; // ip 源
   login_at: number; // 登录时间
@@ -295,7 +296,9 @@ export interface LoginLogBackVO {
   user?: UserInfo; // 用户信息
 }
 
-export interface LoginLogQuery extends PageQuery {}
+export interface LoginLogQuery extends PageQuery {
+  user_id?: string; // 用户id
+}
 
 export interface LoginReq {
   username: string;
@@ -546,6 +549,16 @@ export interface RoleResourcesResp {
   menu_ids: number[];
 }
 
+export interface SendEmailVerifyCodeReq {
+  email: string; // 邮箱
+  type: string; // 类型 register,reset_password,bind_email,bind_phone
+}
+
+export interface SendPhoneVerifyCodeReq {
+  phone: string; // 手机号
+  type: string; // 类型 register,reset_password,bind_email,bind_phone
+}
+
 export interface Server {
   os: any;
   cpu: any;
@@ -645,6 +658,30 @@ export interface UpdateRoleMenusReq {
   menu_ids: number[];
 }
 
+export interface UpdateUserAvatarReq {
+  avatar: string; // 头像
+}
+
+export interface UpdateUserBindEmailReq {
+  email: string; // 邮箱
+  verify_code: string; // 验证码
+}
+
+export interface UpdateUserBindPhoneReq {
+  phone: string; // 手机号
+  verify_code: string; // 验证码
+}
+
+export interface UpdateUserInfoReq extends UserInfoExt {
+  nickname: string; // 昵称
+}
+
+export interface UpdateUserPasswordReq {
+  old_password: string; // 旧密码
+  new_password: string; // 新密码
+  confirm_password: string; // 确认密码
+}
+
 export interface UploadFileReq {
   file?: any; // 文件
   file_path?: string; // 文件路径
@@ -670,10 +707,6 @@ export interface UserAreaVO {
   value: number;
 }
 
-export interface UserEmailReq {
-  username: string;
-}
-
 export interface UserInfo {
   user_id: string;
   username: string;
@@ -682,13 +715,9 @@ export interface UserInfo {
 }
 
 export interface UserInfoExt {
+  gender: number; // 性别 0未知 1男 2女
   intro: string; // 简介
   website: string; // 网站
-}
-
-export interface UserInfoReq extends UserInfoExt {
-  nickname: string; // 昵称
-  avatar: string; // 头像
 }
 
 export interface UserInfoResp extends UserInfoExt {
@@ -711,7 +740,8 @@ export interface UserInfoResp extends UserInfoExt {
 export interface UserLoginHistory {
   id?: number;
   login_type: string; // 登录类型
-  agent: string; // 代理
+  os: string; // 操作系统
+  browser: string; // 浏览器
   ip_address: string; // ip host
   ip_source: string; // ip 源
   login_at: number; // 登录时间
@@ -768,23 +798,27 @@ export interface UserRolesResp {
 export interface VisitLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
+  terminal_id: string; // 终端id
+  page_name: string; // 页面
   ip_address: string; // 操作ip
   ip_source: string; // 操作地址
   os: string; // 操作系统
   browser: string; // 浏览器
-  page: string; // 页面
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   user?: UserInfo; // 用户信息
 }
 
 export interface VisitLogQuery extends PageQuery {
-  keywords?: string; // 关键字
+  user_id?: string; // 用户id
+  terminal_id?: string; // 终端id
+  page_name?: string; // 页面
 }
 
 export interface VisitTrendVO {
   date: string; // 日期
-  count: number; // 数量
+  uv_count: number; // 访客数
+  pv_count: number; // 浏览量
 }
 
 export interface WebsiteConfig {

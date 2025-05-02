@@ -360,8 +360,8 @@
       <div v-loading="homeInfoLoading" style="height: 450px">
         <div class="chart-wrapper">
           <el-radio-group v-model="userType" size="small">
-            <el-radio :value="1">用户</el-radio>
-            <el-radio :value="2">游客</el-radio>
+            <el-radio :value="0">用户</el-radio>
+            <el-radio :value="1">游客</el-radio>
           </el-radio-group>
         </div>
         <ChinaMap :values="userAreaData" />
@@ -564,11 +564,11 @@ const updateVisitTrendChartOptions = (data: GetVisitTrendResp) => {
   const dates = [];
   const pvs = [];
   const uvs = [];
-  for (let i = 0; i < data.uv_trend.length; i++) {
-    dates.push(data.uv_trend[i].date);
-    pvs.push(data.pv_trend[i]?.count | 0);
-    uvs.push(data.uv_trend[i]?.count | 0);
-  }
+  data.visit_trend.forEach((item, _) => {
+    dates.push(item.date);
+    pvs.push(item.pv_count);
+    uvs.push(item.uv_count);
+  });
 
   visitTrendChartOptions.value = {
     tooltip: {
@@ -739,7 +739,6 @@ const fetchUserAreaData = () => {
 onMounted(() => {
   fetchVisitStatsData();
   fetchHomeInfoData();
-  fetchUserAreaData();
 });
 
 // 文章浏览量排行图表配置
@@ -814,8 +813,8 @@ const updateCategoryOptions = (categories: CategoryVO[]) => {
   };
 };
 
-// 用户类型（1：用户，2：游客）
-const userType = ref(1);
+// 用户类型（0：用户，1：游客）
+const userType = ref(0);
 
 // 用户地域分布数据
 const userAreaData = ref<UserAreaVO[]>([]);

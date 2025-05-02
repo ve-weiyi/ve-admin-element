@@ -11,6 +11,7 @@ const HeaderAuthorization = "Authorization";
 const HeaderXAuthToken = "X-Auth-Token";
 const HeaderTerminal = "Terminal";
 const HeaderTimestamp = "Timestamp";
+const HeaderAppName = "App-Name";
 
 function addUserToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
   config.headers = Object.assign({}, config.headers, {
@@ -25,6 +26,7 @@ function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestC
   const dv = getUid() || "";
   const ts = Math.floor(Date.now() / 1000).toString();
   config.headers = Object.assign({}, config.headers, {
+    [HeaderAppName]: "admin-web",
     [HeaderTerminal]: dv,
     [HeaderTimestamp]: ts,
     [HeaderXAuthToken]: MD5(dv + ts).toString(),

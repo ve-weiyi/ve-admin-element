@@ -129,7 +129,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
           text: "重置密码",
           type: "primary",
           render(row) {
-            return row.is_review != 1;
+            return !row.roles.find((item) => item.role_key === "super-admin");
           },
         },
         "edit",

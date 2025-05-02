@@ -75,17 +75,6 @@ const contentConfig: IContentConfig<AccountQuery> = {
       align: "center",
     },
     {
-      label: "状态",
-      prop: "status",
-      width: 100,
-      align: "center",
-      templet: "switch",
-      activeValue: 1,
-      inactiveValue: 0,
-      activeText: "下线",
-      inactiveText: "在线",
-    },
-    {
       label: "IP地址",
       prop: "ip_address",
       width: 140,
@@ -108,28 +97,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       sortable: true,
       templet: "date",
       dateFormat: "YYYY/MM/DD HH:mm:ss",
-    },
-    {
-      label: "操作栏",
-      align: "center",
-      fixed: "right",
-      width: 220,
-      templet: "tool",
-      operat: [
-        {
-          name: "reset_pwd",
-          auth: "password:reset",
-          icon: "refresh-left",
-          text: "重置密码",
-          type: "primary",
-          render(row) {
-            return row.is_review != 1;
-          },
-        },
-        "edit",
-        "delete",
-      ],
-    },
+    }
   ],
 };
 

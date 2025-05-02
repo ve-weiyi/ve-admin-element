@@ -3,8 +3,12 @@ import type {
   EmptyReq,
   EmptyResp,
   PageResp,
+  UpdateUserAvatarReq,
+  UpdateUserBindEmailReq,
+  UpdateUserBindPhoneReq,
+  UpdateUserInfoReq,
+  UpdateUserPasswordReq,
   UserApisResp,
-  UserInfoReq,
   UserInfoResp,
   UserLoginHistoryQuery,
   UserMenusResp,
@@ -57,10 +61,46 @@ export const UserAPI = {
     });
   },
 
+  /** 修改用户头像 */
+  updateUserAvatarApi(data?: UpdateUserAvatarReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/update_user_avatar",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 修改用户绑定邮箱 */
+  updateUserBindEmailApi(data?: UpdateUserBindEmailReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/update_user_bind_email",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 修改用户绑定手机号 */
+  updateUserBindPhoneApi(data?: UpdateUserBindPhoneReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/update_user_bind_phone",
+      method: "POST",
+      data: data,
+    });
+  },
+
   /** 修改用户信息 */
-  updateUserInfoApi(data?: UserInfoReq): Promise<IApiResponse<EmptyResp>> {
+  updateUserInfoApi(data?: UpdateUserInfoReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin_api/v1/user/update_user_info",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 修改用户密码 */
+  updateUserPasswordApi(data?: UpdateUserPasswordReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin_api/v1/user/update_user_password",
       method: "POST",
       data: data,
     });

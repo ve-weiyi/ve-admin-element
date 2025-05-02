@@ -18,7 +18,7 @@ export default {
     {
       path: "/mine/info",
       component: () => import("@/views/admin/mine/Mine.vue"),
-      name: "Mine",
+      name: "Profile",
       meta: { title: "个人信息", hidden: true },
     },
     // {
@@ -28,8 +28,8 @@ export default {
     //   meta: { title: "个人信息", keepAlive: true },
     // },
     // {
-    //   path: "/mine/identity",
-    //   component: () => import("@/views/admin/mine/identity/Identity.vue"),
+    //   path: "/mine/security",
+    //   component: () => import("@/views/admin/mine/security/Security.vue"),
     //   name: "Identity",
     //   meta: { title: "身份认证", keepAlive: true },
     // },

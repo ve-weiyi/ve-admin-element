@@ -29,14 +29,12 @@
                 <el-dropdown-item>
                   <el-tag>{{ defaultSettings.version }}</el-tag>
                 </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('root', '123456')">
-                  超级管理员：root/123456
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('admin', '123456')">
-                  系统管理员：admin/123456
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('test', '123456')">
-                  测试小游客：test/123456
+                <el-dropdown-item
+                  v-for="(credential, index) in loginCredentials"
+                  :key="index"
+                  @click="setLoginCredentials(credential.username, credential.password)"
+                >
+                  {{ credential.label }}：{{ credential.username }}/{{ credential.password }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -152,6 +150,25 @@ const isDark = ref(settingsStore.theme === ThemeMode.DARK); // 是否暗黑模�
 const loading = ref(false); // 按钮 loading 状态
 const isCapslock = ref(false); // 是否大写锁定
 const captchaBase64 = ref(); // 验证码图片Base64字符串
+
+// 登录凭证列表
+const loginCredentials = [
+  {
+    label: "超级管理员",
+    username: "root@qq.com",
+    password: "root@qq.com",
+  },
+  {
+    label: "系统管理员",
+    username: "admin@qq.com",
+    password: "admin@qq.com",
+  },
+  {
+    label: "测试小游客",
+    username: "test@qq.com",
+    password: "test@qq.com",
+  },
+];
 
 const loginFormData = ref<LoginReq>({
   username: "admin@qq.com",

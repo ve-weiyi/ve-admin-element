@@ -57,7 +57,7 @@
       </el-row>
       <!-- 空状态 -->
       <el-empty
-        v-if="photoList.length === 0"
+        v-if="photoList?.length === 0"
         style="width: 100%; height: 500px"
         description="暂无照片"
       />
@@ -106,9 +106,9 @@
       </el-checkbox-group>
       <!-- 分页 -->
       <el-pagination
-        class="pagination-container"
         v-model:current-page="queryParams.page"
         v-model:page-size="queryParams.page_size"
+        class="pagination-container"
         layout="total, sizes, prev, pager, next, jumper"
         :total="count"
         background
@@ -143,15 +143,15 @@
       <!-- 上传对话框 -->
       <el-dialog v-model="upload" title="上传照片" width="60%" append-to-body>
         <multi-image-upload
+          v-model:file-list="uploadList"
           class="upload-container"
           list-type="picture-card"
-          v-model:file-list="uploadList"
           :show-file-list="true"
           upload-path="/photo"
         />
         <template #footer>
           <div class="dialog-footer">
-            <div>共上传{{ uploadList.length }}张照片</div>
+            <div>共上传{{ uploadList?.length }}张照片</div>
             <div>
               <el-button type="primary" :disabled="uploadList.length == 0" @click="handleAdd">
                 确 定

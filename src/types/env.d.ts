@@ -8,6 +8,8 @@ interface ImportMetaEnv {
   VITE_APP_BASE_API: string;
   /** API 地址 */
   VITE_APP_API_URL: string;
+  /** WebSocket 地址 */
+  VITE_APP_WS_ENDPOINT: string;
   /** 是否开启 Mock 服务 */
   VITE_MOCK_DEV_SERVER: boolean;
   /** 是否启用 Mock 菜单 */

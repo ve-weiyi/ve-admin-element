@@ -23,7 +23,7 @@
                 <Edit />
               </el-icon>
             </div>
-            <div class="user-role">{{ userProfile.roles?.map((item) => item.role_label) }}</div>
+            <div class="user-role">{{ userProfile.roles }}</div>
           </div>
           <el-divider />
           <div class="user-stats">
@@ -108,7 +108,7 @@
                 <span v-else>未绑定手机</span>
               </div>
             </div>
-            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.PASSWORD)">
+            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.MOBILE)">
               修改
             </el-button>
           </div>
@@ -121,9 +121,76 @@
                 <span v-else>未绑定邮箱</span>
               </div>
             </div>
-            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.PASSWORD)">
+            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.EMAIL)">
               修改
             </el-button>
+          </div>
+          <!-- 绑定第三方账号 -->
+          <div>
+            <div class="security-title">绑定第三方账号</div>
+            <p class="tip-text">
+              使用以下任一方式都可以登录到您的
+              <strong>blog</strong>
+              帐号
+            </p>
+
+            <!-- 响应式表格容器 -->
+            <el-table :data="userProfile.third_party" label-width="auto" border>
+              <el-table-column prop="index" label="序号" width="60" align="center">
+                <template #default="{ $index }">{{ $index + 1 }}</template>
+              </el-table-column>
+              <el-table-column
+                prop="platform"
+                label="平台"
+                width="100"
+                align="center"
+                show-overflow-tooltip
+              />
+              <el-table-column
+                prop="account"
+                label="详情"
+                width="150"
+                align="center"
+                show-overflow-tooltip
+              >
+                <template #default="{ row }">
+                  <div class="flex justify-center">
+                    <el-avatar :src="row.avatar" :size="24" />
+                    <span class="ml-2">{{ row.nickname }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="created_at" label="绑定时间" width="200" align="center">
+                <template #default="{ row }">
+                  {{ formatDateTime(row.created_at) }}
+                </template>
+              </el-table-column>
+              <el-table-column label="状态" width="100" align="center">
+                <template #default><span class="status-active">● 使用中</span></template>
+              </el-table-column>
+              <el-table-column label="操作" width="100" align="center" fixed="right">
+                <template #default="{ row }">
+                  <el-button type="danger" link border @click="handleUnbindAccount(row.platform)">
+                    解除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <div class="bind-more">
+              <p class="bind-title">可绑定的第三方账号</p>
+              <div class="platform-list">
+                <div v-for="item in availablePlatforms" class="platform-tag">
+                  <div
+                    text-32px
+                    cursor-pointer
+                    :class="item.icon"
+                    @click="handleBindAccount(item.platform)"
+                  />
+                  <span>{{ item.name }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </el-card>
         <!-- 登录历史 -->
@@ -137,7 +204,7 @@
           <el-auto-resizer>
             <template #default="{ _, width }">
               <el-table-v2
-                :columns="columns"
+                :columns="loginHistoryColumns"
                 :data="tableData"
                 :width="width"
                 :height="600"
@@ -262,13 +329,17 @@ import {
   UpdateUserInfoReq,
   UserInfoResp,
   UpdateUserBindEmailReq,
-  UpdateUserBindPhoneReq, UserLoginHistory,
+  UpdateUserBindPhoneReq,
 } from "@/api/types.ts";
 import { UserAPI } from "@/api/user.ts";
 import { AuthAPI } from "@/api/auth.ts";
 import { UploadAPI } from "@/api/upload.ts";
-import type { Column } from "element-plus";
-import { formatDate, formatDateTime } from "@/utils/date.ts";
+import { loginHistoryColumns } from "./columns.tsx";
+import { thirdPlatformList } from "@/utils/third.ts";
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { useRoute } from "vue-router";
+import { formatDateTime } from "@/utils/date.ts";
 
 const userProfile = ref<UserInfoResp>(<UserInfoResp>{});
 
@@ -277,6 +348,8 @@ const enum DialogType {
   PASSWORD = "password",
   MOBILE = "mobile",
   EMAIL = "email",
+  GITHUB = "github",
+  GITEE = "gitee",
 }
 
 const dialog = reactive({
@@ -353,6 +426,9 @@ const handleOpenDialog = (type: DialogType) => {
       break;
     case DialogType.EMAIL:
       dialog.title = "绑定邮箱";
+      break;
+    case DialogType.GITHUB:
+      dialog.title = "绑定第三方账号";
       break;
   }
 };
@@ -503,63 +579,6 @@ onMounted(async () => {
 });
 
 const loading = ref<boolean>(false);
-const columns = ref<Column<UserLoginHistory>[]>([
-  {
-    key: "login_type",
-    dataKey: "login_type",
-    title: "登录方式",
-    align: "center",
-    width: 80,
-  },
-  {
-    key: "os",
-    dataKey: "os",
-    title: "操作系统",
-    align: "center",
-    width: 100,
-  },
-  {
-    key: "browser",
-    dataKey: "browser",
-    title: "浏览器",
-    align: "center",
-    width: 100,
-  },
-  {
-    key: "ip_address",
-    dataKey: "ip_address",
-    title: "登录IP",
-    align: "center",
-    width: 120,
-  },
-  {
-    key: "ip_source",
-    dataKey: "ip_source",
-    title: "登录地点",
-    align: "center",
-    width: 120,
-  },
-  {
-    key: "login_at",
-    dataKey: "login_at",
-    title: "登录时间",
-    align: "center",
-    width: 160,
-    cellRenderer: (row) => {
-      return formatDateTime(row.rowData.login_at);
-    },
-  },
-  {
-    key: "logout_at",
-    dataKey: "logout_at",
-    title: "登出时间",
-    align: "center",
-    width: 160,
-    cellRenderer: (row) => {
-      return formatDateTime(row.rowData.logout_at);
-    },
-  },
-]);
 const tableData = ref<any[]>([]);
 
 const getHistory = async () => {
@@ -576,6 +595,65 @@ const getHistory = async () => {
 onMounted(async () => {
   await getHistory();
 });
+
+const route = useRoute();
+
+const availablePlatforms = computed(() => {
+  return thirdPlatformList?.filter((platform) => {
+    return !userProfile.value.third_party?.some((item) => item.platform === platform.platform);
+  });
+});
+
+const handleUnbindAccount = (platform: string) => {
+  console.log("解除绑定:", platform);
+  // 这里添加解除绑定逻辑
+  ElMessageBox.confirm(
+    `解绑后无法使用第三方账号 <strong>${platform}</strong> 登录`,
+    `确定要解除绑定吗？`,
+    {
+      type: "warning",
+      dangerouslyUseHTMLString: true,
+    }
+  )
+    .then(() => {
+      UserAPI.deleteUserBindThirdPartyApi({
+        platform: platform,
+      })
+        .then(() => {
+          ElMessage.success("解除绑定成功");
+          loadUserProfile();
+        })
+        .catch((error) => {
+          ElMessage.error("解除绑定失败，请稍后重试");
+        });
+    })
+    .catch(() => {
+      // 取消操作
+    });
+};
+
+const handleBindAccount = (platform: string) => {
+  console.log("绑定平台:", platform);
+  // 这里添加绑定逻辑
+  const state = route.query.redirect as string;
+  AuthAPI.getOauthAuthorizeUrlApi({
+    platform: platform,
+    state: "bind_account",
+  })
+    .then((res) => {
+      if (res.data?.authorize_url) {
+        // 跳转到授权页面
+        let url = res.data.authorize_url;
+        console.log("第三方登录平台:", platform, state, url);
+        window.open(url, "_self");
+      } else {
+        ElMessage.error("获取授权地址失败");
+      }
+    })
+    .catch((error) => {
+      ElMessage.error("第三方登录失败，请稍后重试");
+    });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -730,6 +808,26 @@ onMounted(async () => {
     padding: 20px;
     border-top: 1px solid var(--el-border-color-light);
   }
+}
+
+/* 其他样式保持原样 */
+.status-active {
+  color: #67c23a;
+}
+
+.platform-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.platform-tag {
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  align-items: center; /* 水平居中 */
+  justify-content: center; /* 垂直居中（可选，取决于是否希望整个容器在页面中也垂直居中） */
 }
 
 // 响应式适配

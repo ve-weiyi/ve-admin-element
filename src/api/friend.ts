@@ -13,7 +13,7 @@ export const FriendAPI = {
   /** 创建友链 */
   addFriendApi(data?: FriendNewReq): Promise<IApiResponse<FriendBackVO>> {
     return request({
-      url: "/admin_api/v1/friend/add_friend",
+      url: "/admin-api/v1/friend/add_friend",
       method: "POST",
       data: data,
     });
@@ -22,7 +22,7 @@ export const FriendAPI = {
   /** 批量删除友链 */
   batchDeleteFriendApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin_api/v1/friend/batch_delete_friend",
+      url: "/admin-api/v1/friend/batch_delete_friend",
       method: "DELETE",
       data: data,
     });
@@ -31,7 +31,7 @@ export const FriendAPI = {
   /** 删除友链 */
   deleteFriendApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin_api/v1/friend/delete_friend",
+      url: "/admin-api/v1/friend/delete_friend",
       method: "DELETE",
       data: data,
     });
@@ -40,7 +40,7 @@ export const FriendAPI = {
   /** 分页获取友链列表 */
   findFriendListApi(data?: FriendQuery): Promise<IApiResponse<PageResp>> {
     return request({
-      url: "/admin_api/v1/friend/find_friend_list",
+      url: "/admin-api/v1/friend/find_friend_list",
       method: "POST",
       data: data,
     });
@@ -49,7 +49,7 @@ export const FriendAPI = {
   /** 更新友链 */
   updateFriendApi(data?: FriendNewReq): Promise<IApiResponse<FriendBackVO>> {
     return request({
-      url: "/admin_api/v1/friend/update_friend",
+      url: "/admin-api/v1/friend/update_friend",
       method: "PUT",
       data: data,
     });

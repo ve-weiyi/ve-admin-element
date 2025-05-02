@@ -6,7 +6,7 @@ import { usePermissionStore, useUserStore } from "@/store";
 
 export function setupPermission() {
   // 白名单路由
-  const whiteList = ["/login"];
+  const whiteList = ["/login", "/oauth/login/:platform"];
 
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
@@ -49,7 +49,7 @@ export function setupPermission() {
       }
     } else {
       // 未登录，判断是否在白名单中
-      if (whiteList.includes(to.path)) {
+      if (whiteList.some((pattern) => matchRoute(to.path, pattern))) {
         next();
       } else {
         // 不在白名单，重定向到登录页
@@ -63,6 +63,12 @@ export function setupPermission() {
   router.afterEach(() => {
     NProgress.done();
   });
+}
+
+function matchRoute(targetPath: string, pattern: string): boolean {
+  // 将动态参数转换为正则表达式
+  const patternRegex = new RegExp("^" + pattern.replace(/:[^/]+/g, "[^/]+") + "$");
+  return patternRegex.test(targetPath);
 }
 
 /** 重定向到登录页 */

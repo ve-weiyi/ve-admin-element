@@ -68,7 +68,7 @@ const fetchFileList = (query: string) => {
     loading.value = true;
     let data: ListUploadFileReq = {
       file_path: query,
-      limit: 10,
+      limit: 20,
     };
 
     FileAPI.listUploadFileApi(data).then((res) => {

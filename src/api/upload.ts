@@ -9,7 +9,7 @@ export const UploadAPI = {
     formData.append("file_path", data.file_path);
 
     return request({
-      url: `/admin_api/v1/file/upload_file`,
+      url: `/admin-api/v1/file/upload_file`,
       method: "post",
       data: formData,
       headers: {
@@ -27,7 +27,7 @@ export const UploadAPI = {
     formData.append("file_path", data.file_path);
 
     return request({
-      url: `/admin_api/v1/file/multi_upload_file`,
+      url: `/admin-api/v1/file/multi_upload_file`,
       method: "POST",
       data: formData,
       headers: {

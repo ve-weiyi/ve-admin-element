@@ -96,6 +96,7 @@ export interface ArticleNewReq {
   article_content: string; // 内容
   article_type: number; // 文章类型 1原创 2转载 3翻译
   original_url: string; // 原文链接
+  is_top: number; // 是否置顶
   status: number; // 状态值 1 公开 2 私密 3 草稿 4 已删除
   category_name?: string; // 文章分类名
   tag_name_list?: string[]; // 文章标签列表
@@ -136,11 +137,6 @@ export interface BatchResp {
   success_count: number;
 }
 
-export interface BindUserEmailReq {
-  email: string; // 邮箱
-  verify_code: string; // 验证码
-}
-
 export interface CategoryBackVO {
   id?: number;
   category_name: string; // 分类名
@@ -173,8 +169,8 @@ export interface CommentBackVO {
   comment_content: string; // 评论内容
   is_review: number; // 是否审核 0.未审核 1.已审核
   created_at: number; // 创建时间
-  user?: UserInfo; // 用户信息
-  reply_user?: UserInfo; // 回复用户信息
+  user?: UserInfoVO; // 用户信息
+  reply_user?: UserInfoVO; // 回复用户信息
 }
 
 export interface CommentQuery extends PageQuery {
@@ -186,6 +182,17 @@ export interface CommentQuery extends PageQuery {
 export interface CommentReviewReq {
   ids?: number[];
   is_review?: number;
+}
+
+export interface DeleteUserBindThirdPartyReq {
+  platform: string; // 平台
+}
+
+export interface EmailLoginReq {
+  email: string; // 邮箱
+  password: string; // 密码
+  captcha_key?: string; // 验证码key
+  captcha_code?: string; // 验证码
 }
 
 export interface EmptyReq {}
@@ -203,7 +210,7 @@ export interface FileBackVO {
   file_url: string; // 上传路径
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  creator?: UserInfo; // 创建人
+  creator?: UserInfoVO; // 创建人
 }
 
 export interface FileFolderNewReq {
@@ -236,6 +243,30 @@ export interface FriendNewReq {
 
 export interface FriendQuery extends PageQuery {
   link_name?: string; // 链接名
+}
+
+export interface GetCaptchaCodeReq {
+  width?: number; // 宽度
+  height?: number; // 高度
+}
+
+export interface GetCaptchaCodeResp {
+  captcha_key: string; // 验证码key
+  captcha_base64: string; // 验证码base64
+  captcha_code: string; // 验证码
+}
+
+export interface GetOauthAuthorizeUrlReq {
+  platform: string; // 平台
+  state?: string; // 状态
+}
+
+export interface GetOauthAuthorizeUrlResp {
+  authorize_url: string; // 授权地址
+}
+
+export interface GetTouristInfoResp {
+  tourist_id: string; // 游客id
 }
 
 export interface GetUserAreaStatsReq {
@@ -293,7 +324,7 @@ export interface LoginLogBackVO {
   ip_source: string; // ip 源
   login_at: number; // 登录时间
   logout_at: number; // 登出时间
-  user?: UserInfo; // 用户信息
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface LoginLogQuery extends PageQuery {
@@ -361,16 +392,6 @@ export interface MultiUploadFileReq {
   file_path?: string; // 文件路径
 }
 
-export interface OauthLoginReq {
-  platform: string; // 平台
-  code?: string; // 授权码
-  state?: string; // 状态
-}
-
-export interface OauthLoginUrlResp {
-  url: string; // 授权地址
-}
-
 export interface OperationLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
@@ -386,7 +407,7 @@ export interface OperationLogBackVO {
   cost: string; // 耗时（ms）
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfo; // 用户信息
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface OperationLogQuery extends PageQuery {}
@@ -428,6 +449,11 @@ export interface PageResp {
   list: any;
 }
 
+export interface PhoneLoginReq {
+  phone: string; // 手机号
+  verify_code: string; // 验证码
+}
+
 export interface PhotoBackVO {
   id?: number; // 主键
   album_id: number; // 相册id
@@ -466,6 +492,8 @@ export interface PingResp {
 export interface RegisterReq {
   username: string;
   password: string;
+  confirm_password: string; // 确认密码
+  email: string; // 邮箱
   verify_code: string; // 验证码
 }
 
@@ -479,7 +507,7 @@ export interface RemarkBackVO {
   is_review: number; // 是否审核
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
-  user?: UserInfo; // 用户信息
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface RemarkQuery extends PageQuery {
@@ -493,8 +521,9 @@ export interface RemarkReviewReq {
 }
 
 export interface ResetPasswordReq {
-  username: string;
   password: string;
+  confirm_password: string; // 确认密码
+  email: string;
   verify_code: string; // 验证码
 }
 
@@ -608,7 +637,7 @@ export interface TalkBackVO {
   comment_count: number; // 评论量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfo; // 用户信息
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface TalkNewReq {
@@ -621,6 +650,11 @@ export interface TalkNewReq {
 
 export interface TalkQuery extends PageQuery {
   status?: number; // 状态 1.公开 2.私密
+}
+
+export interface ThirdLoginReq {
+  platform: string; // 平台
+  code?: string; // 授权码
 }
 
 export interface Token {
@@ -672,6 +706,12 @@ export interface UpdateUserBindPhoneReq {
   verify_code: string; // 验证码
 }
 
+export interface UpdateUserBindThirdPartyReq {
+  platform: string; // 平台
+  code: string; // 授权码
+  state?: string; // 状态
+}
+
 export interface UpdateUserInfoReq extends UserInfoExt {
   nickname: string; // 昵称
 }
@@ -707,20 +747,7 @@ export interface UserAreaVO {
   value: number;
 }
 
-export interface UserInfo {
-  user_id: string;
-  username: string;
-  avatar: string;
-  nickname: string;
-}
-
-export interface UserInfoExt {
-  gender: number; // 性别 0未知 1男 2女
-  intro: string; // 简介
-  website: string; // 网站
-}
-
-export interface UserInfoResp extends UserInfoExt {
+export interface UserInfoDetail extends UserInfoExt {
   user_id: string; // 用户id
   username: string; // 用户名
   nickname: string; // 用户昵称
@@ -733,8 +760,33 @@ export interface UserInfoResp extends UserInfoExt {
   ip_source: string; // ip 源
   created_at: number;
   updated_at: number;
-  roles: UserRoleLabel[];
-  perms: UserApi[];
+  role_labels: UserRoleLabel[];
+}
+
+export interface UserInfoExt {
+  gender?: number; // 性别 0未知 1男 2女
+  intro?: string; // 简介
+  website?: string; // 网站
+}
+
+export interface UserInfoResp extends UserInfoExt {
+  user_id: string; // 用户id
+  username: string; // 用户名
+  nickname: string; // 用户昵称
+  avatar: string; // 用户头像
+  email: string; // 用户邮箱
+  phone: string; // 用户手机号
+  created_at: number; // 创建时间
+  third_party: UserThirdPartyInfo[];
+  roles: string[];
+  perms: string[];
+}
+
+export interface UserInfoVO extends UserInfoExt {
+  user_id: string;
+  username: string;
+  avatar: string;
+  nickname: string;
 }
 
 export interface UserLoginHistory {
@@ -795,6 +847,14 @@ export interface UserRolesResp {
   list: UserRole[];
 }
 
+export interface UserThirdPartyInfo {
+  platform: string; // 平台
+  open_id: string; // 平台用户id
+  nickname: string; // 昵称
+  avatar: string; // 头像
+  created_at: number; // 创建时间
+}
+
 export interface VisitLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
@@ -806,7 +866,7 @@ export interface VisitLogBackVO {
   browser: string; // 浏览器
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfo; // 用户信息
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface VisitLogQuery extends PageQuery {

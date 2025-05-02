@@ -80,7 +80,7 @@ function handleOperatClick(data: IOperatData) {
   console.log(data);
 
   switch (data.name) {
-    case "reset_pwd":
+    case "reset_password":
       ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

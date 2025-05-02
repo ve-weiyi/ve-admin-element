@@ -4,36 +4,14 @@ import MD5 from "crypto-js/md5";
 import { useUserStore } from "@/store";
 import { getAccessToken, getUid } from "./auth";
 
+const HeaderAppName = "App-Name";
+const HeaderTimestamp = "Timestamp";
+const HeaderTerminal = "Terminal";
+const HeaderXToken = "X-Token";
+
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
 const HeaderAuthorization = "Authorization";
-
-const HeaderXAuthToken = "X-Auth-Token";
-const HeaderTerminal = "Terminal";
-const HeaderTimestamp = "Timestamp";
-const HeaderAppName = "App-Name";
-
-function addUserToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
-  config.headers = Object.assign({}, config.headers, {
-    [HeaderUid]: getUid(),
-    [HeaderAuthorization]: getAccessToken(),
-  });
-
-  return config;
-}
-
-function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
-  const dv = getUid() || "";
-  const ts = Math.floor(Date.now() / 1000).toString();
-  config.headers = Object.assign({}, config.headers, {
-    [HeaderAppName]: "admin-web",
-    [HeaderTerminal]: dv,
-    [HeaderTimestamp]: ts,
-    [HeaderXAuthToken]: MD5(dv + ts).toString(),
-  });
-
-  return config;
-}
 
 const requests = axios.create({
   baseURL: "",
@@ -50,18 +28,22 @@ const requests = axios.create({
 
 // 请求拦截器
 requests.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // 请求带token
-    addUserToken(config);
-    addTimeToken(config);
+  async (config: InternalAxiosRequestConfig) => {
+    // 请求携带用户token
+    const timestamp = Math.floor(Date.now() / 1000).toString();
 
+    config.headers = Object.assign({}, config.headers, {
+      [HeaderAppName]: "admin-web",
+      [HeaderUid]: getUid(),
+      [HeaderAuthorization]: getAccessToken(),
+      [HeaderTimestamp]: timestamp,
+    });
     return config;
   },
   (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
-
 // 配置响应拦截器
 requests.interceptors.response.use(
   (response: AxiosResponse) => {

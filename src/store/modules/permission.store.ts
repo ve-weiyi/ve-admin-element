@@ -13,7 +13,7 @@ import system from "@/router/admin/system";
 import log from "@/router/admin/log";
 import website from "@/router/admin/website";
 import monitor from "@/router/admin/monitor";
-import document from "@/router/admin/document";
+import lab from "@/router/admin/lab";
 import mine from "@/router/admin/mine";
 
 const modules = import.meta.glob("../../views/**/**.vue");
@@ -69,7 +69,7 @@ export const usePermissionStore = defineStore("permission", () => {
     dynamicRoutes.push(monitor);
     dynamicRoutes.push(system);
     dynamicRoutes.push(website);
-    dynamicRoutes.push(document);
+    dynamicRoutes.push(lab);
     dynamicRoutes.push(mine);
     return dynamicRoutes;
   }

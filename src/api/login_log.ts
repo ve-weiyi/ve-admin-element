@@ -5,7 +5,7 @@ export const LoginLogAPI = {
   /** 删除登录日志 */
   deletesLoginLogApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin_api/v1/login_log/deletes_login_log",
+      url: "/admin-api/v1/login_log/deletes_login_log",
       method: "DELETE",
       data: data,
     });
@@ -14,7 +14,7 @@ export const LoginLogAPI = {
   /** 查询登录日志 */
   findLoginLogListApi(data?: LoginLogQuery): Promise<IApiResponse<PageResp>> {
     return request({
-      url: "/admin_api/v1/user/find_login_log_list",
+      url: "/admin-api/v1/user/find_login_log_list",
       method: "POST",
       data: data,
     });

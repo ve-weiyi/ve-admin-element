@@ -17,7 +17,7 @@ export default {
       path: "/system/user",
       component: () => import("@/views/admin/system/user/User.vue"),
       name: "User",
-      meta: { title: "用户列表" },
+      meta: { title: "用户管理" },
     },
     {
       path: "/system/role",

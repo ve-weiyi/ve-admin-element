@@ -41,7 +41,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     server: {
       host: "0.0.0.0",
-      port: +env.VITE_APP_PORT,
+      port: Number(env.VITE_APP_PORT),
       open: true,
       proxy: {
         // 代理 /dev-api 的请求
@@ -49,7 +49,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           changeOrigin: true,
           // 代理目标地址：https://api.youlai.tech
           target: env.VITE_APP_API_URL,
-          rewrite: (path) => path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+          rewrite: (path) => path.replace("", ""),
+          bypass(req, res, options) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log("proxyURL", proxyURL);
+            res.setHeader("x-req-proxyURL", proxyURL); // 设置响应头可以看到
+          },
         },
       },
     },
@@ -68,8 +73,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
         vueTemplate: true,
         // 导入函数类型声明文件路径 (false:关闭自动生成)
-        dts: false,
-        // dts: "src/types/auto-imports.d.ts",
+        // dts: false,
+        dts: "src/types/auto-imports.d.ts",
       }),
       Components({
         resolvers: [
@@ -170,6 +175,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     build: {
       chunkSizeWarningLimit: 2000, // 消除打包大小超过500kb警告
       minify: "terser", // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
+      outDir: env.VITE_APP_DIST_NAME,
       terserOptions: {
         compress: {
           keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题

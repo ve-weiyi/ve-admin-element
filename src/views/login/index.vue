@@ -29,14 +29,12 @@
                 <el-dropdown-item>
                   <el-tag>{{ defaultSettings.version }}</el-tag>
                 </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('root', '123456')">
-                  超级管理员：root/123456
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('admin', '123456')">
-                  系统管理员：admin/123456
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('test', '123456')">
-                  测试小游客：test/123456
+                <el-dropdown-item
+                  v-for="(credential, index) in loginCredentials"
+                  :key="index"
+                  @click="setLoginCredentials(credential.username, credential.password)"
+                >
+                  {{ credential.label }}：{{ credential.username }}/{{ credential.password }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -83,12 +81,12 @@
         </el-tooltip>
 
         <!-- 验证码 -->
-        <el-form-item prop="captchaCode">
+        <el-form-item v-show="false" prop="captchaCode">
           <div class="input-wrapper">
             <div class="i-svg:captcha mx-2" />
 
             <el-input
-              v-model="loginFormData.captchaCode"
+              v-model="loginFormData.captcha_key"
               auto-complete="off"
               size="large"
               class="flex-1"
@@ -130,9 +128,9 @@
 </template>
 
 <script setup lang="ts">
-import { LocationQuery, useRoute } from "vue-router";
+import { type LocationQuery, useRoute } from "vue-router";
 
-import AuthAPI, { type LoginFormData } from "@/api/auth.api";
+import type { LoginReq } from "@/api/types";
 import router from "@/router";
 
 import type { FormInstance } from "element-plus";
@@ -153,11 +151,31 @@ const loading = ref(false); // 按钮 loading 状态
 const isCapslock = ref(false); // 是否大写锁定
 const captchaBase64 = ref(); // 验证码图片Base64字符串
 
-const loginFormData = ref<LoginFormData>({
-  username: "admin",
-  password: "123456",
-  captchaKey: "",
-  captchaCode: "",
+// 登录凭证列表
+const loginCredentials = [
+  {
+    label: "超级管理员",
+    username: "root@qq.com",
+    password: "root@qq.com",
+  },
+  {
+    label: "系统管理员",
+    username: "admin@qq.com",
+    password: "admin@qq.com",
+  },
+  {
+    label: "测试小游客",
+    username: "test@qq.com",
+    password: "test@qq.com",
+  },
+];
+
+const loginFormData = ref<LoginReq>({
+  username: "admin@qq.com",
+  password: "admin@qq.com",
+  captcha_key: "",
+  // captchaKey: "",
+  // captchaCode: "",
 });
 
 const loginRules = computed(() => {
@@ -183,9 +201,9 @@ const loginRules = computed(() => {
     ],
     captchaCode: [
       {
-        required: true,
+        required: false,
         trigger: "blur",
-        message: "请输入验证码",
+        message: "请输入验证码【任意输入】",
       },
     ],
   };
@@ -193,10 +211,10 @@ const loginRules = computed(() => {
 
 // 获取验证码
 function getCaptcha() {
-  AuthAPI.getCaptcha().then((data) => {
-    loginFormData.value.captchaKey = data.captchaKey;
-    captchaBase64.value = data.captchaBase64;
-  });
+  // AuthAPI.getCaptcha().then((data) => {
+  //   loginData.value.captchaKey = data.captchaKey;
+  //   captchaBase64.value = data.captchaBase64;
+  // });
 }
 
 // 登录
@@ -208,9 +226,9 @@ async function handleLoginSubmit() {
         .login(loginFormData.value)
         .then(async () => {
           await userStore.getUserInfo();
+          // 需要在路由跳转前加载字典数据，否则会出现字典数据未加载完成导致页面渲染异常
           // 跳转到登录前的页面
           const { path, queryParams } = parseRedirect();
-          console.log("跳转到登录前的页面", path, queryParams);
           router.push({ path: path, query: queryParams });
         })
         .catch(() => {

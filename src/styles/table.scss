@@ -1,0 +1,236 @@
+/***********************************/
+/** 自定义 Element Plus 样式 */
+// justify flex 布局下的水平排列方式
+// align flex 布局下的垂直排列方式
+
+// 横向
+.flex-row {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+}
+
+// 纵向
+.flex-column {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+}
+
+// 两侧排列
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+}
+
+// 水平居中
+.flex-level-center {
+  justify-content: center;
+  -webkit-justify-content: center;
+}
+
+// 水平居中 垂直居中
+.flex-vertical-center {
+  align-items: center;
+  -webkit-align-items: center;
+}
+
+// 水平居中 垂直居中
+.flex-center {
+  display: flex;
+  justify-content: center; /* 可选，根据需要调整对齐方式 */
+  align-items: center; /* 可选，根据需要调整对齐方式 */
+}
+
+
+// 表格
+.el-table {
+  // 表头
+  th.el-table__cell {
+    background-color: var(--el-fill-color-light) !important;
+  }
+}
+
+// table-v2 表头背景
+.el-table-v2__header-cell {
+  background-color: var(--el-fill-color-light) !important;
+}
+
+// 分页
+.el-pagination {
+  // 参考 Bootstrap 的响应式设计 WIDTH = 768
+  @media screen and (max-width: 768px) {
+    .el-pagination__total,
+    .el-pagination__sizes,
+    .el-pagination__jump,
+    .btn-prev,
+    .btn-next {
+      display: none !important;
+    }
+  }
+}
+
+.el-card.is-always-shadow,
+.el-card.is-hover-shadow:focus,
+.el-card.is-hover-shadow:hover {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+//表头加粗，显示card标题
+.table-title {
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 16px;
+  font-weight: bold;
+  color: #202a34;
+}
+
+.table-title::before {
+  content: "";
+  width: 24px;
+  height: 16px;
+  border-left: 3px solid #0081ff;
+  margin-right: 20px;
+  margin-left: -20px;
+}
+
+.el-dialog__title {
+  font-weight: bold;
+}
+
+.toolbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+//main-container全局样式
+.app-container {
+  padding: 20px;
+}
+
+.main-card {
+  min-height: calc(100vh - 126px);
+}
+
+.operation-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.pagination-container {
+  float: right;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.dialog-container {
+  align-items: center;
+  font-weight: bold;
+  width: 45%;
+}
+
+.dialog-title-container {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.dialog-title-container i {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.status-menu {
+  font-size: 14px;
+  margin-top: 0px;
+  margin-bottom: 12px;
+  color: #999;
+}
+
+.status-menu span {
+  margin-right: 24px;
+}
+
+.status-menu-normal {
+  cursor: pointer;
+  margin-right: 24px;
+}
+
+.status-menu-active {
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+}
+
+.dropdown-item-active {
+  background: #409eff;
+  color: #fff;
+}
+
+.dropdown-item-normal {
+  color: var(--el-text-color-primary);
+}
+
+//表单字体加粗
+.el-form-item__label {
+  font-weight: bold;
+}
+
+.el-form-item__content {
+  font-weight: bold;
+}
+
+/* 重置 el-button 中 icon 的 margin */
+.el-button [class*="el-icon"] + span {
+  margin-left: 2px !important;
+}
+
+.el-button--small {
+  margin-left: 0px;
+  padding: 3px;
+}
+
+.el-button + .el-button {
+  margin-left: 4px;
+}
+
+/* 重置 el-button 中 icon 的 margin */
+.reset-margin [class*="el-icon"] + span {
+  margin-left: 2px !important;
+}
+
+.align-right {
+  float: right;
+  margin-left: auto;
+}
+
+.align-left {
+  margin-right: auto;
+}
+
+.table-text-button {
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 4px !important;
+  padding: 4px !important;
+}
+
+.table-tag {
+  margin-right: 0.2rem;
+  margin-top: 0.2rem;
+}
+
+.table-icon {
+  display: flex;
+  justify-content: center; /* 可选，根据需要调整对齐方式 */
+  align-items: center; /* 可选，根据需要调整对齐方式 */
+  vertical-align: -15%;
+  margin-right: 4px;
+}

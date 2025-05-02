@@ -1,7 +1,7 @@
 // 核心枚举定义
 export enum MenuTypeEnum {
-  CATALOG = 2, // 目录
-  MENU = 1, // 菜单
+  CATALOG = 1, // 目录
+  MENU = 2, // 菜单
   BUTTON = 3, // 按钮
   EXTLINK = 4, // 外链
 }
@@ -12,13 +12,13 @@ export const MenuTypeConfig = {
     label: "目录",
     type: "warning" as const,
     icon: "folder-opened",
-    value: 2,
+    value: 1,
   },
   [MenuTypeEnum.MENU]: {
     label: "菜单",
     type: "success" as const,
     icon: "menu",
-    value: 1,
+    value: 2,
   },
   [MenuTypeEnum.BUTTON]: {
     label: "按钮",

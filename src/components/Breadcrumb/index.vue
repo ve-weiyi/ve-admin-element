@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { RouteLocationMatched } from "vue-router";
+import type { RouteLocationMatched } from "vue-router";
 import { compile } from "path-to-regexp";
 import router from "@/router";
 

@@ -27,24 +27,18 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/",
     name: "/",
     component: Layout,
-    redirect: "/dashboard",
+    redirect: "/home",
     children: [
       {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        name: "Dashboard",
+        path: "home",
+        component: () => import("@/views/admin/home/Home.vue"),
+        name: "Home",
         meta: {
           title: "首页",
           icon: "homepage",
           affix: true,
           keepAlive: true,
         },
-      },
-      {
-        path: "profile",
-        name: "Profile",
-        component: () => import("@/views/profile/index.vue"),
-        meta: { title: "个人中心", icon: "user", hidden: true },
       },
       {
         path: "401",

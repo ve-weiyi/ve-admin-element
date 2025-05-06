@@ -1,6 +1,6 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { AccountQuery } from "@/api/types";
-import { AccountAPI } from "@/api/account";
+import { LoginLogAPI } from "@/api/login_log.ts";
 
 const contentConfig: IContentConfig<AccountQuery> = {
   pageName: "sys:user",
@@ -22,7 +22,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
     };
   },
   indexAction: function (query: AccountQuery) {
-    return AccountAPI.findAccountLoginHistoryListApi(query);
+    return LoginLogAPI.findLoginLogListApi(query);
   },
   pk: "id",
   toolbar: ["delete"],
@@ -43,24 +43,11 @@ const contentConfig: IContentConfig<AccountQuery> = {
       show: true,
     },
     {
-      label: "头像",
+      label: "用户",
+      prop: "user",
+      width: 200,
       align: "center",
-      prop: "avatar",
-      width: 80,
-      templet: "image",
-    },
-    {
-      label: "用户名",
-      prop: "username",
-      width: 160,
-      align: "center",
-    },
-    {
-      label: "昵称",
-      prop: "nickname",
-      width: 0,
-      minWidth: 160,
-      align: "center",
+      templet: "custom",
     },
     {
       label: "登录类型",
@@ -68,6 +55,43 @@ const contentConfig: IContentConfig<AccountQuery> = {
       width: 120,
       align: "center",
       templet: "custom",
+    },
+    {
+      label: "登录应用",
+      prop: "app_name",
+      width: 120,
+      align: "center",
+      templet: "tag",
+      tagOptions: [
+        {
+          label: "admin",
+          value: "admin-web",
+          type: "primary",
+        },
+        {
+          label: "blog",
+          value: "blog-web",
+          type: "success",
+        },
+        {
+          label: "unknown",
+          value: "",
+          type: "danger",
+        },
+      ],
+    },
+    {
+      label: "操作系统",
+      prop: "os",
+      width: 0,
+      minWidth: 160,
+      align: "center",
+    },
+    {
+      label: "浏览器",
+      prop: "browser",
+      minWidth: 140,
+      align: "center",
     },
     {
       label: "IP地址",
@@ -92,7 +116,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
     },
     {
       label: "登出时间",
-      prop: "logout_out",
+      prop: "logout_at",
       width: 140,
       align: "center",
       templet: "date",

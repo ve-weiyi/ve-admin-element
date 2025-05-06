@@ -12,13 +12,14 @@ export default {
     icon: "el-icon-user",
     rank: 100,
     alwaysShow: true,
+    hidden: true,
   },
   children: [
     {
       path: "/mine/info",
       component: () => import("@/views/admin/mine/Mine.vue"),
-      name: "Mine",
-      meta: { title: "个人信息" },
+      name: "Profile",
+      meta: { title: "个人信息", hidden: true },
     },
     // {
     //   path: "/mine/info",
@@ -27,8 +28,8 @@ export default {
     //   meta: { title: "个人信息", keepAlive: true },
     // },
     // {
-    //   path: "/mine/identity",
-    //   component: () => import("@/views/admin/mine/identity/Identity.vue"),
+    //   path: "/mine/security",
+    //   component: () => import("@/views/admin/mine/security/Security.vue"),
     //   name: "Identity",
     //   meta: { title: "身份认证", keepAlive: true },
     // },

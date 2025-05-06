@@ -125,7 +125,7 @@ import { ElMessage } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import "@/styles/table.scss";
 import { PageAPI } from "@/api/page";
-import type { PageBackDTO, PageNewReq, PageQueryReq } from "@/api/types";
+import type { PageBackVO, PageNewReq, PageQueryReq } from "@/api/types";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
 
 const route = useRoute();
@@ -138,7 +138,7 @@ const queryParams = ref<PageQueryReq>({
   page: 1,
   page_size: 10,
 });
-const tableData = ref<PageBackDTO[]>([]);
+const tableData = ref<PageBackVO[]>([]);
 const total = ref(0);
 
 const handleSizeChange = (size: number) => {
@@ -190,7 +190,7 @@ const dialogTitle = computed(() => {
   }
 });
 
-function handleAdd(data?: PageBackDTO) {
+function handleAdd(data?: PageBackVO) {
   if (data) {
     formData.value = data;
   } else {
@@ -221,7 +221,7 @@ function cancelSave() {
   addModalVisible.value = false;
 }
 
-function handleDelete(data?: PageBackDTO) {
+function handleDelete(data?: PageBackVO) {
   deleteId.value = data.id;
   deleteModalVisible.value = true;
 }

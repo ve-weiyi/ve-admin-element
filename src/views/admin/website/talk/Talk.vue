@@ -18,10 +18,10 @@
       <div v-for="item of tableData" :key="item.id" class="talk-item">
         <!-- 用户信息 -->
         <div class="user-info-wrapper">
-          <el-avatar :size="36" :src="item.avatar" class="user-avatar" />
+          <el-avatar :size="36" :src="item.user?.avatar" class="user-avatar" />
           <div class="user-detail-wrapper">
             <div class="user-nickname">
-              <div>{{ item.nickname || "未知用户" }}</div>
+              <div>{{ item.user?.nickname || "未知用户" }}</div>
               <!-- 操作 -->
               <el-dropdown trigger="click" @command="handleCommand">
                 <el-icon style="color: #333; cursor: pointer">
@@ -103,7 +103,7 @@ import { computed, onMounted, reactive, ref, toRefs } from "vue";
 import Talk from "./TalkWrite.vue";
 import VeTablePagination from "@/components/VeTable/TablePagination.vue";
 import { TalkAPI } from "@/api/talk";
-import type { TalkQuery } from "@/api/types";
+import type { TalkQuery, TalkBackVO } from "@/api/types";
 import { useRoute, useRouter } from "vue-router";
 import "@/styles/table.scss";
 import { formatDateTime } from "@/utils/date";
@@ -119,7 +119,7 @@ const data = reactive({
   },
   searchData: {} as any,
   orderData: {} as any,
-  tableData: [],
+  tableData: [] as Array<TalkBackVO>,
   formData: {} as any,
 });
 

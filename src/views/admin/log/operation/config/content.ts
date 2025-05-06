@@ -56,17 +56,11 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
       show: false,
     },
     {
-      label: "用户昵称",
-      prop: "nickname",
-      width: 100,
+      label: "用户",
+      prop: "user",
+      width: 150,
       align: "center",
-    },
-    {
-      label: "头像",
-      align: "center",
-      prop: "avatar",
-      width: 80,
-      templet: "image",
+      templet: "custom",
     },
     {
       label: "操作模块",

@@ -94,7 +94,7 @@ function Sync() {
     draggable: true,
   })
     .then(({ value }) => {
-      // "service/api/admin/proto/admin.api"
+      // "service/api/admin/proto/admin.json"
       ApiAPI.syncApiListApi({
         api_file_path: value || "service/api/admin/docs/admin.json",
       }).then((res) => {

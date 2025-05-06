@@ -1,6 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { AccountQuery } from "@/api/types";
 import { AccountAPI } from "@/api/account";
+import { useUserStore } from "@/store";
 
 const contentConfig: IContentConfig<AccountQuery> = {
   pageName: "sys:user",
@@ -123,13 +124,16 @@ const contentConfig: IContentConfig<AccountQuery> = {
       templet: "tool",
       operat: [
         {
-          name: "reset_pwd",
+          name: "reset_password",
           auth: "password:reset",
           icon: "refresh-left",
           text: "重置密码",
           type: "primary",
           render(row) {
-            return row.is_review != 1;
+            return (
+              !row.roles.find((item) => item === "super-admin") ||
+              row.user_id == useUserStore().userInfo.user_id
+            );
           },
         },
         "edit",

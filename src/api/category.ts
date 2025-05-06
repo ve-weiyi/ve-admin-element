@@ -1,12 +1,19 @@
 import request from "@/utils/request";
-import type { BatchResp, CategoryBackDTO, CategoryNewReq, CategoryQuery, IdReq, IdsReq, PageResp } from "./types";
+import type {
+  BatchResp,
+  CategoryBackVO,
+  CategoryNewReq,
+  CategoryQuery,
+  IdReq,
+  IdsReq,
+  PageResp,
+} from "./types";
 
 export const CategoryAPI = {
-
   /** 创建文章分类 */
-  addCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackDTO>> {
+  addCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackVO>> {
     return request({
-      url: "/admin_api/v1/category/add_category",
+      url: "/admin-api/v1/category/add_category",
       method: "POST",
       data: data,
     });
@@ -15,7 +22,7 @@ export const CategoryAPI = {
   /** 批量删除文章分类 */
   batchDeleteCategoryApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin_api/v1/category/batch_delete_category",
+      url: "/admin-api/v1/category/batch_delete_category",
       method: "DELETE",
       data: data,
     });
@@ -24,7 +31,7 @@ export const CategoryAPI = {
   /** 删除文章分类 */
   deleteCategoryApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin_api/v1/category/delete_category",
+      url: "/admin-api/v1/category/delete_category",
       method: "DELETE",
       data: data,
     });
@@ -33,16 +40,16 @@ export const CategoryAPI = {
   /** 分页获取文章分类列表 */
   findCategoryListApi(data?: CategoryQuery): Promise<IApiResponse<PageResp>> {
     return request({
-      url: "/admin_api/v1/category/find_category_list",
+      url: "/admin-api/v1/category/find_category_list",
       method: "POST",
       data: data,
     });
   },
 
   /** 更新文章分类 */
-  updateCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackDTO>> {
+  updateCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackVO>> {
     return request({
-      url: "/admin_api/v1/category/update_category",
+      url: "/admin-api/v1/category/update_category",
       method: "PUT",
       data: data,
     });

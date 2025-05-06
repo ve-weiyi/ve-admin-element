@@ -1,20 +1,17 @@
 import { store } from "@/store";
 import { usePermissionStoreHook } from "@/store/modules/permission.store";
 
-import type { LoginReq, UserInfoResp } from "@/api/types";
+import type { EmailLoginReq, LoginReq, PhoneLoginReq, ThirdLoginReq, UserInfoResp } from "@/api/types";
 import { AuthAPI } from "@/api/auth";
 import { UserAPI } from "@/api/user";
 
 import { clearToken, setAccessToken, setUid } from "@/utils/auth";
 
 export const useUserStore = defineStore("user", () => {
-  const userInfo = useStorage<UserInfoResp>("userInfo", {} as UserInfoResp);
+  const userInfo = useStorage<UserInfoResp>("userInfo", <UserInfoResp>{});
 
   /**
    * 登录
-   *
-   * @param {LoginFormData}
-   * @returns
    */
   function login(loginData: LoginReq) {
     return new Promise<void>((resolve, reject) => {
@@ -32,9 +29,61 @@ export const useUserStore = defineStore("user", () => {
   }
 
   /**
+   * 邮箱登录
+   */
+  function emailLogin(loginData: EmailLoginReq) {
+    return new Promise<void>((resolve, reject) => {
+      AuthAPI.emailLoginApi(loginData)
+        .then((data) => {
+          console.log("emailLogin", data);
+          setAccessToken(data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          setUid(data.data.token?.user_id);
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * 手机验证码登录
+   */
+  function phoneLogin(loginData: PhoneLoginReq) {
+    return new Promise<void>((resolve, reject) => {
+      AuthAPI.phoneLoginApi(loginData)
+        .then((data) => {
+          console.log("phoneLogin", data);
+          setAccessToken(data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          setUid(data.data.token?.user_id);
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * 第三方登录
+   */
+  function thirdLogin(loginData: ThirdLoginReq) {
+    return new Promise<void>((resolve, reject) => {
+      AuthAPI.thirdLoginApi(loginData)
+        .then((data) => {
+          console.log("thirdLogin", data);
+          setAccessToken(data.data.token?.access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          setUid(data.data.token?.user_id);
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
    * 获取用户信息
-   *
-   * @returns {UserInfo} 用户信息
    */
   function getUserInfo() {
     return new Promise<UserInfoResp>((resolve, reject) => {
@@ -60,14 +109,15 @@ export const useUserStore = defineStore("user", () => {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.logoutApi()
         .then(() => {
-          clearSessionAndCache();
-          location.reload();
           resolve();
         })
         .catch((error) => {
           reject(error);
         })
-        .finally(() => {});
+        .finally(() => {
+          clearSessionAndCache();
+          location.reload();
+        });
     });
   }
 
@@ -86,6 +136,9 @@ export const useUserStore = defineStore("user", () => {
     userInfo,
     getUserInfo,
     login,
+    emailLogin,
+    phoneLogin,
+    thirdLogin,
     logout,
     clearSessionAndCache,
   };

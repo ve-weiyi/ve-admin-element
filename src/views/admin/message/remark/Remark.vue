@@ -22,6 +22,16 @@
         @operat-click="handleOperatClick"
         @filter-change="handleFilterChange"
       >
+        <template #user="scope">
+          <div v-if="scope.row[scope.prop]" style="display: flex; align-items: center; gap: 8px">
+            <el-image
+              :src="scope.row[scope.prop].avatar"
+              :preview-teleported="true"
+              :style="`width: ${scope.imageWidth ?? 40}px; height: ${scope.imageHeight ?? 40}px`"
+            />
+            <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
+          </div>
+        </template>
         <template #is_review="scope">
           <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'warning'">
             {{ scope.row[scope.prop] == 1 ? "通过" : "审核中" }}

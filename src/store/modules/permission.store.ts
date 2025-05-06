@@ -6,16 +6,14 @@ import router from "@/router";
 import { UserAPI } from "@/api/user";
 import type { UserMenu } from "@/api/types";
 
-import home from "@/router/admin/home";
 import article from "@/router/admin/article";
 import message from "@/router/admin/message";
-import picture from "@/router/admin/picture";
 import resource from "@/router/admin/resource";
 import system from "@/router/admin/system";
 import log from "@/router/admin/log";
 import website from "@/router/admin/website";
 import monitor from "@/router/admin/monitor";
-import document from "@/router/admin/document";
+import lab from "@/router/admin/lab";
 import mine from "@/router/admin/mine";
 
 const modules = import.meta.glob("../../views/**/**.vue");
@@ -34,6 +32,14 @@ export const usePermissionStore = defineStore("permission", () => {
    */
   function generateRoutes() {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
+      // console.log("generateRoutes", import.meta.env.VITE_USE_MOCK_MENU);
+      if (import.meta.env.VITE_USE_MOCK_MENU == "true") {
+        const dynamicRoutes = getMockRoutes();
+        routes.value = [...constantRoutes, ...dynamicRoutes];
+        isRoutesLoaded.value = true;
+        resolve(dynamicRoutes);
+        return;
+      }
       UserAPI.getUserMenusApi()
         .then((data) => {
           const dynamicRoutes = transformRoutes(data.data.list);
@@ -45,30 +51,25 @@ export const usePermissionStore = defineStore("permission", () => {
         })
         .catch((error) => {
           // reject(error);
-          console.log("generateRoutes", import.meta.env.VITE_USE_MOCK_MENU);
-          if (import.meta.env.VITE_USE_MOCK_MENU == "true") {
-            const dynamicRoutes = getMockRoutes();
-            routes.value = [...constantRoutes, ...dynamicRoutes];
-            isRoutesLoaded.value = true;
-            console.log("use mock routes", dynamicRoutes);
-            resolve(dynamicRoutes);
-          }
+          const dynamicRoutes = getMockRoutes();
+          routes.value = [...constantRoutes, ...dynamicRoutes];
+          isRoutesLoaded.value = true;
+          console.log("use mock routes", dynamicRoutes);
+          resolve(dynamicRoutes);
         });
     });
   }
 
   function getMockRoutes(): RouteRecordRaw[] {
     const dynamicRoutes = [];
-    dynamicRoutes.push(home);
     dynamicRoutes.push(article);
     dynamicRoutes.push(message);
-    dynamicRoutes.push(picture);
     dynamicRoutes.push(resource);
-    dynamicRoutes.push(system);
     dynamicRoutes.push(log);
-    dynamicRoutes.push(website);
     dynamicRoutes.push(monitor);
-    dynamicRoutes.push(document);
+    dynamicRoutes.push(system);
+    dynamicRoutes.push(website);
+    dynamicRoutes.push(lab);
     dynamicRoutes.push(mine);
     return dynamicRoutes;
   }

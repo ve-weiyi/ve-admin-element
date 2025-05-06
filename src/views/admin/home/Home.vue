@@ -1,541 +1,876 @@
 <template>
   <div class="dashboard-container">
+    <!-- github 角标 -->
     <github-corner class="github-corner" />
 
-    <el-card shadow="never">
-      <el-row justify="space-between">
+    <el-card shadow="never" class="mt-2">
+      <el-row class="h-80px">
         <el-col :span="18" :xs="24">
-          <div class="flex h-full items-center">
+          <div class="flex-x-start">
             <img
-              class="w-20 h-20 mr-5 rounded-full"
+              class="w80px h80px rounded-full"
               :src="userStore.userInfo.avatar + '?imageView2/1/w/80/h/80'"
             />
-            <div>
+            <div class="ml-5">
               <p>{{ greetings }}</p>
               <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
             </div>
           </div>
         </el-col>
-
-        <el-col :span="6" :xs="24">
-          <div class="flex h-full items-center justify-around">
-            <el-statistic v-for="item in statisticData" :key="item.key" :value="item.value">
-              <template #title>
-                <div class="flex items-center">
-                  <svg-icon :icon-class="item.iconClass" size="20px" />
-                  <span class="text-[16px] ml-1">{{ item.title }}</span>
-                </div>
-              </template>
-              <template v-if="item.suffix" #suffix>/100</template>
-            </el-statistic>
-          </div>
-        </el-col>
       </el-row>
     </el-card>
 
-    <el-row :gutter="40" class="panel-group">
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-view">
-            <svg-icon icon-class="uv" size="4em" class-tagName="card-panel-icon" />
+    <!-- 数据统计 -->
+    <el-row :gutter="10" class="mt-5">
+      <!-- 在线用户数量 -->
+      <el-col :span="4">
+        <el-card shadow="never">
+          <template #header>
+            <div class="flex-x-between">
+              <span class="text-gray">在线用户</span>
+              <el-tag type="danger" size="small">实时</el-tag>
+            </div>
+          </template>
+
+          <div class="flex-x-between mt-2">
+            <div class="flex-y-center">
+              <span class="text-lg transition-all duration-300 hover:scale-110">
+                {{ onlineUserCount }}
+              </span>
+              <span v-if="isConnected" class="ml-2 text-xs text-[#67c23a]">
+                <el-icon><Connection /></el-icon>
+                已连接
+              </span>
+              <span v-else class="ml-2 text-xs text-[#f56c6c]">
+                <el-icon><Failed /></el-icon>
+                未连接
+              </span>
+            </div>
+            <div class="i-svg:people w-8 h-8 animate-[pulse_2s_infinite]" />
           </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">访问量</div>
-            <span class="card-panel-num">{{ viewCount }}</span>
+
+          <div class="flex-x-between mt-2 text-sm text-gray">
+            <span>更新时间</span>
+            <span>{{ formattedTime }}</span>
           </div>
-        </div>
+        </el-card>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="document" size="3rem" class-tagName="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">文章量</div>
-            <span class="card-panel-num">{{ articleCount }}</span>
-          </div>
-        </div>
+
+      <!-- 访客数(UV) -->
+      <el-col :span="4">
+        <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
+          <template #template>
+            <el-card>
+              <template #header>
+                <div>
+                  <el-skeleton-item variant="h3" style="width: 40%" />
+                  <el-skeleton-item variant="rect" style="float: right; width: 1em; height: 1em" />
+                </div>
+              </template>
+
+              <div class="flex-x-between">
+                <el-skeleton-item variant="text" style="width: 30%" />
+                <el-skeleton-item variant="circle" style="width: 2em; height: 2em" />
+              </div>
+              <div class="mt-5 flex-x-between">
+                <el-skeleton-item variant="text" style="width: 50%" />
+                <el-skeleton-item variant="text" style="width: 1em" />
+              </div>
+            </el-card>
+          </template>
+          <template v-if="!visitStatsLoading">
+            <el-card shadow="never">
+              <template #header>
+                <div class="flex-x-between">
+                  <span class="text-gray">访客数(UV)</span>
+                  <el-tag type="success" size="small">日</el-tag>
+                </div>
+              </template>
+
+              <div class="flex-x-between mt-2">
+                <div class="flex-y-center">
+                  <span class="text-lg">{{ Math.round(transitionUvCount) }}</span>
+                  <span
+                    :class="[
+                      'text-xs',
+                      'ml-2',
+                      computeGrowthRateClass(visitStatsData.uv_growth_rate),
+                    ]"
+                  >
+                    <el-icon>
+                      <Top v-if="visitStatsData.uv_growth_rate > 0" />
+                      <Bottom v-else-if="visitStatsData.uv_growth_rate < 0" />
+                    </el-icon>
+                    {{ formatGrowthRate(visitStatsData.uv_growth_rate) }}
+                  </span>
+                </div>
+                <div class="i-svg:visitor w-8 h-8" />
+              </div>
+
+              <div class="flex-x-between mt-2 text-sm text-gray">
+                <span>总访客数</span>
+                <span>{{ Math.round(transitionTotalUvCount) }}</span>
+              </div>
+            </el-card>
+          </template>
+        </el-skeleton>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="user" size="4em" lass-tagName="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">用户量</div>
-            <span class="card-panel-num">{{ userCount }}</span>
-          </div>
-        </div>
+
+      <!-- 浏览量(PV) -->
+      <el-col :span="4">
+        <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
+          <template #template>
+            <el-card>
+              <template #header>
+                <div>
+                  <el-skeleton-item variant="h3" style="width: 40%" />
+                  <el-skeleton-item variant="rect" style="float: right; width: 1em; height: 1em" />
+                </div>
+              </template>
+
+              <div class="flex-x-between">
+                <el-skeleton-item variant="text" style="width: 30%" />
+                <el-skeleton-item variant="circle" style="width: 2em; height: 2em" />
+              </div>
+              <div class="mt-5 flex-x-between">
+                <el-skeleton-item variant="text" style="width: 50%" />
+                <el-skeleton-item variant="text" style="width: 1em" />
+              </div>
+            </el-card>
+          </template>
+          <template v-if="!visitStatsLoading">
+            <el-card shadow="never">
+              <template #header>
+                <div class="flex-x-between">
+                  <span class="text-gray">浏览量(PV)</span>
+                  <el-tag type="primary" size="small">日</el-tag>
+                </div>
+              </template>
+
+              <div class="flex-x-between mt-2">
+                <div class="flex-y-center">
+                  <span class="text-lg">{{ Math.round(transitionPvCount) }}</span>
+                  <span
+                    :class="[
+                      'text-xs',
+                      'ml-2',
+                      computeGrowthRateClass(visitStatsData.pv_growth_rate),
+                    ]"
+                  >
+                    <el-icon>
+                      <Top v-if="visitStatsData.pv_growth_rate > 0" />
+                      <Bottom v-else-if="visitStatsData.pv_growth_rate < 0" />
+                    </el-icon>
+                    {{ formatGrowthRate(visitStatsData.pv_growth_rate) }}
+                  </span>
+                </div>
+                <div class="i-svg:browser w-8 h-8" />
+              </div>
+
+              <div class="flex-x-between mt-2 text-sm text-gray">
+                <span>总浏览量</span>
+                <span>{{ Math.round(transitionTotalPvCount) }}</span>
+              </div>
+            </el-card>
+          </template>
+        </el-skeleton>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="message" size="4em" class-tagName="card-panel-icon" />
+
+      <!-- 用户量 -->
+      <el-col :span="4">
+        <el-card shadow="never" :loading="homeInfoLoading">
+          <template #header>
+            <div class="flex-x-between">
+              <span class="text-gray">用户量</span>
+              <el-tag type="warning" size="small">总</el-tag>
+            </div>
+          </template>
+
+          <div class="flex-x-between mt-2">
+            <div class="flex-y-center">
+              <span class="text-lg">{{ Math.round(transitionUserCount) }}</span>
+            </div>
+            <div class="i-svg:user w-8 h-8" />
           </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">留言量</div>
-            <span class="card-panel-num">{{ remarkCount }}</span>
+
+          <div class="flex-x-between mt-2 text-sm text-gray">
+            <span>注册用户</span>
+            <span>{{ Math.round(transitionUserCount) }}</span>
           </div>
-        </div>
+        </el-card>
       </el-col>
-    </el-row>
-    <el-row class="data-card">
-      <div class="title">一周访问量✨</div>
-      <Echarts :options="userViewOptions" height="350px" />
+
+      <!-- 文章量 -->
+      <el-col :span="4">
+        <el-card shadow="never" :loading="homeInfoLoading">
+          <template #header>
+            <div class="flex-x-between">
+              <span class="text-gray">文章量</span>
+              <el-tag type="success" size="small">总</el-tag>
+            </div>
+          </template>
+
+          <div class="flex-x-between mt-2">
+            <div class="flex-y-center">
+              <span class="text-lg">{{ Math.round(transitionArticleCount) }}</span>
+            </div>
+            <div class="i-svg:article w-8 h-8" />
+          </div>
+
+          <div class="flex-x-between mt-2 text-sm text-gray">
+            <span>发布文章</span>
+            <span>{{ Math.round(transitionArticleCount) }}</span>
+          </div>
+        </el-card>
+      </el-col>
+
+      <!-- 留言量 -->
+      <el-col :span="4">
+        <el-card shadow="never" :loading="homeInfoLoading">
+          <template #header>
+            <div class="flex-x-between">
+              <span class="text-gray">留言量</span>
+              <el-tag type="info" size="small">总</el-tag>
+            </div>
+          </template>
+
+          <div class="flex-x-between mt-2">
+            <div class="flex-y-center">
+              <span class="text-lg">{{ Math.round(transitionRemarkCount) }}</span>
+            </div>
+            <div class="i-svg:message w-8 h-8" />
+          </div>
+
+          <div class="flex-x-between mt-2 text-sm text-gray">
+            <span>留言总数</span>
+            <span>{{ Math.round(transitionRemarkCount) }}</span>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
 
+    <el-row :gutter="10" class="mt-5">
+      <!-- 访问趋势统计图 -->
+      <el-col :xs="24" :span="16">
+        <el-card>
+          <template #header>
+            <div class="flex-x-between">
+              <div class="title">一周访问量✨</div>
+              <el-radio-group v-model="visitTrendDateRange" size="small">
+                <el-radio-button :value="30">近30天</el-radio-button>
+                <el-radio-button :value="180">近180天</el-radio-button>
+              </el-radio-group>
+            </div>
+          </template>
+          <ECharts :options="visitTrendChartOptions" height="400px" />
+        </el-card>
+      </el-col>
+      <!-- 最新动态 -->
+      <el-col :xs="24" :span="8">
+        <el-card>
+          <template #header>
+            <div class="flex-x-between">
+              <div class="title">最新动态✨</div>
+              <el-link
+                type="primary"
+                :underline="false"
+                href="https://github.com/ve-weiyi/ve-blog-golang/releases"
+                target="_blank"
+              >
+                完整记录
+                <el-icon class="link-icon">
+                  <TopRight />
+                </el-icon>
+              </el-link>
+            </div>
+          </template>
+
+          <el-scrollbar height="400px">
+            <el-timeline class="p-3">
+              <el-timeline-item
+                v-for="(item, index) in vesionList"
+                :key="index"
+                :timestamp="item.date"
+                placement="top"
+                :color="index === 0 ? '#67C23A' : '#909399'"
+                :hollow="index !== 0"
+                size="large"
+              >
+                <div class="version-item" :class="{ 'latest-item': index === 0 }">
+                  <div>
+                    <el-text tag="strong">{{ item.title }}</el-text>
+                    <el-tag v-if="item.tag" :type="index === 0 ? 'success' : 'info'" size="small">
+                      {{ item.tag }}
+                    </el-tag>
+                  </div>
+
+                  <el-text class="version-content">{{ item.content }}</el-text>
+
+                  <div v-if="item.link">
+                    <el-link
+                      :type="index === 0 ? 'primary' : 'info'"
+                      :href="item.link"
+                      target="_blank"
+                      :underline="false"
+                    >
+                      详情
+                      <el-icon class="link-icon">
+                        <TopRight />
+                      </el-icon>
+                    </el-link>
+                  </div>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </el-scrollbar>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 图表 -->
     <el-row :gutter="32" style="margin-top: 32px">
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
+        <el-card shadow="never" :loading="homeInfoLoading">
           <div class="title">文章浏览量排行🚀</div>
-          <Echarts :options="articleRankOptions" height="350px" />
-        </div>
+          <ECharts :options="articleRankOptions" height="350px" />
+        </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
+        <el-card shadow="never" :loading="homeInfoLoading">
           <div class="title">文章分类统计🍉</div>
-          <Echarts :options="categoryOptions" height="350px" />
-        </div>
+          <ECharts :options="categoryOptions" height="350px" />
+        </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
+        <el-card shadow="never" :loading="homeInfoLoading">
           <div class="title">文章标签统计🌈</div>
-          <TagCloud v-if="tagLoad" :tag-list="tagList" />
-        </div>
+          <TagCloud v-if="!homeInfoLoading" :tag-list="homeInfoData.tag_list" />
+        </el-card>
       </el-col>
     </el-row>
 
     <el-row class="data-card" style="margin-top: 32px">
       <div class="title">文章贡献统计🎉</div>
-      <Calender style="width: 100%" :values="articleStatisticsList" />
+      <Calender style="width: 100%" :values="homeInfoData.article_statistics" />
     </el-row>
 
     <!-- 用户地域分布 -->
-    <el-card style="margin-top: 32px">
+    <el-card shadow="never" :loading="homeInfoLoading">
       <div class="title">用户地域分布</div>
-      <div v-loading="loading" style="height: 450px">
+      <div v-loading="homeInfoLoading" style="height: 450px">
         <div class="chart-wrapper">
-          <el-radio-group v-model="type">
-            <el-radio :value="1">用户</el-radio>
-            <el-radio :value="2">游客</el-radio>
+          <el-radio-group v-model="userType" size="small">
+            <el-radio :value="0">用户</el-radio>
+            <el-radio :value="1">游客</el-radio>
           </el-radio-group>
         </div>
-        <ChinaMap v-loading="loading" :values="areaData" />
+        <ChinaMap :values="userAreaData" />
       </div>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import GithubCorner from "@/components/GithubCorner/index.vue";
-import TagCloud from "@/components/TagCloud/index.vue";
-import Echarts from "@/components/Echarts/index.vue";
-import Calender from "./components/Calender.vue";
+defineOptions({
+  name: "Dashboard",
+  inheritAttrs: false,
+});
+
+import { dayjs } from "element-plus";
+import { useUserStore } from "@/store/modules/user.store";
+import { useTransition, useDateFormat } from "@vueuse/core";
+import { Connection, Failed } from "@element-plus/icons-vue";
+import { useWebSocketOnlineUsers } from "@/hooks/useWebSocketOnlineUsers";
+import {
+  UserAreaVO,
+  AdminHomeInfo,
+  GetVisitStatsResp,
+  GetVisitTrendResp,
+  ArticleViewVO,
+  CategoryVO,
+} from "@/api/types.ts";
+import { WebsiteAPI } from "@/api/website.ts";
+import ECharts from "@/components/ECharts/index.vue";
 import ChinaMap from "./components/ChinaMap.vue";
+import Calender from "./components/Calender.vue";
+import TagCloud from "./components/TagCloud.vue";
 
-import { onMounted, reactive, ref } from "vue";
-import { WebsiteAPI } from "@/api/website";
-import { AccountAPI } from "@/api/account";
-import type { AccountArea, ArticleStatisticsDTO } from "@/api/types";
-import { useUserStore } from "@/store";
+// 在线用户数量组件相关
+const { onlineUserCount, lastUpdateTime, isConnected } = useWebSocketOnlineUsers();
 
-const loading = ref(true);
+// 记录上一次的用户数量用于计算趋势
+const previousCount = ref(0);
 
-const viewCount = ref(0);
-const remarkCount = ref(0);
-const userCount = ref(0);
-const articleCount = ref(0);
-
-const articleStatisticsList = ref<ArticleStatisticsDTO[]>([]);
-const areaData = ref<AccountArea[]>([]);
-
-let userViewOptions = reactive({
-  xAxis: {
-    data: [] as string[],
-    boundaryGap: false,
-    axisTick: {
-      show: false,
-    },
-  },
-  grid: {
-    left: 8,
-    right: 35,
-    bottom: 0,
-    top: 30,
-    containLabel: true,
-  },
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "cross",
-    },
-    padding: [5, 10],
-  },
-  yAxis: {
-    axisTick: {
-      show: false,
-    },
-  },
-  legend: {
-    data: ["访问量(PV)", "独立访客(UV)"],
-  },
-  series: [
-    {
-      name: "访问量(PV)",
-      itemStyle: {
-        color: "#FF005A",
-      },
-      lineStyle: {
-        color: "#FF005A",
-        width: 2,
-      },
-      smooth: true,
-      type: "line",
-      data: [] as number[],
-      animationDuration: 2800,
-      animationEasing: "cubicInOut",
-    },
-    {
-      name: "独立访客(UV)",
-      smooth: true,
-      type: "line",
-      itemStyle: {
-        color: "#3888fa",
-      },
-      lineStyle: {
-        color: "#3888fa",
-        width: 2,
-      },
-      areaStyle: {
-        color: "#f3f8ff",
-      },
-      data: [] as number[],
-      animationDuration: 2800,
-      animationEasing: "quadraticOut",
-    },
-  ],
+// 监听用户数量变化，计算趋势
+watch(onlineUserCount, (newCount, oldCount) => {
+  if (oldCount > 0) {
+    previousCount.value = oldCount;
+  }
 });
-let categoryOptions = reactive({
-  tooltip: {
-    trigger: "item",
-    formatter: "{a} <br/>{b} : {c} ({d}%)",
-  },
-  legend: {
-    top: "bottom",
-  },
-  series: [
-    {
-      name: "分类统计",
-      type: "pie",
-      radius: [15, 95],
-      center: ["50%", "38%"],
-      roseType: "area",
-      itemStyle: {
-        borderRadius: 6,
-      },
-      data: [] as {
-        value: number;
-        name: string;
-      }[],
-    },
-  ],
+
+// 格式化时间戳
+const formattedTime = computed(() => {
+  if (!lastUpdateTime.value) return "--";
+  return useDateFormat(lastUpdateTime, "HH:mm:ss").value;
 });
-let articleRankOptions = reactive({
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "shadow",
-    },
-  },
-  color: ["#58AFFF"],
-  grid: {
-    left: "0%",
-    right: "0%",
-    bottom: "0%",
-    top: "10%",
-    containLabel: true,
-  },
-  xAxis: {
-    data: [] as string[],
-    axisTick: {
-      alignWithLabel: true,
-    },
-  },
-  yAxis: {
-    type: "value",
-    axisTick: {
-      show: false,
-    },
-  },
-  series: [
-    {
-      name: "浏览量",
-      type: "bar",
-      data: [] as number[],
-    },
-  ],
-});
-const tagList = ref<any[]>([]);
-const tagLoad = ref(false);
 
-const getList = () => {
-  loading.value = true;
-  WebsiteAPI.getAdminHomeInfoApi()
-    .then((res) => {
-      viewCount.value = res.data.view_count;
-      remarkCount.value = res.data.remark_count;
-      userCount.value = res.data.user_count;
-      articleCount.value = res.data.article_count;
-
-      if (res.data.category_list != null) {
-        res.data.category_list.forEach((item) => {
-          categoryOptions.series[0].data.push({
-            value: item.article_count,
-            name: item.category_name,
-          });
-        });
-      }
-      if (res.data.tag_list != null) {
-        res.data.tag_list.forEach((item) => {
-          tagList.value.push({
-            tag_name: item.tag_name,
-          });
-        });
-        tagLoad.value = true;
-      }
-      if (res.data.article_view_ranks != null) {
-        res.data.article_view_ranks.forEach((item) => {
-          articleRankOptions.series[0].data.push(item.view_count);
-          articleRankOptions.xAxis.data.push(item.article_title);
-        });
-      }
-      if (res.data.article_statistics != null) {
-        articleStatisticsList.value = res.data.article_statistics;
-      }
-
-      if (res.data.user_visit_daliy != null) {
-        const x = [];
-        const y = [];
-        res.data.user_visit_daliy.reverse().forEach((item) => {
-          x.push(item.date);
-          y.push(item.count);
-        });
-
-        userViewOptions.xAxis.data.push(...x);
-        userViewOptions.series[0].data.push(...y);
-      }
-      // if (res.data.userViewVOList != null) {
-      //   res.data.userViewVOList.forEach((item) => {
-      //     userView.xAxis.data.push(item.date);
-      //     userView.series[0].data.push(item.pv);
-      //     userView.series[1].data.push(item.uv);
-      //   });
-      // }
-    })
-    .catch((e) => {
-      console.log("获取数据失败", e);
-    })
-    .finally(() => {
-      loading.value = false;
-    });
-};
-
-// 切换用户/游客类型
-const type = ref(1);
-const listUserArea = () => {
-  // 发送请求获取用户地域分布数据
-  AccountAPI.findAccountAreaAnalysisApi().then((res) => {
-    // userAreaMap.series[0].data = res.data
-    res.data.list.forEach((item: AccountArea) => {
-      areaData.value.push({
-        name: item.name,
-        value: item.value,
-      });
-    });
-  });
-};
-
-onMounted(() => {
-  getList();
-  listUserArea();
-});
+interface VersionItem {
+  id: string;
+  title: string; // 版本标题（如：v2.4.0）
+  date: string; // 发布时间
+  content: string; // 版本描述
+  link: string; // 详情链接
+  tag?: string; // 版本标签（可选）
+}
 
 const userStore = useUserStore();
-const date: Date = new Date();
+
+// 当前通知公告列表
+const vesionList = ref<VersionItem[]>([
+  {
+    id: "1",
+    title: "v3.0.0",
+    date: "2025-01-01 00:00:00",
+    content: "实现基础框架搭建，包含权限管理、路由系统等核心功能。",
+    link: "https://github.com/ve-weiyi/ve-blog-golang/releases",
+    tag: "里程碑",
+  },
+  {
+    id: "1",
+    title: "v2.0.0",
+    date: "2024-01-01 00:00:00",
+    content: "实现基础框架搭建，包含权限管理、路由系统等核心功能。",
+    link: "https://github.com/ve-weiyi/ve-blog-golang/releases",
+    tag: "里程碑",
+  },
+  {
+    id: "1",
+    title: "v1.0.0",
+    date: "2023-01-01 00:00:00",
+    content: "实现基础框架搭建，包含权限管理、路由系统等核心功能。",
+    link: "https://github.com/ve-weiyi/ve-blog-golang/releases",
+    tag: "里程碑",
+  },
+]);
+
+// 当前时间（用于计算问候语）
+const currentDate = new Date();
+
+// 问候语：根据当前小时返回不同问候语
 const greetings = computed(() => {
-  const hours = date.getHours();
+  const hours = currentDate.getHours();
+  const nickname = userStore.userInfo.nickname;
   if (hours >= 6 && hours < 8) {
     return "晨起披衣出草堂，轩窗已自喜微凉🌅！";
   } else if (hours >= 8 && hours < 12) {
-    return "上午好，" + userStore.userInfo.nickname + "！";
+    return `上午好，${nickname}！`;
   } else if (hours >= 12 && hours < 18) {
-    return "下午好，" + userStore.userInfo.nickname + "！";
+    return `下午好，${nickname}！`;
   } else if (hours >= 18 && hours < 24) {
-    return "晚上好，" + userStore.userInfo.nickname + "！";
+    return `晚上好，${nickname}！`;
   } else {
     return "偷偷向银河要了一把碎星，只等你闭上眼睛撒入你的梦中，晚安🌛！";
   }
 });
-// 右上角数量
-const statisticData = ref([
+
+// 访客统计数据加载状态
+const visitStatsLoading = ref(true);
+// 访客统计数据
+const visitStatsData = ref<GetVisitStatsResp>({
+  today_uv_count: 0,
+  total_uv_count: 0,
+  uv_growth_rate: 0,
+  today_pv_count: 0,
+  total_pv_count: 0,
+  pv_growth_rate: 0,
+});
+
+// 数字过渡动画
+const transitionUvCount = useTransition(
+  computed(() => visitStatsData.value.today_uv_count),
   {
-    value: 99,
-    iconClass: "message",
-    title: "消息",
-    key: "message",
-  },
+    duration: 1000,
+    transition: [0.25, 0.1, 0.25, 1.0], // CSS cubic-bezier
+  }
+);
+
+const transitionTotalUvCount = useTransition(
+  computed(() => visitStatsData.value.total_uv_count),
   {
-    value: 50,
-    iconClass: "todo",
-    title: "待办",
-    suffix: "/100",
-    key: "upcoming",
-  },
+    duration: 1200,
+    transition: [0.25, 0.1, 0.25, 1.0],
+  }
+);
+
+const transitionPvCount = useTransition(
+  computed(() => visitStatsData.value.today_pv_count),
   {
-    value: 10,
-    iconClass: "project",
-    title: "项目",
-    key: "project",
+    duration: 1000,
+    transition: [0.25, 0.1, 0.25, 1.0],
+  }
+);
+
+const transitionTotalPvCount = useTransition(
+  computed(() => visitStatsData.value.total_pv_count),
+  {
+    duration: 1200,
+    transition: [0.25, 0.1, 0.25, 1.0],
+  }
+);
+
+// 访问趋势日期范围（单位：天）
+const visitTrendDateRange = ref(30);
+// 访问趋势图表配置
+const visitTrendChartOptions = ref();
+
+/**
+ * 获取访客统计数据
+ */
+const fetchVisitStatsData = () => {
+  WebsiteAPI.getVisitStatsApi()
+    .then((res) => {
+      visitStatsData.value = res.data;
+    })
+    .finally(() => {
+      visitStatsLoading.value = false;
+    });
+};
+
+/**
+ * 获取访问趋势数据，并更新图表配置
+ */
+const fetchVisitTrendData = () => {
+  const startDate = dayjs()
+    .subtract(visitTrendDateRange.value - 1, "day")
+    .toDate();
+  const endDate = new Date();
+
+  WebsiteAPI.getVisitTrendApi({
+    start_date: dayjs(startDate).format("YYYY-MM-DD"),
+    end_date: dayjs(endDate).format("YYYY-MM-DD"),
+  }).then((res) => {
+    updateVisitTrendChartOptions(res.data);
+  });
+};
+
+/**
+ * 更新访问趋势图表的配置项
+ *
+ * @param data - 访问趋势数据
+ */
+const updateVisitTrendChartOptions = (data: GetVisitTrendResp) => {
+  console.log("Updating visit trend chart options");
+
+  const dates = [];
+  const pvs = [];
+  const uvs = [];
+  data.visit_trend.forEach((item, _) => {
+    dates.push(item.date);
+    pvs.push(item.pv_count);
+    uvs.push(item.uv_count);
+  });
+
+  visitTrendChartOptions.value = {
+    tooltip: {
+      trigger: "axis",
+    },
+    legend: {
+      data: ["浏览量(PV)", "访客数(UV)"],
+      bottom: 0,
+    },
+    grid: {
+      left: "1%",
+      right: "5%",
+      bottom: "10%",
+      containLabel: true,
+    },
+    xAxis: {
+      type: "category",
+      data: dates,
+    },
+    yAxis: {
+      type: "value",
+      splitLine: {
+        show: true,
+        lineStyle: {
+          type: "dashed",
+        },
+      },
+    },
+    series: [
+      {
+        name: "浏览量(PV)",
+        type: "line",
+        data: pvs,
+        areaStyle: {
+          color: "rgba(64, 158, 255, 0.1)",
+        },
+        smooth: true,
+        itemStyle: {
+          color: "#4080FF",
+        },
+        lineStyle: {
+          color: "#4080FF",
+        },
+      },
+      {
+        name: "访客数(UV)",
+        type: "line",
+        data: uvs,
+        areaStyle: {
+          color: "rgba(103, 194, 58, 0.1)",
+        },
+        smooth: true,
+        itemStyle: {
+          color: "#67C23A",
+        },
+        lineStyle: {
+          color: "#67C23A",
+        },
+      },
+    ],
+  };
+};
+
+function formatGrowthRate(growthRate: number) {
+  if (growthRate === 0) {
+    return "-";
+  }
+
+  const formattedRate = Math.abs(growthRate * 100)
+    .toFixed(2)
+    .replace(/\.?0+$/, "");
+  return formattedRate + "%";
+}
+
+/**
+ * 根据增长率计算对应的 CSS 类名
+ *
+ * @param growthRate - 增长率数值
+ */
+const computeGrowthRateClass = (growthRate?: number): string => {
+  if (!growthRate) {
+    return "text-[--el-color-info]";
+  }
+  if (growthRate > 0) {
+    return "text-[--el-color-danger]";
+  } else if (growthRate < 0) {
+    return "text-[--el-color-success]";
+  } else {
+    return "text-[--el-color-info]";
+  }
+};
+
+// 监听访问趋势日期范围的变化，重新获取趋势数据
+watch(
+  () => visitTrendDateRange.value,
+  (newVal) => {
+    console.log("Visit trend date range changed:", newVal);
+    fetchVisitTrendData();
   },
-]);
+  { immediate: true }
+);
+
+// 首页信息加载状态
+const homeInfoLoading = ref(true);
+// 首页信息数据
+const homeInfoData = ref<AdminHomeInfo>({
+  user_count: 0,
+  article_count: 0,
+  remark_count: 0,
+  category_list: [],
+  tag_list: [],
+  article_view_ranks: [],
+  article_statistics: [],
+});
+
+// 数字过渡动画
+const transitionUserCount = useTransition(
+  computed(() => homeInfoData.value.user_count),
+  {
+    duration: 1000,
+    transition: [0.25, 0.1, 0.25, 1.0],
+  }
+);
+
+const transitionArticleCount = useTransition(
+  computed(() => homeInfoData.value.article_count),
+  {
+    duration: 1000,
+    transition: [0.25, 0.1, 0.25, 1.0],
+  }
+);
+
+const transitionRemarkCount = useTransition(
+  computed(() => homeInfoData.value.remark_count),
+  {
+    duration: 1000,
+    transition: [0.25, 0.1, 0.25, 1.0],
+  }
+);
+
+/**
+ * 获取首页信息数据
+ */
+const fetchHomeInfoData = () => {
+  WebsiteAPI.getAdminHomeInfoApi()
+    .then((res) => {
+      homeInfoData.value = res.data;
+      updateArticleRankOptions(res.data.article_view_ranks);
+      updateCategoryOptions(res.data.category_list);
+    })
+    .finally(() => {
+      homeInfoLoading.value = false;
+    });
+};
+
+/**
+ * 获取用户地区分布数据
+ */
+const fetchUserAreaData = () => {
+  WebsiteAPI.getUserAreaStatsApi({
+    user_type: userType.value,
+  }).then((res) => {
+    userAreaData.value = res.data.user_areas;
+  });
+};
+
+// 组件挂载后加载访客统计数据和首页信息数据
+onMounted(() => {
+  fetchVisitStatsData();
+  fetchHomeInfoData();
+});
+
+// 文章浏览量排行图表配置
+const articleRankOptions = ref();
+
+// 文章分类统计图表配置
+const categoryOptions = ref();
+
+const updateArticleRankOptions = (articleRanks: ArticleViewVO[]) => {
+  articleRankOptions.value = {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    color: ["#58AFFF"],
+    grid: {
+      left: "0%",
+      right: "0%",
+      bottom: "0%",
+      top: "10%",
+      containLabel: true,
+    },
+    xAxis: {
+      data: articleRanks?.map((item) => item.article_title),
+      axisTick: {
+        alignWithLabel: true,
+      },
+    },
+    yAxis: {
+      type: "value",
+      axisTick: {
+        show: false,
+      },
+    },
+    series: [
+      {
+        name: "浏览量",
+        type: "bar",
+        data: articleRanks?.map((item) => item.view_count),
+      },
+    ],
+  };
+};
+
+const updateCategoryOptions = (categories: CategoryVO[]) => {
+  categoryOptions.value = {
+    tooltip: {
+      trigger: "item",
+      formatter: "{a} <br/>{b} : {c} ({d}%)",
+    },
+    legend: {
+      top: "bottom",
+    },
+    series: [
+      {
+        name: "分类统计",
+        type: "pie",
+        radius: [15, 95],
+        center: ["50%", "38%"],
+        roseType: "area",
+        itemStyle: {
+          borderRadius: 6,
+        },
+        data: categories?.map((item) => ({
+          name: item.category_name,
+          value: item.article_count,
+        })),
+      },
+    ],
+  };
+};
+
+// 用户类型（0：用户，1：游客）
+const userType = ref(0);
+
+// 用户地域分布数据
+const userAreaData = ref<UserAreaVO[]>([]);
+
+// 监听用户类型的变化，重新获取用户地区分布数据
+watch(
+  () => userType.value,
+  (newVal) => {
+    console.log("User type changed:", newVal);
+    fetchUserAreaData();
+  },
+  { immediate: true }
+);
 </script>
+
 <style lang="scss" scoped>
-.title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--el-text-color-secondary);
-}
-
-.data-card {
-  padding: 1rem;
-  background: var(--el-bg-color-overlay);
-}
-
 .dashboard-container {
   position: relative;
-  padding: 32px;
-  background: var(--el-bg-color-page);
+  padding: 24px;
 
   .github-corner {
     position: absolute;
     top: 0;
     right: 0;
+    z-index: 1;
     border: 0;
   }
 
-  .chart-wrapper {
-    padding: 1rem;
-    background: var(--el-bg-color-overlay);
-    //margin-bottom: 2rem;
-  }
-}
+  .version-item {
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--el-fill-color-lighter);
+    border-radius: 8px;
+    transition: all 0.2s;
 
-.panel-group {
-  margin-top: 18px;
-
-  .card-panel-col {
-    margin-bottom: 32px;
-  }
-
-  .card-panel {
-    position: relative;
-    height: 108px;
-    overflow: hidden;
-    font-size: 12px;
-    color: #666;
-    cursor: pointer;
-    background: var(--el-bg-color-overlay);
-    border-color: rgb(0 0 0 / 5%);
-    box-shadow: 4px 4px 40px rgb(0 0 0 / 5%);
+    &.latest-item {
+      background: var(--el-color-primary-light-9);
+      border: 1px solid var(--el-color-primary-light-5);
+    }
 
     &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
-
-      .icon-people {
-        background: #40c9c6;
-      }
-
-      .icon-message {
-        background: #36a3f7;
-      }
-
-      .icon-money {
-        background: #f4516c;
-      }
-
-      .icon-view {
-        background: #34bfa3;
-      }
+      transform: translateX(5px);
     }
 
-    .icon-people {
-      color: #40c9c6;
-    }
-
-    .icon-message {
-      color: #36a3f7;
-    }
-
-    .icon-money {
-      color: #f4516c;
-    }
-
-    .icon-view {
-      color: #34bfa3;
-    }
-
-    .card-panel-icon-wrapper {
-      float: left;
-      padding: 16px;
-      margin: 14px 0 0 14px;
-      border-radius: 6px;
-      transition: all 0.38s ease-out;
-    }
-
-    .card-panel-description {
-      float: right;
-      margin: 26px;
-      margin-left: 0;
-      font-weight: bold;
-
-      .card-panel-text {
-        margin-bottom: 12px;
-        font-size: 16px;
-        line-height: 18px;
-        color: var(--el-text-color-secondary);
-      }
-
-      .card-panel-num {
-        font-size: 20px;
-      }
+    .version-content {
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--el-text-color-secondary);
     }
   }
 }
 
-@media (width <= 1024px) {
-  .chart-wrapper {
-    padding: 8px;
-  }
-}
-
-@media (width <= 550px) {
-  .card-panel-description {
-    display: none;
-  }
-
-  .card-panel-icon-wrapper {
-    float: none !important;
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-
-    .svg-icon {
-      display: block;
-      float: none !important;
-      margin: 14px auto !important;
-    }
-  }
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--el-text-color-secondary);
 }
 </style>

@@ -5,8 +5,8 @@ const searchConfig: ISearchConfig = {
   formItems: [
     {
       type: "input",
-      label: "用户昵称",
-      prop: "nickname",
+      label: "用户ID",
+      prop: "user_id",
       attrs: {
         placeholder: "请输入",
         clearable: true,

@@ -76,7 +76,7 @@ const {
   // handleSubmitClick,
   handleExportClick,
   handleSearchClick,
-  handleFilterChange
+  handleFilterChange,
 } = usePage();
 
 // 新增
@@ -112,7 +112,7 @@ function handleOperatClick(data: IOperatData) {
     case "recycleArticle":
       ArticleAPI.recycleArticleApi({
         id: data.row.id,
-        is_delete: 1
+        is_delete: 1,
       }).then(() => {
         data.row.is_delete = 1;
         ElMessage.success("回收成功");
@@ -121,7 +121,7 @@ function handleOperatClick(data: IOperatData) {
     case "restoreArticle":
       ArticleAPI.recycleArticleApi({
         id: data.row.id,
-        is_delete: 0
+        is_delete: 0,
       }).then(() => {
         data.row.is_delete = 0;
         ElMessage.success("恢复成功");
@@ -129,7 +129,7 @@ function handleOperatClick(data: IOperatData) {
       break;
     case "removeArticle":
       ArticleAPI.deleteArticleApi({
-        id: data.row.id
+        id: data.row.id,
       }).then(() => {
         ElMessage.success("删除成功");
       });
@@ -156,30 +156,30 @@ const statusList: StatusTag[] = [
     label: "公开",
     condition: {
       is_delete: ArticleDeleteEnum.NO,
-      status: ArticleStatusEnum.PUBLIC
-    }
+      status: ArticleStatusEnum.PUBLIC,
+    },
   },
   {
     value: "private",
     label: "私密",
     condition: {
       is_delete: ArticleDeleteEnum.NO,
-      status: ArticleStatusEnum.PRIVATE
-    }
+      status: ArticleStatusEnum.PRIVATE,
+    },
   },
   {
     value: "draft",
     label: "草稿",
     condition: {
       is_delete: ArticleDeleteEnum.NO,
-      status: ArticleStatusEnum.DRAFT
-    }
+      status: ArticleStatusEnum.DRAFT,
+    },
   },
   {
     value: "delete",
     label: "回收站",
-    condition: { is_delete: ArticleDeleteEnum.YES }
-  }
+    condition: { is_delete: ArticleDeleteEnum.YES },
+  },
 ];
 
 const status = ref<string | number>(statusList.length > 0 ? statusList[0].value : 0);

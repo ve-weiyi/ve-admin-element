@@ -77,8 +77,8 @@ const contentConfig: IContentConfig<AccountQuery> = {
       templet: "custom",
     },
     {
-      label: "登录类型",
-      prop: "login_type",
+      label: "注册方式",
+      prop: "register_type",
       width: 120,
       align: "center",
       templet: "custom",

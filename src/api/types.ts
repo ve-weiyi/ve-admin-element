@@ -755,7 +755,7 @@ export interface UserInfoDetail extends UserInfoExt {
   email: string; // 用户邮箱
   phone: string; // 用户手机号
   status: number; // 状态
-  login_type: string; // 登录方式
+  register_type: string; // 登录方式
   ip_address: string; // ip host
   ip_source: string; // ip 源
   created_at: number;

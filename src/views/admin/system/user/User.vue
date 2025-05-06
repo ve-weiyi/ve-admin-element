@@ -28,9 +28,13 @@
           </el-tag>
         </template>
         <template #login_type="scope">
-          <el-tag v-if="scope.row.login_type === LoginTypeEnum.EMAIL" type="success">邮箱</el-tag>
-          <el-tag v-if="scope.row.login_type === LoginTypeEnum.PHONE" type="danger">手机</el-tag>
-          <el-tag v-if="scope.row.login_type === LoginTypeEnum.OAUTH" type="primary">第三方</el-tag>
+          <el-tag v-if="scope.row.register_type === LoginTypeEnum.EMAIL" type="success">
+            邮箱
+          </el-tag>
+          <el-tag v-else-if="scope.row.register_type === LoginTypeEnum.PHONE" type="danger">
+            手机
+          </el-tag>
+          <el-tag v-else type="primary">{{ scope.row.register_type }}</el-tag>
         </template>
       </page-content>
       <!-- 编辑 -->

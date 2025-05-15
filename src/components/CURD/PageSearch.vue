@@ -94,7 +94,7 @@
           v-if="isExpandable && formItems.length > showNumber"
           class="ml-2"
           type="primary"
-          :underline="false"
+          underline="never"
           @click="isExpand = !isExpand"
         >
           <template v-if="isExpand">

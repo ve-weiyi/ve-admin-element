@@ -23,7 +23,7 @@
     <!-- 数据统计 -->
     <el-row :gutter="10" class="mt-5">
       <!-- 在线用户数量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never">
           <template #header>
             <div class="flex-x-between">
@@ -57,7 +57,7 @@
       </el-col>
 
       <!-- 访客数(UV) -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
           <template #template>
             <el-card>
@@ -117,7 +117,7 @@
       </el-col>
 
       <!-- 浏览量(PV) -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
           <template #template>
             <el-card>
@@ -177,7 +177,7 @@
       </el-col>
 
       <!-- 用户量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never" :loading="homeInfoLoading">
           <template #header>
             <div class="flex-x-between">
@@ -201,7 +201,7 @@
       </el-col>
 
       <!-- 文章量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never" :loading="homeInfoLoading">
           <template #header>
             <div class="flex-x-between">
@@ -225,7 +225,7 @@
       </el-col>
 
       <!-- 留言量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never" :loading="homeInfoLoading">
           <template #header>
             <div class="flex-x-between">
@@ -273,7 +273,7 @@
               <div class="title">最新动态✨</div>
               <el-link
                 type="primary"
-                :underline="false"
+                underline="never"
                 href="https://github.com/ve-weiyi/ve-blog-golang/releases"
                 target="_blank"
               >
@@ -311,7 +311,7 @@
                       :type="index === 0 ? 'primary' : 'info'"
                       :href="item.link"
                       target="_blank"
-                      :underline="false"
+                      underline="never"
                     >
                       详情
                       <el-icon class="link-icon">
@@ -380,7 +380,7 @@ import { dayjs } from "element-plus";
 import { useUserStore } from "@/store/modules/user.store";
 import { useTransition, useDateFormat } from "@vueuse/core";
 import { Connection, Failed } from "@element-plus/icons-vue";
-import { useWebSocketOnlineUsers } from "@/hooks/useWebSocketOnlineUsers";
+import { useOnlineCount } from "@/hooks/websocket/services/useOnlineCount";
 import {
   UserAreaVO,
   AdminHomeInfo,
@@ -396,7 +396,7 @@ import Calender from "./components/Calender.vue";
 import TagCloud from "./components/TagCloud.vue";
 
 // 在线用户数量组件相关
-const { onlineUserCount, lastUpdateTime, isConnected } = useWebSocketOnlineUsers();
+const { onlineUserCount, lastUpdateTime, isConnected } = useOnlineCount();
 
 // 记录上一次的用户数量用于计算趋势
 const previousCount = ref(0);

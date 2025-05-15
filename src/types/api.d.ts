@@ -3,5 +3,6 @@ interface IApiResponse<T = any> {
   flag: number;
   code: number;
   data: T;
-  message: string;
+  msg: string;
+  trace_id: string;
 }

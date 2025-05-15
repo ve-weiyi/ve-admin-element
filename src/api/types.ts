@@ -1,10 +1,15 @@
-export interface AboutMe {
+
+export interface AboutMeVO {
   content: string;
 }
 
 export interface AccountQuery extends PageQuery {
   username?: string;
   nickname?: string;
+  email?: string;
+  phone?: string;
+  status?: number; // 状态: -1删除 0正常 1禁用
+  user_ids?: string[]; // 用户ID
 }
 
 export interface AdminHomeInfo {
@@ -195,9 +200,11 @@ export interface EmailLoginReq {
   captcha_code?: string; // 验证码
 }
 
-export interface EmptyReq {}
+export interface EmptyReq {
+}
 
-export interface EmptyResp {}
+export interface EmptyResp {
+}
 
 export interface FileBackVO {
   id?: number; // 文件目录ID
@@ -392,6 +399,11 @@ export interface MultiUploadFileReq {
   file_path?: string; // 文件路径
 }
 
+export interface OnlineCountResp {
+  msg: string; // 消息
+  count: number; // 在线人数
+}
+
 export interface OperationLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
@@ -410,7 +422,8 @@ export interface OperationLogBackVO {
   user?: UserInfoVO; // 用户信息
 }
 
-export interface OperationLogQuery extends PageQuery {}
+export interface OperationLogQuery extends PageQuery {
+}
 
 export interface PageBackVO {
   id?: number; // 页面id
@@ -478,7 +491,8 @@ export interface PhotoQuery extends PageQuery {
   album_id?: number; // 相册id
 }
 
-export interface PingReq {}
+export interface PingReq {
+}
 
 export interface PingResp {
   env: string;
@@ -529,7 +543,7 @@ export interface ResetPasswordReq {
 
 export interface Response {
   code: number;
-  message: string;
+  msg: string;
   data: any;
   trace_id: string;
 }
@@ -539,9 +553,17 @@ export interface RestHeader {
   header_language?: string;
   header_timezone?: string;
   header_app_name?: string;
-  header_x_user_id?: string;
-  header_x_auth_token?: string;
+  header_timestamp?: string;
   header_terminal_id?: string;
+  header_x_ts_token?: string;
+  header_uid?: string;
+  header_token?: string;
+  header_authorization?: string;
+}
+
+export interface RewardQrCode {
+  alipay_qr_code: string; // 支付宝二维码
+  weixin_qr_code: string; // 微信二维码
 }
 
 export interface RoleBackVO {
@@ -593,6 +615,13 @@ export interface Server {
   cpu: any;
   ram: any;
   disk: any;
+}
+
+export interface SocialAccountInfo {
+  name: string; // 名称-微信
+  platform: string; // 平台-wechat
+  link_url: string; // 链接地址
+  enabled: boolean; // 是否启用
 }
 
 export interface SyncApiReq {
@@ -655,6 +684,13 @@ export interface TalkQuery extends PageQuery {
 export interface ThirdLoginReq {
   platform: string; // 平台
   code?: string; // 授权码
+}
+
+export interface ThirdPlatformInfo {
+  name: string; // 名称-微信
+  platform: string; // 平台-wechat
+  authorize_url: string; // 授权地址
+  enabled: boolean; // 是否启用
 }
 
 export interface Token {
@@ -755,7 +791,7 @@ export interface UserInfoDetail extends UserInfoExt {
   email: string; // 用户邮箱
   phone: string; // 用户手机号
   status: number; // 状态
-  register_type: string; // 登录方式
+  register_type: string; // 注册方式
   ip_address: string; // ip host
   ip_source: string; // ip 源
   created_at: number;
@@ -777,6 +813,7 @@ export interface UserInfoResp extends UserInfoExt {
   email: string; // 用户邮箱
   phone: string; // 用户手机号
   created_at: number; // 创建时间
+  register_type: string; // 注册方式
   third_party: UserThirdPartyInfo[];
   roles: string[];
   perms: string[];
@@ -800,7 +837,8 @@ export interface UserLoginHistory {
   logout_at: number; // 登出时间
 }
 
-export interface UserLoginHistoryQuery extends PageQuery {}
+export interface UserLoginHistoryQuery extends PageQuery {
+}
 
 export interface UserMenu {
   id?: number; // 主键
@@ -881,22 +919,28 @@ export interface VisitTrendVO {
   pv_count: number; // 浏览量
 }
 
-export interface WebsiteConfig {
+export interface WebsiteConfigVO {
   admin_url: string; // 后台地址
-  alipay_qr_code: string; // 支付宝二维码
-  gitee: string; // Gitee
-  github: string; // Github
+  websocket_url: string; // websocket地址
+  tourist_avatar: string; // 游客头像
+  user_avatar: string; // 用户头像
+  website_feature?: WebsiteFeature; // 网站功能
+  website_info?: WebsiteInfo; // 网站信息
+  reward_qr_code?: RewardQrCode; // 打赏二维码
+  social_login_list: ThirdPlatformInfo[]; // 用户第三方登录列表
+  social_url_list: SocialAccountInfo[]; // 作者社交地址列表
+}
+
+export interface WebsiteFeature {
   is_chat_room: number; // 是否开启聊天室
   is_comment_review: number; // 是否开启评论审核
   is_email_notice: number; // 是否开启邮件通知
   is_message_review: number; // 是否开启留言审核
   is_music_player: number; // 是否开启音乐播放器
   is_reward: number; // 是否开启打赏
-  qq: string; // QQ
-  social_login_list: string[]; // 社交登录列表
-  social_url_list: string[]; // 社交地址列表
-  tourist_avatar: string; // 游客头像
-  user_avatar: string; // 用户头像
+}
+
+export interface WebsiteInfo {
   website_author: string; // 网站作者
   website_avatar: string; // 网站头像
   website_create_time: string; // 网站创建时间
@@ -904,6 +948,4 @@ export interface WebsiteConfig {
   website_name: string; // 网站名称
   website_notice: string; // 网站公告
   website_record_no: string; // 网站备案号
-  websocket_url: string; // websocket地址
-  weixin_qr_code: string; // 微信二维码
 }

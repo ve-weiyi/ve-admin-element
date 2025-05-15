@@ -273,7 +273,7 @@
               <div class="title">最新动态✨</div>
               <el-link
                 type="primary"
-                :underline="false"
+                underline="never"
                 href="https://github.com/ve-weiyi/ve-blog-golang/releases"
                 target="_blank"
               >
@@ -311,7 +311,7 @@
                       :type="index === 0 ? 'primary' : 'info'"
                       :href="item.link"
                       target="_blank"
-                      :underline="false"
+                      underline="never"
                     >
                       详情
                       <el-icon class="link-icon">
@@ -380,7 +380,7 @@ import { dayjs } from "element-plus";
 import { useUserStore } from "@/store/modules/user.store";
 import { useTransition, useDateFormat } from "@vueuse/core";
 import { Connection, Failed } from "@element-plus/icons-vue";
-import { useWebSocketOnlineUsers } from "@/hooks/useWebSocketOnlineUsers";
+import { useOnlineCount } from "@/hooks/websocket/services/useOnlineCount";
 import {
   UserAreaVO,
   AdminHomeInfo,
@@ -396,7 +396,7 @@ import Calender from "./components/Calender.vue";
 import TagCloud from "./components/TagCloud.vue";
 
 // 在线用户数量组件相关
-const { onlineUserCount, lastUpdateTime, isConnected } = useWebSocketOnlineUsers();
+const { onlineUserCount, lastUpdateTime, isConnected } = useOnlineCount();
 
 // 记录上一次的用户数量用于计算趋势
 const previousCount = ref(0);

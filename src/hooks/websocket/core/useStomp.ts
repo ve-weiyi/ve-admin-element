@@ -82,8 +82,8 @@ export function useStomp(options: UseStompOptions = {}) {
       },
       debug: options.debug ? console.log : () => {},
       reconnectDelay: useExponentialBackoff ? 0 : reconnectDelay, // 禁用内置重连机制
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
+      heartbeatIncoming: 10000,
+      heartbeatOutgoing: 10000,
     });
 
     // 设置连接监听器

@@ -62,7 +62,7 @@ const updateAbout = () => {
   WebsiteAPI.updateAboutMeApi(data).then((res) => {
     ElNotification.success({
       title: "成功",
-      message: res.message,
+      message: res.msg,
     });
   });
 };

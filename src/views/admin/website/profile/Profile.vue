@@ -296,7 +296,7 @@ function getWebsiteConfig() {
 
 function updateWebsiteConfig() {
   WebsiteAPI.updateWebsiteConfigApi(websiteConfigForm.value).then((res) => {
-    ElMessage.success(res.message);
+    ElMessage.success(res.msg);
   });
 }
 

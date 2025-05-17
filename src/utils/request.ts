@@ -6,8 +6,8 @@ import { getAccessToken, getUid } from "./auth";
 
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
-const HeaderTerminal = "Terminal";
-const HeaderXToken = "X-Token";
+const HeaderTerminalId = "Terminal-Id";
+const HeaderXTsToken = "X-Ts-Token";
 
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
@@ -52,7 +52,7 @@ requests.interceptors.response.use(
       return response;
     }
 
-    const { code, data, message } = response.data;
+    const { code, data, msg } = response.data;
 
     // 接口错误码
     switch (code) {
@@ -60,24 +60,25 @@ requests.interceptors.response.use(
         break;
       case 401:
         ElMessage.error("用户未登录");
-        return Promise.reject(message);
+        return Promise.reject(msg);
       case 402:
         useUserStore().clearSessionAndCache();
         ElMessage.error("用户登录过期");
-        return Promise.reject(message);
+        return Promise.reject(msg);
       case 403:
         ElMessage.error("无权限访问");
-        return Promise.reject(message);
+        return Promise.reject(msg);
       case 500:
-        ElMessage.error(message);
-        return Promise.reject(message);
+        ElMessage.error(msg);
+        return Promise.reject(msg);
       default:
-        ElMessage.error(message || "系统出错");
-        return Promise.reject(new Error(message || "Error"));
+        ElMessage.error(msg || "系统出错");
+        return Promise.reject(new Error(msg || "Error"));
     }
     return response.data;
   },
   (error: AxiosError) => {
+    console.error("request error", error); // for debug
     let { message } = error;
     if (message == "Network Error") {
       message = "后端接口连接异常";

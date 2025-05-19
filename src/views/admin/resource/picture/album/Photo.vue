@@ -260,12 +260,9 @@ const handleDelete = () => {
   })
     .then(() => {
       PhotoAPI.batchDeletePhotoApi({ ids: selectPhotoIdList.value }).then((res) => {
-        if (res.flag) {
-          ElMessage.success(res.message);
-          getList();
-          selectPhotoIdList.value = [];
-          isIndeterminate.value = false;
-        }
+        getList();
+        selectPhotoIdList.value = [];
+        isIndeterminate.value = false;
       });
     })
     .catch(() => {});
@@ -297,7 +294,7 @@ const submitForm = () => {
     if (valid) {
       PhotoAPI.updatePhotoApi(photoForm.value).then((res) => {
         if (res.flag) {
-          ElMessage.success(res.message);
+          ElMessage.success(res.msg);
           getList();
         }
         update.value = false;

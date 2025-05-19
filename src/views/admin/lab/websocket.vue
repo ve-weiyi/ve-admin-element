@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch } from "vue";
-import { useStomp } from "@/hooks/useStomp";
+import { useStomp } from "@/hooks/websocket/core/useStomp.ts";
 import { useUserStoreHook } from "@/store/modules/user.store";
 
 const userStore = useUserStoreHook();

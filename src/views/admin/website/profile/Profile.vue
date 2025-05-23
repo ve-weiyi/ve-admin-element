@@ -61,7 +61,10 @@
           </el-form-item>
           <el-form-item label="第三方登录">
             <el-checkbox-group v-model="websiteConfigForm.social_login_list">
+              <el-checkbox label="github" value="github">Github</el-checkbox>
+              <el-checkbox label="gitee" value="gitee">Gitee</el-checkbox>
               <el-checkbox label="qq" value="qq">QQ</el-checkbox>
+              <el-checkbox label="wx" value="wx">微信</el-checkbox>
               <el-checkbox label="weibo" value="weibo">微博</el-checkbox>
               <el-checkbox label="feishu" value="feishu">飞书</el-checkbox>
             </el-checkbox-group>
@@ -80,14 +83,6 @@
       <el-tab-pane label="社交信息" name="notice">
         <el-form v-model="websiteConfigForm" label-width="70px">
           <el-checkbox-group v-model="websiteConfigForm.social_url_list">
-            <el-form-item label="QQ">
-              <el-input
-                v-model="websiteConfigForm.qq"
-                size="small"
-                style="width: 400px; margin-right: 1rem"
-              />
-              <el-checkbox label="qq" value="qq">是否展示</el-checkbox>
-            </el-form-item>
             <el-form-item label="Github">
               <el-input
                 v-model="websiteConfigForm.github"
@@ -103,6 +98,22 @@
                 style="width: 400px; margin-right: 1rem"
               />
               <el-checkbox label="gitee" value="gitee">是否展示</el-checkbox>
+            </el-form-item>
+            <el-form-item label="QQ">
+              <el-input
+                v-model="websiteConfigForm.qq"
+                size="small"
+                style="width: 400px; margin-right: 1rem"
+              />
+              <el-checkbox label="qq" value="qq">是否展示</el-checkbox>
+            </el-form-item>
+            <el-form-item label="微信">
+              <el-input
+                v-model="websiteConfigForm.wx"
+                size="small"
+                style="width: 400px; margin-right: 1rem"
+              />
+              <el-checkbox label="wx" value="wx">是否展示</el-checkbox>
             </el-form-item>
             <el-button
               size="default"

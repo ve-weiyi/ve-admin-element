@@ -28,6 +28,7 @@ export interface UseStompOptions {
 export function useStomp(options: UseStompOptions = {}) {
   // 默认值：brokerURL 从环境变量中获取，token 从 getAccessToken() 获取
   const defaultBrokerURL = import.meta.env.VITE_APP_WS_ENDPOINT || "";
+  console.log("WebSocket端点:", defaultBrokerURL);
 
   const brokerURL = ref(options.brokerURL ?? defaultBrokerURL);
   // 默认配置参数

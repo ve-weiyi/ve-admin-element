@@ -27,7 +27,7 @@
             {{ item.role_key }}
           </el-tag>
         </template>
-        <template #login_type="scope">
+        <template #register_type="scope">
           <el-tag v-if="scope.row.register_type === LoginTypeEnum.EMAIL" type="success">
             邮箱
           </el-tag>

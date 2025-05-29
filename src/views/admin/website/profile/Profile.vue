@@ -13,8 +13,8 @@
               :on-success="handleWebsiteAvatarSuccess"
             >
               <img
-                v-if="websiteConfigForm.website_avatar"
-                :src="websiteConfigForm.website_avatar"
+                v-if="websiteConfigForm.website_info.website_avatar"
+                :src="websiteConfigForm.website_info.website_avatar"
                 alt="img"
                 class="avatar"
               />
@@ -22,21 +22,29 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="网站名称">
-            <el-input v-model="websiteConfigForm.website_name" size="small" style="width: 400px" />
+            <el-input
+              v-model="websiteConfigForm.website_info.website_name"
+              size="small"
+              style="width: 400px"
+            />
           </el-form-item>
           <el-form-item label="网站作者">
             <el-input
-              v-model="websiteConfigForm.website_author"
+              v-model="websiteConfigForm.website_info.website_author"
               size="small"
               style="width: 400px"
             />
           </el-form-item>
           <el-form-item label="网站简介">
-            <el-input v-model="websiteConfigForm.website_intro" size="small" style="width: 400px" />
+            <el-input
+              v-model="websiteConfigForm.website_info.website_intro"
+              size="small"
+              style="width: 400px"
+            />
           </el-form-item>
           <el-form-item label="网站创建日期">
             <el-date-picker
-              v-model="websiteConfigForm.website_create_time"
+              v-model="websiteConfigForm.website_info.website_create_time"
               placeholder="选择日期"
               style="width: 400px"
               type="date"
@@ -45,7 +53,7 @@
           </el-form-item>
           <el-form-item label="网站公告">
             <el-input
-              v-model="websiteConfigForm.website_notice"
+              v-model="websiteConfigForm.website_info.website_notice"
               :rows="5"
               placeholder="请输入公告内容"
               style="width: 400px"
@@ -54,20 +62,20 @@
           </el-form-item>
           <el-form-item label="备案号">
             <el-input
-              v-model="websiteConfigForm.website_record_no"
+              v-model="websiteConfigForm.website_info.website_record_no"
               size="small"
               style="width: 400px"
             />
           </el-form-item>
           <el-form-item label="第三方登录">
-            <el-checkbox-group v-model="websiteConfigForm.social_login_list">
-              <el-checkbox label="github" value="github">Github</el-checkbox>
-              <el-checkbox label="gitee" value="gitee">Gitee</el-checkbox>
-              <el-checkbox label="qq" value="qq">QQ</el-checkbox>
-              <el-checkbox label="wx" value="wx">微信</el-checkbox>
-              <el-checkbox label="weibo" value="weibo">微博</el-checkbox>
-              <el-checkbox label="feishu" value="feishu">飞书</el-checkbox>
-            </el-checkbox-group>
+            <el-checkbox
+              v-for="item in websiteConfigForm.social_login_list"
+              v-model="item.enabled"
+              :key="item.platform"
+              :label="item.name"
+            >
+              {{ item.name }}
+            </el-checkbox>
           </el-form-item>
           <el-button
             size="default"
@@ -81,49 +89,44 @@
       </el-tab-pane>
       <!-- 网站公告 -->
       <el-tab-pane label="社交信息" name="notice">
-        <el-form v-model="websiteConfigForm" label-width="70px">
-          <el-checkbox-group v-model="websiteConfigForm.social_url_list">
-            <el-form-item label="Github">
-              <el-input
-                v-model="websiteConfigForm.github"
-                size="small"
-                style="width: 400px; margin-right: 1rem"
-              />
-              <el-checkbox label="github" value="github">是否展示</el-checkbox>
-            </el-form-item>
-            <el-form-item label="Gitee">
-              <el-input
-                v-model="websiteConfigForm.gitee"
-                size="small"
-                style="width: 400px; margin-right: 1rem"
-              />
-              <el-checkbox label="gitee" value="gitee">是否展示</el-checkbox>
-            </el-form-item>
-            <el-form-item label="QQ">
-              <el-input
-                v-model="websiteConfigForm.qq"
-                size="small"
-                style="width: 400px; margin-right: 1rem"
-              />
-              <el-checkbox label="qq" value="qq">是否展示</el-checkbox>
-            </el-form-item>
-            <el-form-item label="微信">
-              <el-input
-                v-model="websiteConfigForm.wx"
-                size="small"
-                style="width: 400px; margin-right: 1rem"
-              />
-              <el-checkbox label="wx" value="wx">是否展示</el-checkbox>
-            </el-form-item>
-            <el-button
-              size="default"
-              style="margin-left: 4.375rem"
-              type="primary"
-              @click="updateWebsiteConfig"
-            >
-              修改
+        <el-form v-model="websiteConfigForm" label-width="100px">
+          <el-table :data="websiteConfigForm.social_url_list" style="width: 100%" border>
+            <el-table-column prop="name" label="平台名称" width="140">
+              <template #default="scope">
+                <el-input v-model="scope.row.name" placeholder="如: 微信"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="platform" label="平台标识" width="140">
+              <template #default="scope">
+                <el-input v-model="scope.row.platform" placeholder="如: wechat"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="link_url" label="社交地址">
+              <template #default="scope">
+                <el-input v-model="scope.row.link_url" placeholder="社交地址URL"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="enabled" label="是否展示" width="100">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.enabled"></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120">
+              <template #default="scope">
+                <el-button size="small" type="danger" @click="removeSocialUrl(scope.$index)">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="margin-top: 20px">
+            <el-button type="primary" icon="el-icon-plus" @click="addSocialUrl">
+              新增社交平台
             </el-button>
-          </el-checkbox-group>
+            <el-button type="primary" style="margin-left: 20px" @click="updateWebsiteConfig">
+              保存配置
+            </el-button>
+          </div>
         </el-form>
       </el-tab-pane>
       <!-- 修改密码 -->
@@ -168,30 +171,30 @@
             </el-col>
           </el-row>
           <el-form-item label="邮箱通知">
-            <el-radio-group v-model="websiteConfigForm.is_email_notice">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_email_notice">
               <el-radio :label="0" :value="0">关闭</el-radio>
               <el-radio :label="1" :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="评论审核">
-            <el-radio-group v-model="websiteConfigForm.is_comment_review">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_comment_review">
               <el-radio :label="0" :value="0">关闭</el-radio>
               <el-radio :label="1" :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="留言审核">
-            <el-radio-group v-model="websiteConfigForm.is_message_review">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_message_review">
               <el-radio :label="0" :value="0">关闭</el-radio>
               <el-radio :label="1" :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="打赏状态">
-            <el-radio-group v-model="websiteConfigForm.is_reward">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_reward">
               <el-radio :label="0" :value="0">关闭</el-radio>
               <el-radio :label="1" :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-row v-show="websiteConfigForm.is_reward == 1" style="width: 600px">
+          <el-row v-show="websiteConfigForm.website_feature.is_reward == 1" style="width: 600px">
             <el-col :md="12">
               <el-form-item label="微信收款码">
                 <el-upload
@@ -202,8 +205,8 @@
                   :on-success="handleWeiXinSuccess"
                 >
                   <img
-                    v-if="websiteConfigForm.weixin_qr_code"
-                    :src="websiteConfigForm.weixin_qr_code"
+                    v-if="websiteConfigForm.reward_qr_code.weixin_qr_code"
+                    :src="websiteConfigForm.reward_qr_code.weixin_qr_code"
                     class="avatar"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -220,8 +223,8 @@
                   :on-success="handleAlipaySuccess"
                 >
                   <img
-                    v-if="websiteConfigForm.alipay_qr_code"
-                    :src="websiteConfigForm.alipay_qr_code"
+                    v-if="websiteConfigForm.reward_qr_code.alipay_qr_code"
+                    :src="websiteConfigForm.reward_qr_code.alipay_qr_code"
                     class="avatar"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -229,20 +232,26 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="聊天室状态">
-            <el-radio-group v-model="websiteConfigForm.is_chat_room">
+          <el-form-item label="音乐播放器状态">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_music_player">
               <el-radio :label="0" :value="0">关闭</el-radio>
               <el-radio :label="1" :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item v-show="websiteConfigForm.is_chat_room == 1" label="Websocket地址">
+          <el-form-item label="聊天室状态">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_chat_room">
+              <el-radio :label="0" :value="0">关闭</el-radio>
+              <el-radio :label="1" :value="1">开启</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item
+            v-show="websiteConfigForm.website_feature.is_chat_room == 1"
+            label="Websocket地址"
+          >
             <el-input v-model="websiteConfigForm.websocket_url" size="small" style="width: 400px" />
           </el-form-item>
-          <el-form-item label="音乐播放器状态">
-            <el-radio-group v-model="websiteConfigForm.is_music_player">
-              <el-radio :label="0" :value="0">关闭</el-radio>
-              <el-radio :label="1" :value="1">开启</el-radio>
-            </el-radio-group>
+          <el-form-item label="Admin地址">
+            <el-input v-model="websiteConfigForm.admin_url" size="small" style="width: 400px" />
           </el-form-item>
           <el-button
             size="default"
@@ -263,34 +272,37 @@ import { onMounted, ref } from "vue";
 import type { UploadRawFile, UploadRequestOptions } from "element-plus";
 import { ElMessage } from "element-plus";
 import { WebsiteAPI } from "@/api/website";
-import type { WebsiteConfig } from "@/api/types";
 import { uploadFile } from "@/utils/file";
+import { WebsiteConfigVO } from "@/api/types.ts";
 
-const websiteConfigForm = ref<WebsiteConfig>({
-  website_avatar: "",
-  website_name: "",
-  website_author: "",
-  website_intro: "",
-  website_notice: "",
-  website_create_time: null,
-  website_record_no: "",
-  social_login_list: [],
-  admin_url: "",
-  social_url_list: [],
-  qq: "",
-  github: "",
-  gitee: "",
-  user_avatar: "",
+const websiteConfigForm = ref<WebsiteConfigVO>({
+  admin_url: "https://admin.veweiyi.cn",
+  websocket_url: "wss://blog.veweiyi.cn/api/websocket",
   tourist_avatar: "",
-  is_reward: 1,
-  weixin_qr_code: "",
-  alipay_qr_code: "",
-  is_chat_room: 1,
-  websocket_url: "",
-  is_music_player: 1,
-  is_email_notice: 1,
-  is_comment_review: 0,
-  is_message_review: 0,
+  user_avatar: "",
+  website_feature: {
+    is_chat_room: 1,
+    is_comment_review: 0,
+    is_email_notice: 1,
+    is_message_review: 0,
+    is_music_player: 1,
+    is_reward: 0,
+  },
+  website_info: {
+    website_author: "与梦",
+    website_avatar: "https://static.veweiyi.cn/blog/website/tiger-20241115175746.jpg",
+    website_create_time: "2022-01-17",
+    website_intro: "你能做的，岂止如此。",
+    website_name: "与梦",
+    website_notice: "网站搭建问题请联系QQ 791422171。",
+    website_record_no: "桂ICP备2023013735号-1",
+  },
+  reward_qr_code: {
+    alipay_qr_code: "",
+    weixin_qr_code: "",
+  },
+  social_login_list: [],
+  social_url_list: [],
 });
 
 const activeName = ref("info");
@@ -325,7 +337,7 @@ function onUpload(options: UploadRequestOptions) {
 }
 
 function handleWebsiteAvatarSuccess(response) {
-  websiteConfigForm.value.website_avatar = response.data.file_url;
+  websiteConfigForm.value.website_info.website_avatar = response.data.file_url;
   updateWebsiteConfig();
 }
 
@@ -338,11 +350,37 @@ function handleTouristAvatarSuccess(response) {
 }
 
 function handleWeiXinSuccess(response) {
-  websiteConfigForm.value.weixin_qr_code = response.data.file_url;
+  websiteConfigForm.value.reward_qr_code.weixin_qr_code = response.data.file_url;
 }
 
 function handleAlipaySuccess(response) {
-  websiteConfigForm.value.alipay_qr_code = response.data.file_url;
+  websiteConfigForm.value.reward_qr_code.alipay_qr_code = response.data.file_url;
+}
+
+// 新增社交平台
+function addSocialUrl() {
+  websiteConfigForm.value.social_url_list.push({
+    name: "",
+    platform: "",
+    link_url: "",
+    enabled: false,
+  });
+}
+
+// 删除社交平台
+function removeSocialUrl(index) {
+  ElMessageBox.confirm("确定要删除这条社交信息吗?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      websiteConfigForm.value.social_url_list.splice(index, 1);
+      ElMessage.success("删除成功");
+    })
+    .catch(() => {
+      ElMessage.info("已取消删除");
+    });
 }
 </script>
 

@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 import type {
-  AboutMe,
+  AboutMeVO,
   AdminHomeInfo,
   EmptyReq,
   EmptyResp,
@@ -10,7 +10,7 @@ import type {
   GetVisitTrendReq,
   GetVisitTrendResp,
   Server,
-  WebsiteConfig,
+  WebsiteConfigVO,
 } from "./types";
 
 export const WebsiteAPI = {
@@ -33,19 +33,10 @@ export const WebsiteAPI = {
   },
 
   /** 获取关于我的信息 */
-  getAboutMeApi(data?: EmptyReq): Promise<IApiResponse<AboutMe>> {
+  getAboutMeApi(data?: EmptyReq): Promise<IApiResponse<AboutMeVO>> {
     return request({
-      url: "/admin-api/v1/admin/about_me",
+      url: "/admin-api/v1/admin/get_about_me",
       method: "GET",
-      data: data,
-    });
-  },
-
-  /** 更新关于我的信息 */
-  updateAboutMeApi(data?: AboutMe): Promise<IApiResponse<EmptyResp>> {
-    return request({
-      url: "/admin-api/v1/admin/about_me",
-      method: "PUT",
       data: data,
     });
   },
@@ -69,7 +60,7 @@ export const WebsiteAPI = {
   },
 
   /** 获取网站配置 */
-  getWebsiteConfigApi(data?: EmptyReq): Promise<IApiResponse<WebsiteConfig>> {
+  getWebsiteConfigApi(data?: EmptyReq): Promise<IApiResponse<WebsiteConfigVO>> {
     return request({
       url: "/admin-api/v1/admin/get_website_config",
       method: "GET",
@@ -86,8 +77,17 @@ export const WebsiteAPI = {
     });
   },
 
+  /** 更新关于我的信息 */
+  updateAboutMeApi(data?: AboutMeVO): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/admin/update_about_me",
+      method: "PUT",
+      data: data,
+    });
+  },
+
   /** 更新网站配置 */
-  updateWebsiteConfigApi(data?: WebsiteConfig): Promise<IApiResponse<EmptyResp>> {
+  updateWebsiteConfigApi(data?: WebsiteConfigVO): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/admin/update_website_config",
       method: "PUT",

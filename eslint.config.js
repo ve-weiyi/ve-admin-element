@@ -13,9 +13,10 @@ import pluginPrettier from "eslint-plugin-prettier"; // 运行 Prettier 规则
 
 // 解析自动导入配置
 import fs from "fs";
+
 const autoImportConfig = JSON.parse(fs.readFileSync(".eslintrc-auto-import.json", "utf-8"));
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   // 指定检查文件和忽略文件
   {
@@ -97,6 +98,7 @@ export default [
       "vue/no-v-html": "off", // 允许 v-html
       "vue/multi-word-component-names": "off", // 允许单个单词组件名
       "no-unused-vars": "warn", // 设置未使用变量为警告级别
+      "vue/attributes-order": "off",
     },
   },
 ];

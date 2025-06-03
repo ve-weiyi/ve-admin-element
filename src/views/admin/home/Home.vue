@@ -23,7 +23,7 @@
     <!-- 数据统计 -->
     <el-row :gutter="10" class="mt-5">
       <!-- 在线用户数量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never">
           <template #header>
             <div class="flex-x-between">
@@ -57,7 +57,7 @@
       </el-col>
 
       <!-- 访客数(UV) -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
           <template #template>
             <el-card>
@@ -117,7 +117,7 @@
       </el-col>
 
       <!-- 浏览量(PV) -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
           <template #template>
             <el-card>
@@ -177,7 +177,7 @@
       </el-col>
 
       <!-- 用户量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never" :loading="homeInfoLoading">
           <template #header>
             <div class="flex-x-between">
@@ -201,7 +201,7 @@
       </el-col>
 
       <!-- 文章量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never" :loading="homeInfoLoading">
           <template #header>
             <div class="flex-x-between">
@@ -225,7 +225,7 @@
       </el-col>
 
       <!-- 留言量 -->
-      <el-col :span="4">
+      <el-col :xs="8" :sm="8" :md="4">
         <el-card shadow="never" :loading="homeInfoLoading">
           <template #header>
             <div class="flex-x-between">

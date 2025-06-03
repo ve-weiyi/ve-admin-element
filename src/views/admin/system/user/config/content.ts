@@ -69,6 +69,12 @@ const contentConfig: IContentConfig<AccountQuery> = {
       align: "center",
     },
     {
+      label: "登录邮箱",
+      prop: "email",
+      width: 120,
+      align: "center",
+    },
+    {
       label: "角色列表",
       prop: "roles",
       minWidth: 140,

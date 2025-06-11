@@ -1,5 +1,4 @@
 import request from "@/utils/request";
-import type {} from "./types";
 
 export const WebsocketAPI = {
   /** WebSocket消息 */

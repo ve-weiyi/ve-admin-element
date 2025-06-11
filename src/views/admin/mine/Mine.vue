@@ -333,13 +333,13 @@ import {
 } from "@/api/types.ts";
 import { UserAPI } from "@/api/user.ts";
 import { AuthAPI } from "@/api/auth.ts";
-import { UploadAPI } from "@/api/upload.ts";
 import { loginHistoryColumns } from "./columns.tsx";
 import { thirdPlatformList } from "@/utils/third.ts";
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
 import { formatDateTime } from "@/utils/date.ts";
+import { uploadFile } from "@/utils/file.ts";
 
 const userProfile = ref<UserInfoResp>(<UserInfoResp>{});
 
@@ -545,19 +545,18 @@ const handleFileChange = async (event: Event) => {
   if (file) {
     // 调用文件上传API
     try {
-      const res = await UploadAPI.uploadFileApi({
-        file: file,
-        file_path: "avatar",
-      });
-      // 更新用户头像
-      userProfile.value.avatar = res.data.file_url;
-      // 更新用户信息
-      await UserAPI.updateUserAvatarApi({
-        avatar: res.data.file_url,
+      uploadFile(file, "blog/avatar/").then((res) => {
+        // 更新用户头像
+        userProfile.value.avatar = res.data.file_url;
+        // 更新用户信息
+        UserAPI.updateUserAvatarApi({
+          avatar: res.data.file_url,
+        }).then(() => {
+          ElMessage.success("头像上传成功");
+        });
       });
     } catch (error) {
-      console.error("头像上传失败：" + error);
-      ElMessage.error("头像上传失败");
+      ElMessage.error("头像上传失败" + error);
     }
   }
 };

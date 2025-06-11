@@ -5,6 +5,7 @@ import IconSelect from "@/components/IconSelect/index.vue";
 import type { MenuBackVO, MenuNewReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 import { MenuTypeEnum } from "@/enums/MenuTypeEnum";
+import { CirclePlusFilled, DeleteFilled, QuestionFilled } from "@element-plus/icons-vue";
 
 const menuForm = defineModel<MenuNewReq>({
   default: () => {},
@@ -120,7 +121,9 @@ onMounted(() => {
               <template #content>
                 如果需要开启缓存，需保证页面 defineOptions 中的 name 与此处一致，建议使用驼峰。
               </template>
-              <i-ep-QuestionFilled class="inline-block" />
+              <el-icon style="vertical-align: -0.15em" size="16">
+                <QuestionFilled />
+              </el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -139,7 +142,9 @@ onMounted(() => {
                 定义应用中不同页面对应的 URL 路径，目录需以 / 开头，菜单项不用。例如：系统管理目录
                 /system，系统管理下的用户管理菜单 user。
               </template>
-              <i-ep-QuestionFilled class="inline-block" />
+              <el-icon style="vertical-align: -0.15em" size="16">
+                <QuestionFilled />
+              </el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -159,7 +164,9 @@ onMounted(() => {
               <template #content>
                 组件页面完整路径，相对于 src/views/，如 system/user/index，缺省后缀 .vue
               </template>
-              <i-ep-QuestionFilled class="inline-block" />
+              <el-icon style="vertical-align: -0.15em" size="16">
+                <QuestionFilled />
+              </el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -176,7 +183,9 @@ onMounted(() => {
             路由参数
             <el-tooltip placement="bottom" effect="light">
               <template #content>组件页面使用 `useRoute().query.参数名` 获取路由参数值。</template>
-              <i-ep-QuestionFilled class="inline-block" />
+              <el-icon style="vertical-align: -0.15em" size="16">
+                <QuestionFilled />
+              </el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -235,7 +244,9 @@ onMounted(() => {
                 <br />
                 如果是叶子节点，请选择“否”。
               </template>
-              <i-ep-QuestionFilled class="inline-block" />
+              <el-icon style="vertical-align: -0.15em" size="16">
+                <QuestionFilled />
+              </el-icon>
             </el-tooltip>
           </div>
         </template>

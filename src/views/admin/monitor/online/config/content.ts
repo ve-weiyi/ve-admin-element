@@ -3,8 +3,8 @@ import type { AccountQuery } from "@/api/types";
 import { AccountAPI } from "@/api/account";
 
 const contentConfig: IContentConfig<AccountQuery> = {
-  pageName: "sys:user",
-  pageTitle: "用户管理",
+  pageName: "monitor:online",
+  pageTitle: "在线用户",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -97,7 +97,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       sortable: true,
       templet: "date",
       dateFormat: "YYYY/MM/DD HH:mm:ss",
-    }
+    },
   ],
 };
 

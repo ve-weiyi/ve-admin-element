@@ -4,7 +4,7 @@ import { ArticleAPI } from "@/api/article";
 import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/ArticleEnum";
 
 const contentConfig: IContentConfig<ArticleQuery> = {
-  pageName: "sys:user",
+  pageName: "blog:article",
   pageTitle: "文章管理",
   table: {
     border: true,
@@ -22,15 +22,15 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       list: res.data.list || [],
     };
   },
-  modifyAction: function (row) {
-    const data = {
-      id: row.id as number,
-      is_top: row.value as number,
-    };
-    return ArticleAPI.topArticleApi(data);
-  },
   indexAction: function (query: ArticleQuery) {
     return ArticleAPI.findArticleListApi(query);
+  },
+  modifyAction(row, field, value) {
+    const data = {
+      id: row.id as number,
+      is_top: row.is_top as number,
+    };
+    return ArticleAPI.topArticleApi(data);
   },
   pk: "id",
   toolbar: [

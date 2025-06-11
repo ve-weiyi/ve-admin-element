@@ -3,8 +3,8 @@ import type { VisitLogQuery } from "@/api/types";
 import { VisitLogAPI } from "@/api/visit_log";
 
 const contentConfig: IContentConfig<VisitLogQuery> = {
-  pageName: "sys:user",
-  pageTitle: "留言管理",
+  pageName: "log:visit",
+  pageTitle: "服务日志",
   table: {
     border: true,
     highlightCurrentRow: true,

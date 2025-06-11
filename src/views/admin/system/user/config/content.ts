@@ -22,11 +22,10 @@ const contentConfig: IContentConfig<AccountQuery> = {
       list: res.data.list || [],
     };
   },
-  modifyAction: function (data) {
-    console.log("修改请求", data);
+  modifyAction(row, field, value) {
     return AccountAPI.updateAccountStatusApi({
-      user_id: data.user_id,
-      status: data.value as number,
+      user_id: row.user_id,
+      status: row.status,
     });
   },
   indexAction: function (query: AccountQuery) {

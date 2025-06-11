@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { FileQuery } from "@/api/types";
-import { FileAPI } from "@/api/file";
+import type { ListUploadFileReq } from "@/api/types";
+import { UploadAPI } from "@/api/upload";
 
-const contentConfig: IContentConfig<FileQuery> = {
+const contentConfig: IContentConfig<ListUploadFileReq> = {
   pageName: "resource:file",
   pageTitle: "文件管理",
   table: {
@@ -12,7 +12,7 @@ const contentConfig: IContentConfig<FileQuery> = {
   pagination: {
     background: true,
     layout: "prev,pager,next,jumper,total,sizes",
-    pageSize: 10,
+    pageSize: 20,
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
@@ -22,28 +22,19 @@ const contentConfig: IContentConfig<FileQuery> = {
     };
   },
   indexAction: function (query) {
-    if (!query.file_path) {
-      query.file_path = "/";
-    }
 
-    return FileAPI.findFileListApi(query);
+    return UploadAPI.listUploadFileApi({
+      limit: 20,
+      file_path: query.file_path,
+    });
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return FileAPI.deletesFileApi(data);
+    return UploadAPI.deletesUploadFileApi({
+      file_paths: ids.split(","),
+    });
   },
-  pk: "id",
+  pk: "file_path",
   toolbar: [
-    {
-      name: "addFolder",
-      icon: "plus",
-      text: "新增目录",
-      auth: "addFolder",
-      type: "primary",
-    },
     {
       name: "addFile",
       icon: "plus",
@@ -87,12 +78,6 @@ const contentConfig: IContentConfig<FileQuery> = {
       templet: "custom",
     },
     {
-      label: "文件目录",
-      prop: "file_path",
-      width: 140,
-      align: "left",
-    },
-    {
       label: "文件名",
       prop: "file_name",
       minWidth: 200,
@@ -113,15 +98,8 @@ const contentConfig: IContentConfig<FileQuery> = {
       templet: "custom",
     },
     {
-      label: "创建者",
-      prop: "creator",
-      width: 120,
-      align: "left",
-      templet: "custom",
-    },
-    {
-      label: "创建时间",
-      prop: "created_at",
+      label: "更新时间",
+      prop: "updated_at",
       width: 170,
       align: "center",
       sortable: true,

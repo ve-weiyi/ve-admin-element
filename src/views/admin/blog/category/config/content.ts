@@ -26,7 +26,7 @@ const contentConfig: IContentConfig<CategoryQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return CategoryAPI.batchDeleteCategoryApi(data);
+    return CategoryAPI.deletesCategoryApi(data);
   },
   indexAction: function (params: CategoryQuery) {
     if (!params.sorts) {

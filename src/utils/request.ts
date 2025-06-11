@@ -13,7 +13,7 @@ const HeaderUid = "Uid";
 const HeaderToken = "Token";
 const HeaderAuthorization = "Authorization";
 
-const requests = axios.create({
+const axiosInstance = axios.create({
   baseURL: "",
   timeout: 10000,
   withCredentials: false, // 禁用 Cookie
@@ -27,16 +27,21 @@ const requests = axios.create({
 });
 
 // 请求拦截器
-requests.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     // 请求携带用户token
+    const uid = getUid();
+    const accessToken = getAccessToken();
+    // 签名
     const timestamp = Math.floor(Date.now() / 1000).toString();
+    const sign = MD5(`${timestamp}${uid}${accessToken}`).toString();
 
     config.headers = Object.assign({}, config.headers, {
       [HeaderAppName]: "admin-web",
-      [HeaderUid]: getUid(),
-      [HeaderAuthorization]: getAccessToken(),
+      [HeaderUid]: uid,
+      [HeaderAuthorization]: accessToken,
       [HeaderTimestamp]: timestamp,
+      [HeaderXTsToken]: sign,
     });
     return config;
   },
@@ -45,7 +50,7 @@ requests.interceptors.request.use(
   }
 );
 // 配置响应拦截器
-requests.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
     if (response.config.responseType === "blob" || response.config.responseType === "arraybuffer") {
@@ -93,4 +98,4 @@ requests.interceptors.response.use(
 );
 
 // 对外暴露
-export default requests;
+export default axiosInstance;

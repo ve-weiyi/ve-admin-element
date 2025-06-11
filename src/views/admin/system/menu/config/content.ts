@@ -3,7 +3,7 @@ import type { MenuQuery } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 
 const contentConfig: IContentConfig<MenuQuery> = {
-  pageName: "sys:user",
+  pageName: "sys:menu",
   pageTitle: "菜单管理",
   table: {
     border: true,
@@ -30,7 +30,7 @@ const contentConfig: IContentConfig<MenuQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return MenuAPI.batchDeleteMenuApi(data);
+    return MenuAPI.deletesMenuApi(data);
   },
   indexAction: function (params: MenuQuery) {
     if (!params.sorts) {

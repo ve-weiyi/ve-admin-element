@@ -12,6 +12,7 @@
             plain
             icon="Promotion"
             :disabled="selectPhotoIdList.length == 0"
+            @click="handleRecover"
           >
             批量恢复
           </el-button>
@@ -40,7 +41,7 @@
       </el-row>
       <!-- 空状态 -->
       <el-empty
-        v-if="photoList.length === 0"
+        v-if="photoList == null || photoList.length === 0"
         style="width: 100%; height: 500px"
         description="暂无照片"
       />
@@ -62,18 +63,6 @@
             <el-checkbox :value="photo.id">
               <template #default>
                 <div class="photo-item">
-                  <div class="photo-operation">
-                    <el-dropdown @command="handleCommand">
-                      <el-icon style="color: #fff">
-                        <MoreFilled />
-                      </el-icon>
-                      <template #dropdown>
-                        <el-dropdown-menu>
-                          <el-dropdown-item :command="photo">编辑</el-dropdown-item>
-                        </el-dropdown-menu>
-                      </template>
-                    </el-dropdown>
-                  </div>
                   <el-image
                     class="photo-cover"
                     fit="cover"
@@ -98,65 +87,46 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-      <!-- 图片预览 -->
-      <el-dialog v-model="dialogVisible" append-to-body>
-        <img :src="dialogImageUrl" style="max-width: 100%" />
-      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { FormInstance, UploadFile, UploadUserFile } from "element-plus";
 import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useRoute } from "vue-router";
-import { AlbumAPI } from "@/api/album.ts";
 import { PhotoAPI } from "@/api/photo.ts";
-import type { AlbumBackVO, PhotoBackVO, PhotoNewReq, PhotoQuery } from "@/api/types.ts";
+import type { PhotoBackVO, PhotoQuery } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
-const photoFormRef = ref<FormInstance>();
 
 const route = useRoute();
 const data = reactive({
   count: 0,
   loading: false,
-  upload: false,
   update: false,
   checkAll: false,
   isIndeterminate: false,
-  dialogImageUrl: "",
-  dialogVisible: false,
   queryParams: {
     page: 1,
     page_size: 10,
     total: 10,
   } as PhotoQuery,
-  photoForm: {} as PhotoNewReq,
   photoIdList: [] as number[],
   selectPhotoIdList: [] as number[],
   photoList: [] as PhotoBackVO[],
-  albumInfo: {} as AlbumBackVO,
-  uploadList: [] as UploadUserFile[],
 });
 const {
   count,
   loading,
-  upload,
-  update,
   checkAll,
   isIndeterminate,
-  dialogImageUrl,
-  dialogVisible,
   queryParams,
-  photoForm,
   photoIdList,
   selectPhotoIdList,
   photoList,
-  albumInfo,
-  uploadList,
 } = toRefs(data);
+
 watch(
   () => photoList.value,
   (newValue) => {
@@ -185,31 +155,45 @@ const handleCheckedPhotoChange = (value: number[]) => {
   checkAll.value = checkedCount === photoIdList.value.length;
   isIndeterminate.value = checkedCount > 0 && checkedCount < photoIdList.value.length;
 };
-const handleCommand = (photo: PhotoBackVO) => {
-  photoFormRef.value?.resetFields();
-  photoForm.value = photo;
-  update.value = true;
+
+const handleRecover = () => {
+  ElMessageBox.confirm("确认恢复已选中的数据项?", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    PhotoAPI.preDeletePhotoApi({
+      ids: selectPhotoIdList.value,
+      is_delete: 0,
+    })
+      .then((res) => {
+        getList();
+        selectPhotoIdList.value = [];
+        isIndeterminate.value = false;
+      })
+      .catch((error) => {
+        ElMessage.error("恢复失败: " + error.message);
+      });
+  });
 };
 
-const handlePictureCardPreview = (file: UploadFile) => {
-  dialogImageUrl.value = file.url!;
-  dialogVisible.value = true;
-};
-const handleMove = () => {};
 const handleDelete = () => {
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  })
-    .then(() => {
-      PhotoAPI.batchDeletePhotoApi({ ids: selectPhotoIdList.value }).then((res) => {
+  }).then(() => {
+    PhotoAPI.deletesPhotoApi({ ids: selectPhotoIdList.value })
+      .then((res) => {
         getList();
         selectPhotoIdList.value = [];
         isIndeterminate.value = false;
+        checkAll.value = false;
+      })
+      .catch((error) => {
+        ElMessage.error("删除失败: " + error.message);
       });
-    })
-    .catch(() => {});
+  });
 };
 
 const getList = () => {
@@ -217,7 +201,8 @@ const getList = () => {
   const data: PhotoQuery = {
     page: 1,
     page_size: 10,
-    album_id: albumId,
+    // album_id: albumId,
+    is_delete: 1, // 只查询已删除的照片
   };
 
   PhotoAPI.findPhotoListApi(data).then((res) => {
@@ -227,19 +212,7 @@ const getList = () => {
   });
 };
 
-function getAlbumInfo(id: number) {
-  AlbumAPI.getAlbumApi({
-    id,
-  }).then((res) => {
-    console.log("getAlbumInfo", res);
-    albumInfo.value = res.data;
-    document.title = `${albumInfo.value.album_name} - 相册`;
-  });
-}
-
-const albumId = route.params.id ? parseInt(route.params.id as string) : 0; // 假设路由参数名
 onMounted(() => {
-  getAlbumInfo(albumId);
   getList();
 });
 </script>

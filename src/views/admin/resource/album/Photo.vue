@@ -28,6 +28,7 @@
             plain
             icon="Promotion"
             :disabled="selectPhotoIdList.length == 0"
+            @click="handleMove"
           >
             移动
           </el-button>
@@ -53,7 +54,8 @@
           </el-checkbox>
         </el-col>
 
-        <right-toolbar :search="false" @query-table="getList" />
+        <right-toolbar :search="false" @query-table="getList">
+        </right-toolbar>
       </el-row>
       <!-- 空状态 -->
       <el-empty
@@ -115,60 +117,60 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-      <!-- 修改对话框 -->
-      <el-dialog v-model="update" title="修改照片" width="550px" append-to-body>
-        <el-form ref="photoFormRef" label-width="100px" :model="photoForm" :rules="rules">
-          <el-form-item label="照片名称" prop="photoName">
-            <el-input
-              v-model="photoForm.photo_name"
-              placeholder="请输入照片名称"
-              style="width: 250px"
-            />
-          </el-form-item>
-          <el-form-item label="照片描述" prop="photoDesc">
-            <el-input
-              v-model="photoForm.photo_desc"
-              placeholder="请输入照片描述"
-              style="width: 250px"
-            />
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button type="primary" @click="submitForm">确 定</el-button>
-            <el-button @click="update = false">取 消</el-button>
-          </div>
-        </template>
-      </el-dialog>
-      <!-- 上传对话框 -->
-      <el-dialog v-model="upload" title="上传照片" width="60%" append-to-body>
-        <multi-image-upload
-          v-model:file-list="uploadList"
-          class="upload-container"
-          list-type="picture-card"
-          :show-file-list="true"
-          upload-path="/photo"
-        />
-        <template #footer>
-          <div class="dialog-footer">
-            <div>共上传{{ uploadList?.length }}张照片</div>
-            <div>
-              <el-button type="primary" :disabled="uploadList.length == 0" @click="handleAdd">
-                确 定
-              </el-button>
-              <el-button @click="upload = false">取 消</el-button>
-            </div>
-          </div>
-        </template>
-      </el-dialog>
     </el-card>
+    <!-- 修改对话框 -->
+    <el-dialog v-model="update" title="修改照片" width="550px" append-to-body>
+      <el-form ref="photoFormRef" label-width="100px" :model="photoForm" :rules="rules">
+        <el-form-item label="照片名称" prop="photo_name">
+          <el-input
+            v-model="photoForm.photo_name"
+            placeholder="请输入照片名称"
+            style="width: 250px"
+          />
+        </el-form-item>
+        <el-form-item label="照片描述" prop="photo_desc">
+          <el-input
+            v-model="photoForm.photo_desc"
+            placeholder="请输入照片描述"
+            style="width: 250px"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="update = false">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 上传对话框 -->
+    <el-dialog v-model="upload" title="上传照片" width="60%" append-to-body>
+      <multi-image-upload
+        v-model:file-list="uploadList"
+        class="upload-container"
+        list-type="picture-card"
+        :show-file-list="true"
+        upload-path="blog/photo/"
+      />
+      <template #footer>
+        <div class="dialog-footer">
+          <div>共上传{{ uploadList?.length }}张照片</div>
+          <div>
+            <el-button type="primary" :disabled="uploadList.length == 0" @click="handleAdd">
+              确 定
+            </el-button>
+            <el-button @click="upload = false">取 消</el-button>
+          </div>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { FormInstance, FormRules, UploadUserFile } from "element-plus";
 import { onMounted, reactive, ref, toRefs, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { AlbumAPI } from "@/api/album.ts";
 import { PhotoAPI } from "@/api/photo.ts";
 import type { AlbumBackVO, PhotoBackVO, PhotoNewReq, PhotoQuery } from "@/api/types.ts";
@@ -180,7 +182,6 @@ const rules = reactive<FormRules>({
   photo_name: [{ required: true, message: "请输入照片名称", trigger: "blur" }],
 });
 
-const route = useRoute();
 const data = reactive({
   count: 0,
   loading: false,
@@ -188,10 +189,9 @@ const data = reactive({
   update: false,
   checkAll: false,
   isIndeterminate: false,
-  dialogImageUrl: "",
   queryParams: {
-    current: 1,
-    size: 10,
+    page: 1,
+    page_size: 10,
     total: 10,
   } as PhotoQuery,
   photoForm: {} as PhotoNewReq,
@@ -208,7 +208,6 @@ const {
   update,
   checkAll,
   isIndeterminate,
-  dialogImageUrl,
   queryParams,
   photoForm,
   photoIdList,
@@ -251,7 +250,10 @@ const handleCommand = (photo: PhotoBackVO) => {
   update.value = true;
 };
 
-const handleMove = () => {};
+const handleMove = () => {
+  ElMessage.warning("该功能暂未实现");
+};
+
 const handleDelete = () => {
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
     confirmButtonText: "确定",
@@ -259,7 +261,10 @@ const handleDelete = () => {
     type: "warning",
   })
     .then(() => {
-      PhotoAPI.batchDeletePhotoApi({ ids: selectPhotoIdList.value }).then((res) => {
+      PhotoAPI.preDeletePhotoApi({
+        ids: selectPhotoIdList.value,
+        is_delete: 1,
+      }).then((res) => {
         getList();
         selectPhotoIdList.value = [];
         isIndeterminate.value = false;
@@ -268,7 +273,6 @@ const handleDelete = () => {
     .catch(() => {});
 };
 const handleAdd = () => {
-  let photoUrlList: string[] = [];
   if (uploadList.value.length > 0) {
     uploadList.value.forEach((item) => {
       // photoUrlList.push(item.url);
@@ -305,8 +309,8 @@ const submitForm = () => {
 const getList = () => {
   loading.value = true;
   const data: PhotoQuery = {
-    page: 1,
-    page_size: 10,
+    page: queryParams.value.page,
+    page_size: queryParams.value.page_size,
     album_id: albumId,
   };
 
@@ -327,6 +331,7 @@ function getAlbumInfo(id: number) {
   });
 }
 
+const route = useRoute();
 const albumId = route.params.id ? parseInt(route.params.id as string) : 0; // 假设路由参数名
 onMounted(() => {
   getAlbumInfo(albumId);

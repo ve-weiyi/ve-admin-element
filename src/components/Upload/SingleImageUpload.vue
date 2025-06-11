@@ -1,5 +1,6 @@
 <!-- 单图上传组件 -->
 <template>
+  <!-- 拖拽上传 -->
   <el-upload
     v-show="imgUrl === ''"
     multiple
@@ -86,8 +87,6 @@ const imgUrl = defineModel("modelValue", {
   type: String,
   required: true,
 });
-
-console.log("props", imgUrl.value);
 
 /**
  * 上传前

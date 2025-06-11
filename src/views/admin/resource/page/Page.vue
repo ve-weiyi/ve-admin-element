@@ -78,41 +78,31 @@
           {{ dialogTitle }}
         </div>
       </template>
-      <el-form ref="formRef" :model="formData" label-width="80px" size="default">
-        <el-form-item label="页面名称">
-          <el-input v-model="formData.page_name" style="width: 360px" />
+      <el-form
+        ref="addFormRef"
+        :model="addFormData"
+        :rules="addFormRules"
+        label-width="80px"
+        size="default"
+      >
+        <el-form-item label="页面名称" prop="page_name">
+          <el-input v-model="addFormData.page_name" />
         </el-form-item>
-        <el-form-item label="页面标签">
-          <el-input v-model="formData.page_label" style="width: 360px" />
+        <el-form-item label="页面标签" prop="page_label">
+          <el-input v-model="addFormData.page_label" />
         </el-form-item>
-        <el-form-item label="上传封面">
+        <el-form-item label="上传封面" prop="page_cover">
           <el-radio-group v-model="uploadType">
-            <el-radio label="upload">上传文件</el-radio>
-            <el-radio label="select">选择文件</el-radio>
-            <el-radio label="input">填写链接</el-radio>
+            <el-radio value="upload">上传文件</el-radio>
+            <el-radio value="select">选择文件</el-radio>
+            <el-radio value="input">填写链接</el-radio>
           </el-radio-group>
-          <option-image-upload v-model="formData.page_cover" :upload-type="uploadType" />
         </el-form-item>
+        <option-image-upload v-model="addFormData.page_cover" :upload-type="uploadType" />
       </el-form>
       <template #footer>
-        <el-button @click="cancelSave">取 消</el-button>
-        <el-button type="primary" @click="confirmSave">确 定</el-button>
-      </template>
-    </el-dialog>
-    <!-- 删除对话框 -->
-    <el-dialog v-model="deleteModalVisible" width="30%">
-      <template #header>
-        <div class="dialog-title-container">
-          <el-icon style="color: #f90">
-            <Warning />
-          </el-icon>
-          提示
-        </div>
-      </template>
-      <div style="font-size: 1rem">是否删除该页面？</div>
-      <template #footer>
-        <el-button @click="cancelDelete">取 消</el-button>
-        <el-button type="primary" @click="confirmDelete">确 定</el-button>
+        <el-button @click="addFormCancel">取 消</el-button>
+        <el-button type="primary" @click="addFormSubmit">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -121,11 +111,11 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
+import { ElMessage, FormInstance, FormRules } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import "@/styles/table.scss";
-import { PageAPI } from "@/api/page";
-import type { PageBackVO, PageNewReq, PageQueryReq } from "@/api/types";
+import { PageAPI } from "@/api/page.ts";
+import type { PageBackVO, PageNewReq, PageQueryReq } from "@/api/types.ts";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
 
 const route = useRoute();
@@ -175,68 +165,80 @@ const initFormData = <PageNewReq>{
   page_cover: "",
 };
 
-const addModalVisible = ref(false);
-const formData = ref<PageNewReq>({ ...initFormData });
 const uploadType = ref("upload");
 
 const deleteModalVisible = ref(false);
 const deleteId = ref(0);
 
 const dialogTitle = computed(() => {
-  if (formData.value.id == 0) {
+  if (addFormData.id == 0) {
     return "添加页面";
   } else {
     return "编辑页面";
   }
 });
 
+const addModalVisible = ref(false);
+const addFormRef = ref<FormInstance>();
+const addFormRules = reactive<FormRules<PageNewReq>>({
+  page_name: [{ required: true, message: "请输入页面名称", trigger: "blur" }],
+  page_label: [{ required: true, message: "请输入页面标签", trigger: "blur" }],
+  page_cover: [{ required: true, message: "请上传页面封面", trigger: "blur" }],
+});
+const addFormData = reactive<PageNewReq>({ ...initFormData });
+
+function addFormSubmit() {
+  addFormRef.value?.validate((valid: boolean) => {
+    console.log("addFormSubmit", valid);
+    if (valid) {
+      let data = { ...addFormData };
+      if (data.id == 0) {
+        PageAPI.addPageApi(data).then((res) => {
+          addModalVisible.value = false;
+          ElMessage.success("创建成功");
+          refreshList();
+        });
+      } else {
+        PageAPI.updatePageApi(data).then((res) => {
+          addModalVisible.value = false;
+          ElMessage.success("编辑成功");
+          refreshList();
+        });
+      }
+    }
+  });
+}
+
+function addFormCancel() {
+  addModalVisible.value = false;
+}
+
 function handleAdd(data?: PageBackVO) {
   if (data) {
-    formData.value = data;
+    Object.assign(addFormData, data);
   } else {
-    formData.value = { ...initFormData };
+    Object.assign(addFormData, initFormData);
   }
   addModalVisible.value = true;
 }
 
-function confirmSave() {
-  let data = formData.value;
-  console.log("confirmSave", data);
-  if (data.id == 0) {
-    PageAPI.addPageApi(data).then((res) => {
-      addModalVisible.value = false;
-      ElMessage.success("创建成功");
-      refreshList();
-    });
-  } else {
-    PageAPI.updatePageApi(data).then((res) => {
-      addModalVisible.value = false;
-      ElMessage.success("编辑成功");
-      refreshList();
-    });
-  }
-}
-
-function cancelSave() {
-  addModalVisible.value = false;
-}
-
 function handleDelete(data?: PageBackVO) {
-  deleteId.value = data.id;
-  deleteModalVisible.value = true;
-}
-
-function confirmDelete() {
-  console.log("confirmDelete", deleteId.value);
-  PageAPI.deletePageApi({ id: deleteId.value }).then((res) => {
-    deleteModalVisible.value = false;
-    ElMessage.success("删除成功");
-    refreshList();
+  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    console.log("confirmDelete", deleteId.value);
+    PageAPI.deletePageApi({ id: deleteId.value })
+      .then((res) => {
+        deleteModalVisible.value = false;
+        ElMessage.success("删除成功");
+        refreshList();
+      })
+      .catch((error) => {
+        ElMessage.error("删除失败: " + error.message);
+      });
   });
-}
-
-function cancelDelete() {
-  deleteModalVisible.value = false;
 }
 </script>
 

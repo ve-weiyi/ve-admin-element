@@ -35,7 +35,7 @@
             class="operation-btn"
             v-model:file-list="uploadList"
             :show-file-list="false"
-            upload-path="/talk"
+            upload-path="blog/talk/"
           >
             <el-icon>
               <PictureFilled />
@@ -86,7 +86,7 @@
         list-type="picture-card"
         v-model:file-list="uploadList"
         :show-file-list="true"
-        upload-path="/talk"
+        upload-path="blog/talk/"
       />
     </div>
   </el-card>

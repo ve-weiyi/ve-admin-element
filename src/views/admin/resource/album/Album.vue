@@ -27,25 +27,26 @@
           <el-button icon="plus" size="default" type="primary" @click="handleAdd()">
             新建相册
           </el-button>
+        </el-col>
+        <right-toolbar v-model:showSearch="showSearch" @query-table="refreshList">
           <el-button
             icon="delete"
             size="default"
             style="margin-right: 1rem"
             text
             type="primary"
-            @click="checkDelete"
+            @click="routeToDelete"
           >
             回收站
           </el-button>
-        </el-col>
-        <right-toolbar v-model:showSearch="showSearch" @query-table="refreshList" />
+        </right-toolbar>
       </el-row>
       <!-- 空状态 -->
       <el-empty v-if="!tableData" description="暂无相册" />
       <!-- 相册列表 -->
       <el-row v-loading="loading" :gutter="12" class="album-container">
         <el-col v-for="item in tableData" :key="item.id" :md="6">
-          <div class="album-item" @click="checkPhoto(item)">
+          <div class="album-item" @click="routeToPhoto(item)">
             <!-- 相册操作 -->
             <div class="album-operation">
               <el-dropdown>
@@ -87,62 +88,50 @@
       />
     </el-card>
     <!-- 新增模态框 -->
-    <el-dialog v-model="addModalVisible" top="10vh" width="35%">
+    <el-dialog v-model="addModalVisible" width="35%">
       <template #header>
         <div class="dialog-title-container">
           {{ dialogTitle }}
         </div>
       </template>
-      <el-form ref="formRef" :model="formData" label-width="80px" size="default">
-        <el-form-item label="相册名称">
-          <el-input v-model="formData.album_name" style="width: 360px" />
+      <el-form
+        ref="addFormRef"
+        :model="addFormData"
+        :rules="addFormRules"
+        label-width="80px"
+        size="default"
+      >
+        <el-form-item label="相册名称" prop="album_name">
+          <el-input v-model="addFormData.album_name" />
         </el-form-item>
-        <el-form-item label="相册描述">
-          <el-input v-model="formData.album_desc" style="width: 360px" />
+        <el-form-item label="相册描述" prop="album_desc">
+          <el-input v-model="addFormData.album_desc" />
         </el-form-item>
-        <el-form-item label="封面">
+        <el-form-item label="相册封面" prop="album_cover">
           <el-radio-group v-model="isUpload">
-            <el-radio :label="true">上传文件</el-radio>
-            <el-radio :label="false">填写链接</el-radio>
+            <el-radio :value="true">上传文件</el-radio>
+            <el-radio :value="false">填写链接</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="相册封面" style="width: 360px">
+        <div>
           <single-image-upload
             v-if="isUpload"
-            v-model="formData.album_cover"
+            v-model="addFormData.album_cover"
             accept="image/*"
-            upload-path="/album"
-            height="180px"
-            width="360px"
+            upload-path="blog/album/"
           />
-          <el-input v-else v-model="formData.album_cover" placeholder="请输入图片链接" />
-        </el-form-item>
-        <el-form-item label="发布形式">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="1">公开</el-radio>
-            <el-radio :label="2">私密</el-radio>
+          <el-input v-else v-model="addFormData.album_cover" placeholder="请输入图片链接" />
+        </div>
+        <el-form-item label="发布形式" prop="status">
+          <el-radio-group v-model="addFormData.status">
+            <el-radio :value="1">公开</el-radio>
+            <el-radio :value="2">私密</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="cancelSave">取 消</el-button>
-        <el-button type="primary" @click="confirmSave">确 定</el-button>
-      </template>
-    </el-dialog>
-    <!-- 删除对话框 -->
-    <el-dialog v-model="deleteModalVisible" width="30%">
-      <template #header>
-        <div class="dialog-title-container">
-          <el-icon style="color: #f90">
-            <Warning />
-          </el-icon>
-          提示
-        </div>
-      </template>
-      <div style="font-size: 1rem">是否删除该相册？</div>
-      <template #footer>
-        <el-button @click="cancelDelete">取 消</el-button>
-        <el-button type="primary" @click="confirmDelete">确 定</el-button>
+        <el-button @click="addFormCancel">取 消</el-button>
+        <el-button type="primary" @click="addFormSubmit">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -151,15 +140,12 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
+import { ElMessage, FormInstance, FormRules } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import { AlbumAPI } from "@/api/album.ts";
 import type { AlbumBackVO, AlbumNewReq, AlbumQuery } from "@/api/types.ts";
-
-const route = useRoute();
-const router = useRouter();
 
 const loading = ref(false);
 
@@ -207,78 +193,92 @@ const initFormData = <AlbumNewReq>{
   is_delete: 0,
 };
 
-const addModalVisible = ref(false);
-const formData = ref<AlbumNewReq>({ ...initFormData });
 const isUpload = ref(true);
 
-const deleteModalVisible = ref(false);
-const deleteId = ref(0);
-
 const dialogTitle = computed(() => {
-  if (formData.value.id == 0) {
+  if (addFormData.id == 0) {
     return "添加相册";
   } else {
     return "编辑相册";
   }
 });
 
+const addModalVisible = ref(false);
+const addFormRef = ref<FormInstance>();
+const addFormRules = reactive<FormRules<AlbumNewReq>>({
+  album_name: [{ required: true, message: "请输入相册名称", trigger: "blur" }],
+  album_desc: [{ required: true, message: "请输入相册描述", trigger: "blur" }],
+  album_cover: [{ required: true, message: "请上传相册封面", trigger: "blur" }],
+  status: [{ required: true, message: "请选择发布形式", trigger: "change" }],
+});
+const addFormData = reactive<AlbumNewReq>({ ...initFormData });
+
+function addFormSubmit() {
+  addFormRef.value?.validate((valid: boolean) => {
+    if (valid) {
+      const data = { ...addFormData };
+      if (data.id == 0) {
+        AlbumAPI.addAlbumApi(data).then((res) => {
+          addModalVisible.value = false;
+          ElMessage.success("创建成功");
+          refreshList();
+        });
+      } else {
+        AlbumAPI.updateAlbumApi(data).then((res) => {
+          addModalVisible.value = false;
+          ElMessage.success("编辑成功");
+          refreshList();
+        });
+      }
+    }
+  });
+}
+
+function addFormCancel() {
+  addModalVisible.value = false;
+}
+
+const route = useRoute();
+const router = useRouter();
+const routeToPhoto = (item) => {
+  router.push({ path: "/resource/albums/" + item.id });
+};
+const routeToDelete = () => {
+  router.push({ path: `/resource/photo/delete` });
+};
+
 function handleAdd(data?: AlbumBackVO) {
   if (data) {
-    formData.value = data;
+    Object.assign(addFormData, data);
   } else {
-    formData.value = { ...initFormData };
+    Object.assign(addFormData, initFormData);
   }
   isUpload.value = true;
   addModalVisible.value = true;
 }
 
-function confirmSave() {
-  let data = formData.value;
-  console.log("confirmSave", data);
-  if (data.id == 0) {
-    AlbumAPI.addAlbumApi(data).then((res) => {
-      addModalVisible.value = false;
-      ElMessage.success("创建成功");
-      refreshList();
-    });
-  } else {
-    AlbumAPI.updateAlbumApi(data).then((res) => {
-      addModalVisible.value = false;
-      ElMessage.success("编辑成功");
-      refreshList();
-    });
-  }
-}
-
-function cancelSave() {
-  addModalVisible.value = false;
-}
-
 function handleDelete(data?: AlbumBackVO) {
-  deleteId.value = data.id;
-  deleteModalVisible.value = true;
+  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      console.log("confirmDelete", data);
+      AlbumAPI.preDeleteAlbumApi({
+        ids: [data.id],
+        is_delete: 1,
+      })
+        .then((res) => {
+          ElMessage.success("删除成功");
+          refreshList();
+        })
+        .catch((error) => {
+          ElMessage.error("删除失败: " + error.message);
+        });
+    })
+    .catch(() => {});
 }
-
-function confirmDelete() {
-  console.log("confirmDelete", deleteId.value);
-  AlbumAPI.deleteAlbumApi({ id: deleteId.value }).then((res) => {
-    deleteModalVisible.value = false;
-    ElMessage.success("删除成功");
-    refreshList();
-  });
-}
-
-function cancelDelete() {
-  deleteModalVisible.value = false;
-}
-
-const checkDelete = () => {
-  router.push({ path: "/picture/photo/delete" });
-};
-
-const checkPhoto = (item) => {
-  router.push({ path: "/picture/albums/" + item.id });
-};
 </script>
 
 <style scoped>

@@ -45,7 +45,7 @@ async function uploadImg(files: Array<File>, callback: (urls: string[]) => void)
   const res = await Promise.all(
     files.map((file) => {
       return new Promise((rev, rej) => {
-        uploadFile(file, "about")
+        uploadFile(file, "blog/about/")
           .then((res) => rev(res))
           .catch((error) => rej(error));
       });

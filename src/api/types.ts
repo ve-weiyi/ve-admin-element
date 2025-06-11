@@ -1,4 +1,3 @@
-
 export interface AboutMeVO {
   content: string;
 }
@@ -45,6 +44,7 @@ export interface AlbumNewReq {
 
 export interface AlbumQuery extends PageQuery {
   album_name?: string; // 相册名
+  is_delete?: number; // 是否删除
 }
 
 export interface ApiBackVO {
@@ -193,6 +193,10 @@ export interface DeleteUserBindThirdPartyReq {
   platform: string; // 平台
 }
 
+export interface DeletesUploadFileReq {
+  file_paths?: string[]; // 文件路径
+}
+
 export interface EmailLoginReq {
   email: string; // 邮箱
   password: string; // 密码
@@ -200,34 +204,17 @@ export interface EmailLoginReq {
   captcha_code?: string; // 验证码
 }
 
-export interface EmptyReq {
-}
+export interface EmptyReq {}
 
-export interface EmptyResp {
-}
+export interface EmptyResp {}
 
-export interface FileBackVO {
-  id?: number; // 文件目录ID
-  user_id: string; // 用户id
+export interface FileInfoVO {
   file_path: string; // 文件路径
   file_name: string; // 文件名称
   file_type: string; // 文件类型
   file_size: number; // 文件大小
-  file_md5: string; // 文件md5值
   file_url: string; // 上传路径
-  created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  creator?: UserInfoVO; // 创建人
-}
-
-export interface FileFolderNewReq {
-  file_path: string; // 文件路径
-  file_name: string; // 文件名称
-}
-
-export interface FileQuery extends PageQuery {
-  file_path?: string; // 文件路径
-  file_type?: string; // 文件类型
 }
 
 export interface FriendBackVO {
@@ -314,10 +301,6 @@ export interface IdsReq {
 export interface ListUploadFileReq {
   file_path?: string; // 文件路径
   limit?: number; // 限制
-}
-
-export interface ListUploadFileResp {
-  urls: string[]; // 文件路径
 }
 
 export interface LoginLogBackVO {
@@ -422,8 +405,7 @@ export interface OperationLogBackVO {
   user?: UserInfoVO; // 用户信息
 }
 
-export interface OperationLogQuery extends PageQuery {
-}
+export interface OperationLogQuery extends PageQuery {}
 
 export interface PageBackVO {
   id?: number; // 页面id
@@ -489,10 +471,10 @@ export interface PhotoNewReq {
 
 export interface PhotoQuery extends PageQuery {
   album_id?: number; // 相册id
+  is_delete?: number; // 是否删除
 }
 
-export interface PingReq {
-}
+export interface PingReq {}
 
 export interface PingResp {
   env: string;
@@ -501,6 +483,16 @@ export interface PingResp {
   runtime: string;
   description: string;
   rpc_status: string[];
+}
+
+export interface PreDeleteAlbumReq {
+  ids: number[]; // 主键
+  is_delete: number; // 是否删除
+}
+
+export interface PreDeletePhotoReq {
+  ids: number[]; // 主键
+  is_delete: number; // 是否删除
 }
 
 export interface RegisterReq {
@@ -763,6 +755,26 @@ export interface UploadFileReq {
   file_path?: string; // 文件路径
 }
 
+export interface UploadLogBackVO {
+  id?: number; // 文件目录ID
+  user_id: string; // 用户id
+  file_path: string; // 文件路径
+  file_name: string; // 文件名称
+  file_type: string; // 文件类型
+  file_size: number; // 文件大小
+  file_md5: string; // 文件md5值
+  file_url: string; // 上传路径
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
+  creator?: UserInfoVO; // 创建人
+}
+
+export interface UploadLogQuery extends PageQuery {
+  file_path?: string; // 文件路径
+  file_name?: string; // 文件名称
+  file_type?: string; // 文件类型
+}
+
 export interface UserApi {
   id?: number; // 主键id
   parent_id: number; // 父id
@@ -837,8 +849,7 @@ export interface UserLoginHistory {
   logout_at: number; // 登出时间
 }
 
-export interface UserLoginHistoryQuery extends PageQuery {
-}
+export interface UserLoginHistoryQuery extends PageQuery {}
 
 export interface UserMenu {
   id?: number; // 主键

@@ -1,6 +1,5 @@
 <template>
   <el-card shadow="never">
-    <slot name="table-top"></slot>
     <!-- 表格工具栏 -->
     <div class="flex-x-between mb-[10px]">
       <!-- 左侧工具栏 -->
@@ -142,6 +141,7 @@
         </template>
       </div>
     </div>
+    <slot name="table-header"></slot>
     <!-- 列表 -->
     <el-table
       ref="tableRef"

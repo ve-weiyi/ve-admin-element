@@ -1,6 +1,7 @@
 <template>
   <div class="top-right-btn" :style="style">
     <el-row>
+      <slot />
       <el-tooltip
         class="item"
         effect="dark"

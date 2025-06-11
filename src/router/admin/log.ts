@@ -31,5 +31,11 @@ export default {
       name: "LogVisit",
       meta: { title: "浏览日志", keepAlive: true },
     },
+    {
+      path: "/log/upload",
+      component: () => import("@/views/admin/log/upload/Upload.vue"),
+      name: "LogUpload",
+      meta: { title: "上传日志", keepAlive: true },
+    },
   ],
 } satisfies RouteRecordRaw;

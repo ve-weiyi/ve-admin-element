@@ -3,8 +3,8 @@ import type { OperationLogQuery } from "@/api/types";
 import { OperationLogAPI } from "@/api/operation_log";
 
 const contentConfig: IContentConfig<OperationLogQuery> = {
-  pageName: "sys:user",
-  pageTitle: "留言管理",
+  pageName: "log:operation",
+  pageTitle: "操作日志",
   table: {
     border: true,
     highlightCurrentRow: true,

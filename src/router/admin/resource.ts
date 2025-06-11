@@ -21,10 +21,16 @@ export default {
       meta: { title: "文件管理", keepAlive: true },
     },
     {
-      path: "/picture",
+      path: "/resource/page",
+      component: () => import("@/views/admin/resource/page/Page.vue"),
+      name: "Page",
+      meta: { title: "页面管理" },
+    },
+    {
+      path: "/resource/picture",
       name: "",
       // component: Layout,
-      redirect: "/picture/albums",
+      redirect: "/resource/albums",
       meta: {
         title: "图片管理",
         icon: "el-icon-picture",
@@ -33,21 +39,21 @@ export default {
       },
       children: [
         {
-          path: "/picture/albums",
+          path: "/resource/albums",
           name: "Albums",
-          component: () => import("@/views/admin/resource/picture/album/Album.vue"),
+          component: () => import("@/views/admin/resource/album/Album.vue"),
           meta: { title: "相册管理" },
         },
         {
-          path: "/picture/albums/:id",
+          path: "/resource/albums/:id",
           name: "Photo",
-          component: () => import("@/views/admin/resource/picture/album/Photo.vue"),
+          component: () => import("@/views/admin/resource/album/Photo.vue"),
           meta: { title: "相册详情", hidden: true },
         },
         {
-          path: "/picture/photo/delete",
+          path: "/resource/photo/delete",
           name: "PhotoDelete",
-          component: () => import("@/views/admin/resource/picture/album/Delete.vue"),
+          component: () => import("@/views/admin/resource/album/Delete.vue"),
           meta: { title: "相片回收站", hidden: true },
         },
       ],

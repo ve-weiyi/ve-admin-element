@@ -1,10 +1,10 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { ListUploadFileReq } from "@/api/types";
-import { UploadAPI } from "@/api/upload";
+import type { UploadLogQuery } from "@/api/types";
+import { UploadLogAPI } from "@/api/upload_log";
 
-const contentConfig: IContentConfig<ListUploadFileReq> = {
-  pageName: "resource:file",
-  pageTitle: "文件管理",
+const contentConfig: IContentConfig<UploadLogQuery> = {
+  pageName: "log:upload",
+  pageTitle: "上传日志",
   table: {
     border: false,
     highlightCurrentRow: true,
@@ -12,7 +12,7 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
   pagination: {
     background: true,
     layout: "prev,pager,next,jumper,total,sizes",
-    pageSize: 20,
+    pageSize: 10,
     pageSizes: [10, 20, 30, 50],
   },
   parseData: (res) => {
@@ -22,35 +22,20 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
     };
   },
   indexAction: function (query) {
-
-    return UploadAPI.listUploadFileApi({
-      limit: 20,
-      file_path: query.file_path,
-    });
+    return UploadLogAPI.findUploadLogListApi(query);
   },
   deleteAction: function (ids: string) {
-    return UploadAPI.deletesUploadFileApi({
-      file_paths: ids.split(","),
-    });
+    const data = {
+      ids: [],
+    };
+    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
+    return UploadLogAPI.deletesUploadLogApi(data);
   },
-  pk: "file_path",
+  pk: "id",
   toolbar: [
-    {
-      name: "addFile",
-      icon: "plus",
-      text: "上传文件",
-      auth: "addFile",
-      type: "primary",
-    },
     "delete",
   ],
   defaultToolbar: [
-    {
-      name: "return",
-      icon: "RefreshLeft",
-      title: "返回",
-      auth: "return",
-    },
     "refresh",
     "filter",
     "search",
@@ -78,6 +63,12 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
       templet: "custom",
     },
     {
+      label: "文件目录",
+      prop: "file_path",
+      width: 140,
+      align: "left",
+    },
+    {
       label: "文件名",
       prop: "file_name",
       minWidth: 200,
@@ -98,8 +89,15 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
       templet: "custom",
     },
     {
-      label: "更新时间",
-      prop: "updated_at",
+      label: "创建者",
+      prop: "creator",
+      width: 150,
+      align: "left",
+      templet: "custom",
+    },
+    {
+      label: "创建时间",
+      prop: "created_at",
       width: 170,
       align: "center",
       sortable: true,

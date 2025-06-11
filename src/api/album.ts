@@ -1,5 +1,14 @@
 import request from "@/utils/request";
-import type { AlbumBackVO, AlbumNewReq, AlbumQuery, BatchResp, IdReq, PageResp } from "./types";
+import type {
+  AlbumBackVO,
+  AlbumNewReq,
+  AlbumQuery,
+  BatchResp,
+  IdReq,
+  IdsReq,
+  PageResp,
+  PreDeleteAlbumReq,
+} from "./types";
 
 export const AlbumAPI = {
   /** 创建相册 */
@@ -12,9 +21,9 @@ export const AlbumAPI = {
   },
 
   /** 删除相册 */
-  deleteAlbumApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesAlbumApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/album/delete_album",
+      url: "/admin-api/v1/album/deletes_album",
       method: "DELETE",
       data: data,
     });
@@ -33,6 +42,15 @@ export const AlbumAPI = {
   getAlbumApi(data?: IdReq): Promise<IApiResponse<AlbumBackVO>> {
     return request({
       url: "/admin-api/v1/album/get_album",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 预删除相册 */
+  preDeleteAlbumApi(data?: PreDeleteAlbumReq): Promise<IApiResponse<BatchResp>> {
+    return request({
+      url: "/admin-api/v1/album/pre_delete_album",
       method: "POST",
       data: data,
     });

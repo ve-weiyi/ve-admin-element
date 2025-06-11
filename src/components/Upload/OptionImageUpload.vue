@@ -4,9 +4,8 @@
     v-if="uploadType === 'upload'"
     v-model="imgUrl"
     accept="image/*"
-    upload-path="/page"
+    upload-path="blog/page/"
     height="100px"
-    width="270px"
   />
   <el-select
     v-if="uploadType === 'select'"
@@ -19,12 +18,7 @@
     :remote-method="fetchFileList"
     :loading="loading"
   >
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    >
+    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
       <div class="flex items-center">
         <img :src="item.value" size="6" />
         <span>{{ item.label }}</span>
@@ -36,14 +30,12 @@
 
 <script setup lang="ts">
 import type { ListUploadFileReq } from "@/api/types";
-import { FileAPI } from "@/api/file";
+import { UploadAPI } from "@/api/upload";
 
 const imgUrl = defineModel("modelValue", {
   type: String,
   required: true,
 });
-
-console.log("props", imgUrl.value);
 
 const props = defineProps({
   uploadType: {
@@ -65,18 +57,27 @@ const options = ref([]);
 const loading = ref(false);
 const fetchFileList = (query: string) => {
   if (query) {
+    if (query.lastIndexOf("/") !== query.length - 1) {
+      return;
+    }
+
     loading.value = true;
     let data: ListUploadFileReq = {
       file_path: query,
       limit: 20,
     };
 
-    FileAPI.listUploadFileApi(data).then((res) => {
+    UploadAPI.listUploadFileApi(data).then((res) => {
       loading.value = false;
       options.value = [];
-      res.data.urls.forEach((item) => {
-        options.value.push({ value: item, label: item.split("/").pop() });
+      res.data.list.forEach((item) => {
+        options.value.push({
+          value: item.file_url,
+          label: item.file_name,
+        });
       });
+
+      console.log("options", options.value);
     });
   } else {
     options.value = [];

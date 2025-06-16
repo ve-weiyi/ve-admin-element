@@ -29,7 +29,7 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return RemarkAPI.batchDeleteRemarkApi(data);
+    return RemarkAPI.deletesRemarkApi(data);
   },
   pk: "id",
   toolbar: [

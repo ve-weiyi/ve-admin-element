@@ -1,13 +1,5 @@
 import request from "@/utils/request";
-import type {
-  BatchResp,
-  FriendBackVO,
-  FriendNewReq,
-  FriendQuery,
-  IdReq,
-  IdsReq,
-  PageResp,
-} from "./types";
+import type { BatchResp, FriendBackVO, FriendNewReq, FriendQuery, IdsReq, PageResp } from "./types";
 
 export const FriendAPI = {
   /** 创建友链 */
@@ -19,19 +11,10 @@ export const FriendAPI = {
     });
   },
 
-  /** 批量删除友链 */
-  batchDeleteFriendApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/friend/batch_delete_friend",
-      method: "DELETE",
-      data: data,
-    });
-  },
-
   /** 删除友链 */
-  deleteFriendApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesFriendApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/friend/delete_friend",
+      url: "/admin-api/v1/friend/deletes_friend",
       method: "DELETE",
       data: data,
     });

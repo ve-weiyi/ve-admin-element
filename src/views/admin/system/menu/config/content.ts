@@ -30,7 +30,7 @@ const contentConfig: IContentConfig<MenuQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return MenuAPI.batchDeleteMenuApi(data);
+    return MenuAPI.deletesMenuApi(data);
   },
   indexAction: function (params: MenuQuery) {
     if (!params.sorts) {

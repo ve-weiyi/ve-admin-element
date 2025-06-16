@@ -2,7 +2,6 @@ import request from "@/utils/request";
 import type {
   BatchResp,
   EmptyReq,
-  IdReq,
   IdsReq,
   MenuBackVO,
   MenuNewReq,
@@ -21,15 +20,6 @@ export const MenuAPI = {
     });
   },
 
-  /** 批量删除菜单 */
-  batchDeleteMenuApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/menu/batch_delete_menu",
-      method: "DELETE",
-      data: data,
-    });
-  },
-
   /** 清空菜单列表 */
   cleanMenuListApi(data?: EmptyReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -40,9 +30,9 @@ export const MenuAPI = {
   },
 
   /** 删除菜单 */
-  deleteMenuApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesMenuApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/menu/delete_menu",
+      url: "/admin-api/v1/menu/deletes_menu",
       method: "DELETE",
       data: data,
     });

@@ -29,7 +29,7 @@ const contentConfig: IContentConfig<CommentQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return CommentAPI.batchDeleteCommentApi(data);
+    return CommentAPI.deletesCommentApi(data);
   },
   pk: "id",
   toolbar: [

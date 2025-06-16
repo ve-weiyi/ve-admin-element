@@ -5,7 +5,6 @@ import type {
   ApiQuery,
   BatchResp,
   EmptyReq,
-  IdReq,
   IdsReq,
   PageResp,
   SyncApiReq,
@@ -21,15 +20,6 @@ export const ApiAPI = {
     });
   },
 
-  /** 批量删除api路由 */
-  batchDeleteApiApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/api/batch_delete_api",
-      method: "DELETE",
-      data: data,
-    });
-  },
-
   /** 清空接口列表 */
   cleanApiListApi(data?: EmptyReq): Promise<IApiResponse<BatchResp>> {
     return request({
@@ -40,9 +30,9 @@ export const ApiAPI = {
   },
 
   /** 删除api路由 */
-  deleteApiApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesApiApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/api/delete_api",
+      url: "/admin-api/v1/api/deletes_api",
       method: "DELETE",
       data: data,
     });

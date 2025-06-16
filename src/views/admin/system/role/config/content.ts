@@ -26,7 +26,7 @@ const contentConfig: IContentConfig<RoleQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return RoleAPI.batchDeleteRoleApi(data);
+    return RoleAPI.deletesRoleApi(data);
   },
   indexAction: function (params: RoleQuery) {
     if (!params.sorts) {

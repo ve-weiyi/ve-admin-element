@@ -26,7 +26,7 @@ const contentConfig: IContentConfig<TagQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return TagAPI.batchDeleteTagApi(data);
+    return TagAPI.deletesTagApi(data);
   },
   indexAction: function (params: TagQuery) {
     if (!params.sorts) {

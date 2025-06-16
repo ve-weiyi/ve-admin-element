@@ -30,7 +30,7 @@ const contentConfig: IContentConfig<ApiQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return ApiAPI.batchDeleteApiApi(data);
+    return ApiAPI.deletesApiApi(data);
   },
   indexAction: function (params: ApiQuery) {
     if (!params.sorts) {

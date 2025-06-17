@@ -55,7 +55,7 @@
                 </el-icon>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item icon="edit" @click="handleAdd(item)">编辑</el-dropdown-item>
+                    <el-dropdown-item icon="edit" @click="handleEdit(item)">编辑</el-dropdown-item>
                     <el-dropdown-item icon="delete" @click="handleDelete(item)">
                       删除
                     </el-dropdown-item>
@@ -247,12 +247,14 @@ const routeToDelete = () => {
   router.push({ path: `/resource/photo/delete` });
 };
 
-function handleAdd(data?: AlbumBackVO) {
-  if (data) {
-    Object.assign(addFormData, data);
-  } else {
-    Object.assign(addFormData, initFormData);
-  }
+function handleAdd() {
+  Object.assign(addFormData, initFormData);
+  isUpload.value = true;
+  addModalVisible.value = true;
+}
+
+function handleEdit(data?: AlbumBackVO) {
+  Object.assign(addFormData, data);
   isUpload.value = true;
   addModalVisible.value = true;
 }

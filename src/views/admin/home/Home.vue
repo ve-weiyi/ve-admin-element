@@ -814,7 +814,7 @@ const updateCategoryOptions = (categories: CategoryVO[]) => {
 };
 
 // 用户类型（0：用户，1：游客）
-const userType = ref(0);
+const userType = ref(1);
 
 // 用户地域分布数据
 const userAreaData = ref<UserAreaVO[]>([]);

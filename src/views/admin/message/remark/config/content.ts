@@ -3,7 +3,7 @@ import type { RemarkQuery } from "@/api/types";
 import { RemarkAPI } from "@/api/remark";
 
 const contentConfig: IContentConfig<RemarkQuery> = {
-  pageName: "sys:user",
+  pageName: "message:remark",
   pageTitle: "留言管理",
   table: {
     border: true,

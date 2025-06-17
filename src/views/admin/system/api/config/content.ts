@@ -33,11 +33,11 @@ const contentConfig: IContentConfig<ApiQuery> = {
     return ApiAPI.deletesApiApi(data);
   },
   indexAction: function (params: ApiQuery) {
-    if (!params.sorts) {
-      params.sorts = [`id desc`];
-    }
-
     return ApiAPI.findApiListApi(params);
+  },
+  modifyAction(row, field, value) {
+    const data = Object.assign(row);
+    return ApiAPI.updateApiApi(data);
   },
   pk: "id",
   toolbar: [
@@ -137,26 +137,17 @@ const contentConfig: IContentConfig<ApiQuery> = {
       label: "操作栏",
       align: "center",
       fixed: "right",
-      width: 160,
+      width: 200,
       templet: "tool",
       operat: [
         {
           name: "addSubApi",
-          auth: "api:addSubApi",
+          auth: "addSubApi",
           icon: "plus",
           text: "添加",
           type: "success",
-          render(row) {
-            return row.type == 0;
-          },
         },
-        {
-          name: "editApi",
-          auth: "api:editApi",
-          icon: "edit",
-          text: "编辑",
-          type: "primary",
-        },
+        "edit",
         "delete",
       ],
     },

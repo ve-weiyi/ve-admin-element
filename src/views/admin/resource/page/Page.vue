@@ -36,7 +36,7 @@
       <!-- 页面列表 -->
       <el-row v-loading="loading" :gutter="12" class="album-container">
         <el-col v-for="item in tableData" :key="item.id" :md="6">
-          <div class="album-item" @click="handleAdd(item)">
+          <div class="album-item" @click="handleEdit(item)">
             <!-- 页面操作 -->
             <div class="album-operation">
               <el-dropdown>
@@ -45,7 +45,7 @@
                 </el-icon>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item icon="edit" @click="handleAdd(item)">编辑</el-dropdown-item>
+                    <el-dropdown-item icon="edit" @click="handleEdit(item)">编辑</el-dropdown-item>
                     <el-dropdown-item icon="delete" @click="handleDelete(item)">
                       删除
                     </el-dropdown-item>
@@ -167,9 +167,6 @@ const initFormData = <PageNewReq>{
 
 const uploadType = ref("upload");
 
-const deleteModalVisible = ref(false);
-const deleteId = ref(0);
-
 const dialogTitle = computed(() => {
   if (addFormData.id == 0) {
     return "添加页面";
@@ -213,12 +210,13 @@ function addFormCancel() {
   addModalVisible.value = false;
 }
 
-function handleAdd(data?: PageBackVO) {
-  if (data) {
-    Object.assign(addFormData, data);
-  } else {
-    Object.assign(addFormData, initFormData);
-  }
+function handleAdd() {
+  Object.assign(addFormData, initFormData);
+  addModalVisible.value = true;
+}
+
+function handleEdit(data?: PageBackVO) {
+  Object.assign(addFormData, data);
   addModalVisible.value = true;
 }
 
@@ -228,10 +226,8 @@ function handleDelete(data?: PageBackVO) {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    console.log("confirmDelete", deleteId.value);
-    PageAPI.deletePageApi({ id: deleteId.value })
+    PageAPI.deletePageApi({ id: data.id })
       .then((res) => {
-        deleteModalVisible.value = false;
         ElMessage.success("删除成功");
         refreshList();
       })

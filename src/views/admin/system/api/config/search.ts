@@ -1,7 +1,7 @@
 import type { ISearchConfig } from "@/components/CURD/types";
 
 const searchConfig: ISearchConfig = {
-  pageName: "sys:user",
+  pageName: "sys:api",
   formItems: [
     {
       type: "input",
@@ -32,7 +32,7 @@ const searchConfig: ISearchConfig = {
       label: "请求方法",
       prop: "method",
       attrs: {
-        placeholder: "请输入",
+        placeholder: "请选择",
         clearable: true,
         style: {
           width: "150px",

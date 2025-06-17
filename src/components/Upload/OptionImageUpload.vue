@@ -5,7 +5,6 @@
     v-model="imgUrl"
     accept="image/*"
     upload-path="blog/page/"
-    height="100px"
   />
   <el-select
     v-if="uploadType === 'select'"

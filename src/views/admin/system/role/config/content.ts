@@ -3,7 +3,7 @@ import type { RoleQuery } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 
 const contentConfig: IContentConfig<RoleQuery> = {
-  pageName: "sys:user",
+  pageName: "sys:role",
   pageTitle: "角色管理",
   table: {
     border: true,
@@ -29,11 +29,11 @@ const contentConfig: IContentConfig<RoleQuery> = {
     return RoleAPI.deletesRoleApi(data);
   },
   indexAction: function (params: RoleQuery) {
-    if (!params.sorts) {
-      params.sorts = [`id desc`];
-    }
-
     return RoleAPI.findRoleListApi(params);
+  },
+  modifyAction(row, field, value) {
+    const data = Object.assign(row);
+    return RoleAPI.updateRoleApi(data);
   },
   pk: "id",
   toolbar: ["add", "delete"],

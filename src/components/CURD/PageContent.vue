@@ -14,7 +14,7 @@
             <template v-if="item === 'add'">
               <el-button
                 v-hasPerm="[`${contentConfig.pageName}:${item}`]"
-                type="success"
+                type="primary"
                 icon="plus"
                 @click="handleToolbar(item)"
               >
@@ -266,10 +266,7 @@
               <template v-if="col.prop">
                 {{
                   scope.row[col.prop]
-                    ? useDateFormat(
-                        scope.row[col.prop] * 1000,
-                        col.dateFormat ?? "YYYY-MM-DD HH:mm:ss"
-                      ).value
+                    ? formatDateTime(scope.row[col.prop], col.dateFormat ?? "YYYY-MM-DD HH:mm:ss")
                     : ""
                 }}
               </template>
@@ -488,6 +485,7 @@ import {
 import ExcelJS from "exceljs";
 import { reactive, ref } from "vue";
 import type { IContentConfig, IObject, IOperatData, ISelectedData } from "./types";
+import { formatDateTime } from "../../utils/date.ts";
 
 // 定义接收的属性
 const props = defineProps<{
@@ -893,11 +891,14 @@ function handleOperat(data: IOperatData) {
 // 属性修改
 function handleModify(field: string, value: boolean | string | number, row: Record<string, any>) {
   if (props.contentConfig.modifyAction) {
-    props.contentConfig.modifyAction({
-      [pk]: row[pk],
-      field: field,
-      value: value,
-    });
+    props.contentConfig
+      .modifyAction(row, field, value)
+      .then(() => {
+        ElMessage.success("修改成功");
+      })
+      .catch((error) => {
+        ElMessage.error(`修改失败: ${error.message}`);
+      });
   } else {
     ElMessage.error("未配置modifyAction");
   }

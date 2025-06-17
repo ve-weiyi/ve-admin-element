@@ -3,7 +3,7 @@ import type { CommentQuery } from "@/api/types";
 import { CommentAPI } from "@/api/comment";
 
 const contentConfig: IContentConfig<CommentQuery> = {
-  pageName: "sys:user",
+  pageName: "message:comment",
   pageTitle: "评论管理",
   table: {
     border: true,

@@ -73,6 +73,8 @@ function handleOperatClick(data: IOperatData) {
   console.log(data);
 
   switch (data.name) {
+    default:
+      break;
   }
 }
 

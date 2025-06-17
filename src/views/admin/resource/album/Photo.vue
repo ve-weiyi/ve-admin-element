@@ -54,8 +54,7 @@
           </el-checkbox>
         </el-col>
 
-        <right-toolbar :search="false" @query-table="getList">
-        </right-toolbar>
+        <right-toolbar :search="false" @query-table="getList"></right-toolbar>
       </el-row>
       <!-- 空状态 -->
       <el-empty
@@ -147,7 +146,6 @@
     <el-dialog v-model="upload" title="上传照片" width="60%" append-to-body>
       <multi-image-upload
         v-model:file-list="uploadList"
-        class="upload-container"
         list-type="picture-card"
         :show-file-list="true"
         upload-path="blog/photo/"
@@ -390,12 +388,6 @@ onMounted(() => {
     margin-top: 0.3rem;
     text-align: center;
   }
-}
-
-.upload-container {
-  min-height: 400px;
-  max-height: 600px;
-  overflow: auto;
 }
 
 .dialog-footer {

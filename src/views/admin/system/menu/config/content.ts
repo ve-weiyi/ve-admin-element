@@ -3,7 +3,7 @@ import type { MenuQuery } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 
 const contentConfig: IContentConfig<MenuQuery> = {
-  pageName: "sys:user",
+  pageName: "sys:menu",
   pageTitle: "菜单管理",
   table: {
     border: true,

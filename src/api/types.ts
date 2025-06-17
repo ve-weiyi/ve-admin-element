@@ -617,7 +617,6 @@ export interface SocialAccountInfo {
 }
 
 export interface SyncApiReq {
-  api_file_path: string; // api文件路径
 }
 
 export interface SyncMenuReq {

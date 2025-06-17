@@ -103,11 +103,7 @@ export interface IContentConfig<T = any> {
     [key: string]: any;
   };
   // 修改属性的网络请求函数(需返回promise)
-  modifyAction?: (data: {
-    [key: string]: any;
-    field: string;
-    value: boolean | string | number;
-  }) => Promise<any>;
+  modifyAction?: (row: IObject, field: string, value: boolean | string | number) => Promise<any>;
   // 删除的网络请求函数(需返回promise)
   deleteAction?: (ids: string) => Promise<any>;
   // 后端导出的网络请求函数(需返回promise)

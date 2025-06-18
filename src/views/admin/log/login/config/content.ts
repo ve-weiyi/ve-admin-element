@@ -3,8 +3,8 @@ import type { AccountQuery } from "@/api/types";
 import { LoginLogAPI } from "@/api/login_log.ts";
 
 const contentConfig: IContentConfig<AccountQuery> = {
-  pageName: "sys:user",
-  pageTitle: "留言管理",
+  pageName: "log:login",
+  pageTitle: "登录日志",
   table: {
     border: true,
     highlightCurrentRow: true,

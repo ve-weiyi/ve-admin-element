@@ -84,20 +84,15 @@ async function handleEditClick(row: IObject) {
 }
 
 function Sync() {
-  ElMessageBox.prompt(`确认要<strong>同步接口列表到数据库吗</strong>`, "系统提示", {
+  ElMessageBox.confirm(`确认要<strong>同步接口列表到数据库吗</strong>`, "系统提示", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
-    type: "info",
-    inputPlaceholder: "请输入swagger.json地址(url或本地路径)",
-    inputErrorMessage: ".json后缀",
+    type: "warning",
     dangerouslyUseHTMLString: true,
     draggable: true,
   })
     .then(({ value }) => {
-      // "service/api/admin/proto/admin.json"
-      ApiAPI.syncApiListApi({
-        api_file_path: value || "service/api/admin/docs/admin.json",
-      }).then((res) => {
+      ApiAPI.syncApiListApi().then((res) => {
         ElMessage.success("同步成功,请稍后刷新列表");
       });
     })
@@ -111,6 +106,7 @@ function handleToolbarClick(data: ISelectedData) {
   console.log(data.name);
   switch (data.name) {
     case "addApi":
+      addModalRef.value?.setModalVisible({});
       break;
     case "syncApi":
       Sync();
@@ -133,6 +129,10 @@ function handleOperatClick(data: IOperatData) {
   console.log(data);
   switch (data.name) {
     case "addSubApi":
+      addModalRef.value?.setModalVisible({
+        parent_id: data.row.id,
+        parent_name: data.row.name,
+      });
       break;
     case "editApi":
       break;

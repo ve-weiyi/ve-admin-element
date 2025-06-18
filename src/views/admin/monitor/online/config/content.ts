@@ -1,10 +1,10 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { AccountQuery } from "@/api/types";
+import type { AccountQuery, OnlineQuery } from "@/api/types";
 import { AccountAPI } from "@/api/account";
 
-const contentConfig: IContentConfig<AccountQuery> = {
-  pageName: "sys:user",
-  pageTitle: "用户管理",
+const contentConfig: IContentConfig<OnlineQuery> = {
+  pageName: "monitor:online",
+  pageTitle: "在线用户",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -21,7 +21,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: AccountQuery) {
+  indexAction: function (query: OnlineQuery) {
     return AccountAPI.findAccountOnlineListApi(query);
   },
   pk: "user_id",
@@ -97,7 +97,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       sortable: true,
       templet: "date",
       dateFormat: "YYYY/MM/DD HH:mm:ss",
-    }
+    },
   ],
 };
 

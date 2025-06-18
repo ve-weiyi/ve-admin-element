@@ -49,7 +49,7 @@
         v-model="drawer"
         :before-close="handleClose"
         :show-close="true"
-        size="40%"
+        size="45%"
       >
         <template #header>
           <a style="font-size: 20px; font-weight: bold">【{{ formData.role_label }}】权限设置</a>

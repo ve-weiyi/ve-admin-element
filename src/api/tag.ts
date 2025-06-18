@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, IdReq, IdsReq, PageResp, TagBackVO, TagNewReq, TagQuery } from "./types";
+import type { BatchResp, IdsReq, PageResp, TagBackVO, TagNewReq, TagQuery } from "./types";
 
 export const TagAPI = {
   /** 创建标签 */
@@ -11,19 +11,10 @@ export const TagAPI = {
     });
   },
 
-  /** 批量删除标签 */
-  batchDeleteTagApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/tag/batch_delete_tag",
-      method: "DELETE",
-      data: data,
-    });
-  },
-
   /** 删除标签 */
-  deleteTagApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesTagApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/tag/delete_tag",
+      url: "/admin-api/v1/tag/deletes_tag",
       method: "DELETE",
       data: data,
     });

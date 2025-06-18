@@ -49,9 +49,6 @@
         </template>
       </page-content>
 
-      <!-- 编辑 -->
-      <el-dialog v-model="addOrUpdate" width="680px" append-to-body />
-
       <!-- 添加或修改对话框 -->
       <el-dialog :title="title" v-model="addOrUpdate" width="680px" append-to-body>
         <MenuForm v-model="menuForm" />
@@ -163,7 +160,7 @@ function convertMenu(menus: any[]): MenuNewReq[] {
       parent_id: 0,
       path: menu.path,
       name: menu.name,
-      component: input?.slice(start, end),
+      component: input?.slice(start, end)+".vue",
       redirect: menu.redirect,
       type: menu.children ? MenuTypeEnum.CATALOG : MenuTypeEnum.MENU,
       title: menu.meta.title,

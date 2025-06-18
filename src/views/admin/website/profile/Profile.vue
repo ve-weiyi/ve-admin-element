@@ -172,20 +172,20 @@
           </el-row>
           <el-form-item label="邮箱通知">
             <el-radio-group v-model="websiteConfigForm.website_feature.is_email_notice">
-              <el-radio :label="0" :value="0">关闭</el-radio>
-              <el-radio :label="1" :value="1">开启</el-radio>
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="评论审核">
             <el-radio-group v-model="websiteConfigForm.website_feature.is_comment_review">
-              <el-radio :label="0" :value="0">关闭</el-radio>
-              <el-radio :label="1" :value="1">开启</el-radio>
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="留言审核">
             <el-radio-group v-model="websiteConfigForm.website_feature.is_message_review">
-              <el-radio :label="0" :value="0">关闭</el-radio>
-              <el-radio :label="1" :value="1">开启</el-radio>
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="打赏状态">
@@ -234,14 +234,14 @@
           </el-row>
           <el-form-item label="音乐播放器状态">
             <el-radio-group v-model="websiteConfigForm.website_feature.is_music_player">
-              <el-radio :label="0" :value="0">关闭</el-radio>
-              <el-radio :label="1" :value="1">开启</el-radio>
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="聊天室状态">
             <el-radio-group v-model="websiteConfigForm.website_feature.is_chat_room">
-              <el-radio :label="0" :value="0">关闭</el-radio>
-              <el-radio :label="1" :value="1">开启</el-radio>
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item
@@ -333,7 +333,7 @@ function beforeUpload(rawFile: UploadRawFile) {
 }
 
 function onUpload(options: UploadRequestOptions) {
-  return uploadFile(options.file, "/website");
+  return uploadFile(options.file, "blog/website/");
 }
 
 function handleWebsiteAvatarSuccess(response) {

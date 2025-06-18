@@ -148,12 +148,12 @@
           </el-form-item>
           <el-form-item label="上传封面">
             <el-radio-group v-model="uploadType">
-              <el-radio label="upload">上传文件</el-radio>
-              <el-radio label="select">选择文件</el-radio>
-              <el-radio label="input">填写链接</el-radio>
+              <el-radio value="upload">上传文件</el-radio>
+              <el-radio value="select">选择文件</el-radio>
+              <el-radio value="input">填写链接</el-radio>
             </el-radio-group>
-            <option-image-upload v-model="article.article_cover" :upload-type="uploadType" />
           </el-form-item>
+          <option-image-upload v-model="article.article_cover" :upload-type="uploadType" />
           <el-form-item label="置顶">
             <el-switch
               v-model="article.is_top"
@@ -255,7 +255,7 @@ async function uploadImg(files: Array<File>, callback: (urls: string[]) => void)
   const res = await Promise.all(
     files.map((file) => {
       return new Promise((rev, rej) => {
-        uploadFile(file, "article")
+        uploadFile(file, "blog/article/")
           .then((res) => rev(res))
           .catch((error) => rej(error));
       });

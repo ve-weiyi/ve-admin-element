@@ -12,8 +12,14 @@ export function compressImage(rawFile: Blob) {
 }
 
 export function uploadFile(blob: Blob, path: string) {
-  if (!path.startsWith("/")) {
-    ElMessage.error("上传路径必须以'/'为前缀");
+  if (path.startsWith("/")) {
+    ElMessage.error("上传路径不能以'/'开头，不能包含连续的 '/'");
+    return
+  }
+
+  if (!path.endsWith("/")) {
+    ElMessage.error("上传路径必须以'/'结尾");
+    return
   }
 
   const data = {
@@ -24,6 +30,15 @@ export function uploadFile(blob: Blob, path: string) {
 }
 
 export async function multipleUploadFile(files: Blob[], path: string) {
+  if (path.startsWith("/")) {
+    ElMessage.error("上传路径不能以'/'开头，不能包含连续的 '/'");
+    return
+  }
+
+  if (!path.endsWith("/")) {
+    ElMessage.error("上传路径必须以'/'结尾");
+    return
+  }
   const data = {
     files: files,
     file_path: path,

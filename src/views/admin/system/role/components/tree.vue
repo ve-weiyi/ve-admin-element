@@ -18,9 +18,9 @@
           <template #content>
             如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动
           </template>
-          <i-ep-QuestionFilled
-            class="ml-1 color-[--el-color-primary] inline-block cursor-pointer"
-          />
+          <el-icon class="ml-1 color-[--el-color-primary] inline-block cursor-pointer">
+            <QuestionFilled />
+          </el-icon>
         </el-tooltip>
       </div>
     </div>

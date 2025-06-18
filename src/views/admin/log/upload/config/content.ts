@@ -1,12 +1,12 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { RemarkQuery } from "@/api/types";
-import { RemarkAPI } from "@/api/remark";
+import type { UploadLogQuery } from "@/api/types";
+import { UploadLogAPI } from "@/api/upload_log";
 
-const contentConfig: IContentConfig<RemarkQuery> = {
-  pageName: "message:remark",
-  pageTitle: "留言管理",
+const contentConfig: IContentConfig<UploadLogQuery> = {
+  pageName: "log:upload",
+  pageTitle: "上传日志",
   table: {
-    border: true,
+    border: false,
     highlightCurrentRow: true,
   },
   pagination: {
@@ -21,28 +21,25 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: RemarkQuery) {
-    return RemarkAPI.findRemarkListApi(query);
+  indexAction: function (query) {
+    return UploadLogAPI.findUploadLogListApi(query);
   },
   deleteAction: function (ids: string) {
     const data = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return RemarkAPI.deletesRemarkApi(data);
+    return UploadLogAPI.deletesUploadLogApi(data);
   },
   pk: "id",
   toolbar: [
-    {
-      name: "review",
-      icon: "CircleCheck",
-      text: "批量通过",
-      auth: "review",
-      type: "success",
-    },
     "delete",
   ],
-  defaultToolbar: ["refresh", "filter", "search"],
+  defaultToolbar: [
+    "refresh",
+    "filter",
+    "search",
+  ],
   cols: [
     {
       type: "selection",
@@ -56,42 +53,47 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       width: 70,
       align: "center",
       sortable: true,
+      show: false,
     },
     {
-      label: "留言人",
-      prop: "user",
-      width: 200,
+      label: "预览",
+      prop: "icon",
+      width: 80,
       align: "center",
       templet: "custom",
     },
     {
-      label: "留言内容",
-      prop: "message_content",
-      minWidth: 200,
-      width: 0,
-      align: "center",
-    },
-    {
-      label: "状态",
-      prop: "is_review",
-      width: 100,
-      align: "center",
-      templet: "custom",
-    },
-    {
-      label: "IP地址",
-      prop: "ip_address",
+      label: "文件目录",
+      prop: "file_path",
       width: 140,
-      align: "center",
-      show: false,
+      align: "left",
     },
     {
-      label: "IP来源",
-      prop: "ip_address",
-      width: 0,
-      minWidth: 160,
+      label: "文件名",
+      prop: "file_name",
+      minWidth: 200,
+      align: "left",
+      templet: "custom",
+    },
+    {
+      label: "文件类型",
+      prop: "file_type",
+      width: 80,
       align: "center",
-      show: false,
+    },
+    {
+      label: "文件大小",
+      prop: "file_size",
+      width: 120,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "创建者",
+      prop: "creator",
+      width: 150,
+      align: "left",
+      templet: "custom",
     },
     {
       label: "创建时间",
@@ -110,13 +112,13 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       templet: "tool",
       operat: [
         {
-          name: "review",
-          auth: "password:reset",
-          icon: "check",
-          text: "通过",
-          type: "success",
+          name: "download",
+          auth: "download",
+          icon: "download",
+          text: "下载",
+          type: "primary",
           render(row) {
-            return row.is_review != 1;
+            return row.file_type != "";
           },
         },
         "delete",

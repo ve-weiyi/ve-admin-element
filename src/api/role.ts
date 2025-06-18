@@ -23,20 +23,11 @@ export const RoleAPI = {
     });
   },
 
-  /** 批量删除角色 */
-  batchDeleteRoleApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/role/batch_delete_role",
-      method: "POST",
-      data: data,
-    });
-  },
-
   /** 删除角色 */
-  deleteRoleApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesRoleApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/role/delete_role",
-      method: "DELETE",
+      url: "/admin-api/v1/role/deletes_role",
+      method: "POST",
       data: data,
     });
   },

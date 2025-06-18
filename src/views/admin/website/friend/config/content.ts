@@ -26,7 +26,7 @@ const contentConfig: IContentConfig<FriendQuery> = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return FriendAPI.batchDeleteFriendApi(data);
+    return FriendAPI.deletesFriendApi(data);
   },
   indexAction: function (params: FriendQuery) {
     if (!params.sorts) {

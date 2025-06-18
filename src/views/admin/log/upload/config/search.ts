@@ -1,12 +1,12 @@
 import type { ISearchConfig } from "@/components/CURD/types";
 
 const searchConfig: ISearchConfig = {
-  pageName: "sys:api",
+  pageName: "sys:user",
   formItems: [
     {
       type: "input",
-      label: "名称",
-      prop: "name",
+      label: "文件目录",
+      prop: "file_path",
       attrs: {
         placeholder: "请输入",
         clearable: true,
@@ -17,8 +17,8 @@ const searchConfig: ISearchConfig = {
     },
     {
       type: "input",
-      label: "路径",
-      prop: "path",
+      label: "文件名称",
+      prop: "file_name",
       attrs: {
         placeholder: "请输入",
         clearable: true,
@@ -28,38 +28,16 @@ const searchConfig: ISearchConfig = {
       },
     },
     {
-      type: "select",
-      label: "请求方法",
-      prop: "method",
+      type: "input",
+      label: "文件类型",
+      prop: "file_type",
       attrs: {
-        placeholder: "请选择",
+        placeholder: "请输入",
         clearable: true,
         style: {
           width: "150px",
         },
       },
-      options: [
-        {
-          label: "GET",
-          value: "GET",
-        },
-        {
-          label: "POST",
-          value: "POST",
-        },
-        {
-          label: "PUT",
-          value: "PUT",
-        },
-        {
-          label: "DELETE",
-          value: "DELETE",
-        },
-        {
-          label: "NULL",
-          value: "",
-        },
-      ],
     },
   ],
 };

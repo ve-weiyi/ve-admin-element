@@ -4,7 +4,6 @@ import type {
   CategoryBackVO,
   CategoryNewReq,
   CategoryQuery,
-  IdReq,
   IdsReq,
   PageResp,
 } from "./types";
@@ -19,19 +18,10 @@ export const CategoryAPI = {
     });
   },
 
-  /** 批量删除文章分类 */
-  batchDeleteCategoryApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/category/batch_delete_category",
-      method: "DELETE",
-      data: data,
-    });
-  },
-
   /** 删除文章分类 */
-  deleteCategoryApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesCategoryApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/category/delete_category",
+      url: "/admin-api/v1/category/deletes_category",
       method: "DELETE",
       data: data,
     });

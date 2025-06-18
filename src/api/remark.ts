@@ -1,20 +1,11 @@
 import request from "@/utils/request";
-import type { BatchResp, IdReq, IdsReq, PageResp, RemarkQuery, RemarkReviewReq } from "./types";
+import type { BatchResp, IdsReq, PageResp, RemarkQuery, RemarkReviewReq } from "./types";
 
 export const RemarkAPI = {
-  /** 批量删除留言 */
-  batchDeleteRemarkApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
-    return request({
-      url: "/admin-api/v1/remark/batch_delete_remark",
-      method: "DELETE",
-      data: data,
-    });
-  },
-
   /** 删除留言 */
-  deleteRemarkApi(data?: IdReq): Promise<IApiResponse<BatchResp>> {
+  deletesRemarkApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/remark/delete_remark",
+      url: "/admin-api/v1/remark/deletes_remark",
       method: "DELETE",
       data: data,
     });

@@ -27,16 +27,6 @@
             </el-breadcrumb>
           </div>
         </template>
-        <template #creator="scope">
-          <div v-if="scope.row[scope.prop]" style="display: flex; align-items: center; gap: 8px">
-            <el-image
-              :src="scope.row[scope.prop].avatar"
-              :preview-teleported="true"
-              :style="`width: ${scope.imageWidth ?? 40}px; height: ${scope.imageHeight ?? 40}px`"
-            />
-            <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
-          </div>
-        </template>
         <template #icon="scope">
           <img
             v-if="scope.row.file_type === ''"
@@ -58,32 +48,6 @@
       </page-content>
     </template>
 
-    <!-- 新建文件夹对话框 -->
-    <el-dialog title="新建文件夹" v-model="folderModalVisible" width="500px" append-to-body>
-      <el-form
-        ref="folderFormRef"
-        label-width="100px"
-        :model="folderFormData"
-        :rules="folderFormRules"
-      >
-        <el-form-item label="文件夹路径" prop="file_path">
-          <el-input disabled v-model="folderFormData.file_path" style="width: 250px" />
-        </el-form-item>
-        <el-form-item label="文件夹名称" prop="file_name">
-          <el-input
-            placeholder="请输入文件夹名称"
-            v-model="folderFormData.file_name"
-            style="width: 250px"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitFolderForm">确 定</el-button>
-          <el-button @click="cancelFolderForm">取 消</el-button>
-        </div>
-      </template>
-    </el-dialog>
     <!-- 导入弹窗 -->
     <el-dialog
       v-model="importModalVisible"
@@ -95,6 +59,9 @@
     >
       <!-- 滚动 -->
       <el-scrollbar max-height="60vh">
+        <el-form-item label="文件路径" prop="file_path">
+          <el-input v-model="importFormData.file_path" style="width: 250px" />
+        </el-form-item>
         <!-- 表单 -->
         <el-form
           ref="importFormRef"
@@ -147,8 +114,7 @@ import {
   type UploadUserFile,
 } from "element-plus";
 import { multipleUploadFile } from "@/utils/file";
-import type { FileBackVO, FileFolderNewReq } from "@/api/types";
-import { FileAPI } from "@/api/file";
+import type { FileInfoVO } from "@/api/types";
 
 const {
   contentRef,
@@ -166,10 +132,6 @@ const {
 function handleToolbarClick(data: ISelectedData) {
   console.log(data.name);
   switch (data.name) {
-    case "addFolder":
-      folderFormData.file_path = filePath.value;
-      folderModalVisible.value = true;
-      break;
     case "addFile":
       importFormData.file_path = filePath.value;
       importModalVisible.value = true;
@@ -191,36 +153,7 @@ function handleOperatClick(data: IOperatData) {
 // 切换示例
 const isA = ref(true);
 
-const folderModalVisible = ref(false);
-const folderFormRef = ref<FormInstance>();
-const folderFormRules = reactive<FormRules>({
-  file_name: [{ required: true, message: "请输入文件夹名称", trigger: "blur" }],
-});
-const folderFormData = reactive<FileFolderNewReq>({
-  file_path: "",
-  file_name: "",
-});
-
-function submitFolderForm() {
-  folderFormRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      console.log(folderFormData);
-      FileAPI.addFileFolderApi(folderFormData).then((res) => {
-        fetchPageData();
-        folderModalVisible.value = false;
-        ElMessage.success("新建文件夹成功");
-      });
-    }
-  });
-}
-
-function cancelFolderForm() {
-  folderModalVisible.value = false;
-}
-
 // 导入表单
-
-const uploadRef = ref<UploadInstance>();
 const importModalVisible = ref(false);
 const importFormRef = ref<FormInstance>();
 const importFormData = reactive<{
@@ -339,11 +272,11 @@ function fetchPageData() {
   contentRef.value.fetchPageData(queryParams);
 }
 
-const handleOpen = (row: FileBackVO) => {
+const handleOpen = (row: FileInfoVO) => {
   console.log("open dir->", row);
   router.push({
     query: {
-      filePath: `${row.file_path === "/" ? "" : row.file_path}/${row.file_name}`,
+      filePath: `${row.file_path}`,
     },
   });
 };

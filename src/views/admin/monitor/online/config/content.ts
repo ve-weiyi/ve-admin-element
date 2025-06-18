@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { AccountQuery, OnlineQuery } from "@/api/types";
+import type { AccountQuery } from "@/api/types";
 import { AccountAPI } from "@/api/account";
 
-const contentConfig: IContentConfig<OnlineQuery> = {
+const contentConfig: IContentConfig<AccountQuery> = {
   pageName: "monitor:online",
   pageTitle: "在线用户",
   table: {
@@ -21,7 +21,7 @@ const contentConfig: IContentConfig<OnlineQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: OnlineQuery) {
+  indexAction: function (query: AccountQuery) {
     return AccountAPI.findAccountOnlineListApi(query);
   },
   pk: "user_id",

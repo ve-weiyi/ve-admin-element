@@ -1,85 +1,69 @@
-import type {
-  DialogProps,
-  DrawerProps,
-  FormItemRule,
-  FormProps,
-  PaginationProps,
-  TableProps,
-  ColProps,
-} from "element-plus";
+import type { DialogProps, DrawerProps, FormItemRule, PaginationProps } from "element-plus";
+import type { FormProps, TableProps, ColProps, ButtonProps, CardProps } from "element-plus";
 import type PageContent from "./PageContent.vue";
-import type PageForm from "./PageForm.vue";
 import type PageModal from "./PageModal.vue";
 import type PageSearch from "./PageSearch.vue";
+import type { CSSProperties } from "vue";
 
 export type PageSearchInstance = InstanceType<typeof PageSearch>;
 export type PageContentInstance = InstanceType<typeof PageContent>;
 export type PageModalInstance = InstanceType<typeof PageModal>;
-export type PageFormInstance = InstanceType<typeof PageForm>;
 
 export type IObject = Record<string, any>;
 
-export interface IOperatData {
+type DateComponent = "date-picker" | "time-picker" | "time-select" | "custom-tag" | "input-tag";
+type InputComponent = "input" | "select" | "input-number" | "cascader" | "tree-select";
+type OtherComponent = "text" | "radio" | "checkbox" | "switch" | "icon-select" | "custom";
+export type ISearchComponent = DateComponent | InputComponent | "custom";
+export type IComponentType = DateComponent | InputComponent | OtherComponent;
+
+type ToolbarLeft = "add" | "delete" | "import" | "export";
+type ToolbarRight = "refresh" | "filter" | "imports" | "exports" | "search";
+type ToolbarTable = "edit" | "view" | "delete";
+export type IToolsButton = {
+  name: string; // 按钮名称
+  text?: string; // 按钮文本
+  perm?: Array<string> | string; // 权限标识(可以是完整权限字符串如'sys:user:add'或操作权限如'add')
+  attrs?: Partial<ButtonProps> & { style?: CSSProperties }; // 按钮属性
+  render?: (row: IObject) => boolean; // 条件渲染
+};
+export type IToolsDefault = ToolbarLeft | ToolbarRight | ToolbarTable | IToolsButton;
+
+export interface IOperateData {
   name: string;
   row: IObject;
   column: IObject;
   $index: number;
 }
 
-export interface ISelectedData {
-  name: string;
-  selectionData: IObject[];
-  selectionIds: (number | string)[];
-}
-
-interface PageResult<T> {
-  list: T;
-  page: number;
-  page_size: number;
-  total: number;
-}
-
-interface PageQuery {
-  page?: number;
-  page_size?: number;
-  sorts?: string[];
-}
-
 export interface ISearchConfig {
-  // 页面名称(参与组成权限标识,如sys:user:xxx)
-  pageName: string;
-  // 表单项
-  formItems: Array<{
-    // 组件类型(如input,select等)
-    type?: "input" | "select" | "tree-select" | "date-picker" | "input-tag";
-    // 标签文本
-    label: string;
-    // 标签提示
-    tips?: string;
-    // 键名
-    prop: string;
-    // 组件属性(input-tag组件支持join,btnText,size属性)
-    attrs?: IObject;
-    // 初始值
-    initialValue?: any;
-    // 可选项(适用于select组件)
-    options?: { label: string; value: any }[];
-    // 初始化数据函数扩展
-    initFn?: (formItem: IObject) => void;
-  }>;
-  // 是否开启展开和收缩
+  // 权限前缀(如sys:user，用于组成权限标识)，不提供则不进行权限校验
+  permPrefix?: string;
+  // 标签冒号(默认：false)
+  colon?: boolean;
+  // 表单项(默认：[])
+  formItems?: IFormItems<ISearchComponent>;
+  // 是否开启展开和收缩(默认：true)
   isExpandable?: boolean;
-  // 默认展示的表单项数量
+  // 默认展示的表单项数量(默认：3)
   showNumber?: number;
+  // 卡片属性
+  cardAttrs?: Partial<CardProps> & { style?: CSSProperties };
+  // form组件属性
+  form?: IForm;
+  // 自适应网格布局(使用时表单不要添加 style: { width: "200px" })
+  grid?: boolean | "left" | "right";
 }
 
 export interface IContentConfig<T = any> {
-  // 页面名称(参与组成权限标识,如sys:user:xxx)
-  pageName: string;
   // 页面标题
   pageTitle?: string;
+  // 权限前缀(如sys:user，用于组成权限标识)，不提供则不进行权限校验
+  permPrefix?: string;
   // table组件属性
   table?: Omit<TableProps<any>, "data">;
+  // 分页组件位置(默认：left)
+  pagePosition?: "left" | "right";
   // pagination组件属性
   pagination?:
     | boolean
@@ -118,34 +102,10 @@ export interface IContentConfig<T = any> {
   importsAction?: (data: IObject[]) => Promise<any>;
   // 主键名(默认为id)
   pk?: string;
-  // 表格工具栏(默认支持add,delete,export,也可自定义)
-  toolbar?: Array<
-    | "add"
-    | "delete"
-    | "import"
-    | "export"
-    | {
-        auth: string;
-        icon?: string;
-        name: string;
-        text: string;
-        type?: "primary" | "success" | "warning" | "danger" | "info";
-      }
-  >;
-  // 表格工具栏右侧图标
-  defaultToolbar?: Array<
-    | "refresh"
-    | "filter"
-    | "imports"
-    | "exports"
-    | "search"
-    | {
-        name: string;
-        icon: string;
-        title?: string;
-        auth?: string;
-      }
-  >;
+  // 表格工具栏(默认:add,delete,export,也可自定义)
+  toolbar?: Array<ToolbarLeft | IToolsButton>;
+  // 表格工具栏右侧图标(默认:refresh,filter,imports,exports,search)
+  defaultToolbar?: Array<ToolbarRight | IToolsButton>;
   // table组件列属性(额外的属性templet,operat,slotName)
   cols: Array<{
     type?: "default" | "selection" | "index" | "expand";
@@ -161,7 +121,6 @@ export interface IContentConfig<T = any> {
     templet?:
       | "image"
       | "list"
-      | "tag"
       | "url"
       | "switch"
       | "input"
@@ -174,12 +133,6 @@ export interface IContentConfig<T = any> {
     // image模板相关参数
     imageWidth?: number;
     imageHeight?: number;
-    // tag模板相关参数
-    tagOptions?: Array<{
-      value: string | number;
-      label: string;
-      type: "primary" | "success" | "info" | "warning" | "danger";
-    }>;
     // list模板相关参数
     selectList?: IObject;
     // switch模板相关参数
@@ -194,18 +147,7 @@ export interface IContentConfig<T = any> {
     // date模板相关参数
     dateFormat?: string;
     // tool模板相关参数
-    operat?: Array<
-      | "edit"
-      | "delete"
-      | {
-          auth?: string;
-          icon?: string;
-          name: string;
-          text: string;
-          type?: "primary" | "success" | "warning" | "danger" | "info";
-          render?: (row: IObject) => boolean;
-        }
-    >;
+    operat?: Array<ToolbarTable | IToolsButton>;
     // filter值拼接符
     filterJoin?: string;
     [key: string]: any;
@@ -215,11 +157,13 @@ export interface IContentConfig<T = any> {
 }
 
 export interface IModalConfig<T = any> {
-  // 页面名称
-  pageName?: string;
+  // 权限前缀(如sys:user，用于组成权限标识)，不提供则不进行权限校验
+  permPrefix?: string;
+  // 标签冒号(默认：false)
+  colon?: boolean;
   // 主键名(主要用于编辑数据,默认为id)
   pk?: string;
-  // 组件类型
+  // 组件类型(默认：dialog)
   component?: "dialog" | "drawer";
   // dialog组件属性
   dialog?: Partial<Omit<DialogProps, "modelValue">>;
@@ -228,60 +172,41 @@ export interface IModalConfig<T = any> {
   // form组件属性
   form?: IForm;
   // 表单项
-  formItems: IFormItems<T>;
+  formItems: IFormItems<IComponentType>;
   // 提交之前处理
   beforeSubmit?: (data: T) => void;
   // 提交的网络请求函数(需返回promise)
-  formAction: (data: T) => Promise<any>;
+  formAction?: (data: T) => Promise<any>;
 }
 
 export type IForm = Partial<Omit<FormProps, "model" | "rules">>;
 
 // 表单项
-export type IFormItems<T = any> = Array<{
-  // 组件类型(如input,select,radio,custom等，默认input)
-  type?:
-    | "input"
-    | "select"
-    | "radio"
-    | "switch"
-    | "checkbox"
-    | "tree-select"
-    | "date-picker"
-    | "input-number"
-    | "text"
-    | "custom";
-  // 组件属性
-  attrs?: IObject;
-  // 组件可选项(适用于select,radio,checkbox组件)
-  options?: Array<{
-    label: string;
-    value: any;
-    disabled?: boolean;
-    [key: string]: any;
-  }>;
-  // 插槽名(适用于组件类型为custom)
-  slotName?: string;
+export type IFormItems<T = IComponentType> = Array<{
+  // 组件类型(如input,select,radio,custom等)
+  type: T;
+  // 标签提示
+  tips?: string | IObject;
   // 标签文本
   label: string;
-  // 标签提示
-  tips?: string;
   // 键名
   prop: string;
+  // 组件属性
+  attrs?: IObject;
+  // 组件可选项(只适用于select,radio,checkbox组件)
+  options?: Array<{ label: string; value: any; [key: string]: any }> | Ref<any[]>;
   // 验证规则
   rules?: FormItemRule[];
   // 初始值
   initialValue?: any;
+  // 插槽名(适用于自定义组件，设置类型为custom)
+  slotName?: string;
   // 是否隐藏
   hidden?: boolean;
   // layout组件Col属性
   col?: Partial<ColProps>;
-  // 监听函数
-  watch?: (newValue: any, oldValue: any, data: T, items: IObject[]) => void;
-  // 计算属性函数
-  computed?: (data: T) => any;
-  // 监听收集函数
-  watchEffect?: (data: T) => void;
+  // 组件事件
+  events?: Record<string, (...args: any) => void>;
   // 初始化数据函数扩展
   initFn?: (item: IObject) => void;
 }>;
@@ -292,5 +217,5 @@ export interface IPageForm {
   // form组件属性
   form?: IForm;
   // 表单项
-  formItems: IFormItems;
+  formItems: IFormItems<IComponentType>;
 }

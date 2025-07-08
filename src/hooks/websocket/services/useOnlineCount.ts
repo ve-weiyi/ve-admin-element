@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useStomp } from "../core/useStomp";
 import { ElMessage } from "element-plus";
-import { getAccessToken } from "@/utils/auth";
+import { getAccessToken, getUid } from "@/utils/auth";
 
 /**
  * 在线用户计数Hook
@@ -28,6 +28,8 @@ export function useOnlineCount() {
     disconnect,
     isConnected: stompConnected,
   } = useStomp({
+    token: getAccessToken(),
+    login: getUid(),
     reconnectDelay: 15000, // 重连基础延迟
     maxReconnectAttempts: 3, // 重连次数上限
     connectionTimeout: 10000, // 连接超时
@@ -68,10 +70,11 @@ export function useOnlineCount() {
     }
 
     // 订阅在线用户计数主题
-    subscriptionId = subscribe("/topic/online-count", (message) => {
+    subscriptionId = subscribe("/topic/system/online", (message) => {
       try {
         const data = message.body;
 
+        console.error("收到在线用户计数消息:", data);
         const jsonData = JSON.parse(data);
         const count = typeof jsonData === "number" ? jsonData : jsonData.count;
 

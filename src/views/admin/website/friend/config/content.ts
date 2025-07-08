@@ -3,8 +3,8 @@ import type { FriendQuery } from "@/api/types";
 import { FriendAPI } from "@/api/friend";
 
 const contentConfig: IContentConfig<FriendQuery> = {
-  pageName: "website:friend",
   pageTitle: "友链管理",
+  permPrefix: "website:friend",
   table: {
     border: true,
     highlightCurrentRow: true,

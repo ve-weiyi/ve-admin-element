@@ -3,7 +3,7 @@ import type { CategoryNewReq } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
 const modalConfig: IModalConfig<CategoryNewReq> = {
-  pageName: "sys:user",
+  permPrefix: "sys:user",
   component: "drawer",
   drawer: {
     title: "修改分类",
@@ -28,4 +28,4 @@ const modalConfig: IModalConfig<CategoryNewReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

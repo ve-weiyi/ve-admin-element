@@ -3,8 +3,8 @@ import type { UploadLogQuery } from "@/api/types";
 import { UploadLogAPI } from "@/api/upload_log";
 
 const contentConfig: IContentConfig<UploadLogQuery> = {
-  pageName: "log:upload",
   pageTitle: "上传日志",
+  permPrefix: "log:upload",
   table: {
     border: false,
     highlightCurrentRow: true,
@@ -32,14 +32,8 @@ const contentConfig: IContentConfig<UploadLogQuery> = {
     return UploadLogAPI.deletesUploadLogApi(data);
   },
   pk: "id",
-  toolbar: [
-    "delete",
-  ],
-  defaultToolbar: [
-    "refresh",
-    "filter",
-    "search",
-  ],
+  toolbar: ["delete"],
+  defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
       type: "selection",
@@ -113,10 +107,12 @@ const contentConfig: IContentConfig<UploadLogQuery> = {
       operat: [
         {
           name: "download",
-          auth: "download",
-          icon: "download",
           text: "下载",
-          type: "primary",
+          perm: "download",
+          attrs: {
+            icon: "download",
+            type: "primary",
+          },
           render(row) {
             return row.file_type != "";
           },

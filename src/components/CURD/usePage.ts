@@ -18,14 +18,50 @@ function usePage() {
     contentRef.value?.fetchPageData({ ...queryParams, ...filterParams }, true);
   }
   // 新增
-  function handleAddClick() {
-    //显示添加表单
-    addModalRef.value?.setModalVisible();
+  function handleAddClick(RefImpl?: Ref<PageModalInstance>) {
+    if (RefImpl) {
+      RefImpl?.value.setModalVisible();
+      RefImpl?.value.handleDisabled(false);
+    } else {
+      addModalRef.value?.setModalVisible();
+      addModalRef.value?.handleDisabled(false);
+    }
   }
   // 编辑
-  function handleEditClick(row: IObject) {
-    //显示编辑表单 根据数据进行填充
-    editModalRef.value?.setModalVisible(row);
+  async function handleEditClick(
+    row: IObject,
+    callback?: (result?: IObject) => IObject,
+    RefImpl?: Ref<PageModalInstance>
+  ) {
+    if (RefImpl) {
+      RefImpl.value?.setModalVisible();
+      RefImpl.value?.handleDisabled(false);
+      const from = await (callback?.(row) ?? Promise.resolve(row));
+      RefImpl.value?.setFormData(from ? from : row);
+    } else {
+      editModalRef.value?.setModalVisible();
+      editModalRef.value?.handleDisabled(false);
+      const from = await (callback?.(row) ?? Promise.resolve(row));
+      editModalRef.value?.setFormData(from ? from : row);
+    }
+  }
+  // 查看
+  async function handleViewClick(
+    row: IObject,
+    callback?: (result?: IObject) => IObject,
+    RefImpl?: Ref<PageModalInstance>
+  ) {
+    if (RefImpl) {
+      RefImpl.value?.setModalVisible();
+      RefImpl.value?.handleDisabled(true);
+      const from = await (callback?.(row) ?? Promise.resolve(row));
+      RefImpl.value?.setFormData(from ? from : row);
+    } else {
+      editModalRef.value?.setModalVisible();
+      editModalRef.value?.handleDisabled(true);
+      const from = await (callback?.(row) ?? Promise.resolve(row));
+      editModalRef.value?.setFormData(from ? from : row);
+    }
   }
   // 表单提交
   function handleSubmitClick() {
@@ -58,6 +94,7 @@ function usePage() {
     handleResetClick,
     handleAddClick,
     handleEditClick,
+    handleViewClick,
     handleSubmitClick,
     handleExportClick,
     handleSearchClick,

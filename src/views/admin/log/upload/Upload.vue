@@ -16,7 +16,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #creator="scope">
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -65,8 +65,8 @@ const {
   contentRef,
   handleQueryClick,
   handleResetClick,
-  // handleAddClick,
-  // handleEditClick,
+  handleAddClick,
+  handleEditClick,
   handleSubmitClick,
   handleExportClick,
   handleSearchClick,
@@ -74,18 +74,24 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
-  switch (data.name) {
+function handleToolbarClick(name: string) {
+  console.log(name);
+  switch (name) {
     default:
       break;
   }
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
-  // 重置密码
+  switch (data.name) {
+    case "edit":
+      handleEditClick(data.row);
+      break;
+    default:
+      break;
+  }
 }
 
 // 切换示例
@@ -127,7 +133,6 @@ const calculateFileSize = (size: number, isInteger = false) => {
     }
   }
 };
-
 </script>
 <style scoped>
 .article-cover {

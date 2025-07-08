@@ -21,7 +21,7 @@ export default {
       component: () => import("@/views/admin/lab/apifox.vue"),
       name: "Apifox",
       meta: {
-        title: "Apifox",
+        title: "接口文档",
         icon: "api",
         hidden: false,
         keepAlive: true,
@@ -30,11 +30,11 @@ export default {
       },
     },
     {
-      path: "/lab/gitlink",
-      component: () => import("@/views/admin/lab/gitlink.vue"),
-      name: "GitLink",
+      path: "https://admin.veweiyi.cn/admin-api/v1/swagger/index.html",
+      component: Layout,
+      name: "Swagger",
       meta: {
-        title: "博客前台",
+        title: "接口文档(外链)",
         icon: "document",
         hidden: false,
         alwaysShow: false,

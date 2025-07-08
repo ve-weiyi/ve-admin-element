@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #status="scope">
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IObject, IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -64,33 +64,29 @@ const {
   editModalRef,
   handleQueryClick,
   handleResetClick,
-  // handleAddClick,
-  // handleEditClick,
+  handleAddClick,
+  handleEditClick,
   handleSubmitClick,
   handleExportClick,
   handleSearchClick,
   handleFilterChange,
 } = usePage();
 
-// 新增
-async function handleAddClick() {
-  addModalRef.value?.setModalVisible();
-}
-
-// 编辑
-async function handleEditClick(row: IObject) {
-  editModalRef.value?.setModalVisible(row);
-}
-
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
+function handleToolbarClick(name: string) {
+  console.log(name);
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
-  // 重置密码
+  switch (data.name) {
+    case "edit":
+      handleEditClick(data.row);
+      break;
+    default:
+      break;
+  }
 }
 
 // 切换示例

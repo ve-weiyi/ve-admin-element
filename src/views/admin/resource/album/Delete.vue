@@ -99,7 +99,6 @@ import type { PhotoBackVO, PhotoQuery } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
-
 const route = useRoute();
 const data = reactive({
   count: 0,

@@ -3,8 +3,8 @@ import type { RoleQuery } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 
 const contentConfig: IContentConfig<RoleQuery> = {
-  pageName: "sys:role",
   pageTitle: "角色管理",
+  permPrefix: "sys:role",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -112,11 +112,13 @@ const contentConfig: IContentConfig<RoleQuery> = {
         "edit",
         "delete",
         {
-          name: "editRoleMenu",
-          auth: "menu:editRoleMenu",
-          icon: "plus",
+          name: "perm",
           text: "分配权限",
-          type: "success",
+          perm: "perm",
+          attrs: {
+            icon: "plus",
+            type: "success",
+          },
         },
       ],
     },

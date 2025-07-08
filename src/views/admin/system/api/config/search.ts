@@ -1,7 +1,7 @@
 import type { ISearchConfig } from "@/components/CURD/types";
 
 const searchConfig: ISearchConfig = {
-  pageName: "sys:api",
+  permPrefix: "sys:api",
   formItems: [
     {
       type: "input",

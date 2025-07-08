@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #title="scope">
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IObject, IOperateData } from "@/components/CURD/types";
 import type { RouteRecordRaw } from "vue-router";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
@@ -74,7 +74,7 @@ import PageContent from "@/components/CURD/PageContent.vue";
 import MenuForm from "./form.vue";
 import type { MenuNewReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
-import { MenuTypeEnum } from "@/enums/MenuTypeEnum";
+import { MenuTypeEnum } from "@/enums/blog/MenuTypeEnum";
 import { usePermissionStore } from "@/store";
 
 const {
@@ -84,23 +84,13 @@ const {
   editModalRef,
   handleQueryClick,
   handleResetClick,
-  // handleAddClick,
-  // handleEditClick,
+  handleAddClick,
+  handleEditClick,
   // handleSubmitClick,
   handleExportClick,
   handleSearchClick,
   handleFilterChange,
 } = usePage();
-
-// 新增
-async function handleAddClick() {
-  addModalRef.value?.setModalVisible();
-}
-
-// 编辑
-async function handleEditClick(row: IObject) {
-  editModalRef.value?.setModalVisible(row);
-}
 
 // 表单提交
 async function handleSubmitClick() {
@@ -160,7 +150,7 @@ function convertMenu(menus: any[]): MenuNewReq[] {
       parent_id: 0,
       path: menu.path,
       name: menu.name,
-      component: input?.slice(start, end)+".vue",
+      component: input?.slice(start, end) + ".vue",
       redirect: menu.redirect,
       type: menu.children ? MenuTypeEnum.CATALOG : MenuTypeEnum.MENU,
       title: menu.meta.title,
@@ -181,9 +171,9 @@ function convertMenu(menus: any[]): MenuNewReq[] {
 }
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
-  switch (data.name) {
+function handleToolbarClick(name: string) {
+  console.log(name);
+  switch (name) {
     case "addMenu":
       menuForm.value = null;
       addOrUpdate.value = true;
@@ -205,7 +195,7 @@ function handleToolbarClick(data: ISelectedData) {
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
   switch (data.name) {
     case "addSubMenu":

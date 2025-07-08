@@ -3,11 +3,12 @@ import type { RoleNewReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 
 const modalConfig: IModalConfig<RoleNewReq> = {
-  pageName: "sys:user",
+  permPrefix: "sys:user",
   dialog: {
     title: "新增用户",
     width: 600,
     draggable: true,
+    transition: undefined,
   },
   form: {
     labelWidth: 100,
@@ -68,4 +69,4 @@ const modalConfig: IModalConfig<RoleNewReq> = {
 };
 
 // 如果有异步数据会修改配置的，推荐用reactive包裹，而纯静态配置的可以直接导出
-export default reactive(modalConfig);
+export default modalConfig;

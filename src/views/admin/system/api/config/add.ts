@@ -3,7 +3,7 @@ import type { ApiNewReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
 
 const modalConfig: IModalConfig<ApiNewReq> = {
-  pageName: "sys:api",
+  permPrefix: "sys:api",
   component: "dialog",
   dialog: {
     title: "新增接口",
@@ -85,4 +85,4 @@ const modalConfig: IModalConfig<ApiNewReq> = {
 };
 
 // 如果有异步数据会修改配置的，推荐用reactive包裹，而纯静态配置的可以直接导出
-export default reactive(modalConfig);
+export default modalConfig;

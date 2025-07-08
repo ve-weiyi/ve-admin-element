@@ -3,8 +3,8 @@ import type { OperationLogQuery } from "@/api/types";
 import { OperationLogAPI } from "@/api/operation_log";
 
 const contentConfig: IContentConfig<OperationLogQuery> = {
-  pageName: "log:operation",
   pageTitle: "操作日志",
+  permPrefix: "log:operation",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -80,15 +80,7 @@ const contentConfig: IContentConfig<OperationLogQuery> = {
       prop: "request_method",
       width: 100,
       align: "center",
-      templet: "tag",
-      tagOptions: [
-        { value: "GET", label: "GET", type: "success" },
-        { value: "POST", label: "POST", type: "primary" },
-        { value: "PUT", label: "PUT", type: "warning" },
-        { value: "DELETE", label: "DELETE", type: "danger" },
-        { value: "NULL", label: "NULL", type: "info" },
-        { value: "", label: "NULL", type: "info" },
-      ],
+      templet: "custom",
     },
     {
       label: "请求地址",

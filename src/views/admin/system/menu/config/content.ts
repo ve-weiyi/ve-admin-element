@@ -3,8 +3,8 @@ import type { MenuQuery } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 
 const contentConfig: IContentConfig<MenuQuery> = {
-  pageName: "sys:menu",
   pageTitle: "菜单管理",
+  permPrefix: "sys:menu",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -43,24 +43,30 @@ const contentConfig: IContentConfig<MenuQuery> = {
   toolbar: [
     {
       name: "syncMenu",
-      icon: "refresh",
       text: "同步菜单",
-      auth: "sync",
-      type: "success",
+      perm: "sync",
+      attrs: {
+        icon: "refresh",
+        type: "success",
+      },
     },
     {
       name: "clearMenu",
-      icon: "delete",
       text: "清空菜单",
-      auth: "clear",
-      type: "info",
+      perm: "clear",
+      attrs: {
+        icon: "delete",
+        type: "info",
+      },
     },
     {
       name: "addMenu",
-      icon: "plus",
       text: "新增菜单",
-      auth: "add",
-      type: "primary",
+      perm: "add",
+      attrs: {
+        icon: "plus",
+        type: "primary",
+      },
     },
     "delete",
   ],
@@ -163,17 +169,21 @@ const contentConfig: IContentConfig<MenuQuery> = {
       operat: [
         {
           name: "addSubMenu",
-          auth: "menu:addSubMenu",
-          icon: "plus",
           text: "添加",
-          type: "success",
+          perm: "menu:addSubMenu",
+          attrs: {
+            icon: "plus",
+            type: "success",
+          },
         },
         {
           name: "editMenu",
-          auth: "menu:editMenu",
-          icon: "edit",
           text: "编辑",
-          type: "primary",
+          perm: "menu:editMenu",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
         },
         "delete",
       ],

@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import IconSelect from "@/components/IconSelect/index.vue";
 import type { MenuBackVO, MenuNewReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
-import { MenuTypeEnum } from "@/enums/MenuTypeEnum";
+import { MenuTypeEnum } from "@/enums/blog/MenuTypeEnum";
 import { CirclePlusFilled, DeleteFilled, QuestionFilled } from "@element-plus/icons-vue";
 
 const menuForm = defineModel<MenuNewReq>({

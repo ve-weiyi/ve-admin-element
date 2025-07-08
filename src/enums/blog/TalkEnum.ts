@@ -1,4 +1,3 @@
-
 /**
  * 说说置顶枚举
  */
@@ -8,7 +7,6 @@ export const enum TalkTopEnum {
   // 置顶
   YES = 1,
 }
-
 
 /**
  * 说说状态枚举

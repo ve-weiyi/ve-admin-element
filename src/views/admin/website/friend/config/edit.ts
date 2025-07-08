@@ -3,7 +3,7 @@ import type { FriendNewReq } from "@/api/types";
 import { FriendAPI } from "@/api/friend";
 
 const modalConfig: IModalConfig<FriendNewReq> = {
-  pageName: "website:friend",
+  permPrefix: "website:friend",
   component: "drawer",
   drawer: {
     title: "修改友链",
@@ -55,4 +55,4 @@ const modalConfig: IModalConfig<FriendNewReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

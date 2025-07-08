@@ -192,7 +192,7 @@ import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file";
 import { formatDate } from "@/utils/date";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
-import { ArticleTopEnum } from "@/enums/ArticleEnum";
+import { ArticleTopEnum } from "@/enums/blog/ArticleEnum.ts";
 
 const route = useRoute();
 const router = useRouter();

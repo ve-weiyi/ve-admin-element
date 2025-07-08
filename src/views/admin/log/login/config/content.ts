@@ -3,8 +3,8 @@ import type { AccountQuery } from "@/api/types";
 import { LoginLogAPI } from "@/api/login_log.ts";
 
 const contentConfig: IContentConfig<AccountQuery> = {
-  pageName: "log:login",
   pageTitle: "登录日志",
+  permPrefix: "log:login",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -61,24 +61,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       prop: "app_name",
       width: 120,
       align: "center",
-      templet: "tag",
-      tagOptions: [
-        {
-          label: "admin",
-          value: "admin-web",
-          type: "primary",
-        },
-        {
-          label: "blog",
-          value: "blog-web",
-          type: "success",
-        },
-        {
-          label: "unknown",
-          value: "",
-          type: "danger",
-        },
-      ],
+      templet: "custom",
     },
     {
       label: "操作系统",

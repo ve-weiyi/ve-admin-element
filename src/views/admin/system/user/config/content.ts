@@ -4,8 +4,8 @@ import { AccountAPI } from "@/api/account";
 import { useUserStore } from "@/store";
 
 const contentConfig: IContentConfig<AccountQuery> = {
-  pageName: "sys:user",
   pageTitle: "用户管理",
+  permPrefix: "sys:user",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -130,10 +130,12 @@ const contentConfig: IContentConfig<AccountQuery> = {
       operat: [
         {
           name: "reset_password",
-          auth: "password:reset",
-          icon: "refresh-left",
           text: "重置密码",
-          type: "primary",
+          perm: "password:reset",
+          attrs: {
+            icon: "refresh-left",
+            type: "primary",
+          },
           render(row) {
             return (
               !row.roles.find((item) => item === "super-admin") ||

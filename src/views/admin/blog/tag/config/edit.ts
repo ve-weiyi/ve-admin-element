@@ -3,7 +3,7 @@ import type { TagNewReq } from "@/api/types";
 import { TagAPI } from "@/api/tag";
 
 const modalConfig: IModalConfig<TagNewReq> = {
-  pageName: "sys:user",
+  permPrefix: "sys:user",
   dialog: {
     title: "新增用户",
     width: 600,
@@ -32,4 +32,4 @@ const modalConfig: IModalConfig<TagNewReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

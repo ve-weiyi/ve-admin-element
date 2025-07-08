@@ -90,7 +90,7 @@
       <!-- 网站公告 -->
       <el-tab-pane label="社交信息" name="notice">
         <el-form v-model="websiteConfigForm" label-width="100px">
-          <el-table :data="websiteConfigForm.social_url_list" style="width: 100%" border>
+          <el-table :data="websiteConfigForm.social_url_list" :style="{ width: '100%' }" border>
             <el-table-column prop="name" label="平台名称" width="140">
               <template #default="scope">
                 <el-input v-model="scope.row.name" placeholder="如: 微信"></el-input>

@@ -3,8 +3,8 @@ import type { ApiQuery } from "@/api/types";
 import { ApiAPI } from "@/api/api";
 
 const contentConfig: IContentConfig<ApiQuery> = {
-  pageName: "sys:user",
   pageTitle: "接口管理",
+  permPrefix: "sys:user",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -43,24 +43,30 @@ const contentConfig: IContentConfig<ApiQuery> = {
   toolbar: [
     {
       name: "syncApi",
-      icon: "refresh",
       text: "同步接口",
-      auth: "sync",
-      type: "success",
+      perm: "sync",
+      attrs: {
+        icon: "refresh",
+        type: "success",
+      },
     },
     {
       name: "clearApi",
-      icon: "delete",
       text: "清空接口",
-      auth: "clear",
-      type: "info",
+      perm: "clear",
+      attrs: {
+        icon: "delete",
+        type: "info",
+      },
     },
     {
       name: "addApi",
-      icon: "plus",
       text: "新增接口",
-      auth: "add",
-      type: "primary",
+      perm: "add",
+      attrs: {
+        icon: "plus",
+        type: "primary",
+      },
     },
     "delete",
   ],
@@ -96,15 +102,7 @@ const contentConfig: IContentConfig<ApiQuery> = {
       prop: "method",
       width: 0,
       align: "center",
-      templet: "tag",
-      tagOptions: [
-        { value: "GET", label: "GET", type: "success" },
-        { value: "POST", label: "POST", type: "primary" },
-        { value: "PUT", label: "PUT", type: "warning" },
-        { value: "DELETE", label: "DELETE", type: "danger" },
-        { value: "NULL", label: "NULL", type: "info" },
-        { value: "", label: "NULL", type: "info" },
-      ],
+      templet: "custom",
     },
     {
       label: "是否记录日志",
@@ -142,10 +140,12 @@ const contentConfig: IContentConfig<ApiQuery> = {
       operat: [
         {
           name: "addSubApi",
-          auth: "addSubApi",
-          icon: "plus",
           text: "添加",
-          type: "success",
+          perm: "addSubApi",
+          attrs: {
+            icon: "plus",
+            type: "success",
+          },
         },
         "edit",
         "delete",

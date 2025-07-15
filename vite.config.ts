@@ -32,7 +32,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         // 定义全局 SCSS 变量
         scss: {
-          api: "modern-compiler",
           additionalData: `
             @use "@/styles/variables.scss" as *;
           `,
@@ -187,6 +186,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
       },
       rollupOptions: {
+        treeshake: false, // 尝试禁用 treeshake
         output: {
           // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
           entryFileNames: "js/[name].[hash].js",

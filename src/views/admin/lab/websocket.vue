@@ -92,6 +92,7 @@
 import { onMounted, onBeforeUnmount, ref, watch } from "vue";
 import { useStomp } from "@/hooks/websocket/core/useStomp.ts";
 import { useUserStoreHook } from "@/store/modules/user.store";
+import { getAccessToken, getUid } from "@/utils/auth.ts";
 
 const userStore = useUserStoreHook();
 // 用于手动调整 WebSocket 地址
@@ -112,6 +113,8 @@ const receiver = ref("root");
 // 调用 useStomp hook，默认使用 socketEndpoint 和 token（此处用 getAccessToken()）
 const { isConnected, connect, subscribe, disconnect, client } = useStomp({
   debug: true,
+  token: getAccessToken(),
+  login: getUid(),
 });
 
 watch(
@@ -120,13 +123,14 @@ watch(
     console.log("WebSocket 连接状态:", connected);
     if (connected) {
       // 连接成功后，订阅广播和点对点消息主题
-      subscribe("/topic/notice", (res) => {
+      subscribe("/topic/system/broadcast", (res) => {
+        const messageData = JSON.parse(res.body) as MessageType;
         messages.value.push({
           sender: "Server",
-          content: res.body,
+          content: messageData.content,
         });
       });
-      subscribe("/user/queue/greeting", (res) => {
+      subscribe(`/queue/user/${userStore.userInfo.user_id}`, (res) => {
         const messageData = JSON.parse(res.body) as MessageType;
         messages.value.push({
           sender: messageData.sender,
@@ -162,7 +166,7 @@ function disconnectWebSocket() {
 function sendToAll() {
   if (client.value && client.value.connected) {
     client.value.publish({
-      destination: "/topic/notice",
+      destination: "/app/system/broadcast",
       body: topicMessage.value,
     });
     messages.value.push({
@@ -176,7 +180,7 @@ function sendToAll() {
 function sendToUser() {
   if (client.value && client.value.connected) {
     client.value.publish({
-      destination: "/app/sendToUser/" + receiver.value,
+      destination: "/app/user/" + receiver.value,
       body: queneMessage.value,
     });
     messages.value.push({

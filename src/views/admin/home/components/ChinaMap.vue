@@ -119,7 +119,6 @@ watchEffect(() => {
   if (!myChart.value) {
     return;
   }
-  console.log("option.value", newOptions());
   myChart.value?.setOption(newOptions());
 });
 

@@ -1,5 +1,4 @@
-import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
-import { getAccessToken } from "@/utils/auth";
+import { Client, type IMessage, type StompSubscription } from "@stomp/stompjs";
 import { ref, watch } from "vue";
 
 export interface UseStompOptions {
@@ -7,6 +6,7 @@ export interface UseStompOptions {
   brokerURL?: string;
   /** 用于鉴权的 token，不传时使用 getAccessToken() 的返回值 */
   token?: string;
+  login?: string;
   /** 重连延迟，单位毫秒，默认为 8000 */
   reconnectDelay?: number;
   /** 连接超时时间，单位毫秒，默认为 10000 */
@@ -22,13 +22,12 @@ export interface UseStompOptions {
 }
 
 /**
- * STOMP WebSocket连接Hook
+ * STOMP WebSocket连接组合式函数
  * 用于管理WebSocket连接的建立、断开、重连和消息订阅
  */
 export function useStomp(options: UseStompOptions = {}) {
   // 默认值：brokerURL 从环境变量中获取，token 从 getAccessToken() 获取
   const defaultBrokerURL = import.meta.env.VITE_APP_WS_ENDPOINT || "";
-  console.log("WebSocket端点:", defaultBrokerURL);
 
   const brokerURL = ref(options.brokerURL ?? defaultBrokerURL);
   // 默认配置参数
@@ -50,58 +49,68 @@ export function useStomp(options: UseStompOptions = {}) {
   const subscriptions = new Map<string, StompSubscription>();
 
   // 用于保存 STOMP 客户端的实例
-  let client = ref<Client | null>(null);
+  const client = ref<Client | null>(null);
+  // 防止重复连接的标志
+  let isConnecting = false;
+  let isManualDisconnect = false;
 
   /**
    * 初始化 STOMP 客户端
    */
   const initializeClient = () => {
-    if (client.value) {
+    // 如果客户端已存在且正在连接或已连接，直接返回
+    if (client.value && (client.value.active || client.value.connected)) {
+      console.log("STOMP客户端已存在且处于活动状态，跳过初始化");
       return;
     }
 
     // 检查WebSocket端点是否配置
     if (!brokerURL.value) {
-      console.error("WebSocket连接失败: 未配置WebSocket端点URL");
+      console.warn("WebSocket连接失败: 未配置WebSocket端点URL");
       return;
     }
 
-    // 每次连接前重新获取最新令牌，不依赖之前的token值
-    const currentToken = getAccessToken();
-
-    // 检查令牌是否为空，如果为空则不进行连接
-    if (!currentToken) {
-      console.error("WebSocket连接失败：授权令牌为空，请先登录");
-      return;
+    // 如果有旧的客户端，先清理
+    if (client.value) {
+      try {
+        client.value.deactivate();
+      } catch (error) {
+        console.warn("清理旧客户端时出错:", error);
+      }
+      client.value = null;
     }
 
     // 创建 STOMP 客户端
     client.value = new Client({
       brokerURL: brokerURL.value,
       connectHeaders: {
-        Authorization: `Bearer ${currentToken}`,
+        authorization: `Bearer ${options.token}`,
+        login: options.login ?? "",
       },
       debug: options.debug ? console.log : () => {},
-      reconnectDelay: useExponentialBackoff ? 0 : reconnectDelay, // 禁用内置重连机制
-      heartbeatIncoming: 10000,
-      heartbeatOutgoing: 10000,
+      reconnectDelay: 0, // 禁用内置重连机制，使用自定义重连
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
     });
 
     // 设置连接监听器
     client.value.onConnect = () => {
       isConnected.value = true;
+      isConnecting = false;
       reconnectCount.value = 0;
       clearTimeout(connectionTimeoutTimer);
+      clearTimeout(reconnectTimer);
       console.log("WebSocket连接已建立");
     };
 
     // 设置断开连接监听器
     client.value.onDisconnect = () => {
       isConnected.value = false;
+      isConnecting = false;
       console.log("WebSocket连接已断开");
 
-      // 如果使用自定义指数退避重连策略，则在这里处理
-      if (useExponentialBackoff && reconnectCount.value < maxReconnectAttempts) {
+      // 如果不是手动断开且未达到最大重连次数，则尝试重连
+      if (!isManualDisconnect && reconnectCount.value < maxReconnectAttempts) {
         handleReconnect();
       }
     };
@@ -109,32 +118,31 @@ export function useStomp(options: UseStompOptions = {}) {
     // 设置 Web Socket 关闭监听器
     client.value.onWebSocketClose = (event) => {
       isConnected.value = false;
+      isConnecting = false;
       console.log(`WebSocket已关闭: ${event?.code} ${event?.reason}`);
 
-      // 如果是授权问题导致的关闭，尝试重新获取令牌
-      if (event?.code === 1000 || event?.code === 1006 || event?.code === 1008) {
-        console.log("可能是授权问题导致连接关闭，尝试重新建立连接");
+      // 如果是手动断开，不要重连
+      if (isManualDisconnect) {
+        console.log("手动断开连接，不进行重连");
+        return;
+      }
 
-        // 等待一段时间后再尝试重连，避免立即重连
-        setTimeout(() => {
-          // 强制重新初始化客户端，获取最新令牌
-          client.value = null;
+      // 如果是授权问题导致的关闭，尝试重连
+      if (
+        (event?.code === 1000 || event?.code === 1006 || event?.code === 1008) &&
+        reconnectCount.value < maxReconnectAttempts
+      ) {
+        console.log("检测到连接异常关闭，将尝试重连");
 
-          // 检查当前是否有有效令牌
-          const freshToken = getAccessToken();
-          if (freshToken) {
-            initializeClient();
-            connect();
-          } else {
-            console.warn("没有有效令牌，暂不重连WebSocket");
-          }
-        }, 3000);
+        // 通过 handleReconnect 统一处理重连，避免重复计数
+        handleReconnect();
       }
     };
 
     // 设置错误监听器
     client.value.onStompError = (frame) => {
       console.error("STOMP错误:", frame.headers, frame.body);
+      isConnecting = false;
 
       // 检查是否是授权错误
       if (
@@ -143,6 +151,8 @@ export function useStomp(options: UseStompOptions = {}) {
         frame.body?.includes("Token")
       ) {
         console.warn("WebSocket授权错误，请检查登录状态");
+        // 授权错误不进行重连
+        isManualDisconnect = true;
       }
     };
   };
@@ -151,13 +161,18 @@ export function useStomp(options: UseStompOptions = {}) {
    * 处理重连逻辑
    */
   const handleReconnect = () => {
+    // 如果已经在连接中或手动断开，不重连
+    if (isConnecting || isManualDisconnect) {
+      return;
+    }
+
     if (reconnectCount.value >= maxReconnectAttempts) {
       console.error(`已达到最大重连次数(${maxReconnectAttempts})，停止重连`);
       return;
     }
 
     reconnectCount.value++;
-    console.log(`尝试重连(${reconnectCount.value}/${maxReconnectAttempts})...`);
+    console.log(`准备重连(${reconnectCount.value}/${maxReconnectAttempts})...`);
 
     // 使用指数退避策略增加重连间隔
     const delay = useExponentialBackoff
@@ -171,8 +186,9 @@ export function useStomp(options: UseStompOptions = {}) {
 
     // 设置重连计时器
     reconnectTimer = setTimeout(() => {
-      if (!isConnected.value && client.value) {
-        client.value.activate();
+      if (!isConnected.value && !isManualDisconnect && !isConnecting) {
+        console.log(`开始重连...`);
+        connect();
       }
     }, delay);
   };
@@ -197,9 +213,18 @@ export function useStomp(options: UseStompOptions = {}) {
    * 激活连接（如果已经连接或正在激活则直接返回）
    */
   const connect = () => {
+    // 重置手动断开标志
+    isManualDisconnect = false;
+
     // 检查是否有配置WebSocket端点
     if (!brokerURL.value) {
       console.error("WebSocket连接失败: 未配置WebSocket端点URL");
+      return;
+    }
+
+    // 防止重复连接
+    if (isConnecting) {
+      console.log("WebSocket正在连接中，跳过重复连接请求");
       return;
     }
 
@@ -212,29 +237,35 @@ export function useStomp(options: UseStompOptions = {}) {
       return;
     }
 
-    // 避免重复连接:检查是否已连接或正在连接
+    // 避免重复连接:检查是否已连接
     if (client.value.connected) {
       console.log("WebSocket已经连接,跳过重复连接");
+      isConnected.value = true;
       return;
     }
 
-    if (client.value.active) {
-      console.log("WebSocket连接正在进行中,跳过重复连接请求");
-      return;
-    }
+    // 设置连接标志
+    isConnecting = true;
 
     // 设置连接超时
     clearTimeout(connectionTimeoutTimer);
     connectionTimeoutTimer = setTimeout(() => {
-      if (!isConnected.value) {
+      if (!isConnected.value && isConnecting) {
         console.warn("WebSocket连接超时");
-        if (useExponentialBackoff) {
+        isConnecting = false;
+        if (!isManualDisconnect && reconnectCount.value < maxReconnectAttempts) {
           handleReconnect();
         }
       }
     }, connectionTimeout);
 
-    client.value.activate();
+    try {
+      client.value.activate();
+      console.log("正在建立WebSocket连接...");
+    } catch (error) {
+      console.error("激活WebSocket连接失败:", error);
+      isConnecting = false;
+    }
   };
 
   /**
@@ -243,46 +274,43 @@ export function useStomp(options: UseStompOptions = {}) {
    * @param callback 接收到消息时的回调函数
    * @returns 返回订阅 id，用于后续取消订阅
    */
-  const subscribe = (destination: string, callback: (message: IMessage) => void): string => {
-    if (!client.value) {
-      return "";
-    }
-
-    if (!client.value.connected) {
+  const subscribe = (destination: string, callback: (_message: IMessage) => void): string => {
+    if (!client.value || !client.value.connected) {
+      console.warn(`尝试订阅 ${destination} 失败: 客户端未连接`);
       return "";
     }
 
     try {
       const subscription = client.value.subscribe(destination, callback);
-      subscriptions.set(subscription.id, subscription);
-      console.log(`订阅成功: ${destination}, ID: ${subscription.id}`);
-      return subscription.id;
+      const subscriptionId = subscription.id;
+      subscriptions.set(subscriptionId, subscription);
+      console.log(`订阅成功: ${destination}, ID: ${subscriptionId}`);
+      return subscriptionId;
     } catch (error) {
-      console.error(`订阅失败(${destination}):`, error);
+      console.error(`订阅 ${destination} 失败:`, error);
       return "";
     }
   };
 
   /**
-   * 取消指定订阅
-   * @param subscriptionId 要取消的订阅 id
+   * 取消订阅
+   * @param subscriptionId 订阅 id
    */
   const unsubscribe = (subscriptionId: string) => {
     const subscription = subscriptions.get(subscriptionId);
     if (subscription) {
       subscription.unsubscribe();
       subscriptions.delete(subscriptionId);
+      console.log(`已取消订阅: ${subscriptionId}`);
     }
   };
 
   /**
-   * 主动断开连接（如果未连接则不执行）
+   * 断开WebSocket连接
    */
   const disconnect = () => {
-    if (client.value && !(client.value.connected || client.value.active)) {
-      console.log("Already disconnected, skipping disconnect() call.");
-      return;
-    }
+    // 设置手动断开标志
+    isManualDisconnect = true;
 
     // 清除所有计时器
     if (reconnectTimer) {
@@ -295,19 +323,40 @@ export function useStomp(options: UseStompOptions = {}) {
       connectionTimeoutTimer = null;
     }
 
-    client.value?.deactivate();
+    // 清除所有订阅
+    for (const [id, subscription] of subscriptions.entries()) {
+      try {
+        subscription.unsubscribe();
+      } catch (error) {
+        console.warn(`取消订阅 ${id} 时出错:`, error);
+      }
+    }
+    subscriptions.clear();
+
+    // 断开连接
+    if (client.value) {
+      try {
+        if (client.value.connected || client.value.active) {
+          client.value.deactivate();
+          console.log("WebSocket连接已主动断开");
+        }
+      } catch (error) {
+        console.error("断开WebSocket连接时出错:", error);
+      }
+      client.value = null;
+    }
+
     isConnected.value = false;
+    isConnecting = false;
     reconnectCount.value = 0;
   };
 
   return {
     client,
     isConnected,
-    reconnectCount,
     connect,
     subscribe,
     unsubscribe,
     disconnect,
-    brokerURL,
   };
 }

@@ -164,7 +164,7 @@ import { formatDateTime } from "@/utils/date";
 import { ElMessage } from "element-plus";
 import Editor from "@/components/Editor/index.vue";
 import EmojiList from "@/assets/emojis/qq_emoji.json";
-import { TalkStatusEnum, TalkTopEnum } from "@/enums/TalkEnum.ts";
+import { TalkStatusEnum, TalkTopEnum } from "@/enums/blog/TalkEnum.ts";
 
 const route = useRoute();
 const router = useRouter();

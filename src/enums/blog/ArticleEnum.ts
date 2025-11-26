@@ -31,3 +31,17 @@ export const enum ArticleStatusEnum {
   // 草稿
   DRAFT = 3,
 }
+
+/**
+ * 文章类型枚举
+ */
+export const enum ArticleTypeEnum {
+  // 原创
+  ORIGINAL = 1,
+
+  // 转载
+  REPRINT = 2,
+
+  // 翻译
+  TRANSLATE = 3,
+}

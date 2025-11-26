@@ -1,11 +1,11 @@
 import vue from "@vitejs/plugin-vue";
-import { type UserConfig, type ConfigEnv, loadEnv, defineConfig } from "vite";
+import { type ConfigEnv, type UserConfig, loadEnv, defineConfig, PluginOption } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
-import mockDevServerPlugin from "vite-plugin-mock-dev-server";
+import { mockDevServerPlugin } from "vite-plugin-mock-dev-server";
 
 import UnoCSS from "unocss/vite";
 import { resolve } from "path";
@@ -59,9 +59,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      env.VITE_MOCK_DEV_SERVER === "true" ? mockDevServerPlugin() : null,
+      ...(env.VITE_MOCK_DEV_SERVER === "true" ? [mockDevServerPlugin()] : []),
       UnoCSS(),
-      // 自动导入配置 https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+      // API 自动导入
       AutoImport({
         imports: ["vue", "@vueuse/core", "pinia", "vue-router"],
         resolvers: [ElementPlusResolver()],
@@ -86,7 +86,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         dts: false,
         // dts: "src/types/components.d.ts",
       }),
-    ],
+    ] as PluginOption[],
     // 预加载项目必需的组件
     optimizeDeps: {
       include: [
@@ -178,8 +178,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       terserOptions: {
         compress: {
           keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题
-          drop_console: true, // 生产环境去除 console
+          drop_console: true, // 生产环境去除 console.log, console.warn, console.error 等
           drop_debugger: true, // 生产环境去除 debugger
+          // pure_funcs: ["console.log", "console.info"], // 移除指定的函数调用
         },
         format: {
           comments: false, // 删除注释

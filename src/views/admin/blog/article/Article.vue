@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #table-header>
@@ -43,6 +43,17 @@
             {{ scope.row[scope.prop] }}
           </el-tag>
         </template>
+        <template #article_type="scope">
+          <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.ORIGINAL" type="success">
+            原创
+          </el-tag>
+          <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.REPRINT" type="info">
+            转载
+          </el-tag>
+          <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.TRANSLATE" type="warning">
+            翻译
+          </el-tag>
+        </template>
         <template #tag_name_list="scope">
           <el-tag v-for="item of scope.row[scope.prop]" type="primary">
             {{ item }}
@@ -54,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IObject, IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -62,7 +73,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { ArticleAPI } from "@/api/article";
 import "@/styles/table.scss";
-import { ArticleDeleteEnum, ArticleStatusEnum } from "@/enums/ArticleEnum";
+import { ArticleDeleteEnum, ArticleStatusEnum, ArticleTypeEnum } from "@/enums/blog/ArticleEnum.ts";
 
 const {
   searchRef,
@@ -71,28 +82,18 @@ const {
   editModalRef,
   handleQueryClick,
   handleResetClick,
-  // handleAddClick,
-  // handleEditClick,
+  handleAddClick,
+  handleEditClick,
   // handleSubmitClick,
   handleExportClick,
   handleSearchClick,
   handleFilterChange,
 } = usePage();
 
-// 新增
-async function handleAddClick() {
-  addModalRef.value?.setModalVisible();
-}
-
-// 编辑
-async function handleEditClick(row: IObject) {
-  editModalRef.value?.setModalVisible(row);
-}
-
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
-  switch (data.name) {
+function handleToolbarClick(name: string) {
+  console.log(name);
+  switch (name) {
     case "writeArticle":
       router.push({ path: `/article/publish` });
   }
@@ -102,7 +103,7 @@ const route = useRoute();
 const router = useRouter();
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
 
   switch (data.name) {

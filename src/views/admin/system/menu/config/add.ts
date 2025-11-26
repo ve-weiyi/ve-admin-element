@@ -3,7 +3,7 @@ import type { MenuNewReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 
 const modalConfig: IModalConfig<MenuNewReq> = {
-  pageName: "sys:menu",
+  permPrefix: "sys:menu",
   dialog: {
     title: "新增菜单",
     width: 600,
@@ -92,4 +92,4 @@ const modalConfig: IModalConfig<MenuNewReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

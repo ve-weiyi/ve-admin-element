@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #roles="scope">
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import editModalConfig from "./config/edit";
@@ -56,7 +56,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { LoginTypeEnum } from "@/enums/LoginTypeEnum";
+import { LoginTypeEnum } from "@/enums/blog/LoginTypeEnum.ts";
 import { AccountAPI } from "@/api/account.ts";
 
 const {
@@ -75,15 +75,18 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
+function handleToolbarClick(name: string) {
+  console.log(name);
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
 
   switch (data.name) {
+    case "edit":
+      handleEditClick(data.row);
+      break;
     case "reset_password":
       ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {
         confirmButtonText: "确定",

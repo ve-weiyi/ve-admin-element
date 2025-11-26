@@ -3,7 +3,7 @@ import type { CategoryNewReq } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
 const modalConfig: IModalConfig<CategoryNewReq> = {
-  pageName: "sys:user",
+  permPrefix: "sys:user",
   dialog: {
     title: "新增用户",
     width: 600,
@@ -32,4 +32,4 @@ const modalConfig: IModalConfig<CategoryNewReq> = {
 };
 
 // 如果有异步数据会修改配置的，推荐用reactive包裹，而纯静态配置的可以直接导出
-export default reactive(modalConfig);
+export default modalConfig;

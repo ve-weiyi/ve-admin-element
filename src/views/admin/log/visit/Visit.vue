@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #user="scope">
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -61,12 +61,12 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
+function handleToolbarClick(name: string) {
+  console.log(name);
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
 
   switch (data.name) {

@@ -3,8 +3,8 @@ import type { AccountQuery } from "@/api/types";
 import { AccountAPI } from "@/api/account";
 
 const contentConfig: IContentConfig<AccountQuery> = {
-  pageName: "monitor:online",
   pageTitle: "在线用户",
+  permPrefix: "monitor:online",
   table: {
     border: true,
     highlightCurrentRow: true,

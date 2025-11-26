@@ -19,13 +19,20 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #status="scope">
           <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
             {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
           </el-tag>
+        </template>
+        <template #method="scope">
+          <el-tag v-if="scope.row[scope.prop] === 'GET'" type="success">GET</el-tag>
+          <el-tag v-else-if="scope.row[scope.prop] === 'POST'" type="warning">POST</el-tag>
+          <el-tag v-else-if="scope.row[scope.prop] === 'PUT'" type="danger">PUT</el-tag>
+          <el-tag v-else-if="scope.row[scope.prop] === 'DELETE'" type="info">DELETE</el-tag>
+          <el-tag v-else type="info">{{ scope.row[scope.prop] }}</el-tag>
         </template>
       </page-content>
 
@@ -47,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IObject, IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -57,6 +64,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { ApiAPI } from "@/api/api";
+import { ArticleTypeEnum } from "@/enums/blog/ArticleEnum.ts";
 
 const {
   searchRef,
@@ -65,23 +73,13 @@ const {
   editModalRef,
   handleQueryClick,
   handleResetClick,
-  // handleAddClick,
-  // handleEditClick,
+  handleAddClick,
+  handleEditClick,
   handleSubmitClick,
   handleExportClick,
   handleSearchClick,
   handleFilterChange,
 } = usePage();
-
-// 新增
-async function handleAddClick() {
-  addModalRef.value?.setModalVisible();
-}
-
-// 编辑
-async function handleEditClick(row: IObject) {
-  editModalRef.value?.setModalVisible(row);
-}
 
 function Sync() {
   ElMessageBox.confirm(`确认要<strong>同步接口列表到数据库吗</strong>`, "系统提示", {
@@ -102,11 +100,11 @@ function Sync() {
 }
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
-  switch (data.name) {
+function handleToolbarClick(name: string) {
+  console.log(name);
+  switch (name) {
     case "addApi":
-      addModalRef.value?.setModalVisible({});
+      handleAddClick();
       break;
     case "syncApi":
       Sync();
@@ -125,16 +123,18 @@ function handleToolbarClick(data: ISelectedData) {
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
   switch (data.name) {
     case "addSubApi":
-      addModalRef.value?.setModalVisible({
+      addModalRef.value?.setFormData({
         parent_id: data.row.id,
         parent_name: data.row.name,
       });
+      addModalRef.value?.setModalVisible(true);
       break;
-    case "editApi":
+    case "edit":
+      handleEditClick(data.row);
       break;
     default:
       break;

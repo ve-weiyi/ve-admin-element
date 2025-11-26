@@ -11,13 +11,13 @@ RoleAPI.findRoleListApi({}).then((res) => {
 });
 
 const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
-  pageName: "sys:user",
+  permPrefix: "sys:user",
   component: "dialog",
   dialog: {
     title: "编辑用户",
     width: 600,
     draggable: true,
-  },
+  } as const,
   pk: "id",
   formAction: function (data) {
     return AccountAPI.updateAccountRolesApi(data);
@@ -29,6 +29,7 @@ const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
     {
       label: "用户id",
       prop: "user_id",
+      type: "input",
       attrs: {
         disabled: true,
       },
@@ -58,4 +59,4 @@ const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

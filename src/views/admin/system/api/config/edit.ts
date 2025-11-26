@@ -3,7 +3,7 @@ import type { ApiNewReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
 
 const modalConfig: IModalConfig<ApiNewReq> = {
-  pageName: "sys:api",
+  permPrefix: "sys:api",
   component: "dialog",
   dialog: {
     title: "编辑接口",
@@ -82,4 +82,4 @@ const modalConfig: IModalConfig<ApiNewReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

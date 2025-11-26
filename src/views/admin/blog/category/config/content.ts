@@ -3,8 +3,8 @@ import type { CategoryQuery } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
 const contentConfig: IContentConfig<CategoryQuery> = {
-  pageName: "sys:category",
   pageTitle: "分类管理",
+  permPrefix: "sys:category",
   table: {
     border: true,
     highlightCurrentRow: true,

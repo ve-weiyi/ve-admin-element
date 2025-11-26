@@ -3,7 +3,7 @@ import type { FriendNewReq } from "@/api/types";
 import { FriendAPI } from "@/api/friend";
 
 const modalConfig: IModalConfig<FriendNewReq> = {
-  pageName: "website:friend",
+  permPrefix: "website:friend",
   dialog: {
     title: "新增友链",
     width: 600,
@@ -59,4 +59,4 @@ const modalConfig: IModalConfig<FriendNewReq> = {
 };
 
 // 如果有异步数据会修改配置的，推荐用reactive包裹，而纯静态配置的可以直接导出
-export default reactive(modalConfig);
+export default modalConfig;

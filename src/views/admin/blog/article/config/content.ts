@@ -1,11 +1,11 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { ArticleQuery } from "@/api/types";
 import { ArticleAPI } from "@/api/article";
-import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/ArticleEnum";
+import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog/ArticleEnum.ts";
 
 const contentConfig: IContentConfig<ArticleQuery> = {
-  pageName: "blog:article",
   pageTitle: "文章管理",
+  permPrefix: "blog:article",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -36,10 +36,12 @@ const contentConfig: IContentConfig<ArticleQuery> = {
   toolbar: [
     {
       name: "writeArticle",
-      icon: "plus",
+      attrs: {
+        icon: "plus",
+        type: "primary",
+      },
       text: "新增文章",
-      auth: "write",
-      type: "primary",
+      perm: "write",
     },
   ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
@@ -77,24 +79,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       prop: "article_type",
       width: 100,
       align: "center",
-      templet: "tag",
-      tagOptions: [
-        {
-          value: 1,
-          label: "原创",
-          type: "success",
-        },
-        {
-          value: 2,
-          label: "转载",
-          type: "info",
-        },
-        {
-          value: 3,
-          label: "翻译",
-          type: "warning",
-        },
-      ],
+      templet: "custom",
     },
     {
       label: "分类",
@@ -149,40 +134,48 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       operat: [
         {
           name: "editArticle",
-          auth: "article:editArticle",
-          icon: "edit",
+          perm: "article:editArticle",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
           text: "编辑",
-          type: "primary",
           render(row) {
             return row.is_delete != ArticleDeleteEnum.YES;
           },
         },
         {
           name: "recycleArticle",
-          auth: "article:recycleArticle",
-          icon: "refresh",
+          perm: "article:recycleArticle",
+          attrs: {
+            icon: "refresh",
+            type: "danger",
+          },
           text: "回收",
-          type: "danger",
           render(row) {
             return row.is_delete != ArticleDeleteEnum.YES;
           },
         },
         {
           name: "restoreArticle",
-          auth: "article:restoreArticle",
-          icon: "refreshLeft",
+          perm: "article:restoreArticle",
+          attrs: {
+            icon: "refreshLeft",
+            type: "success",
+          },
           text: "恢复",
-          type: "success",
           render(row) {
             return row.is_delete == ArticleDeleteEnum.YES;
           },
         },
         {
           name: "removeArticle",
-          auth: "article:removeArticle",
-          icon: "delete",
+          perm: "article:removeArticle",
+          attrs: {
+            icon: "delete",
+            type: "info",
+          },
           text: "删除",
-          type: "info",
           render(row) {
             return row.is_delete == ArticleDeleteEnum.YES;
           },

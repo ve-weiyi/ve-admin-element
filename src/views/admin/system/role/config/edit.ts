@@ -3,7 +3,7 @@ import type { RoleNewReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 
 const modalConfig: IModalConfig<RoleNewReq> = {
-  pageName: "sys:user",
+  permPrefix: "sys:user",
   component: "dialog",
   dialog: {
     title: "编辑角色",
@@ -66,4 +66,4 @@ const modalConfig: IModalConfig<RoleNewReq> = {
   ],
 };
 
-export default reactive(modalConfig);
+export default modalConfig;

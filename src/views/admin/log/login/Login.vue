@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #user="scope">
@@ -37,19 +37,24 @@
           <el-tag v-if="scope.row.login_type === LoginTypeEnum.PHONE" type="danger">手机</el-tag>
           <el-tag v-if="scope.row.login_type === LoginTypeEnum.OAUTH" type="primary">第三方</el-tag>
         </template>
+        <template #app_name="scope">
+          <el-tag v-if="scope.row.login_type === 'admin-web'" type="success">admin</el-tag>
+          <el-tag v-else-if="scope.row.login_type === 'blog-web'" type="danger">blog</el-tag>
+          <el-tag v-else type="primary">unknown</el-tag>
+        </template>
       </page-content>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { LoginTypeEnum } from "@/enums/LoginTypeEnum";
+import { LoginTypeEnum } from "@/enums/blog/LoginTypeEnum.ts";
 
 const {
   searchRef,
@@ -67,12 +72,12 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
+function handleToolbarClick(name: string) {
+  console.log(name);
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
 
   switch (data.name) {

@@ -19,7 +19,7 @@
         @export-click="handleExportClick"
         @search-click="handleSearchClick"
         @toolbar-click="handleToolbarClick"
-        @operat-click="handleOperatClick"
+        @operate-click="handleOperateClick"
         @filter-change="handleFilterChange"
       >
         <template #user="scope">
@@ -32,13 +32,20 @@
             <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
           </div>
         </template>
+        <template #request_method="scope">
+          <el-tag v-if="scope.row[scope.prop] === 'GET'" type="success">GET</el-tag>
+          <el-tag v-else-if="scope.row[scope.prop] === 'POST'" type="warning">POST</el-tag>
+          <el-tag v-else-if="scope.row[scope.prop] === 'PUT'" type="danger">PUT</el-tag>
+          <el-tag v-else-if="scope.row[scope.prop] === 'DELETE'" type="info">DELETE</el-tag>
+          <el-tag v-else type="info">{{ scope.row[scope.prop] }}</el-tag>
+        </template>
       </page-content>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { IOperatData, ISelectedData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -63,16 +70,13 @@ const {
 } = usePage();
 
 // 其他工具栏
-function handleToolbarClick(data: ISelectedData) {
-  console.log(data.name);
+function handleToolbarClick(name: string) {
+  console.log(name);
 }
 
 // 其他操作列
-function handleOperatClick(data: IOperatData) {
+function handleOperateClick(data: IOperateData) {
   console.log(data);
-
-  switch (data.name) {
-  }
 }
 
 // 切换示例

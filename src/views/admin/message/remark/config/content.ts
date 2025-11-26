@@ -3,8 +3,8 @@ import type { RemarkQuery } from "@/api/types";
 import { RemarkAPI } from "@/api/remark";
 
 const contentConfig: IContentConfig<RemarkQuery> = {
-  pageName: "message:remark",
   pageTitle: "留言管理",
+  permPrefix: "message:remark",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -35,10 +35,12 @@ const contentConfig: IContentConfig<RemarkQuery> = {
   toolbar: [
     {
       name: "review",
-      icon: "CircleCheck",
       text: "批量通过",
-      auth: "review",
-      type: "success",
+      perm: "review",
+      attrs: {
+        icon: "CircleCheck",
+        type: "success",
+      },
     },
     "delete",
   ],
@@ -111,10 +113,12 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       operat: [
         {
           name: "review",
-          auth: "password:reset",
-          icon: "check",
           text: "通过",
-          type: "success",
+          perm: "password:reset",
+          attrs: {
+            icon: "check",
+            type: "success",
+          },
           render(row) {
             return row.is_review != 1;
           },

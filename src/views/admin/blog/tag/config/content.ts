@@ -3,8 +3,8 @@ import type { TagQuery } from "@/api/types";
 import { TagAPI } from "@/api/tag";
 
 const contentConfig: IContentConfig<TagQuery> = {
-  pageName: "sys:tag",
   pageTitle: "标签管理",
+  permPrefix: "sys:tag",
   table: {
     border: true,
     highlightCurrentRow: true,

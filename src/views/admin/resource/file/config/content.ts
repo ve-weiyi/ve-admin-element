@@ -3,8 +3,8 @@ import type { ListUploadFileReq } from "@/api/types";
 import { UploadAPI } from "@/api/upload";
 
 const contentConfig: IContentConfig<ListUploadFileReq> = {
-  pageName: "resource:file",
   pageTitle: "文件管理",
+  permPrefix: "resource:file",
   table: {
     border: false,
     highlightCurrentRow: true,
@@ -22,7 +22,6 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
     };
   },
   indexAction: function (query) {
-
     return UploadAPI.listUploadFileApi({
       limit: 20,
       file_path: query.file_path,
@@ -37,19 +36,23 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
   toolbar: [
     {
       name: "addFile",
-      icon: "plus",
       text: "上传文件",
-      auth: "addFile",
-      type: "primary",
+      perm: "addFile",
+      attrs: {
+        icon: "plus",
+        type: "primary",
+      },
     },
     "delete",
   ],
   defaultToolbar: [
     {
       name: "return",
-      icon: "RefreshLeft",
-      title: "返回",
-      auth: "return",
+      text: "返回",
+      perm: "return",
+      attrs: {
+        icon: "RefreshLeft",
+      },
     },
     "refresh",
     "filter",
@@ -115,10 +118,12 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
       operat: [
         {
           name: "download",
-          auth: "download",
-          icon: "download",
           text: "下载",
-          type: "primary",
+          perm: "download",
+          attrs: {
+            icon: "download",
+            type: "primary",
+          },
           render(row) {
             return row.file_type != "";
           },

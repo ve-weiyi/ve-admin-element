@@ -1,70 +1,101 @@
-import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from "axios";
+import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import qs from "qs";
-import { useUserStoreHook } from "@/store/modules/user.store";
-import { ResultCode } from "@/enums/common/result.enum";
-import { getAccessToken } from "@/utils/auth";
+import MD5 from "crypto-js/md5";
+import { useUserStore } from "@/store";
+import { getAccessToken, getUid } from "./auth";
 
-// 创建 axios 实例
-const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
-  timeout: 50000,
-  headers: { "Content-Type": "application/json;charset=utf-8" },
-  paramsSerializer: (params) => qs.stringify(params),
+const HeaderAppName = "App-Name";
+const HeaderTimestamp = "Timestamp";
+const HeaderTerminalId = "Terminal-Id";
+const HeaderXTsToken = "X-Ts-Token";
+
+const HeaderUid = "Uid";
+const HeaderToken = "Token";
+const HeaderAuthorization = "Authorization";
+
+const axiosInstance = axios.create({
+  baseURL: "",
+  timeout: 10000,
+  withCredentials: false, // 禁用 Cookie
+  // 请求头
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+  },
+  paramsSerializer: (params) => {
+    return qs.stringify(params);
+  },
 });
 
 // 请求拦截器
-service.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+axiosInstance.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    // 请求携带用户token
+    const uid = getUid();
     const accessToken = getAccessToken();
-    // 如果 Authorization 设置为 no-auth，则不携带 Token
-    if (config.headers.Authorization !== "no-auth" && accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      delete config.headers.Authorization;
-    }
+    // 签名
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const sign = MD5(`${timestamp}${uid}${accessToken}`).toString();
+
+    config.headers = Object.assign({}, config.headers, {
+      [HeaderAppName]: "admin-web",
+      [HeaderUid]: uid,
+      [HeaderAuthorization]: accessToken,
+      [HeaderTimestamp]: timestamp,
+      [HeaderXTsToken]: sign,
+    });
     return config;
   },
-  (error) => Promise.reject(error)
+  (error: AxiosError) => {
+    return Promise.reject(error);
+  }
 );
-
-// 响应拦截器
-service.interceptors.response.use(
+// 配置响应拦截器
+axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 如果响应是二进制流，则直接返回，用于下载文件、Excel 导出等
-    if (response.config.responseType === "blob") {
+    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
+    if (response.config.responseType === "blob" || response.config.responseType === "arraybuffer") {
       return response;
     }
 
     const { code, data, msg } = response.data;
-    if (code === ResultCode.SUCCESS) {
-      return data;
-    }
 
-    ElMessage.error(msg || "系统出错");
-    return Promise.reject(new Error(msg || "Error"));
-  },
-  async (error: any) => {
-    // 非 2xx 状态码处理 401、403、500 等
-    const response = error.response;
-    if (response) {
-      const { code, msg } = response.data;
-      if (code === ResultCode.ACCESS_TOKEN_INVALID) {
-        ElMessageBox.confirm("当前页面已失效，请重新登录", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }).then(() => {
-          const userStore = useUserStoreHook();
-          userStore.clearSessionAndCache().then(() => {
-            location.reload();
-          });
-        });
-      } else {
+    // 接口错误码
+    switch (code) {
+      case 200:
+        break;
+      case 401:
+        ElMessage.error("用户未登录");
+        return Promise.reject(msg);
+      case 402:
+        useUserStore().clearSessionAndCache();
+        ElMessage.error("用户登录过期");
+        return Promise.reject(msg);
+      case 403:
+        ElMessage.error("无权限访问");
+        return Promise.reject(msg);
+      case 500:
+        ElMessage.error(msg);
+        return Promise.reject(msg);
+      default:
         ElMessage.error(msg || "系统出错");
-      }
+        return Promise.reject(new Error(msg || "Error"));
     }
-    return Promise.reject(error.message);
+    return response.data;
+  },
+  (error: AxiosError) => {
+    console.error("request error", error); // for debug
+    let { message } = error;
+    if (message == "Network Error") {
+      message = "后端接口连接异常";
+    } else if (message.includes("timeout")) {
+      message = "系统接口请求超时";
+    } else if (message.includes("Request failed with status code")) {
+      message = "系统接口" + message.substring(message.length - 3) + "异常";
+    }
+    ElMessage.error(message);
+    return Promise.reject(error);
   }
 );
 
-export default service;
+// 对外暴露
+export default axiosInstance;

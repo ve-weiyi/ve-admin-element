@@ -2,10 +2,21 @@ import type { RouteRecordRaw } from "vue-router";
 import { constantRoutes } from "@/router";
 import { store } from "@/store";
 import router from "@/router";
+import { UserAPI } from "@/api/user";
+import type { UserMenu } from "@/api/types";
 
-import MenuAPI, { type RouteVO } from "@/api/system/menu.api";
-const modules = import.meta.glob("../../views/**/**.vue");
+// 动态导入所有路由模块
+const routeModules = import.meta.glob("@/router/admin/*.ts", { eager: true });
+const viewModules = import.meta.glob("/src/views/**/*.{vue,tsx}");
 const Layout = () => import("@/layout/index.vue");
+
+// 常量定义
+const LAYOUT_COMPONENT = "Layout";
+const ERROR_404_PATH = "../../views/error/404.vue";
+const USE_MOCK_ENV = import.meta.env.VITE_USE_MOCK_MENU === "true";
+
+// 路由缓存
+const routeCache = new Map<string, any>();
 
 export const usePermissionStore = defineStore("permission", () => {
   // 储所有路由，包括静态路由和动态路由
@@ -16,24 +27,48 @@ export const usePermissionStore = defineStore("permission", () => {
   const isRoutesLoaded = ref(false);
 
   /**
-   * 获取后台动态路由数据，解析并注册到全局路由
-   *
-   * @returns Promise<RouteRecordRaw[]> 解析后的动态路由列表
+   * 生成动态路由
    */
-  function generateRoutes() {
-    return new Promise<RouteRecordRaw[]>((resolve, reject) => {
-      MenuAPI.getRoutes()
-        .then((data) => {
-          const dynamicRoutes = parseDynamicRoutes(data);
-          routes.value = [...constantRoutes, ...dynamicRoutes];
-          isRoutesLoaded.value = true;
-          resolve(dynamicRoutes);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
+  const generateRoutes = async (): Promise<RouteRecordRaw[]> => {
+    try {
+      let dynamicRoutes: RouteRecordRaw[];
+
+      if (USE_MOCK_ENV) {
+        dynamicRoutes = getMockRoutes();
+      } else {
+        try {
+          const { data } = await UserAPI.getUserMenusApi();
+          dynamicRoutes = transformRoutes(data.list);
+        } catch (error) {
+          console.warn("获取用户菜单失败，使用模拟路由:", error);
+          dynamicRoutes = getMockRoutes();
+        }
+      }
+
+      routes.value = [...constantRoutes, ...dynamicRoutes];
+      isRoutesLoaded.value = true;
+      return dynamicRoutes;
+    } catch (error) {
+      console.error("生成路由失败:", error);
+      throw error;
+    }
+  };
+
+  /**
+   * 获取模拟路由数据（按rank排序）
+   */
+  const getMockRoutes = (): RouteRecordRaw[] => {
+    const routes = Object.values(routeModules)
+      .map((module) => (module as any).default)
+      .filter((route) => route)
+      .sort((a, b) => {
+        const rankA = a.meta?.rank || 999;
+        const rankB = b.meta?.rank || 999;
+        return rankA - rankB;
+      });
+
+    return routes;
+  };
 
   /**
    * 根据父菜单路径设置混合模式左侧菜单
@@ -69,43 +104,71 @@ export const usePermissionStore = defineStore("permission", () => {
     mixedLayoutLeftRoutes,
     isRoutesLoaded,
     generateRoutes,
+    getMockRoutes,
     setMixedLayoutLeftRoutes,
     resetRouter,
   };
 });
 
 /**
- * 解析后端返回的路由数据并转换为 Vue Router 兼容的路由配置
- *
- * @param rawRoutes 后端返回的原始路由数据
- * @returns 解析后的路由配置数组
+ * 转换路由数据为组件
  */
-const parseDynamicRoutes = (rawRoutes: RouteVO[]): RouteRecordRaw[] => {
-  const parsedRoutes: RouteRecordRaw[] = [];
+const transformRoutes = (routes: UserMenu[]): RouteRecordRaw[] => {
+  return routes.map((route) => {
+    const transformedRoute = { ...route } as any as RouteRecordRaw;
 
-  rawRoutes.forEach((route) => {
-    const normalizedRoute = { ...route } as RouteRecordRaw;
+    // 设置组件
+    transformedRoute.component = getRouteComponent(route);
 
-    // 处理组件路径
-    normalizedRoute.component =
-      normalizedRoute.component?.toString() === "Layout"
-        ? Layout
-        : modules[`../../views/${normalizedRoute.component}.vue`] ||
-          modules["../../views/error-page/404.vue"];
-
-    // 递归解析子路由
-    if (normalizedRoute.children) {
-      normalizedRoute.children = parseDynamicRoutes(route.children);
+    // 递归处理子路由
+    if (route.children?.length) {
+      transformedRoute.children = transformRoutes(route.children);
     }
 
-    parsedRoutes.push(normalizedRoute);
+    return transformedRoute;
   });
-
-  return parsedRoutes;
 };
+
 /**
- * 在组件外使用 Pinia store 实例 @see https://pinia.vuejs.org/core-concepts/outside-component-usage.html
+ * 获取路由组件
  */
-export function usePermissionStoreHook() {
-  return usePermissionStore(store);
-}
+const getRouteComponent = (route: UserMenu) => {
+  const componentStr = route.component?.toString();
+
+  // 布局组件
+  if (componentStr === LAYOUT_COMPONENT || componentStr?.includes("layout")) {
+    return Layout;
+  }
+
+  // 动态组件
+  const component = findComponent(route);
+  return component || viewModules[ERROR_404_PATH];
+};
+
+/**
+ * 查找组件
+ */
+const findComponent = (route: UserMenu) => {
+  const cacheKey = route.component || route.path;
+  if (routeCache.has(cacheKey)) {
+    return routeCache.get(cacheKey);
+  }
+
+  const moduleKeys = Object.keys(viewModules);
+  const targetPath = route.component || route.path;
+
+  const matchedKey = moduleKeys.find((key) => key.includes(targetPath) || targetPath.includes(key));
+
+  const component = matchedKey ? viewModules[matchedKey] : null;
+
+  if (component) {
+    routeCache.set(cacheKey, component);
+  }
+
+  return component;
+};
+
+/**
+ * 在组件外使用 Pinia store 实例
+ */
+export const usePermissionStoreHook = () => usePermissionStore(store);

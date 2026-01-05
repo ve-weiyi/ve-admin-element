@@ -1,0 +1,195 @@
+import type { IContentConfig } from "@/components/CURD/types";
+import type { ArticleQuery } from "@/api/types";
+import { ArticleAPI } from "@/api/article";
+import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog/index.ts";
+
+const contentConfig: IContentConfig<ArticleQuery> = {
+  pageTitle: "文章管理",
+  permPrefix: "blog:article",
+  table: {
+    border: true,
+    highlightCurrentRow: true,
+  },
+  pagination: {
+    background: true,
+    layout: "prev,pager,next,jumper,total,sizes",
+    pageSize: 10,
+    pageSizes: [10, 20, 30, 50],
+  },
+  parseData: (res) => {
+    return {
+      total: res.data.total,
+      list: res.data.list || [],
+    };
+  },
+  indexAction: function (query: ArticleQuery) {
+    query = Object.assign(
+      {
+        is_top: ArticleDeleteEnum.ALL,
+        is_delete: ArticleDeleteEnum.ALL,
+      },
+      query
+    );
+    return ArticleAPI.findArticleListApi(query);
+  },
+  modifyAction(row, field, value) {
+    const data = {
+      id: row.id as number,
+      is_top: row.is_top as number,
+    };
+    return ArticleAPI.topArticleApi(data);
+  },
+  pk: "id",
+  toolbar: [
+    {
+      name: "writeArticle",
+      attrs: {
+        icon: "plus",
+        type: "primary",
+      },
+      text: "新增文章",
+      perm: "write",
+    },
+  ],
+  defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
+  cols: [
+    {
+      type: "selection",
+      label: "批量操作",
+      width: 50,
+      align: "center",
+    },
+    {
+      label: "id",
+      prop: "id",
+      width: 70,
+      align: "center",
+      sortable: true,
+    },
+    {
+      label: "文章封面",
+      prop: "article_cover",
+      width: 100,
+      align: "center",
+      templet: "image",
+      imageWidth: 80,
+    },
+    {
+      label: "文章标题",
+      prop: "article_title",
+      minWidth: 200,
+      width: 0,
+      align: "center",
+    },
+    {
+      label: "文章类型",
+      prop: "article_type",
+      width: 100,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "分类",
+      prop: "category_name",
+      width: 100,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "标签",
+      prop: "tag_name_list",
+      width: 120,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "是否置顶",
+      prop: "is_top",
+      width: 100,
+      align: "center",
+      templet: "switch",
+      activeValue: ArticleTopEnum.YES,
+      inactiveValue: ArticleTopEnum.NO,
+    },
+    {
+      label: "浏览量",
+      prop: "views_count",
+      width: 80,
+      align: "center",
+    },
+    {
+      label: "点赞量",
+      prop: "like_count",
+      width: 80,
+      align: "center",
+    },
+    {
+      label: "创建时间",
+      prop: "created_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+    },
+    {
+      label: "操作栏",
+      align: "center",
+      fixed: "right",
+      width: 160,
+      templet: "tool",
+      operat: [
+        {
+          name: "editArticle",
+          perm: "article:editArticle",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
+          text: "编辑",
+          render(row) {
+            return row.is_delete != ArticleDeleteEnum.YES;
+          },
+        },
+        {
+          name: "recycleArticle",
+          perm: "article:recycleArticle",
+          attrs: {
+            icon: "refresh",
+            type: "danger",
+          },
+          text: "删除",
+          render(row) {
+            return row.is_delete != ArticleDeleteEnum.YES;
+          },
+        },
+        {
+          name: "restoreArticle",
+          perm: "article:restoreArticle",
+          attrs: {
+            icon: "refreshLeft",
+            type: "success",
+          },
+          text: "恢复",
+          render(row) {
+            return row.is_delete == ArticleDeleteEnum.YES;
+          },
+        },
+        {
+          name: "destroyArticle",
+          perm: "article:destroyArticle",
+          attrs: {
+            icon: "delete",
+            type: "info",
+          },
+          text: "销毁",
+          render(row) {
+            return row.is_delete == ArticleDeleteEnum.YES;
+          },
+        },
+      ],
+    },
+  ],
+};
+
+export default contentConfig;

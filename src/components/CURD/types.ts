@@ -56,6 +56,8 @@ export interface ISearchConfig {
 }
 
 export interface IContentConfig<T = any> {
+  // 页面标题
+  pageTitle?: string;
   // 权限前缀(如sys:user，用于组成权限标识)，不提供则不进行权限校验
   permPrefix?: string;
   // table组件属性
@@ -85,11 +87,7 @@ export interface IContentConfig<T = any> {
     [key: string]: any;
   };
   // 修改属性的网络请求函数(需返回promise)
-  modifyAction?: (data: {
-    [key: string]: any;
-    field: string;
-    value: boolean | string | number;
-  }) => Promise<any>;
+  modifyAction?: (row: IObject, field: string, value: boolean | string | number) => Promise<any>;
   // 删除的网络请求函数(需返回promise)
   deleteAction?: (ids: string) => Promise<any>;
   // 后端导出的网络请求函数(需返回promise)

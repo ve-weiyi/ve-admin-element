@@ -1,0 +1,201 @@
+<template>
+  <div class="app-container">
+    <!-- 搜索 -->
+    <page-search
+      ref="searchRef"
+      :search-config="searchConfig"
+      @query-click="handleQueryClick"
+      @reset-click="handleResetClick"
+    />
+
+    <!-- 列表 -->
+    <page-content
+      ref="contentRef"
+      :content-config="contentConfig"
+      @add-click="handleAddClick"
+      @edit-click="handleEditClick"
+      @export-click="handleExportClick"
+      @search-click="handleSearchClick"
+      @toolbar-click="handleToolbarClick"
+      @operate-click="handleOperateClick"
+      @filter-change="handleFilterChange"
+    >
+      <template #table-header>
+        <!-- 表格菜单 -->
+        <div v-if="statusList.length !== 0" class="status-menu">
+          <span>状态</span>
+          <template v-for="item of statusList" :key="item.value">
+            <span :class="isActive(item.value)" @click="handleStatusCheck(item.value)">
+              {{ item.label }}
+            </span>
+          </template>
+        </div>
+      </template>
+      <template #article_type="scope">
+        <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.ORIGINAL" type="success">
+          原创
+        </el-tag>
+        <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.REPRINT" type="warning">
+          转载
+        </el-tag>
+        <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.TRANSLATE" type="info">翻译</el-tag>
+      </template>
+      <template #category_name="scope">
+        <el-tag type="success">
+          {{ scope.row[scope.prop] }}
+        </el-tag>
+      </template>
+      <template #tag_name_list="scope">
+        <el-tag v-for="item of scope.row[scope.prop]" type="primary">
+          {{ item }}
+        </el-tag>
+      </template>
+    </page-content>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import type { IObject, IOperateData } from "@/components/CURD/types";
+import usePage from "@/components/CURD/usePage";
+import contentConfig from "./config/content";
+import searchConfig from "./config/search";
+import PageSearch from "@/components/CURD/PageSearch.vue";
+import PageContent from "@/components/CURD/PageContent.vue";
+import { ArticleAPI } from "@/api/article";
+import "@/styles/table.scss";
+import { ArticleDeleteEnum, ArticleStatusEnum, ArticleTypeEnum } from "@/enums/blog/index.ts";
+
+const route = useRoute();
+const router = useRouter();
+
+const {
+  searchRef,
+  contentRef,
+  addModalRef,
+  editModalRef,
+  handleQueryClick,
+  handleResetClick,
+  handleAddClick,
+  handleEditClick,
+  // handleSubmitClick,
+  handleExportClick,
+  handleSearchClick,
+  handleFilterChange,
+} = usePage();
+
+// 其他工具栏
+function handleToolbarClick(name: string) {
+  console.log(name);
+  switch (name) {
+    case "writeArticle":
+      router.push({ path: `/article/publish` });
+  }
+}
+
+// 其他操作列
+function handleOperateClick(data: IOperateData) {
+  console.log(data);
+
+  switch (data.name) {
+    case "editArticle":
+      router.push({ path: `/article/edit/${data.row.id}` });
+      break;
+    case "recycleArticle":
+      ArticleAPI.recycleArticleApi({
+        id: data.row.id,
+        is_delete: 1,
+      }).then(() => {
+        data.row.is_delete = 1;
+        ElMessage.success("回收成功");
+      });
+      break;
+    case "restoreArticle":
+      ArticleAPI.recycleArticleApi({
+        id: data.row.id,
+        is_delete: 0,
+      }).then(() => {
+        data.row.is_delete = 0;
+        ElMessage.success("恢复成功");
+      });
+      break;
+    case "destroyArticle":
+      ArticleAPI.deleteArticleApi({
+        id: data.row.id,
+      }).then(() => {
+        ElMessage.success("删除成功");
+      });
+      break;
+    default:
+      break;
+  }
+}
+
+/** ******** start status menu **********/
+type StatusTag = {
+  value: string | number;
+  label: string;
+  condition: any;
+};
+
+const statusList: StatusTag[] = [
+  {
+    value: "all",
+    label: "全部",
+    condition: {
+      is_top: ArticleDeleteEnum.ALL,
+      is_delete: ArticleDeleteEnum.ALL,
+    },
+  },
+  {
+    value: "public",
+    label: "公开",
+    condition: {
+      is_top: ArticleDeleteEnum.ALL,
+      is_delete: ArticleDeleteEnum.NO,
+      status: ArticleStatusEnum.PUBLIC,
+    },
+  },
+  {
+    value: "private",
+    label: "私密",
+    condition: {
+      is_top: ArticleDeleteEnum.ALL,
+      is_delete: ArticleDeleteEnum.NO,
+      status: ArticleStatusEnum.PRIVATE,
+    },
+  },
+  {
+    value: "draft",
+    label: "草稿",
+    condition: {
+      is_top: ArticleDeleteEnum.ALL,
+      is_delete: ArticleDeleteEnum.NO,
+      status: ArticleStatusEnum.DRAFT,
+    },
+  },
+  {
+    value: "delete",
+    label: "回收站",
+    condition: {
+      is_top: ArticleDeleteEnum.ALL,
+      is_delete: ArticleDeleteEnum.YES,
+    },
+  },
+];
+
+const status = ref<string | number>(statusList.length > 0 ? statusList[0].value : 0);
+
+const isActive = (value: string | number) => {
+  return value == status.value ? "status-menu-active" : "status-menu-normal";
+};
+// 选择了状态
+const handleStatusCheck = (value: string | number) => {
+  status.value = value;
+  const conditions = statusList.find((v) => v.value === status.value)?.condition || {};
+
+  handleQueryClick(conditions);
+};
+</script>

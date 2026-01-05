@@ -1,199 +1,164 @@
+<div align=center>
+  <img alt="ve-admin-element" width="64" height="64" src="./public/favicon.ico">
 
-<div align="center">
-  <img alt="vue3-element-admin" width="80" height="80" src="./src/assets/logo.png">
-  <h1>vue3-element-admin</h1>
+  <h1>ve-admin-element</h1>
 
   <img src="https://img.shields.io/badge/Vue-3.5.13-brightgreen.svg"/>
-  <img src="https://img.shields.io/badge/Vite-6.2.1-green.svg"/>
+  <img src="https://img.shields.io/badge/Vite-6.2.6-green.svg"/>
+  <img src="https://img.shields.io/badge/TypeScript-5.8.2-blue.svg"/>
+  <img src="https://img.shields.io/badge/Pinia-3.0.1-yellow.svg"/>
+  <img src="https://img.shields.io/badge/UnoCSS-65.4.3-red.svg"/>
   <img src="https://img.shields.io/badge/Element Plus-2.9.6-blue.svg"/>
-  <img src="https://img.shields.io/badge/license-MIT-green.svg"/>
-  <a href="https://gitee.com/youlaiorg" target="_blank">
-      <img src="https://img.shields.io/badge/Author-有来开源组织-orange.svg"/>
-  </a>
 </div>
-
-![](https://foruda.gitee.com/images/1708618984641188532/a7cca095_716974.png "rainbow.png")
-
 
 <div align="center">
-  <a target="_blank" href="http://vue3.youlai.tech/template">🔍 在线预览</a> |  <a target="_blank" href="https://juejin.cn/post/7228990409909108793">📖 阅读文档</a> | <a href="./README.en-US.md">🌐English
+  <a target="_blank" href="https://admin.veweiyi.cn">🖥️ 在线预览</a> |
+  <a target="_blank" href="https://admin.veweiyi.cn/admin-api/v1/swagger/index.html">📑 接口文档</a>
 </div>
 
+## 📚 项目简介
 
-## 项目简介
+ve-admin-element 是一个现代化的博客后台管理系统，基于 Vue 3.5 + TypeScript + Element Plus 构建。项目采用最新的前端技术栈，提供了丰富的功能组件和优雅的用户界面。
 
-[vue3-element-template](https://gitee.com/youlaiorg/vue3-element-admin) 是  [vue3-element-admin](https://gitee.com/youlaiorg/vue3-element-admin) 精简的 Vue3 中后台开发模板，采用 Vue3 + Vite6 + TypeScript5 + Element-Plus + Pinia 等前沿技术栈构建，配套提供 [Java 后端](https://gitee.com/youlaiorg/youlai-boot) 和 [Node 后端](https://gitee.com/youlaiorg/youlai-nest)，完全免费开源。
+## ✨ 项目预览
 
+![img.png](assets/img.png)
 
-## 项目特色
+![img_1.png](assets/img_1.png)
 
-- 🚀 **核心优势**
-  - **技术升级**：基于经典项目 [vue-element-admin](https://gitee.com/panjiachen/vue-element-admin) 的 Vue3 重构版，避免过度封装，学习曲线平缓
-  - **开箱即用**：预设代码规范、Git 提交规范和工程化配置，内置常用业务组件
-  - **全栈方案**：支持本地 Mock 和线上 API 切换，配套 [Java 后端系统](https://gitee.com/youlaiorg/youlai-boot) 和 [在线接口文档](https://www.apifox.cn/apidoc/shared-195e783f-4d85-4235-a038-eec696de4ea5)
+![img_2.png](assets/img_2.png)
 
-- 🛡️ 权限体系
-  - **完整功能**：用户/角色/菜单/字典/部门五位一体的权限管理系统
-  - **精细控制**：动态路由加载 + 按钮级权限控制，支持国际化多语言方案
+## ✨ 核心特性
 
-- 🛠️ 持续维护
-  - **版本更新**：持续跟进主流技术更新，定期升级依赖和工具链
-  - **多端适配**：提供基础版、开发版、精简版多种形态，满足不同场景需求
+- 🚀 **先进的技术栈**：
+  - 使用 Vue 3.5 + TypeScript + Vite 6.2 构建
+  - 基于 Element Plus 2.9.6 组件库
+  - 采用 Pinia 3.0 状态管理
+  - UnoCSS 原子化 CSS 解决方案
 
+- 🎨 **优秀的开发体验**：
+  - TypeScript 支持
+  - Vue 组合式 API
+  - 完整的类型定义
+  - 代码规范化配置（ESLint + Prettier）
+  - Git 提交规范化（Husky + Commitlint）
 
-## 项目预览
+- 📦 **丰富的功能组件**：
+  - WangEditor 富文本编辑器
+  - Markdown 编辑器（md-editor-v3）
+  - ECharts 图表支持
+  - 文件上传/图片裁剪
+  - Excel 导入导出
 
-![明亮模式](https://foruda.gitee.com/images/1709651876583793739/0ba1ee1c_716974.png)
+- 🔐 **完善的权限系统**：
+  - 基于角色的访问控制
+  - 动态路由权限
+  - 细粒度的按钮权限
 
-![暗黑模式](https://foruda.gitee.com/images/1709651875494206224/2a2b0b53_716974.png)
+## 🛠️ 技术栈
 
-![接口文档](https://foruda.gitee.com/images/1687755822857820115/96054330_716974.png)
+- 核心框架：Vue 3.5.13
+- UI 组件：Element Plus 2.9.6
+- 构建工具：Vite 6.2.6
+- 编程语言：TypeScript 5.8.2
+- 状态管理：Pinia 3.0.1
+- CSS 解决方案：UnoCSS 65.4.3
+- HTTP 工具：Axios 1.8.2
+- 工具库：lodash-es、dayjs
+- 编辑器：@wangeditor/editor、md-editor-v3
+- 图表：ECharts 5.6.0
 
-## 项目源码
+## 📁 项目源码
 
-| 版本类型       | 功能亮点                                | Gitee 源码                                                                 | GitHub 源码                                                               | GitCode 镜像                                                              |
-|----------------|---------------------------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| **基础版**     | ✅ 权限体系 + 🌐 国际化 + 🛠️ 代码生成 + 🎥 演示案例 | [vue3-element-admin](https://gitee.com/youlaiorg/vue3-element-admin)       | [vue3-element-admin](https://github.com/youlaitech/vue3-element-admin)    | [vue3-element-admin](https://gitcode.com/youlai/vue3-element-admin)      |
-| **开发版**     | ✅ 权限系统 + 📦 基础功能               | [vue3-element-template](https://gitee.com/youlaiorg/vue3-element-template) | [vue3-element-template](https://github.com/youlaitech/vue3-element-template) | [vue3-element-template](https://gitcode.com/youlai/vue3-element-template) |
-| **精简版**     | 🔐 基础登录 + 🧩 最小功能集                  | [vue3-element-admin-thin](https://gitee.com/cshaptx4869/vue3-element-admin-thin) | [vue3-element-admin-thin](https://github.com/youlaitech/vue3-element-admin-thin) | -                                                                         |
-| **Java 后端**  | 🏗️ SpringBoot 全栈解决方案                | [youlai-boot](https://gitee.com/youlaiorg/youlai-boot)                     | [youlai-boot](https://github.com/haoxianrui/youlai-boot)                  | [youlai-boot](https://gitcode.com/youlai/youlai-boot)                    |
-| **Node 后端**  | 🚀 NestJS 全栈解决方案                    | [youlai-nest](https://gitee.com/youlaiorg/youlai-nest)                     | [youlai-nest](https://github.com/youlaitech/youlai-nest)                  | [youlai-nest](https://gitcode.com/youlai/youlai-nest)                    |
+| 项目               | 功能     | Github                                                               |                                                                     |
+|------------------|--------|----------------------------------------------------------------------|---------------------------------------------------------------------|
+| ve-blog-golang   | 博客后端服务 | [ve-blog-golang](https://github.com/ve-weiyi/ve-blog-golang.git)     | [ve-blog-golang](https://gitee.com/ve-weiyi/ve-blog-golang.git)     |
+| ve-blog-naive    | 博客前台展示 | [ve-blog-naive](https://github.com/ve-weiyi/ve-blog-naive.git)       | [ve-blog-naive](https://gitee.com/ve-weiyi/ve-blog-naive.git)       |
+| ve-admin-element | 博客后台管理 | [ve-admin-element](https://github.com/ve-weiyi/ve-admin-element.git) | [ve-admin-element](https://gitee.com/ve-weiyi/ve-admin-element.git) |
 
+## 🏗️ 项目结构
 
-## 环境准备
+```
+ve-admin-element
+├── .github/           # GitHub 工作流配置
+├── public/            # 静态资源
+├── src/               # 源代码
+│   ├── api/           # API 接口
+│   ├── assets/        # 静态资源
+│   ├── components/    # 公共组件
+│   ├── directives/    # 自定义指令
+│   ├── hooks/         # 组合式函数
+│   ├── layout/        # 布局组件
+│   ├── router/        # 路由配置
+│   ├── store/         # Pinia 状态管理
+│   ├── styles/        # 全局样式
+│   ├── types/         # TypeScript 类型
+│   ├── utils/         # 工具函数
+│   └── views/         # 页面组件
+├── public/            # 静态资源
+├── mock/              # 接口模拟
+├── .github/           # GitHub 配置
+├── .husky/            # Git Hooks
+├── vite.config.ts     # Vite 配置
+├── tsconfig.json      # TypeScript 配置
+├── uno.config.ts      # UnoCSS 配置
+└── package.json       # 项目依赖
+```
 
+## 🚀 快速开始
 
-| 环境                 | 名称版本                                                     | 下载地址                                                     |
-| -------------------- | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| **开发工具**         | VSCode    | [下载](https://code.visualstudio.com/Download)           |
-| **运行环境**         | Node ≥18 (其中 20.6.0 版本不可用)    | [下载](http://nodejs.cn/download)                        |
+### 环境要求
 
+- Node.js >= 20
+- pnpm >= 9
 
-
-
-## 项目启动
+### 开发环境
 
 ```bash
-# 克隆代码
-git clone https://gitee.com/youlaiorg/vue3-element-template.git
+# 克隆项目
+git clone https://github.com/ve-weiyi/ve-admin-element.git
 
-# 切换目录
-cd vue3-element-template
-
-# 安装 pnpm
-npm install pnpm -g
-
-# 设置镜像源(可忽略)
-pnpm config set registry https://registry.npmmirror.com
+# 进入项目目录
+cd ve-admin-element
 
 # 安装依赖
 pnpm install
 
-# 启动运行
-pnpm run dev
+# 启动开发服务器
+pnpm dev
 ```
 
-
-
-## 项目部署
+### 生产环境
 
 ```bash
-# 项目打包
-pnpm run build
-
-# 上传文件至远程服务器
-将本地打包生成的 dist 目录下的所有文件拷贝至服务器的 /usr/share/nginx/html 目录。
-
-# nginx.cofig 配置
-server {
-	listen     80;
-	server_name  localhost;
-	location / {
-			root /usr/share/nginx/html;
-			index index.html index.htm;
-	}
-	# 反向代理配置
-	location /prod-api/ {
-      # api.youlai.tech 替换后端API地址，注意保留后面的斜杠 /
-      proxy_pass http://api.youlai.tech/;
-	}
-}
+# 构建生产版本
+pnpm build
 ```
 
-## 本地Mock
+### Docker 部署
 
-项目同时支持在线和本地 Mock 接口，默认使用线上接口，如需替换为 Mock 接口，修改文件 `.env.development` 的 `VITE_MOCK_DEV_SERVER` 为  `true` **即可**。
+```bash
+docker run -d \
+--name ve-admin-element \
+--restart always \
+-p 9421:80 \
+ghcr.io/ve-weiyi/ve-admin-element:latest
+```
 
-## 后端接口
+## 📋 开发计划
 
-> 如果您具备Java开发基础，按照以下步骤将在线接口转为本地后端接口，创建企业级前后端分离开发环境，助您走向全栈之路。
+### ✅ 已完成功能
 
-1. 获取基于 `Java` 和 `SpringBoot` 开发的后端 [youlai-boot](https://gitee.com/youlaiorg/youlai-boot.git) 源码。
-2. 根据后端工程的说明文档 [README.md](https://gitee.com/youlaiorg/youlai-boot#%E9%A1%B9%E7%9B%AE%E8%BF%90%E8%A1%8C) 完成本地启动。
-3. 修改 `.env.development` 文件中的 `VITE_APP_API_URL` 的值，将其从 https://api.youlai.tech 更改为 http://localhost:8989 即可。
+- [x] API接口文件重构
+- [x] 登录页面修改
+- [x] 博客管理页面移植
 
+### 🚧 开发中功能
 
-## 注意事项
+- [ ] 支持第三方登录
+- [ ] 支持多语言
+- [ ] 修改首页布局
 
-- **自动导入插件自动生成默认关闭**
+## 📄 开源协议
 
-  模板项目的组件类型声明已自动生成。如果添加和使用新的组件，请按照图示方法开启自动生成。在自动生成完成后，记得将其设置为 `false`，避免重复执行引发冲突。
-
-  ![](https://foruda.gitee.com/images/1687755823137387608/412ea803_716974.png)
-
-- **项目启动浏览器访问空白**
-
-  请升级浏览器尝试，低版本浏览器内核可能不支持某些新的 JavaScript 语法，比如可选链操作符 `?.`。
-
-- **项目同步仓库更新升级**
-
-  项目同步仓库更新升级之后，建议 `pnpm install` 安装更新依赖之后启动 。
-
-- **项目组件、函数和引用爆红**
-
-	重启 VSCode 尝试
-
-- **其他问题**
-
-  如果有其他问题或者建议，建议 [ISSUE](https://gitee.com/youlaiorg/vue3-element-admin/issues/new)
-
-
-
-## 项目文档
-
-- [基于 Vue3 + Vite + TypeScript + Element-Plus 从0到1搭建后台管理系统](https://blog.csdn.net/u013737132/article/details/130191394)
-- [ESLint+Prettier+Stylelint+EditorConfig 约束和统一前端代码规范](https://youlai.blog.csdn.net/article/details/145608723)
-- [Husky + Lint-staged + Commitlint + Commitizen + cz-git 配置 Git 提交规范](https://youlai.blog.csdn.net/article/details/145615236)
-
-
-## 提交规范
-
-执行 `pnpm run commit` 唤起 git commit 交互，根据提示完成信息的输入和选择。
-
-![](https://foruda.gitee.com/images/1687755823165218215/c1705416_716974.png)
-
-
-## 项目统计
-
-![](https://repobeats.axiom.co/api/embed/aa7cca3d6fa9c308fc659fa6e09af9a1910506c3.svg "Repobeats analytics image")
-
-
-Thanks to all the contributors!
-
-[![contributors](https://contrib.rocks/image?repo=youlaitech/vue3-element-admin)](https://github.com/youlaitech/vue3-element-admin/graphs/contributors)
-
-## G-Star
-
-![](https://foruda.gitee.com/images/1728577513089814203/95f2a70d_716974.jpeg)
-
-
-## 加群交流
-
-> **关注「有来技术」公众号，点击菜单“交流群”获取加群二维码。**
->
-> 如果二维码过期，请加微信(haoxianrui)备注「前端」、「后端」或「全栈」拉你进群。
->
-> 交流群仅限技术交流，为过滤广告营销暂设此门槛，感谢理解与配合
-
-![有来技术公众号二维码](https://foruda.gitee.com/images/1737108820762592766/3390ed0d_716974.png)
-
+本项目采用 MIT 协议开源，详情请查看 [LICENSE](LICENSE) 文件。

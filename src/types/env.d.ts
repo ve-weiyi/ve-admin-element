@@ -4,12 +4,18 @@
 interface ImportMetaEnv {
   /** 应用端口 */
   VITE_APP_PORT: number;
+  /** 应用名称 */
+  VITE_APP_NAME: string;
   /** API 基础路径(代理前缀) */
   VITE_APP_BASE_API: string;
   /** API 地址 */
   VITE_APP_API_URL: string;
+  /** WebSocket 地址 */
+  VITE_APP_WS_ENDPOINT: string;
   /** 是否开启 Mock 服务 */
   VITE_MOCK_DEV_SERVER: boolean;
+  /** 是否启用 Mock 菜单 */
+  VITE_USE_MOCK_MENU: string;
 }
 
 interface ImportMeta {
@@ -17,7 +23,7 @@ interface ImportMeta {
 }
 
 /**
- * 平台的名称、版本、运行所需的node版本、依赖、构建时间的类型提示
+ * 平台的名称、版本、运行所需的`node`版本、依赖、构建时间的类型提示
  */
 declare const __APP_INFO__: {
   pkg: {

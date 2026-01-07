@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types.ts";
-import type { FriendQuery } from "@/api/types.ts";
+import type { QueryFriendReq } from "@/api/types.ts";
 import { FriendAPI } from "@/api/friend.ts";
 
-const contentConfig: IContentConfig<FriendQuery> = {
+const contentConfig: IContentConfig<QueryFriendReq> = {
   pageTitle: "友链管理",
   permPrefix: "website:friend",
   table: {
@@ -28,7 +28,7 @@ const contentConfig: IContentConfig<FriendQuery> = {
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
     return FriendAPI.deletesFriendApi(data);
   },
-  indexAction: function (params: FriendQuery) {
+  indexAction: function (params: QueryFriendReq) {
     if (!params.sorts) {
       params.sorts = [`id desc`];
     }

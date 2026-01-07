@@ -2,12 +2,6 @@
   <div class="app-container">
     <el-card class="main-card">
       <div class="table-title">{{ route.meta.title }}</div>
-      <!--    <mavon-editor-->
-      <!--      ref="mdRef"-->
-      <!--      @imgAdd="uploadImg"-->
-      <!--      v-model="aboutContent"-->
-      <!--      style="height: calc(100vh - 250px); margin-top: 2.25rem"-->
-      <!--    />-->
       <MdEditor
         ref="mdRef"
         v-model="aboutContent"

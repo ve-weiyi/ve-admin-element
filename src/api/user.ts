@@ -4,6 +4,7 @@ import type {
   EmptyReq,
   EmptyResp,
   PageResp,
+  QueryUserLoginHistoryReq,
   UpdateUserAvatarReq,
   UpdateUserBindEmailReq,
   UpdateUserBindPhoneReq,
@@ -12,7 +13,6 @@ import type {
   UpdateUserPasswordReq,
   UserApisResp,
   UserInfoResp,
-  UserLoginHistoryQuery,
   UserMenusResp,
   UserRolesResp,
 } from "./types";
@@ -48,7 +48,7 @@ export const UserAPI = {
   },
 
   /** 查询用户登录历史 */
-  getUserLoginHistoryListApi(data?: UserLoginHistoryQuery): Promise<IApiResponse<PageResp>> {
+  getUserLoginHistoryListApi(data?: QueryUserLoginHistoryReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/user/get_user_login_history_list",
       method: "POST",
@@ -78,7 +78,7 @@ export const UserAPI = {
   updateUserAvatarApi(data?: UpdateUserAvatarReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/user/update_user_avatar",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -87,7 +87,7 @@ export const UserAPI = {
   updateUserBindEmailApi(data?: UpdateUserBindEmailReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/user/update_user_bind_email",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -96,7 +96,7 @@ export const UserAPI = {
   updateUserBindPhoneApi(data?: UpdateUserBindPhoneReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/user/update_user_bind_phone",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -107,7 +107,7 @@ export const UserAPI = {
   ): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/user/update_user_bind_third_party",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -116,7 +116,7 @@ export const UserAPI = {
   updateUserInfoApi(data?: UpdateUserInfoReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/user/update_user_info",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -125,7 +125,7 @@ export const UserAPI = {
   updateUserPasswordApi(data?: UpdateUserPasswordReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/user/update_user_password",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },

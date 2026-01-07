@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, IdsReq, OperationLogQuery, PageResp } from "./types";
+import type { BatchResp, IdsReq, PageResp, QueryOperationLogReq } from "./types";
 
 export const OperationLogAPI = {
   /** 删除操作记录 */
@@ -12,7 +12,7 @@ export const OperationLogAPI = {
   },
 
   /** 分页获取操作记录列表 */
-  findOperationLogListApi(data?: OperationLogQuery): Promise<IApiResponse<PageResp>> {
+  findOperationLogListApi(data?: QueryOperationLogReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/operation_log/find_operation_log_list",
       method: "POST",

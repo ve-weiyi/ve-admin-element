@@ -1,18 +1,18 @@
 import request from "@/utils/request";
 import type {
   BatchResp,
-  EmptyReq,
+  CleanMenuReq,
   IdsReq,
   MenuBackVO,
-  MenuNewReq,
-  MenuQuery,
+  NewMenuReq,
   PageResp,
+  QueryMenuReq,
   SyncMenuReq,
 } from "./types";
 
 export const MenuAPI = {
   /** 创建菜单 */
-  addMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackVO>> {
+  addMenuApi(data?: NewMenuReq): Promise<IApiResponse<MenuBackVO>> {
     return request({
       url: "/admin-api/v1/menu/add_menu",
       method: "POST",
@@ -21,7 +21,7 @@ export const MenuAPI = {
   },
 
   /** 清空菜单列表 */
-  cleanMenuListApi(data?: EmptyReq): Promise<IApiResponse<BatchResp>> {
+  cleanMenuListApi(data?: CleanMenuReq): Promise<IApiResponse<BatchResp>> {
     return request({
       url: "/admin-api/v1/menu/clean_menu_list",
       method: "POST",
@@ -39,7 +39,7 @@ export const MenuAPI = {
   },
 
   /** 分页获取菜单列表 */
-  findMenuListApi(data?: MenuQuery): Promise<IApiResponse<PageResp>> {
+  findMenuListApi(data?: QueryMenuReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/menu/find_menu_list",
       method: "POST",
@@ -57,7 +57,7 @@ export const MenuAPI = {
   },
 
   /** 更新菜单 */
-  updateMenuApi(data?: MenuNewReq): Promise<IApiResponse<MenuBackVO>> {
+  updateMenuApi(data?: NewMenuReq): Promise<IApiResponse<MenuBackVO>> {
     return request({
       url: "/admin-api/v1/menu/update_menu",
       method: "PUT",

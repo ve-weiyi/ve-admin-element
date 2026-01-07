@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import type { BatchResp, IdReq, PageResp, TalkBackVO, TalkNewReq, TalkQuery } from "./types";
+import type { BatchResp, IdReq, NewTalkReq, PageResp, QueryTalkReq, TalkBackVO } from "./types";
 
 export const TalkAPI = {
   /** 创建说说 */
-  addTalkApi(data?: TalkNewReq): Promise<IApiResponse<TalkBackVO>> {
+  addTalkApi(data?: NewTalkReq): Promise<IApiResponse<TalkBackVO>> {
     return request({
       url: "/admin-api/v1/talk/add_talk",
       method: "POST",
@@ -21,7 +21,7 @@ export const TalkAPI = {
   },
 
   /** 分页获取说说列表 */
-  findTalkListApi(data?: TalkQuery): Promise<IApiResponse<PageResp>> {
+  findTalkListApi(data?: QueryTalkReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/talk/find_talk_list",
       method: "POST",
@@ -39,7 +39,7 @@ export const TalkAPI = {
   },
 
   /** 更新说说 */
-  updateTalkApi(data?: TalkNewReq): Promise<IApiResponse<TalkBackVO>> {
+  updateTalkApi(data?: NewTalkReq): Promise<IApiResponse<TalkBackVO>> {
     return request({
       url: "/admin-api/v1/talk/update_talk",
       method: "PUT",

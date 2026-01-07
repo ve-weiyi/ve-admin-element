@@ -1,8 +1,8 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import type { TagNewReq } from "@/api/types";
+import type { NewTagReq } from "@/api/types";
 import { TagAPI } from "@/api/tag";
 
-const modalConfig: IModalConfig<TagNewReq> = {
+const modalConfig: IModalConfig<NewTagReq> = {
   permPrefix: "sys:user",
   dialog: {
     title: "新增用户",

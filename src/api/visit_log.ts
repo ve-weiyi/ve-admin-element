@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, IdsReq, PageResp, VisitLogQuery } from "./types";
+import type { BatchResp, IdsReq, PageResp, QueryVisitLogReq } from "./types";
 
 export const VisitLogAPI = {
   /** 删除操作记录 */
@@ -12,7 +12,7 @@ export const VisitLogAPI = {
   },
 
   /** 分页获取操作记录列表 */
-  findVisitLogListApi(data?: VisitLogQuery): Promise<IApiResponse<PageResp>> {
+  findVisitLogListApi(data?: QueryVisitLogReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/visit_log/find_visit_log_list",
       method: "POST",

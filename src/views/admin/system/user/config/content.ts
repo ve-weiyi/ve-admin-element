@@ -1,9 +1,9 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { AccountQuery } from "@/api/types";
+import type { QueryAccountReq } from "@/api/types";
 import { AccountAPI } from "@/api/account";
 import { useUserStore } from "@/store";
 
-const contentConfig: IContentConfig<AccountQuery> = {
+const contentConfig: IContentConfig<QueryAccountReq> = {
   pageTitle: "用户管理",
   permPrefix: "sys:user",
   table: {
@@ -28,7 +28,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       status: row.status,
     });
   },
-  indexAction: function (query: AccountQuery) {
+  indexAction: function (query: QueryAccountReq) {
     return AccountAPI.findAccountListApi(query);
   },
   pk: "user_id",
@@ -44,7 +44,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
     {
       label: "用户id",
       prop: "user_id",
-      width: 120,
+      width: 180,
       align: "center",
       show: false,
     },

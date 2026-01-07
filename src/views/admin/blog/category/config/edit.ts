@@ -1,8 +1,8 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import type { CategoryNewReq } from "@/api/types";
+import type { NewCategoryReq } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
-const modalConfig: IModalConfig<CategoryNewReq> = {
+const modalConfig: IModalConfig<NewCategoryReq> = {
   permPrefix: "sys:user",
   component: "drawer",
   drawer: {

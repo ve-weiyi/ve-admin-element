@@ -1,9 +1,9 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { UploadLogQuery } from "@/api/types";
-import { UploadLogAPI } from "@/api/upload_log";
+import type { QueryFileLogReq } from "@/api/types";
+import { FileLogAPI } from "@/api/file_log";
 
-const contentConfig: IContentConfig<UploadLogQuery> = {
-  pageTitle: "上传日志",
+const contentConfig: IContentConfig<QueryFileLogReq> = {
+  pageTitle: "文件日志",
   permPrefix: "log:upload",
   table: {
     border: false,
@@ -22,14 +22,14 @@ const contentConfig: IContentConfig<UploadLogQuery> = {
     };
   },
   indexAction: function (query) {
-    return UploadLogAPI.findUploadLogListApi(query);
+    return FileLogAPI.findFileLogListApi(query);
   },
   deleteAction: function (ids: string) {
     const data = {
       ids: [],
     };
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return UploadLogAPI.deletesUploadLogApi(data);
+    return FileLogAPI.deletesFileLogApi(data);
   },
   pk: "id",
   toolbar: ["delete"],

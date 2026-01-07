@@ -1,10 +1,10 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import type { ApiNewReq } from "@/api/types";
+import type { NewApiReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
 import { HTTP_METHODS_WITH_EMPTY } from "@/utils/constants";
 import { SwitchStatusEnum } from "@/enums/blog/index.ts";
 
-const modalConfig: IModalConfig<ApiNewReq> = {
+const modalConfig: IModalConfig<NewApiReq> = {
   permPrefix: "sys:api",
   component: "dialog",
   dialog: {

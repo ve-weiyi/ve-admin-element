@@ -5,9 +5,10 @@ import type {
   EmptyResp,
   GetCaptchaCodeReq,
   GetCaptchaCodeResp,
+  GetClientInfoReq,
+  GetClientInfoResp,
   GetOauthAuthorizeUrlReq,
   GetOauthAuthorizeUrlResp,
-  GetTouristInfoResp,
   LoginReq,
   LoginResp,
   PhoneLoginReq,
@@ -19,10 +20,10 @@ import type {
 } from "./types";
 
 export const AuthAPI = {
-  /** 获取游客身份信息 */
-  getTouristInfoApi(data?: EmptyReq): Promise<IApiResponse<GetTouristInfoResp>> {
+  /** 获取客户端信息 */
+  getClientInfoApi(data?: GetClientInfoReq): Promise<IApiResponse<GetClientInfoResp>> {
     return request({
-      url: "/admin-api/v1/get_tourist_info",
+      url: "/admin-api/v1/get_client_info",
       method: "GET",
       data: data,
     });

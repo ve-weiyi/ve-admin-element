@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { CommentQuery } from "@/api/types";
+import type { QueryCommentReq } from "@/api/types";
 import { CommentAPI } from "@/api/comment";
 
-const contentConfig: IContentConfig<CommentQuery> = {
+const contentConfig: IContentConfig<QueryCommentReq> = {
   pageTitle: "评论管理",
   permPrefix: "message:comment",
   table: {
@@ -21,7 +21,7 @@ const contentConfig: IContentConfig<CommentQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: CommentQuery) {
+  indexAction: function (query: QueryCommentReq) {
     return CommentAPI.findCommentBackListApi(query);
   },
   deleteAction: function (ids: string) {

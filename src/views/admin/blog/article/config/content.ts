@@ -1,9 +1,9 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { ArticleQuery } from "@/api/types";
+import type { QueryArticleReq } from "@/api/types";
 import { ArticleAPI } from "@/api/article";
 import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog/index.ts";
 
-const contentConfig: IContentConfig<ArticleQuery> = {
+const contentConfig: IContentConfig<QueryArticleReq> = {
   pageTitle: "文章管理",
   permPrefix: "blog:article",
   table: {
@@ -22,7 +22,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: ArticleQuery) {
+  indexAction: function (query: QueryArticleReq) {
     query = Object.assign(
       {
         is_top: ArticleDeleteEnum.ALL,
@@ -37,7 +37,7 @@ const contentConfig: IContentConfig<ArticleQuery> = {
       id: row.id as number,
       is_top: row.is_top as number,
     };
-    return ArticleAPI.topArticleApi(data);
+    return ArticleAPI.updateArticleTopApi(data);
   },
   pk: "id",
   toolbar: [
@@ -152,8 +152,8 @@ const contentConfig: IContentConfig<ArticleQuery> = {
           },
         },
         {
-          name: "recycleArticle",
-          perm: "article:recycleArticle",
+          name: "deleteArticle",
+          perm: "article:deleteArticle",
           attrs: {
             icon: "refresh",
             type: "danger",

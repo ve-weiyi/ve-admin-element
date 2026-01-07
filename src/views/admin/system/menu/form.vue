@@ -2,7 +2,7 @@
 import { nextTick, onMounted, reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import IconSelect from "@/components/IconSelect/index.vue";
-import type { MenuBackVO, MenuNewReq } from "@/api/types";
+import type { MenuBackVO, NewMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 import { MenuTypeEnum, SwitchStatusEnum } from "@/enums/blog";
 import { CirclePlusFilled, DeleteFilled, QuestionFilled } from "@element-plus/icons-vue";
@@ -13,7 +13,7 @@ interface OptionType {
   children?: OptionType[];
 }
 
-const menuForm = defineModel<MenuNewReq>({
+const menuForm = defineModel<NewMenuReq>({
   default: () => {},
 });
 

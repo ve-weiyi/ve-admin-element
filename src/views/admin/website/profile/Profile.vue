@@ -188,6 +188,24 @@
               <el-radio :value="1">开启</el-radio>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="聊天室状态">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_chat_room">
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="音乐播放器状态">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_music_player">
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="AI助手状态">
+            <el-radio-group v-model="websiteConfigForm.website_feature.is_ai_assistant">
+              <el-radio :value="0">关闭</el-radio>
+              <el-radio :value="1">开启</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="打赏状态">
             <el-radio-group v-model="websiteConfigForm.website_feature.is_reward">
               <el-radio :label="0" :value="0">关闭</el-radio>
@@ -232,18 +250,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="音乐播放器状态">
-            <el-radio-group v-model="websiteConfigForm.website_feature.is_music_player">
-              <el-radio :value="0">关闭</el-radio>
-              <el-radio :value="1">开启</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="聊天室状态">
-            <el-radio-group v-model="websiteConfigForm.website_feature.is_chat_room">
-              <el-radio :value="0">关闭</el-radio>
-              <el-radio :value="1">开启</el-radio>
-            </el-radio-group>
-          </el-form-item>
           <el-form-item
             v-show="websiteConfigForm.website_feature.is_chat_room == 1"
             label="Websocket地址"
@@ -282,10 +288,11 @@ const websiteConfigForm = ref<WebsiteConfigVO>({
   user_avatar: "",
   website_feature: {
     is_chat_room: 1,
+    is_ai_assistant: 1,
+    is_music_player: 1,
     is_comment_review: 0,
     is_email_notice: 1,
     is_message_review: 0,
-    is_music_player: 1,
     is_reward: 0,
   },
   website_info: {
@@ -324,7 +331,7 @@ function updateWebsiteConfig() {
 }
 
 function handleClick(tab) {
-  console.log(tab);
+
 }
 
 // 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。

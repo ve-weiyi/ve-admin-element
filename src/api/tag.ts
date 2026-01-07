@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import type { BatchResp, IdsReq, PageResp, TagBackVO, TagNewReq, TagQuery } from "./types";
+import type { BatchResp, IdsReq, NewTagReq, PageResp, QueryTagReq, TagBackVO } from "./types";
 
 export const TagAPI = {
   /** 创建标签 */
-  addTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackVO>> {
+  addTagApi(data?: NewTagReq): Promise<IApiResponse<TagBackVO>> {
     return request({
       url: "/admin-api/v1/tag/add_tag",
       method: "POST",
@@ -21,7 +21,7 @@ export const TagAPI = {
   },
 
   /** 分页获取标签列表 */
-  findTagListApi(data?: TagQuery): Promise<IApiResponse<PageResp>> {
+  findTagListApi(data?: QueryTagReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/tag/find_tag_list",
       method: "POST",
@@ -30,7 +30,7 @@ export const TagAPI = {
   },
 
   /** 更新标签 */
-  updateTagApi(data?: TagNewReq): Promise<IApiResponse<TagBackVO>> {
+  updateTagApi(data?: NewTagReq): Promise<IApiResponse<TagBackVO>> {
     return request({
       url: "/admin-api/v1/tag/update_tag",
       method: "PUT",

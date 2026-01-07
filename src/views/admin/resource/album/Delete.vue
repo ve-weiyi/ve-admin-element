@@ -96,7 +96,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { PhotoAPI } from "@/api/photo.ts";
-import type { PhotoBackVO, PhotoQuery } from "@/api/types.ts";
+import type { PhotoBackVO, QueryPhotoReq } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 
@@ -104,7 +104,7 @@ import RightToolbar from "@/components/RightToolbar/index.vue";
 const route = useRoute();
 const loading = ref(false);
 const count = ref(0);
-const queryParams = ref<PhotoQuery>({
+const queryParams = ref<QueryPhotoReq>({
   page: 1,
   page_size: 10,
 });
@@ -157,7 +157,7 @@ const handleRecover = async () => {
       type: "warning",
     });
 
-    await PhotoAPI.preDeletePhotoApi({
+    await PhotoAPI.updatePhotoDeleteApi({
       ids: selectPhotoIdList.value,
       is_delete: 0,
     });
@@ -196,7 +196,7 @@ const handleDelete = async () => {
 const refreshList = async () => {
   loading.value = true;
   try {
-    const data: PhotoQuery = {
+    const data: QueryPhotoReq = {
       page: queryParams.value.page,
       page_size: queryParams.value.page_size,
       is_delete: 1, // 只查询已删除的照片

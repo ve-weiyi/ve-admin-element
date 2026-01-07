@@ -1,9 +1,16 @@
 import request from "@/utils/request";
-import type { BatchResp, FriendBackVO, FriendNewReq, FriendQuery, IdsReq, PageResp } from "./types";
+import type {
+  BatchResp,
+  FriendBackVO,
+  IdsReq,
+  NewFriendReq,
+  PageResp,
+  QueryFriendReq,
+} from "./types";
 
 export const FriendAPI = {
   /** 创建友链 */
-  addFriendApi(data?: FriendNewReq): Promise<IApiResponse<FriendBackVO>> {
+  addFriendApi(data?: NewFriendReq): Promise<IApiResponse<FriendBackVO>> {
     return request({
       url: "/admin-api/v1/friend/add_friend",
       method: "POST",
@@ -21,7 +28,7 @@ export const FriendAPI = {
   },
 
   /** 分页获取友链列表 */
-  findFriendListApi(data?: FriendQuery): Promise<IApiResponse<PageResp>> {
+  findFriendListApi(data?: QueryFriendReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/friend/find_friend_list",
       method: "POST",
@@ -30,7 +37,7 @@ export const FriendAPI = {
   },
 
   /** 更新友链 */
-  updateFriendApi(data?: FriendNewReq): Promise<IApiResponse<FriendBackVO>> {
+  updateFriendApi(data?: NewFriendReq): Promise<IApiResponse<FriendBackVO>> {
     return request({
       url: "/admin-api/v1/friend/update_friend",
       method: "PUT",

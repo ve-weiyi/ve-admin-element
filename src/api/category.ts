@@ -2,15 +2,15 @@ import request from "@/utils/request";
 import type {
   BatchResp,
   CategoryBackVO,
-  CategoryNewReq,
-  CategoryQuery,
   IdsReq,
+  NewCategoryReq,
   PageResp,
+  QueryCategoryReq,
 } from "./types";
 
 export const CategoryAPI = {
   /** 创建文章分类 */
-  addCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackVO>> {
+  addCategoryApi(data?: NewCategoryReq): Promise<IApiResponse<CategoryBackVO>> {
     return request({
       url: "/admin-api/v1/category/add_category",
       method: "POST",
@@ -28,7 +28,7 @@ export const CategoryAPI = {
   },
 
   /** 分页获取文章分类列表 */
-  findCategoryListApi(data?: CategoryQuery): Promise<IApiResponse<PageResp>> {
+  findCategoryListApi(data?: QueryCategoryReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/category/find_category_list",
       method: "POST",
@@ -37,7 +37,7 @@ export const CategoryAPI = {
   },
 
   /** 更新文章分类 */
-  updateCategoryApi(data?: CategoryNewReq): Promise<IApiResponse<CategoryBackVO>> {
+  updateCategoryApi(data?: NewCategoryReq): Promise<IApiResponse<CategoryBackVO>> {
     return request({
       url: "/admin-api/v1/category/update_category",
       method: "PUT",

@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { VisitLogQuery } from "@/api/types";
+import type { QueryVisitLogReq } from "@/api/types";
 import { VisitLogAPI } from "@/api/visit_log";
 
-const contentConfig: IContentConfig<VisitLogQuery> = {
+const contentConfig: IContentConfig<QueryVisitLogReq> = {
   pageTitle: "服务日志",
   permPrefix: "log:visit",
   table: {
@@ -67,6 +67,14 @@ const contentConfig: IContentConfig<VisitLogQuery> = {
       prop: "terminal_id",
       width: 150,
       align: "center",
+      show: false,
+    },
+    {
+      label: "访客",
+      prop: "visitor",
+      width: 150,
+      align: "center",
+      templet: "custom",
     },
     {
       label: "页面",
@@ -100,20 +108,6 @@ const contentConfig: IContentConfig<VisitLogQuery> = {
       prop: "ip_source",
       width: 0,
       minWidth: 160,
-      align: "center",
-    },
-    {
-      label: "操作系统",
-      prop: "os",
-      width: 0,
-      minWidth: 160,
-      align: "center",
-    },
-    {
-      label: "浏览器",
-      prop: "browser",
-      width: 0,
-      minWidth: 140,
       align: "center",
     },
     {

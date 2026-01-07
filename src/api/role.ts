@@ -4,10 +4,10 @@ import type {
   EmptyResp,
   IdReq,
   IdsReq,
+  NewRoleReq,
   PageResp,
+  QueryRoleReq,
   RoleBackVO,
-  RoleNewReq,
-  RoleQuery,
   RoleResourcesResp,
   UpdateRoleApisReq,
   UpdateRoleMenusReq,
@@ -15,7 +15,7 @@ import type {
 
 export const RoleAPI = {
   /** 创建角色 */
-  addRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackVO>> {
+  addRoleApi(data?: NewRoleReq): Promise<IApiResponse<RoleBackVO>> {
     return request({
       url: "/admin-api/v1/role/add_role",
       method: "POST",
@@ -27,13 +27,13 @@ export const RoleAPI = {
   deletesRoleApi(data?: IdsReq): Promise<IApiResponse<BatchResp>> {
     return request({
       url: "/admin-api/v1/role/deletes_role",
-      method: "POST",
+      method: "DELETE",
       data: data,
     });
   },
 
   /** 分页获取角色列表 */
-  findRoleListApi(data?: RoleQuery): Promise<IApiResponse<PageResp>> {
+  findRoleListApi(data?: QueryRoleReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/role/find_role_list",
       method: "POST",
@@ -51,7 +51,7 @@ export const RoleAPI = {
   },
 
   /** 更新角色 */
-  updateRoleApi(data?: RoleNewReq): Promise<IApiResponse<RoleBackVO>> {
+  updateRoleApi(data?: NewRoleReq): Promise<IApiResponse<RoleBackVO>> {
     return request({
       url: "/admin-api/v1/role/update_role",
       method: "PUT",
@@ -63,7 +63,7 @@ export const RoleAPI = {
   updateRoleApisApi(data?: UpdateRoleApisReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/role/update_role_apis",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -72,7 +72,7 @@ export const RoleAPI = {
   updateRoleMenusApi(data?: UpdateRoleMenusReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/role/update_role_menus",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },

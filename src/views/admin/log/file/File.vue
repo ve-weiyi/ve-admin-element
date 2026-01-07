@@ -18,14 +18,7 @@
       @filter-change="handleFilterChange"
     >
       <template #creator="scope">
-        <div v-if="scope.row[scope.prop]" style="display: flex; align-items: center; gap: 8px">
-          <el-image
-            :src="scope.row[scope.prop].avatar"
-            :preview-teleported="true"
-            :style="`width: ${scope.imageWidth ?? 40}px; height: ${scope.imageHeight ?? 40}px`"
-          />
-          <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
-        </div>
+        <UserInfo :user="scope.row[scope.prop]" />
       </template>
       <template #icon="scope">
         <img
@@ -57,6 +50,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 
 import { ref } from "vue";
+import UserInfo from "@/components/UserInfo/index.vue";
 
 const {
   contentRef,

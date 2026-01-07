@@ -24,10 +24,11 @@
         <UserInfo :user="scope.row[scope.prop]" />
       </template>
       <template #request_method="scope">
-        <el-tag v-if="scope.row[scope.prop] === 'GET'" type="success">GET</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'POST'" type="warning">POST</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'PUT'" type="danger">PUT</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'DELETE'" type="info">DELETE</el-tag>
+        <div v-if="scope.row[scope.prop] === ''"></div>
+        <el-tag v-else-if="scope.row[scope.prop] === 'GET'" type="success">GET</el-tag>
+        <el-tag v-else-if="scope.row[scope.prop] === 'POST'" type="primary">POST</el-tag>
+        <el-tag v-else-if="scope.row[scope.prop] === 'PUT'" type="warning">PUT</el-tag>
+        <el-tag v-else-if="scope.row[scope.prop] === 'DELETE'" type="danger">DELETE</el-tag>
         <el-tag v-else type="info">{{ scope.row[scope.prop] }}</el-tag>
       </template>
     </page-content>

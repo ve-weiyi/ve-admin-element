@@ -1,8 +1,8 @@
 import request from "@/utils/request";
 import type {
-  AccountQuery,
   EmptyResp,
   PageResp,
+  QueryAccountReq,
   UpdateAccountPasswordReq,
   UpdateAccountRolesReq,
   UpdateAccountStatusReq,
@@ -10,7 +10,7 @@ import type {
 
 export const AccountAPI = {
   /** 查询用户列表 */
-  findAccountListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
+  findAccountListApi(data?: QueryAccountReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/account/find_account_list",
       method: "POST",
@@ -19,7 +19,7 @@ export const AccountAPI = {
   },
 
   /** 查询在线用户列表 */
-  findAccountOnlineListApi(data?: AccountQuery): Promise<IApiResponse<PageResp>> {
+  findAccountOnlineListApi(data?: QueryAccountReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/account/find_account_online_list",
       method: "POST",
@@ -31,7 +31,7 @@ export const AccountAPI = {
   updateAccountPasswordApi(data?: UpdateAccountPasswordReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/account/update_account_password",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -40,7 +40,7 @@ export const AccountAPI = {
   updateAccountRolesApi(data?: UpdateAccountRolesReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/account/update_account_roles",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },
@@ -49,7 +49,7 @@ export const AccountAPI = {
   updateAccountStatusApi(data?: UpdateAccountStatusReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/account/update_account_status",
-      method: "POST",
+      method: "PUT",
       data: data,
     });
   },

@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { AccountQuery } from "@/api/types";
+import type { QueryLoginLogReq } from "@/api/types";
 import { LoginLogAPI } from "@/api/login_log.ts";
 
-const contentConfig: IContentConfig<AccountQuery> = {
+const contentConfig: IContentConfig<QueryLoginLogReq> = {
   pageTitle: "登录日志",
   permPrefix: "log:login",
   table: {
@@ -21,7 +21,7 @@ const contentConfig: IContentConfig<AccountQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: AccountQuery) {
+  indexAction: function (query: QueryLoginLogReq) {
     return LoginLogAPI.findLoginLogListApi(query);
   },
   pk: "id",

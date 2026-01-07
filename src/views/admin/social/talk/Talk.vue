@@ -157,7 +157,7 @@
 import { computed, onMounted, reactive, ref, toRefs } from "vue";
 import VeTablePagination from "@/components/VeTable/TablePagination.vue";
 import { TalkAPI } from "@/api/talk.ts";
-import type { TalkQuery, TalkBackVO, TalkNewReq } from "@/api/types.ts";
+import type { QueryTalkReq, TalkBackVO, NewTalkReq } from "@/api/types.ts";
 import { useRoute, useRouter } from "vue-router";
 import "@/styles/table.scss";
 import { formatDateTime } from "@/utils/date.ts";
@@ -181,7 +181,7 @@ const data = reactive({
 const { pageData, tableData } = toRefs(data);
 
 function refreshList() {
-  let data: TalkQuery = {
+  let data: QueryTalkReq = {
     page: pageData.value.currentPage,
     page_size: pageData.value.pageSize,
     status: status.value,
@@ -206,7 +206,7 @@ const initFormData = {
   is_top: TalkTopEnum.NO,
   status: TalkStatusEnum.PUBLIC,
 };
-const talk = reactive<TalkNewReq>({ ...initFormData });
+const talk = reactive<NewTalkReq>({ ...initFormData });
 
 function handleAdd() {
   Object.assign(talk, initFormData);

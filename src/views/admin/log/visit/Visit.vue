@@ -23,6 +23,9 @@
       <template #user="scope">
         <UserInfo :user="scope.row[scope.prop]" />
       </template>
+      <template #visitor="scope">
+        <VisitorInfo :visitor="scope.row[scope.prop]" />
+      </template>
     </page-content>
   </div>
 </template>
@@ -35,6 +38,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
+import VisitorInfo from "@/components/VisitorInfo/index.vue";
 
 const {
   searchRef,
@@ -61,6 +65,8 @@ function handleOperateClick(data: IOperateData) {
   console.log(data);
 
   switch (data.name) {
+    default:
+      break;
   }
 }
 </script>

@@ -140,12 +140,12 @@ import RightToolbar from "@/components/RightToolbar/index.vue";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import { AlbumAPI } from "@/api/album.ts";
-import type { AlbumBackVO, AlbumNewReq, AlbumQuery } from "@/api/types.ts";
+import type { AlbumBackVO, NewAlbumReq, QueryAlbumReq } from "@/api/types.ts";
 
 // 响应式数据
 const loading = ref(false);
 const showSearch = ref(false);
-const queryParams = ref<AlbumQuery>({
+const queryParams = ref<QueryAlbumReq>({
   page: 1,
   page_size: 10,
   is_delete: 0,
@@ -158,7 +158,7 @@ const modalVisible = ref(false);
 const formRef = ref<FormInstance>();
 const isUpload = ref(true);
 
-const initFormData: AlbumNewReq = {
+const initFormData: NewAlbumReq = {
   id: 0,
   album_name: "",
   album_desc: "",
@@ -167,9 +167,9 @@ const initFormData: AlbumNewReq = {
   is_delete: 0,
 };
 
-const formData = ref<AlbumNewReq>({ ...initFormData });
+const formData = ref<NewAlbumReq>({ ...initFormData });
 
-const formRules: FormRules<AlbumNewReq> = {
+const formRules: FormRules<NewAlbumReq> = {
   album_name: [{ required: true, message: "请输入相册名称", trigger: "blur" }],
   album_desc: [{ required: true, message: "请输入相册描述", trigger: "blur" }],
   album_cover: [{ required: true, message: "请上传相册封面", trigger: "blur" }],
@@ -236,7 +236,7 @@ const handleDelete = async (data: AlbumBackVO) => {
       type: "warning",
     });
 
-    await AlbumAPI.preDeleteAlbumApi({
+    await AlbumAPI.updateAlbumDeleteApi({
       ids: [data.id],
       is_delete: 1,
     });

@@ -187,7 +187,7 @@ import "md-editor-v3/lib/style.css";
 import { CategoryAPI } from "@/api/category";
 import { TagAPI } from "@/api/tag";
 import { ArticleAPI } from "@/api/article";
-import type { ArticleBackVO, ArticleNewReq, CategoryBackVO, TagBackVO } from "@/api/types";
+import type { ArticleBackVO, NewArticleReq, CategoryBackVO, TagBackVO } from "@/api/types";
 import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file";
 import { formatDate } from "@/utils/date";
@@ -354,7 +354,7 @@ function autoSaveArticle() {
   }
 }
 
-function saveArticle(article: ArticleNewReq) {
+function saveArticle(article: NewArticleReq) {
   if (article.id !== 0) {
     return ArticleAPI.updateArticleApi(article);
   } else {

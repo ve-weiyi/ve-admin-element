@@ -174,7 +174,7 @@ import { ElMessage, ElMessageBox, type FormInstance } from "element-plus";
 import type { UploadUserFile } from "element-plus";
 import { AlbumAPI } from "@/api/album.ts";
 import { PhotoAPI } from "@/api/photo.ts";
-import type { AlbumBackVO, PhotoBackVO, PhotoNewReq, PhotoQuery } from "@/api/types.ts";
+import type { AlbumBackVO, PhotoBackVO, NewPhotoReq, QueryPhotoReq } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import MultiImageUpload from "@/components/Upload/MultiImageUpload.vue";
@@ -184,7 +184,7 @@ const route = useRoute();
 const albumId = route.params.id ? parseInt(route.params.id as string) : 0;
 const loading = ref(false);
 const count = ref(0);
-const queryParams = ref<PhotoQuery>({
+const queryParams = ref<QueryPhotoReq>({
   page: 1,
   page_size: 10,
 });
@@ -196,7 +196,7 @@ const selectPhotoIdList = ref<number[]>([]);
 const modalVisible = ref(false);
 const upload = ref(false);
 const photoFormRef = ref<FormInstance>();
-const photoForm = ref<PhotoNewReq>({} as PhotoNewReq);
+const photoForm = ref<NewPhotoReq>({} as NewPhotoReq);
 const uploadList = ref<UploadUserFile[]>([]);
 
 // 表单验证规则
@@ -255,7 +255,7 @@ const handleSingleDelete = async (photo: PhotoBackVO) => {
       type: "warning",
     });
 
-    await PhotoAPI.preDeletePhotoApi({
+    await PhotoAPI.updatePhotoDeleteApi({
       ids: [photo.id],
       is_delete: 1,
     });
@@ -281,7 +281,7 @@ const handleDelete = async () => {
       type: "warning",
     });
 
-    await PhotoAPI.preDeletePhotoApi({
+    await PhotoAPI.updatePhotoDeleteApi({
       ids: selectPhotoIdList.value,
       is_delete: 1,
     });
@@ -309,7 +309,7 @@ const handleAdd = async () => {
 
   try {
     const promises = uploadList.value.map((item) => {
-      const data: PhotoNewReq = {
+      const data: NewPhotoReq = {
         album_id: albumId,
         photo_name: item.name || "未命名照片",
         photo_desc: "",
@@ -349,7 +349,7 @@ const handleSubmit = async () => {
 const refreshList = async () => {
   loading.value = true;
   try {
-    const data: PhotoQuery = {
+    const data: QueryPhotoReq = {
       page: queryParams.value.page,
       page_size: queryParams.value.page_size,
       album_id: albumId,

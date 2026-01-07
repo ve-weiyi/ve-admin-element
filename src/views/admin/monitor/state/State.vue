@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <el-row :gutter="15" class="system_state">
       <el-col :span="12">
         <el-card v-if="state.os" class="card_item">

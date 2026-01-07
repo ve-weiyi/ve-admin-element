@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { MenuQuery } from "@/api/types";
+import type { QueryMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 
-const contentConfig: IContentConfig<MenuQuery> = {
+const contentConfig: IContentConfig<QueryMenuReq> = {
   pageTitle: "菜单管理",
   permPrefix: "sys:menu",
   table: {
@@ -32,7 +32,7 @@ const contentConfig: IContentConfig<MenuQuery> = {
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
     return MenuAPI.deletesMenuApi(data);
   },
-  indexAction: function (params: MenuQuery) {
+  indexAction: function (params: QueryMenuReq) {
     if (!params.sorts) {
       params.sorts = [`id desc`];
     }

@@ -2,16 +2,16 @@ import request from "@/utils/request";
 import type {
   BatchResp,
   IdsReq,
+  NewPhotoReq,
   PageResp,
   PhotoBackVO,
-  PhotoNewReq,
-  PhotoQuery,
-  PreDeletePhotoReq,
+  QueryPhotoReq,
+  UpdatePhotoDeleteReq,
 } from "./types";
 
 export const PhotoAPI = {
   /** 创建照片 */
-  addPhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackVO>> {
+  addPhotoApi(data?: NewPhotoReq): Promise<IApiResponse<PhotoBackVO>> {
     return request({
       url: "/admin-api/v1/photo/add_photo",
       method: "POST",
@@ -29,7 +29,7 @@ export const PhotoAPI = {
   },
 
   /** 分页获取照片列表 */
-  findPhotoListApi(data?: PhotoQuery): Promise<IApiResponse<PageResp>> {
+  findPhotoListApi(data?: QueryPhotoReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/photo/find_photo_list",
       method: "POST",
@@ -37,19 +37,19 @@ export const PhotoAPI = {
     });
   },
 
-  /** 预删除照片 */
-  preDeletePhotoApi(data?: PreDeletePhotoReq): Promise<IApiResponse<BatchResp>> {
+  /** 更新照片 */
+  updatePhotoApi(data?: NewPhotoReq): Promise<IApiResponse<PhotoBackVO>> {
     return request({
-      url: "/admin-api/v1/photo/pre_delete_photo",
+      url: "/admin-api/v1/photo/update_photo",
       method: "PUT",
       data: data,
     });
   },
 
-  /** 更新照片 */
-  updatePhotoApi(data?: PhotoNewReq): Promise<IApiResponse<PhotoBackVO>> {
+  /** 更新照片删除状态 */
+  updatePhotoDeleteApi(data?: UpdatePhotoDeleteReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/photo/update_photo",
+      url: "/admin-api/v1/photo/update_photo_delete",
       method: "PUT",
       data: data,
     });

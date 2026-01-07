@@ -103,17 +103,17 @@ function handleOperateClick(data: IOperateData) {
     case "editArticle":
       router.push({ path: `/article/edit/${data.row.id}` });
       break;
-    case "recycleArticle":
-      ArticleAPI.recycleArticleApi({
+    case "deleteArticle":
+      ArticleAPI.updateArticleDeleteApi({
         id: data.row.id,
         is_delete: 1,
       }).then(() => {
         data.row.is_delete = 1;
-        ElMessage.success("回收成功");
+        ElMessage.success("删除功");
       });
       break;
     case "restoreArticle":
-      ArticleAPI.recycleArticleApi({
+      ArticleAPI.updateArticleDeleteApi({
         id: data.row.id,
         is_delete: 0,
       }).then(() => {
@@ -125,7 +125,7 @@ function handleOperateClick(data: IOperateData) {
       ArticleAPI.deleteArticleApi({
         id: data.row.id,
       }).then(() => {
-        ElMessage.success("删除成功");
+        ElMessage.success("销毁成功");
       });
       break;
     default:

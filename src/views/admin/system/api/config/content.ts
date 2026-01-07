@@ -1,9 +1,9 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { ApiQuery } from "@/api/types";
+import type { QueryApiReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
 import { SwitchStatusEnum } from "@/enums/blog/index.ts";
 
-const contentConfig: IContentConfig<ApiQuery> = {
+const contentConfig: IContentConfig<QueryApiReq> = {
   pageTitle: "接口管理",
   permPrefix: "sys:api",
   table: {
@@ -33,7 +33,7 @@ const contentConfig: IContentConfig<ApiQuery> = {
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
     return ApiAPI.deletesApiApi(data);
   },
-  indexAction: function (params: ApiQuery) {
+  indexAction: function (params: QueryApiReq) {
     return ApiAPI.findApiListApi(params);
   },
   modifyAction(row, field, value) {

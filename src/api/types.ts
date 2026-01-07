@@ -2,15 +2,6 @@ export interface AboutMeVO {
   content: string;
 }
 
-export interface AccountQuery extends PageQuery {
-  username?: string;
-  nickname?: string;
-  email?: string;
-  phone?: string;
-  status?: number; // 状态: -1删除 0正常 1禁用
-  user_ids?: string[]; // 用户ID
-}
-
 export interface AdminHomeInfo {
   user_count: number; // 用户量
   article_count: number; // 文章量
@@ -33,20 +24,6 @@ export interface AlbumBackVO {
   photo_count: number; // 照片数量
 }
 
-export interface AlbumNewReq {
-  id?: number; // 主键
-  album_name: string; // 相册名
-  album_desc: string; // 相册描述
-  album_cover: string; // 相册封面
-  is_delete: number; // 是否删除
-  status: number; // 状态值 1公开 2私密
-}
-
-export interface AlbumQuery extends PageQuery {
-  album_name?: string; // 相册名
-  is_delete?: number; // 是否删除
-}
-
 export interface ApiBackVO {
   id?: number; // 主键id
   parent_id: number; // 分组id
@@ -58,22 +35,6 @@ export interface ApiBackVO {
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   children: ApiBackVO[];
-}
-
-export interface ApiNewReq {
-  id?: number; // 主键id
-  parent_id: number; // 分组id
-  name: string; // api名称
-  path: string; // api路径
-  method: string; // api请求方法
-  traceable: number; // 是否追溯操作记录 0需要，1是
-  is_disable?: number; // 是否禁用 0否 1是
-}
-
-export interface ApiQuery extends PageQuery {
-  name?: string; // api名称
-  path?: string; // api路径
-  method?: string; // api请求方法
 }
 
 export interface ArticleBackVO {
@@ -94,42 +55,9 @@ export interface ArticleBackVO {
   views_count: number; // 浏览量
 }
 
-export interface ArticleNewReq {
-  id?: number; // id
-  article_cover: string; // 文章缩略图
-  article_title: string; // 标题
-  article_content: string; // 内容
-  article_type: number; // 文章类型 1原创 2转载 3翻译
-  original_url: string; // 原文链接
-  is_top: number; // 是否置顶
-  status: number; // 状态值 1 公开 2 私密 3 草稿 4 已删除
-  category_name?: string; // 文章分类名
-  tag_name_list?: string[]; // 文章标签列表
-}
-
-export interface ArticleQuery extends PageQuery {
-  article_title?: string; // 标题
-  article_type?: number; // 文章类型 1原创 2转载 3翻译
-  is_top?: number; // 是否置顶
-  is_delete?: number; // 是否删除
-  status?: number; // 状态值 1 公开 2 私密 3 草稿 4 已删除
-  category_name?: string; // 文章分类名
-  tag_name?: string;
-}
-
-export interface ArticleRecycleReq {
-  id?: number; // 文章ID
-  is_delete: number; // 是否删除
-}
-
 export interface ArticleStatisticsVO {
   date: string; // 日期
   count: number; // 数量
-}
-
-export interface ArticleTopReq {
-  id?: number; // 文章ID
-  is_top: number; // 是否置顶
 }
 
 export interface ArticleViewVO {
@@ -150,20 +78,13 @@ export interface CategoryBackVO {
   updated_at: number; // 更新时间
 }
 
-export interface CategoryNewReq {
-  id?: number;
-  category_name: string; // 分类名
-}
-
-export interface CategoryQuery extends PageQuery {
-  category_name?: string; // 分类名
-}
-
 export interface CategoryVO {
   id?: number;
   category_name: string; // 分类名
   article_count: number; // 文章数量
 }
+
+export interface CleanMenuReq {}
 
 export interface CommentBackVO {
   id: number; // 评论ID
@@ -176,12 +97,6 @@ export interface CommentBackVO {
   created_at: number; // 创建时间
   user?: UserInfoVO; // 用户信息
   reply_user?: UserInfoVO; // 回复用户信息
-}
-
-export interface CommentQuery extends PageQuery {
-  avatar?: string; // 用户头像
-  is_review?: number;
-  type?: number; // 评论类型 1.文章 2.友链 3.说说
 }
 
 export interface CommentReviewReq {
@@ -217,6 +132,20 @@ export interface FileInfoVO {
   updated_at: number; // 更新时间
 }
 
+export interface FileLogBackVO {
+  id?: number; // 文件目录ID
+  user_id: string; // 用户id
+  file_path: string; // 文件路径
+  file_name: string; // 文件名称
+  file_type: string; // 文件类型
+  file_size: number; // 文件大小
+  file_md5: string; // 文件md5值
+  file_url: string; // 上传路径
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
+  creator?: UserInfoVO; // 创建人
+}
+
 export interface FriendBackVO {
   id?: number; // id
   link_name: string; // 链接名
@@ -225,18 +154,6 @@ export interface FriendBackVO {
   link_intro: string; // 链接介绍
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface FriendNewReq {
-  id?: number; // id
-  link_name: string; // 链接名
-  link_avatar: string; // 链接头像
-  link_address: string; // 链接地址
-  link_intro: string; // 链接介绍
-}
-
-export interface FriendQuery extends PageQuery {
-  link_name?: string; // 链接名
 }
 
 export interface GetCaptchaCodeReq {
@@ -250,6 +167,17 @@ export interface GetCaptchaCodeResp {
   captcha_code: string; // 验证码
 }
 
+export interface GetClientInfoReq {}
+
+export interface GetClientInfoResp {
+  id: number; // 访客唯一ID
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
+}
+
 export interface GetOauthAuthorizeUrlReq {
   platform: string; // 平台
   state?: string; // 状态
@@ -257,10 +185,6 @@ export interface GetOauthAuthorizeUrlReq {
 
 export interface GetOauthAuthorizeUrlResp {
   authorize_url: string; // 授权地址
-}
-
-export interface GetTouristInfoResp {
-  tourist_id: string; // 游客id
 }
 
 export interface GetUserAreaStatsReq {
@@ -310,15 +234,11 @@ export interface LoginLogBackVO {
   app_name: string; // 应用名称
   os: string; // 操作系统
   browser: string; // 浏览器
-  ip_address: string; // ip host
-  ip_source: string; // ip 源
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   login_at: number; // 登录时间
   logout_at: number; // 登出时间
   user?: UserInfoVO; // 用户信息
-}
-
-export interface LoginLogQuery extends PageQuery {
-  user_id?: string; // 用户id
 }
 
 export interface LoginReq {
@@ -362,36 +282,112 @@ export interface MenuMetaParams {
   value?: string;
 }
 
-export interface MenuNewReq extends MenuMeta {
+export interface MultiUploadFileReq {
+  files?: any[]; // 文件列表
+  file_path?: string; // 文件路径
+}
+
+export interface NewAlbumReq {
+  id?: number; // 主键
+  album_name: string; // 相册名
+  album_desc: string; // 相册描述
+  album_cover: string; // 相册封面
+  is_delete: number; // 是否删除
+  status: number; // 状态值 1公开 2私密
+}
+
+export interface NewApiReq {
+  id?: number; // 主键id
+  parent_id: number; // 分组id
+  name: string; // api名称
+  path: string; // api路径
+  method: string; // api请求方法
+  traceable: number; // 是否追溯操作记录 0需要，1是
+  is_disable?: number; // 是否禁用 0否 1是
+}
+
+export interface NewArticleReq {
+  id?: number; // id
+  article_cover: string; // 文章缩略图
+  article_title: string; // 标题
+  article_content: string; // 内容
+  article_type: number; // 文章类型 1原创 2转载 3翻译
+  original_url: string; // 原文链接
+  is_top: number; // 是否置顶
+  status: number; // 状态值 1 公开 2 私密 3 草稿 4 已删除
+  category_name?: string; // 文章分类名
+  tag_name_list?: string[]; // 文章标签列表
+}
+
+export interface NewCategoryReq {
+  id?: number;
+  category_name: string; // 分类名
+}
+
+export interface NewFriendReq {
+  id?: number; // id
+  link_name: string; // 链接名
+  link_avatar: string; // 链接头像
+  link_address: string; // 链接地址
+  link_intro: string; // 链接介绍
+}
+
+export interface NewMenuReq extends MenuMeta {
   id?: number; // 主键
   parent_id?: number; // 父id
   path?: string; // 路由地址
   name?: string; // 路由名字
   component?: string; // Layout组件
   redirect?: string; // 路由重定向
-  children?: MenuNewReq[];
+  children?: NewMenuReq[];
 }
 
-export interface MenuQuery extends PageQuery {
-  name?: string; // 路由名字
-  title?: string; // 菜单标题
+export interface NewPageReq {
+  id?: number; // 页面id
+  page_name: string; // 页面名
+  page_label: string; // 页面标签
+  page_cover: string; // 页面封面
+  is_carousel?: number; // 是否轮播
+  carousel_covers?: string[]; // 轮播封面
 }
 
-export interface MultiUploadFileReq {
-  files?: any[]; // 文件列表
-  file_path?: string; // 文件路径
+export interface NewPhotoReq {
+  id?: number; // 主键
+  album_id: number; // 相册id
+  photo_name: string; // 照片名
+  photo_desc: string; // 照片描述
+  photo_src: string; // 照片地址
+  is_delete: number; // 是否删除
 }
 
-export interface OnlineCountResp {
-  msg: string; // 消息
-  count: number; // 在线人数
+export interface NewRoleReq {
+  id?: number; // 主键id
+  parent_id?: number; // 父角色id
+  role_key: string; // 角色名
+  role_label: string; // 角色标签
+  role_comment: string; // 角色备注
+  is_disable: number; // 是否禁用  0否 1是
+  is_default: number; // 是否默认角色 0否 1是
+}
+
+export interface NewTagReq {
+  id?: number;
+  tag_name: string; // 标签名
+}
+
+export interface NewTalkReq {
+  id?: number; // 说说ID
+  content: string; // 说说内容
+  img_list: string[]; // 图片URL列表
+  is_top: number; // 是否置顶
+  status: number; // 状态 1.公开 2.私密
 }
 
 export interface OperationLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
-  ip_address: string; // 操作ip
-  ip_source: string; // 操作地址
+  ip_address: string; // 操作ip地址
+  ip_source: string; // 操作ip归属地
   opt_module: string; // 操作模块
   opt_desc: string; // 操作描述
   request_uri: string; // 请求地址
@@ -405,8 +401,6 @@ export interface OperationLogBackVO {
   user?: UserInfoVO; // 用户信息
 }
 
-export interface OperationLogQuery extends PageQuery {}
-
 export interface PageBackVO {
   id?: number; // 页面id
   page_name: string; // 页面名
@@ -418,23 +412,10 @@ export interface PageBackVO {
   updated_at: number; // 更新时间
 }
 
-export interface PageNewReq {
-  id?: number; // 页面id
-  page_name: string; // 页面名
-  page_label: string; // 页面标签
-  page_cover: string; // 页面封面
-  is_carousel?: number; // 是否轮播
-  carousel_covers?: string[]; // 轮播封面
-}
-
 export interface PageQuery {
   page?: number; // 当前页码
   page_size?: number; // 每页数量
   sorts?: string[]; // 排序
-}
-
-export interface PageQueryReq extends PageQuery {
-  page_name?: string; // 页面名
 }
 
 export interface PageResp {
@@ -460,20 +441,6 @@ export interface PhotoBackVO {
   updated_at: number; // 更新时间
 }
 
-export interface PhotoNewReq {
-  id?: number; // 主键
-  album_id: number; // 相册id
-  photo_name: string; // 照片名
-  photo_desc: string; // 照片描述
-  photo_src: string; // 照片地址
-  is_delete: number; // 是否删除
-}
-
-export interface PhotoQuery extends PageQuery {
-  album_id?: number; // 相册id
-  is_delete?: number; // 是否删除
-}
-
 export interface PingReq {}
 
 export interface PingResp {
@@ -485,14 +452,105 @@ export interface PingResp {
   rpc_status: string[];
 }
 
-export interface PreDeleteAlbumReq {
-  ids: number[]; // 主键
-  is_delete: number; // 是否删除
+export interface QueryAccountReq extends PageQuery {
+  username?: string;
+  nickname?: string;
+  email?: string;
+  phone?: string;
+  status?: number; // 状态: -1删除 0正常 1禁用
+  user_ids?: string[]; // 用户ID
 }
 
-export interface PreDeletePhotoReq {
-  ids: number[]; // 主键
-  is_delete: number; // 是否删除
+export interface QueryAlbumReq extends PageQuery {
+  album_name?: string; // 相册名
+  is_delete?: number; // 是否删除
+}
+
+export interface QueryApiReq extends PageQuery {
+  name?: string; // api名称
+  path?: string; // api路径
+  method?: string; // api请求方法
+}
+
+export interface QueryArticleReq extends PageQuery {
+  article_title?: string; // 标题
+  article_type?: number; // 文章类型 1原创 2转载 3翻译
+  is_top?: number; // 是否置顶
+  is_delete?: number; // 是否删除
+  status?: number; // 状态值 1 公开 2 私密 3 草稿 4 已删除
+  category_name?: string; // 文章分类名
+  tag_name?: string;
+}
+
+export interface QueryCategoryReq extends PageQuery {
+  category_name?: string; // 分类名
+}
+
+export interface QueryCommentReq extends PageQuery {
+  is_review?: number;
+  type?: number; // 评论类型 1.文章 2.友链 3.说说
+}
+
+export interface QueryFileLogReq extends PageQuery {
+  file_path?: string; // 文件路径
+  file_name?: string; // 文件名称
+  file_type?: string; // 文件类型
+}
+
+export interface QueryFriendReq extends PageQuery {
+  link_name?: string; // 链接名
+}
+
+export interface QueryLoginLogReq extends PageQuery {
+  user_id?: string; // 用户id
+}
+
+export interface QueryMenuReq extends PageQuery {
+  name?: string; // 路由名字
+  title?: string; // 菜单标题
+}
+
+export interface QueryOperationLogReq extends PageQuery {}
+
+export interface QueryPageReq extends PageQuery {
+  page_name?: string; // 页面名
+}
+
+export interface QueryPhotoReq extends PageQuery {
+  album_id?: number; // 相册id
+  is_delete?: number; // 是否删除
+}
+
+export interface QueryRemarkReq extends PageQuery {
+  nickname?: string; // 昵称
+  is_review?: number; // 是否审核
+}
+
+export interface QueryRoleReq extends PageQuery {
+  role_key?: string; // 角色名
+  role_label?: string; // 角色标签
+  is_disable?: number; // 是否禁用  0否 1是
+}
+
+export interface QueryTagReq extends PageQuery {
+  tag_name?: string; // 标签名
+}
+
+export interface QueryTalkReq extends PageQuery {
+  status?: number; // 状态 1.公开 2.私密
+}
+
+export interface QueryUserLoginHistoryReq extends PageQuery {}
+
+export interface QueryVisitLogReq extends PageQuery {
+  user_id?: string; // 用户id
+  terminal_id?: string; // 终端id
+  page_name?: string; // 页面
+}
+
+export interface QueryVisitorReq extends PageQuery {
+  terminal_id?: string; // 终端id
+  ip_source?: string; // IP归属地
 }
 
 export interface RegisterReq {
@@ -507,18 +565,13 @@ export interface RemarkBackVO {
   id?: number; // 主键id
   user_id: string; // 用户ID
   message_content: string; // 留言内容
-  ip_address: string; // 用户ip
-  ip_source: string; // 用户地址
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   time: number; // 弹幕速度
   is_review: number; // 是否审核
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
   user?: UserInfoVO; // 用户信息
-}
-
-export interface RemarkQuery extends PageQuery {
-  nickname?: string; // 昵称
-  is_review?: number; // 是否审核
 }
 
 export interface RemarkReviewReq {
@@ -533,21 +586,12 @@ export interface ResetPasswordReq {
   verify_code: string; // 验证码
 }
 
-export interface Response {
-  code: number;
-  msg: string;
-  data: any;
-  trace_id: string;
-}
-
 export interface RestHeader {
+  header_app_name?: string;
   header_country?: string;
   header_language?: string;
   header_timezone?: string;
-  header_app_name?: string;
   header_timestamp?: string;
-  header_terminal_id?: string;
-  header_x_ts_token?: string;
   header_uid?: string;
   header_token?: string;
   header_authorization?: string;
@@ -568,22 +612,6 @@ export interface RoleBackVO {
   is_default: number; // 是否默认角色 0否 1是
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface RoleNewReq {
-  id?: number; // 主键id
-  parent_id?: number; // 父角色id
-  role_key: string; // 角色名
-  role_label: string; // 角色标签
-  role_comment: string; // 角色备注
-  is_disable: number; // 是否禁用  0否 1是
-  is_default: number; // 是否默认角色 0否 1是
-}
-
-export interface RoleQuery extends PageQuery {
-  role_key?: string; // 角色名
-  role_label?: string; // 角色标签
-  is_disable?: number; // 是否禁用  0否 1是
 }
 
 export interface RoleResourcesResp {
@@ -616,11 +644,10 @@ export interface SocialAccountInfo {
   enabled: boolean; // 是否启用
 }
 
-export interface SyncApiReq {
-}
+export interface SyncApiReq {}
 
 export interface SyncMenuReq {
-  menus: MenuNewReq[];
+  menus: NewMenuReq[];
 }
 
 export interface TagBackVO {
@@ -629,15 +656,6 @@ export interface TagBackVO {
   article_count: number; // 文章数量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface TagNewReq {
-  id?: number;
-  tag_name: string; // 标签名
-}
-
-export interface TagQuery extends PageQuery {
-  tag_name?: string; // 标签名
 }
 
 export interface TagVO {
@@ -658,18 +676,6 @@ export interface TalkBackVO {
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   user?: UserInfoVO; // 用户信息
-}
-
-export interface TalkNewReq {
-  id?: number; // 说说ID
-  content: string; // 说说内容
-  img_list: string[]; // 图片URL列表
-  is_top: number; // 是否置顶
-  status: number; // 状态 1.公开 2.私密
-}
-
-export interface TalkQuery extends PageQuery {
-  status?: number; // 状态 1.公开 2.私密
 }
 
 export interface ThirdLoginReq {
@@ -707,6 +713,26 @@ export interface UpdateAccountRolesReq {
 export interface UpdateAccountStatusReq {
   user_id: string;
   status: number; // 状态: -1删除 0正常 1禁用
+}
+
+export interface UpdateAlbumDeleteReq {
+  ids: number[]; // 主键
+  is_delete: number; // 是否删除
+}
+
+export interface UpdateArticleDeleteReq {
+  id?: number; // 文章ID
+  is_delete: number; // 是否删除
+}
+
+export interface UpdateArticleTopReq {
+  id?: number; // 文章ID
+  is_top: number; // 是否置顶
+}
+
+export interface UpdatePhotoDeleteReq {
+  ids: number[]; // 主键
+  is_delete: number; // 是否删除
 }
 
 export interface UpdateRoleApisReq {
@@ -754,26 +780,6 @@ export interface UploadFileReq {
   file_path?: string; // 文件路径
 }
 
-export interface UploadLogBackVO {
-  id?: number; // 文件目录ID
-  user_id: string; // 用户id
-  file_path: string; // 文件路径
-  file_name: string; // 文件名称
-  file_type: string; // 文件类型
-  file_size: number; // 文件大小
-  file_md5: string; // 文件md5值
-  file_url: string; // 上传路径
-  created_at: number; // 创建时间
-  updated_at: number; // 更新时间
-  creator?: UserInfoVO; // 创建人
-}
-
-export interface UploadLogQuery extends PageQuery {
-  file_path?: string; // 文件路径
-  file_name?: string; // 文件名称
-  file_type?: string; // 文件类型
-}
-
 export interface UserApi {
   id?: number; // 主键id
   parent_id: number; // 父id
@@ -803,8 +809,8 @@ export interface UserInfoDetail extends UserInfoExt {
   phone: string; // 用户手机号
   status: number; // 状态
   register_type: string; // 注册方式
-  ip_address: string; // ip host
-  ip_source: string; // ip 源
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   created_at: number;
   updated_at: number;
   role_labels: UserRoleLabel[];
@@ -842,13 +848,11 @@ export interface UserLoginHistory {
   login_type: string; // 登录类型
   os: string; // 操作系统
   browser: string; // 浏览器
-  ip_address: string; // ip host
-  ip_source: string; // ip 源
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   login_at: number; // 登录时间
   logout_at: number; // 登出时间
 }
-
-export interface UserLoginHistoryQuery extends PageQuery {}
 
 export interface UserMenu {
   id?: number; // 主键
@@ -908,25 +912,39 @@ export interface VisitLogBackVO {
   user_id: string; // 用户id
   terminal_id: string; // 终端id
   page_name: string; // 页面
-  ip_address: string; // 操作ip
-  ip_source: string; // 操作地址
+  ip_address: string; // 操作ip地址
+  ip_source: string; // 操作ip归属地
   os: string; // 操作系统
   browser: string; // 浏览器
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   user?: UserInfoVO; // 用户信息
-}
-
-export interface VisitLogQuery extends PageQuery {
-  user_id?: string; // 用户id
-  terminal_id?: string; // 终端id
-  page_name?: string; // 页面
+  visitor?: VisitorInfoVO; // 访客信息
 }
 
 export interface VisitTrendVO {
   date: string; // 日期
   uv_count: number; // 访客数
   pv_count: number; // 浏览量
+}
+
+export interface VisitorBackVO {
+  id?: number; // 主键id
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
+}
+
+export interface VisitorInfoVO {
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
 }
 
 export interface WebsiteConfigVO {
@@ -943,10 +961,11 @@ export interface WebsiteConfigVO {
 
 export interface WebsiteFeature {
   is_chat_room: number; // 是否开启聊天室
+  is_ai_assistant: number; // 是否开启AI助手
+  is_music_player: number; // 是否开启音乐播放器
   is_comment_review: number; // 是否开启评论审核
   is_email_notice: number; // 是否开启邮件通知
   is_message_review: number; // 是否开启留言审核
-  is_music_player: number; // 是否开启音乐播放器
   is_reward: number; // 是否开启打赏
 }
 

@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, CommentQuery, CommentReviewReq, IdsReq, PageResp } from "./types";
+import type { BatchResp, CommentReviewReq, IdsReq, PageResp, QueryCommentReq } from "./types";
 
 export const CommentAPI = {
   /** 删除评论 */
@@ -12,7 +12,7 @@ export const CommentAPI = {
   },
 
   /** 查询评论列表(后台) */
-  findCommentBackListApi(data?: CommentQuery): Promise<IApiResponse<PageResp>> {
+  findCommentBackListApi(data?: QueryCommentReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/comment/find_comment_back_list",
       method: "POST",

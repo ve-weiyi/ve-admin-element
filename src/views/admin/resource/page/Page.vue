@@ -107,7 +107,7 @@ import { computed, onMounted, ref, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import { PageAPI } from "@/api/page.ts";
-import type { PageBackVO, PageNewReq, PageQueryReq } from "@/api/types.ts";
+import type { PageBackVO, NewPageReq, QueryPageReq } from "@/api/types.ts";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
@@ -117,7 +117,7 @@ const route = useRoute();
 const router = useRouter();
 const loading = ref(false);
 const showSearch = ref(false);
-const queryParams = ref<PageQueryReq>({
+const queryParams = ref<QueryPageReq>({
   page: 1,
   page_size: 10,
 });
@@ -129,16 +129,16 @@ const modalVisible = ref(false);
 const formRef = ref<FormInstance>();
 const uploadType = ref("upload");
 
-const initFormData: PageNewReq = {
+const initFormData: NewPageReq = {
   id: 0,
   page_name: "",
   page_label: "",
   page_cover: "",
 };
 
-const formData = reactive<PageNewReq>({ ...initFormData });
+const formData = reactive<NewPageReq>({ ...initFormData });
 
-const formRules: FormRules<PageNewReq> = {
+const formRules: FormRules<NewPageReq> = {
   page_name: [{ required: true, message: "请输入页面名称", trigger: "blur" }],
   page_label: [{ required: true, message: "请输入页面标签", trigger: "blur" }],
   page_cover: [{ required: true, message: "请上传页面封面", trigger: "blur" }],

@@ -1,18 +1,18 @@
 import request from "@/utils/request";
 import type {
   AlbumBackVO,
-  AlbumNewReq,
-  AlbumQuery,
   BatchResp,
   IdReq,
   IdsReq,
+  NewAlbumReq,
   PageResp,
-  PreDeleteAlbumReq,
+  QueryAlbumReq,
+  UpdateAlbumDeleteReq,
 } from "./types";
 
 export const AlbumAPI = {
   /** 创建相册 */
-  addAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackVO>> {
+  addAlbumApi(data?: NewAlbumReq): Promise<IApiResponse<AlbumBackVO>> {
     return request({
       url: "/admin-api/v1/album/add_album",
       method: "POST",
@@ -30,7 +30,7 @@ export const AlbumAPI = {
   },
 
   /** 分页获取相册列表 */
-  findAlbumListApi(data?: AlbumQuery): Promise<IApiResponse<PageResp>> {
+  findAlbumListApi(data?: QueryAlbumReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/album/find_album_list",
       method: "POST",
@@ -47,19 +47,19 @@ export const AlbumAPI = {
     });
   },
 
-  /** 预删除相册 */
-  preDeleteAlbumApi(data?: PreDeleteAlbumReq): Promise<IApiResponse<BatchResp>> {
+  /** 更新相册 */
+  updateAlbumApi(data?: NewAlbumReq): Promise<IApiResponse<AlbumBackVO>> {
     return request({
-      url: "/admin-api/v1/album/pre_delete_album",
-      method: "POST",
+      url: "/admin-api/v1/album/update_album",
+      method: "PUT",
       data: data,
     });
   },
 
-  /** 更新相册 */
-  updateAlbumApi(data?: AlbumNewReq): Promise<IApiResponse<AlbumBackVO>> {
+  /** 更新相册删除状态 */
+  updateAlbumDeleteApi(data?: UpdateAlbumDeleteReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/album/update_album",
+      url: "/admin-api/v1/album/update_album_delete",
       method: "PUT",
       data: data,
     });

@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { CategoryQuery } from "@/api/types";
+import type { QueryCategoryReq } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
-const contentConfig: IContentConfig<CategoryQuery> = {
+const contentConfig: IContentConfig<QueryCategoryReq> = {
   pageTitle: "分类管理",
   permPrefix: "sys:category",
   table: {
@@ -28,7 +28,7 @@ const contentConfig: IContentConfig<CategoryQuery> = {
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
     return CategoryAPI.deletesCategoryApi(data);
   },
-  indexAction: function (params: CategoryQuery) {
+  indexAction: function (params: QueryCategoryReq) {
     if (!params.sorts) {
       params.sorts = [`id desc`];
     }

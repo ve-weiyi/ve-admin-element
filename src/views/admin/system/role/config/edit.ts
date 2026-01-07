@@ -1,8 +1,8 @@
 import type { IModalConfig } from "@/components/CURD/types";
-import type { RoleNewReq } from "@/api/types";
+import type { NewRoleReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 
-const modalConfig: IModalConfig<RoleNewReq> = {
+const modalConfig: IModalConfig<NewRoleReq> = {
   permPrefix: "sys:user",
   component: "dialog",
   dialog: {

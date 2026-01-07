@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { OperationLogQuery } from "@/api/types";
+import type { QueryOperationLogReq } from "@/api/types";
 import { OperationLogAPI } from "@/api/operation_log";
 
-const contentConfig: IContentConfig<OperationLogQuery> = {
+const contentConfig: IContentConfig<QueryOperationLogReq> = {
   pageTitle: "操作日志",
   permPrefix: "log:operation",
   table: {

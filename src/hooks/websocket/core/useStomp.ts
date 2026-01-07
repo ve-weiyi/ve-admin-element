@@ -84,8 +84,9 @@ export function useStomp(options: UseStompOptions = {}) {
     client.value = new Client({
       brokerURL: brokerURL.value,
       connectHeaders: {
-        authorization: `Bearer ${options.token}`,
         login: options.login ?? "",
+        passcode: options.token ?? "",
+        client: options.login ?? "",
       },
       debug: options.debug ? console.log : () => {},
       reconnectDelay: 0, // 禁用内置重连机制，使用自定义重连

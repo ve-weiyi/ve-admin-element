@@ -1,10 +1,10 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { QueryAccountReq } from "@/api/types";
-import { AccountAPI } from "@/api/account";
+import type { QueryVisitorReq } from "@/api/types";
+import { VisitorAPI } from "@/api/visitor";
 
-const contentConfig: IContentConfig<QueryAccountReq> = {
-  pageTitle: "在线用户",
-  permPrefix: "monitor:online",
+const contentConfig: IContentConfig<QueryVisitorReq> = {
+  pageTitle: "游客管理",
+  permPrefix: "sys:visitor",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -21,57 +21,35 @@ const contentConfig: IContentConfig<QueryAccountReq> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: QueryAccountReq) {
-    return AccountAPI.findAccountOnlineListApi(query);
+  indexAction: function (query: QueryVisitorReq) {
+    return VisitorAPI.findVisitorListApi(query);
   },
-  pk: "user_id",
+  pk: "id",
   toolbar: [],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
-      type: "selection",
-      label: "批量操作",
-      width: 50,
-      align: "center",
-    },
-    {
-      label: "用户id",
-      prop: "user_id",
-      width: 120,
-      align: "center",
-      show: false,
-    },
-    {
-      label: "头像",
-      align: "center",
-      prop: "avatar",
+      label: "ID",
+      prop: "id",
       width: 80,
-      templet: "image",
-    },
-    {
-      label: "用户名",
-      prop: "username",
-      width: 160,
       align: "center",
     },
     {
-      label: "昵称",
-      prop: "nickname",
+      label: "终端ID",
+      prop: "terminal_id",
+      width: 180,
+      align: "center",
+    },
+    {
+      label: "操作系统",
+      prop: "os",
       width: 120,
       align: "center",
     },
     {
-      label: "角色列表",
-      prop: "roles",
-      minWidth: 140,
-      width: 0,
-      align: "center",
-      templet: "custom",
-    },
-    {
-      label: "登录类型",
-      prop: "login_type",
-      width: 120,
+      label: "浏览器",
+      prop: "browser",
+      width: 150,
       align: "center",
     },
     {
@@ -79,19 +57,26 @@ const contentConfig: IContentConfig<QueryAccountReq> = {
       prop: "ip_address",
       width: 140,
       align: "center",
-      show: false,
     },
     {
-      label: "IP来源",
+      label: "IP归属地",
       prop: "ip_source",
       width: 0,
       minWidth: 160,
       align: "center",
-      show: false,
     },
     {
       label: "创建时间",
       prop: "created_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+    },
+    {
+      label: "更新时间",
+      prop: "updated_at",
       width: 170,
       align: "center",
       sortable: true,

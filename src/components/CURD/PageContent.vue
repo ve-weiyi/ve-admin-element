@@ -65,7 +65,7 @@
                     <el-image
                       :src="item"
                       :preview-src-list="scope.row[col.prop]"
-                      :initial-index="index"
+                      :initial-index="Number(index)"
                       :preview-teleported="true"
                       :style="`width: ${col.imageWidth ?? 40}px; height: ${col.imageHeight ?? 40}px`"
                     />

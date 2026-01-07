@@ -1,18 +1,18 @@
 import request from "@/utils/request";
 import type {
   ApiBackVO,
-  ApiNewReq,
-  ApiQuery,
   BatchResp,
   EmptyReq,
   IdsReq,
+  NewApiReq,
   PageResp,
+  QueryApiReq,
   SyncApiReq,
 } from "./types";
 
 export const ApiAPI = {
   /** 创建api路由 */
-  addApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackVO>> {
+  addApiApi(data?: NewApiReq): Promise<IApiResponse<ApiBackVO>> {
     return request({
       url: "/admin-api/v1/api/add_api",
       method: "POST",
@@ -39,7 +39,7 @@ export const ApiAPI = {
   },
 
   /** 分页获取api路由列表 */
-  findApiListApi(data?: ApiQuery): Promise<IApiResponse<PageResp>> {
+  findApiListApi(data?: QueryApiReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/api/find_api_list",
       method: "POST",
@@ -57,7 +57,7 @@ export const ApiAPI = {
   },
 
   /** 更新api路由 */
-  updateApiApi(data?: ApiNewReq): Promise<IApiResponse<ApiBackVO>> {
+  updateApiApi(data?: NewApiReq): Promise<IApiResponse<ApiBackVO>> {
     return request({
       url: "/admin-api/v1/api/update_api",
       method: "PUT",

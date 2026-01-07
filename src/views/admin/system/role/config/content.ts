@@ -1,9 +1,9 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { RoleQuery } from "@/api/types";
+import type { QueryRoleReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 import { SwitchStatusEnum } from "@/enums/blog";
 
-const contentConfig: IContentConfig<RoleQuery> = {
+const contentConfig: IContentConfig<QueryRoleReq> = {
   pageTitle: "角色管理",
   permPrefix: "sys:role",
   table: {
@@ -29,7 +29,7 @@ const contentConfig: IContentConfig<RoleQuery> = {
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
     return RoleAPI.deletesRoleApi(data);
   },
-  indexAction: function (params: RoleQuery) {
+  indexAction: function (params: QueryRoleReq) {
     return RoleAPI.findRoleListApi(params);
   },
   modifyAction(row, field, value) {

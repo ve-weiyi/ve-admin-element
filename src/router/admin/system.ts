@@ -37,5 +37,11 @@ export default {
       name: "Api",
       meta: { title: "接口管理" },
     },
+    {
+      path: "/system/visitor",
+      component: () => import("@/views/admin/system/visitor/Visitor.vue"),
+      name: "Visitor",
+      meta: { title: "游客管理" },
+    },
   ],
 } satisfies RouteRecordRaw;

@@ -27,8 +27,16 @@ const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
   },
   formItems: [
     {
-      label: "用户id",
+      label: "用户ID",
       prop: "user_id",
+      type: "input",
+      attrs: {
+        disabled: true,
+      },
+    },
+    {
+      label: "用户名",
+      prop: "username",
       type: "input",
       attrs: {
         disabled: true,
@@ -37,10 +45,8 @@ const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
     {
       label: "昵称",
       prop: "nickname",
-      rules: [{ required: true, message: "昵称不能为空", trigger: "blur" }],
       type: "input",
       attrs: {
-        placeholder: "请输入昵称",
         disabled: true,
       },
     },

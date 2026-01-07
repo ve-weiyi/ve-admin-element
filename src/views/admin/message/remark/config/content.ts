@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { RemarkQuery } from "@/api/types";
+import type { QueryRemarkReq } from "@/api/types";
 import { RemarkAPI } from "@/api/remark";
 
-const contentConfig: IContentConfig<RemarkQuery> = {
+const contentConfig: IContentConfig<QueryRemarkReq> = {
   pageTitle: "留言管理",
   permPrefix: "message:remark",
   table: {
@@ -21,7 +21,7 @@ const contentConfig: IContentConfig<RemarkQuery> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: RemarkQuery) {
+  indexAction: function (query: QueryRemarkReq) {
     return RemarkAPI.findRemarkListApi(query);
   },
   deleteAction: function (ids: string) {

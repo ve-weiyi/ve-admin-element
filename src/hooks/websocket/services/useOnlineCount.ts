@@ -1,5 +1,5 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
-import { useStomp } from "../core/useStomp";
+import { useStomp } from "@/hooks";
 import { ElMessage } from "element-plus";
 import { getAccessToken, getUid } from "@/utils/auth";
 

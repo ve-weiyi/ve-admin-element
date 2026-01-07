@@ -1,8 +1,8 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { TagQuery } from "@/api/types";
+import type { QueryTagReq } from "@/api/types";
 import { TagAPI } from "@/api/tag";
 
-const contentConfig: IContentConfig<TagQuery> = {
+const contentConfig: IContentConfig<QueryTagReq> = {
   pageTitle: "标签管理",
   permPrefix: "sys:tag",
   table: {
@@ -28,7 +28,7 @@ const contentConfig: IContentConfig<TagQuery> = {
     ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
     return TagAPI.deletesTagApi(data);
   },
-  indexAction: function (params: TagQuery) {
+  indexAction: function (params: QueryTagReq) {
     if (!params.sorts) {
       params.sorts = [`id desc`];
     }

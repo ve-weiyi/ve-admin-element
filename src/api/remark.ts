@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, IdsReq, PageResp, RemarkQuery, RemarkReviewReq } from "./types";
+import type { BatchResp, IdsReq, PageResp, QueryRemarkReq, RemarkReviewReq } from "./types";
 
 export const RemarkAPI = {
   /** 删除留言 */
@@ -12,7 +12,7 @@ export const RemarkAPI = {
   },
 
   /** 分页获取留言列表 */
-  findRemarkListApi(data?: RemarkQuery): Promise<IApiResponse<PageResp>> {
+  findRemarkListApi(data?: QueryRemarkReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/admin-api/v1/remark/find_remark_list",
       method: "POST",

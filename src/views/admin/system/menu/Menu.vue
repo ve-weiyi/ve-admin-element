@@ -69,7 +69,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import MenuForm from "./form.vue";
-import type { MenuNewReq } from "@/api/types";
+import type { NewMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 import { MenuTypeEnum, SwitchStatusEnum } from "@/enums/blog";
 import { usePermissionStore } from "@/store";
@@ -112,7 +112,7 @@ async function handleSubmitClick() {
 
 const title = ref("添加菜单");
 const addOrUpdate = ref(false);
-const menuFormData = ref<MenuNewReq>();
+const menuFormData = ref<NewMenuReq>();
 
 function handleSync() {
   const permissionStore = usePermissionStore();
@@ -184,7 +184,7 @@ function getMenuType(route: RouteRecordRaw): string {
 /**
  * 转换单个路由为菜单项
  */
-function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0): MenuNewReq {
+function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0): NewMenuReq {
   return {
     parent_id: parentId,
     path: route.path || "",
@@ -208,7 +208,7 @@ function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0):
 /**
  * 转换路由数组为菜单数组
  */
-function convertMenu(routes: RouteRecordRaw[]): MenuNewReq[] {
+function convertMenu(routes: RouteRecordRaw[]): NewMenuReq[] {
   if (!routes?.length) return [];
 
   return routes.map((route, index) => convertRouteToMenu(route, index));
@@ -289,7 +289,7 @@ function handleOperateClick(data: IOperateData) {
       break;
     case "editMenu":
       title.value = "编辑菜单";
-      menuFormData.value = data.row as MenuNewReq;
+      menuFormData.value = data.row as NewMenuReq;
       addOrUpdate.value = true;
       break;
   }

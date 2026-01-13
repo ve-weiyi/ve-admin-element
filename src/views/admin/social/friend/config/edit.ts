@@ -1,6 +1,6 @@
-import type { IModalConfig } from "@/components/CURD/types.ts";
-import type { NewFriendReq } from "@/api/types.ts";
-import { FriendAPI } from "@/api/friend.ts";
+import type { IModalConfig } from "@/components/CURD/types";
+import type { NewFriendReq } from "@/api/types";
+import { FriendAPI } from "@/api/friend";
 
 const modalConfig: IModalConfig<NewFriendReq> = {
   permPrefix: "website:friend",

@@ -32,18 +32,7 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
     return CommentAPI.deletesCommentApi(data);
   },
   pk: "id",
-  toolbar: [
-    {
-      name: "review",
-      text: "批量通过",
-      perm: "review",
-      attrs: {
-        icon: "CircleCheck",
-        type: "success",
-      },
-    },
-    "delete",
-  ],
+  toolbar: ["delete"],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
@@ -61,7 +50,14 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
     },
     {
       label: "评论人",
-      prop: "user",
+      prop: "user_info",
+      width: 150,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "客户端信息",
+      prop: "client_info",
       width: 150,
       align: "center",
       templet: "custom",
@@ -88,7 +84,7 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
     },
     {
       label: "状态",
-      prop: "is_review",
+      prop: "status",
       width: 100,
       align: "center",
       templet: "custom",
@@ -115,21 +111,7 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
       fixed: "right",
       width: 160,
       templet: "tool",
-      operat: [
-        {
-          name: "review",
-          text: "通过",
-          perm: "password:reset",
-          attrs: {
-            icon: "check",
-            type: "success",
-          },
-          render(row) {
-            return row.is_review != 1;
-          },
-        },
-        "delete",
-      ],
+      operat: ["delete"],
     },
   ],
 };

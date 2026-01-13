@@ -78,8 +78,8 @@ import type { FormInstance } from "element-plus";
 import { LocationQuery, RouteLocationRaw, useRoute } from "vue-router";
 import router from "@/router";
 import { useUserStore } from "@/store";
-import { AuthAPI } from "@/api/auth.ts";
-import { EmailLoginReq } from "@/api/types.ts";
+import { AuthAPI } from "@/api/auth";
+import { EmailLoginReq } from "@/api/types";
 import { Message } from "@element-plus/icons-vue";
 
 const userStore = useUserStore();

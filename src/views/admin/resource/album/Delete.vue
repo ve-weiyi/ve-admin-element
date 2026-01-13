@@ -95,8 +95,8 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { PhotoAPI } from "@/api/photo.ts";
-import type { PhotoBackVO, QueryPhotoReq } from "@/api/types.ts";
+import { PhotoAPI } from "@/api/photo";
+import type { PhotoBackVO, QueryPhotoReq } from "@/api/types";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 

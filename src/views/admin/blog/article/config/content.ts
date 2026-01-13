@@ -1,7 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryArticleReq } from "@/api/types";
 import { ArticleAPI } from "@/api/article";
-import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog/index.ts";
+import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog/index";
 
 const contentConfig: IContentConfig<QueryArticleReq> = {
   pageTitle: "文章管理",

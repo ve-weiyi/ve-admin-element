@@ -1,6 +1,6 @@
-import type { IContentConfig } from "@/components/CURD/types.ts";
-import type { QueryFriendReq } from "@/api/types.ts";
-import { FriendAPI } from "@/api/friend.ts";
+import type { IContentConfig } from "@/components/CURD/types";
+import type { QueryFriendReq } from "@/api/types";
+import { FriendAPI } from "@/api/friend";
 
 const contentConfig: IContentConfig<QueryFriendReq> = {
   pageTitle: "友链管理",

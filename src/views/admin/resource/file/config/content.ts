@@ -1,6 +1,6 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { ListUploadFileReq } from "@/api/types";
-import { UploadAPI } from "@/api/upload_file.ts";
+import { UploadAPI } from "@/api/upload_file";
 
 const contentConfig: IContentConfig<ListUploadFileReq> = {
   pageTitle: "文件管理",

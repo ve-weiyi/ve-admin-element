@@ -1,6 +1,6 @@
 import type { Column } from "element-plus";
-import { UserLoginHistory, UserThirdPartyInfo } from "@/api/types.ts";
-import { formatDateTime } from "@/utils/date.ts";
+import { UserLoginHistory, UserThirdPartyInfo } from "@/api/types";
+import { formatDateTime } from "@/utils/date";
 import { VNode } from "vue";
 
 export const loginHistoryColumns = ref<Column<UserLoginHistory>[]>([

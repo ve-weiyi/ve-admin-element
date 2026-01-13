@@ -106,8 +106,8 @@
 import { computed, onMounted, ref, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
-import { PageAPI } from "@/api/page.ts";
-import type { PageBackVO, NewPageReq, QueryPageReq } from "@/api/types.ts";
+import { PageAPI } from "@/api/page";
+import type { PageBackVO, NewPageReq, QueryPageReq } from "@/api/types";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";

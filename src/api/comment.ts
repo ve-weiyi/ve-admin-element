@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, CommentReviewReq, IdsReq, PageResp, QueryCommentReq } from "./types";
+import type { BatchResp, IdsReq, PageResp, QueryCommentReq, UpdateCommentStatusReq } from "./types";
 
 export const CommentAPI = {
   /** 删除评论 */
@@ -21,7 +21,7 @@ export const CommentAPI = {
   },
 
   /** 更新评论审核状态 */
-  updateCommentReviewApi(data?: CommentReviewReq): Promise<IApiResponse<BatchResp>> {
+  updateCommentStatusApi(data?: UpdateCommentStatusReq): Promise<IApiResponse<BatchResp>> {
     return request({
       url: "/admin-api/v1/comment/update_comment_review",
       method: "PUT",

@@ -330,16 +330,16 @@ import {
   UserInfoResp,
   UpdateUserBindEmailReq,
   UpdateUserBindPhoneReq,
-} from "@/api/types.ts";
-import { UserAPI } from "@/api/user.ts";
-import { AuthAPI } from "@/api/auth.ts";
+} from "@/api/types";
+import { UserAPI } from "@/api/user";
+import { AuthAPI } from "@/api/auth";
 import { loginHistoryColumns } from "./columns.tsx";
-import { thirdPlatformList } from "@/utils/third.ts";
+import { thirdPlatformList } from "@/utils/third";
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import { useRoute } from "vue-router";
-import { formatDateTime } from "@/utils/date.ts";
-import { uploadFile } from "@/utils/file.ts";
+import { formatDateTime } from "@/utils/date";
+import { uploadFile } from "@/utils/file";
 
 const userProfile = ref<UserInfoResp>(<UserInfoResp>{});
 

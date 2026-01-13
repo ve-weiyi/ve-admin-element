@@ -136,8 +136,8 @@ import { LocationQuery, RouteLocationRaw, useRoute } from "vue-router";
 import router from "@/router";
 import { useUserStore } from "@/store";
 import CommonWrapper from "@/components/CommonWrapper/index.vue";
-import { AuthAPI } from "@/api/auth.ts";
-import { LoginReq } from "@/api/types.ts";
+import { AuthAPI } from "@/api/auth";
+import { LoginReq } from "@/api/types";
 import { ElMessage } from "element-plus";
 
 const userStore = useUserStore();

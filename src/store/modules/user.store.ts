@@ -1,11 +1,17 @@
 import { store } from "@/store";
 import { usePermissionStoreHook } from "@/store/modules/permission.store";
 
-import type { EmailLoginReq, LoginReq, PhoneLoginReq, ThirdLoginReq, UserInfoResp } from "@/api/types";
+import type {
+  EmailLoginReq,
+  LoginReq,
+  PhoneLoginReq,
+  ThirdLoginReq,
+  UserInfoResp,
+} from "@/api/types";
 import { AuthAPI } from "@/api/auth";
 import { UserAPI } from "@/api/user";
 
-import { clearToken, setAccessToken, setUid } from "@/utils/auth";
+import { clearStorage, setAccessToken, setUid } from "@/utils/token";
 
 export const useUserStore = defineStore("user", () => {
   const userInfo = useStorage<UserInfoResp>("userInfo", <UserInfoResp>{});
@@ -126,7 +132,7 @@ export const useUserStore = defineStore("user", () => {
    */
   function clearSessionAndCache() {
     return new Promise<void>((resolve) => {
-      clearToken();
+      clearStorage();
       usePermissionStoreHook().resetRouter();
       resolve();
     });

@@ -19,9 +19,9 @@ import { onMounted, ref } from "vue";
 import { ElNotification } from "element-plus";
 import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-import { WebsiteAPI } from "@/api/website.ts";
+import { WebsiteAPI } from "@/api/website";
 import { useRoute, useRouter } from "vue-router";
-import { uploadFile } from "@/utils/file.ts";
+import { uploadFile } from "@/utils/file";
 
 const route = useRoute();
 const router = useRouter();

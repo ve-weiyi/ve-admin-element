@@ -66,7 +66,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { ArticleAPI } from "@/api/article";
 import "@/styles/table.scss";
-import { ArticleDeleteEnum, ArticleStatusEnum, ArticleTypeEnum } from "@/enums/blog/index.ts";
+import { ArticleDeleteEnum, ArticleStatusEnum, ArticleTypeEnum } from "@/enums/blog/index";
 
 const route = useRoute();
 const router = useRouter();

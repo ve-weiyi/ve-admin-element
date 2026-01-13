@@ -84,7 +84,7 @@ const contentConfig: IContentConfig<QueryFileLogReq> = {
     },
     {
       label: "创建者",
-      prop: "creator",
+      prop: "user_info",
       width: 150,
       align: "left",
       templet: "custom",

@@ -1,5 +1,5 @@
 import * as imageConversion from "image-conversion";
-import { UploadAPI } from "@/api/upload_file.ts";
+import { UploadAPI } from "@/api/upload_file";
 
 export function compressImage(rawFile: Blob) {
   return new Promise<Blob>((resolve, reject) => {

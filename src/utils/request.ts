@@ -2,12 +2,12 @@ import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestCo
 import qs from "qs";
 import MD5 from "crypto-js/md5";
 import { useUserStore } from "@/store";
-import { getAccessToken, getUid } from "./auth";
+import { getAccessToken, getTerminalId, getUid } from "./token";
 
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
-const HeaderTerminalId = "Terminal-Id";
-const HeaderXTsToken = "X-Ts-Token";
+const HeaderXTerminalId = "X-Terminal-Id";
+const HeaderXTerminalToken = "X-Terminal-Token";
 
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
@@ -33,15 +33,17 @@ axiosInstance.interceptors.request.use(
     const uid = getUid();
     const accessToken = getAccessToken();
     // 签名
+    const terminalId = getTerminalId() || "";
     const timestamp = Math.floor(Date.now() / 1000).toString();
-    const sign = MD5(`${timestamp}${uid}${accessToken}`).toString();
+    const terminalToken = MD5(terminalId + timestamp).toString();
 
     config.headers = Object.assign({}, config.headers, {
       [HeaderAppName]: "admin-web",
+      [HeaderTimestamp]: timestamp,
+      [HeaderXTerminalId]: terminalId,
+      [HeaderXTerminalToken]: terminalToken,
       [HeaderUid]: uid,
       [HeaderAuthorization]: accessToken,
-      [HeaderTimestamp]: timestamp,
-      [HeaderXTsToken]: sign,
     });
     return config;
   },

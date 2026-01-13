@@ -388,8 +388,8 @@ import {
   GetVisitTrendResp,
   ArticleViewVO,
   CategoryVO,
-} from "@/api/types.ts";
-import { WebsiteAPI } from "@/api/website.ts";
+} from "@/api/types";
+import { WebsiteAPI } from "@/api/website";
 import ECharts from "@/components/ECharts/index.vue";
 import ChinaMap from "./components/ChinaMap.vue";
 import Calender from "./components/Calender.vue";

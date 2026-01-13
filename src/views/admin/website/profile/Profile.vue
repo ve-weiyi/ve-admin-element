@@ -279,7 +279,7 @@ import type { UploadRawFile, UploadRequestOptions } from "element-plus";
 import { ElMessage } from "element-plus";
 import { WebsiteAPI } from "@/api/website";
 import { uploadFile } from "@/utils/file";
-import { WebsiteConfigVO } from "@/api/types.ts";
+import { WebsiteConfigVO } from "@/api/types";
 
 const websiteConfigForm = ref<WebsiteConfigVO>({
   admin_url: "https://admin.veweiyi.cn",

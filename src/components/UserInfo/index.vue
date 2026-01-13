@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { User } from "@element-plus/icons-vue";
-import type { UserInfoVO } from "@/api/types.ts";
+import type { UserInfoVO } from "@/api/types";
 
 interface Props {
   user?: UserInfoVO;

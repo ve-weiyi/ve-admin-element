@@ -79,8 +79,8 @@
 </template>
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
-import { ResetPasswordReq } from "@/api/types.ts";
-import { AuthAPI } from "@/api/auth.ts";
+import { ResetPasswordReq } from "@/api/types";
+import { AuthAPI } from "@/api/auth";
 import { Lock } from "@element-plus/icons-vue";
 
 const emit = defineEmits(["update:modelValue"]);

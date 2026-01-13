@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useStomp } from "@/hooks";
 import { ElMessage } from "element-plus";
-import { getAccessToken, getUid } from "@/utils/auth";
+import { getAccessToken, getUid } from "@/utils/token";
 
 /**
  * 在线用户计数Hook

@@ -1,8 +1,8 @@
 import type { IModalConfig } from "@/components/CURD/types";
 import type { NewApiReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
-import { HTTP_METHODS_WITH_EMPTY } from "@/utils/constants.ts";
-import { SwitchStatusEnum } from "@/enums/blog/index.ts";
+import { HTTP_METHODS_WITH_EMPTY } from "@/utils/constants";
+import { SwitchStatusEnum } from "@/enums/blog/index";
 
 const modalConfig: IModalConfig<NewApiReq> = {
   permPrefix: "sys:api",

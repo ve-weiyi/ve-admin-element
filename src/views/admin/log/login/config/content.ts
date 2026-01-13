@@ -1,6 +1,6 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryLoginLogReq } from "@/api/types";
-import { LoginLogAPI } from "@/api/login_log.ts";
+import { LoginLogAPI } from "@/api/login_log";
 
 const contentConfig: IContentConfig<QueryLoginLogReq> = {
   pageTitle: "登录日志",
@@ -44,7 +44,14 @@ const contentConfig: IContentConfig<QueryLoginLogReq> = {
     },
     {
       label: "用户",
-      prop: "user",
+      prop: "user_info",
+      width: 150,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "客户端",
+      prop: "client_info",
       width: 150,
       align: "center",
       templet: "custom",
@@ -62,32 +69,6 @@ const contentConfig: IContentConfig<QueryLoginLogReq> = {
       width: 120,
       align: "center",
       templet: "custom",
-    },
-    {
-      label: "操作系统",
-      prop: "os",
-      width: 0,
-      minWidth: 160,
-      align: "center",
-    },
-    {
-      label: "浏览器",
-      prop: "browser",
-      minWidth: 140,
-      align: "center",
-    },
-    {
-      label: "IP地址",
-      prop: "ip_address",
-      width: 140,
-      align: "center",
-    },
-    {
-      label: "IP来源",
-      prop: "ip_source",
-      width: 0,
-      minWidth: 160,
-      align: "center",
     },
     {
       label: "登录时间",

@@ -1,7 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryApiReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
-import { SwitchStatusEnum } from "@/enums/blog/index.ts";
+import { SwitchStatusEnum } from "@/enums/blog/index";
 
 const contentConfig: IContentConfig<QueryApiReq> = {
   pageTitle: "接口管理",

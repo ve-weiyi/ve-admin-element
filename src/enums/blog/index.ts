@@ -1,6 +1,6 @@
-export * from "./ArticleEnum.ts";
-export * from "./TalkEnum.ts";
-export * from "./MenuEnum.ts";
-export * from "./LoginEnum.ts";
+export * from "./ArticleEnum";
+export * from "./TalkEnum";
+export * from "./MenuEnum";
+export * from "./LoginEnum";
 
-export * from "./CommonEnum.ts";
+export * from "./CommonEnum";

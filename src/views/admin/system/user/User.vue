@@ -51,8 +51,8 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { LoginTypeEnum } from "@/enums/blog/index.ts";
-import { AccountAPI } from "@/api/account.ts";
+import { LoginTypeEnum } from "@/enums/blog/index";
+import { AccountAPI } from "@/api/account";
 
 const {
   searchRef,

@@ -86,22 +86,27 @@ export interface CategoryVO {
 
 export interface CleanMenuReq {}
 
-export interface CommentBackVO {
-  id: number; // 评论ID
-  type: number; // 评论类型 1.文章 2.友链 3.说说
-  topic_title: string; // 评论主题
-  user_id: string; // 用户ID
-  reply_user_id: string; // 回复用户ID
-  comment_content: string; // 评论内容
-  is_review: number; // 是否审核 0.未审核 1.已审核
-  created_at: number; // 创建时间
-  user?: UserInfoVO; // 用户信息
-  reply_user?: UserInfoVO; // 回复用户信息
+export interface ClientInfoVO {
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
 }
 
-export interface CommentReviewReq {
-  ids?: number[];
-  is_review?: number;
+export interface CommentBackVO {
+  id: number; // 评论ID
+  user_id: string; // 用户ID
+  terminal_id: string; // 终端id
+  type: number; // 评论类型 1.文章 2.友链 3.说说
+  topic_title: string; // 评论主题
+  reply_user_id: string; // 回复用户ID
+  comment_content: string; // 评论内容
+  status: number; // 状态值
+  created_at: number; // 创建时间
+  client_info?: ClientInfoVO; // 客户端信息
+  user_info?: UserInfoVO; // 用户信息
+  reply_user_info?: UserInfoVO; // 回复用户信息
 }
 
 export interface DeleteUserBindThirdPartyReq {
@@ -135,6 +140,7 @@ export interface FileInfoVO {
 export interface FileLogBackVO {
   id?: number; // 文件目录ID
   user_id: string; // 用户id
+  terminal_id: string; // 终端id
   file_path: string; // 文件路径
   file_name: string; // 文件名称
   file_type: string; // 文件类型
@@ -143,7 +149,8 @@ export interface FileLogBackVO {
   file_url: string; // 上传路径
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  creator?: UserInfoVO; // 创建人
+  user_info?: UserInfoVO; // 用户信息
+  client_info?: ClientInfoVO; // 客户端信息
 }
 
 export interface FriendBackVO {
@@ -230,15 +237,13 @@ export interface ListUploadFileReq {
 export interface LoginLogBackVO {
   id?: number;
   user_id: string; // 用户id
+  terminal_id: string; // 终端id
   login_type: string; // 登录类型
   app_name: string; // 应用名称
-  os: string; // 操作系统
-  browser: string; // 浏览器
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
   login_at: number; // 登录时间
   logout_at: number; // 登出时间
-  user?: UserInfoVO; // 用户信息
+  user_info?: UserInfoVO; // 用户信息
+  client_info?: ClientInfoVO; // 客户端信息
 }
 
 export interface LoginReq {
@@ -386,8 +391,7 @@ export interface NewTalkReq {
 export interface OperationLogBackVO {
   id?: number; // 主键id
   user_id: string; // 用户id
-  ip_address: string; // 操作ip地址
-  ip_source: string; // 操作ip归属地
+  terminal_id: string; // 终端id
   opt_module: string; // 操作模块
   opt_desc: string; // 操作描述
   request_uri: string; // 请求地址
@@ -398,7 +402,8 @@ export interface OperationLogBackVO {
   cost: string; // 耗时（ms）
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfoVO; // 用户信息
+  user_info?: UserInfoVO; // 用户信息
+  client_info?: ClientInfoVO; // 客户端信息
 }
 
 export interface PageBackVO {
@@ -487,7 +492,8 @@ export interface QueryCategoryReq extends PageQuery {
 }
 
 export interface QueryCommentReq extends PageQuery {
-  is_review?: number;
+  user_id?: string; // 用户ID
+  status?: number; // 状态
   type?: number; // 评论类型 1.文章 2.友链 3.说说
 }
 
@@ -522,8 +528,8 @@ export interface QueryPhotoReq extends PageQuery {
 }
 
 export interface QueryRemarkReq extends PageQuery {
-  nickname?: string; // 昵称
-  is_review?: number; // 是否审核
+  user_id?: string; // 用户ID
+  status?: number; // 状态
 }
 
 export interface QueryRoleReq extends PageQuery {
@@ -564,19 +570,13 @@ export interface RegisterReq {
 export interface RemarkBackVO {
   id?: number; // 主键id
   user_id: string; // 用户ID
+  terminal_id: string; // 终端id
   message_content: string; // 留言内容
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
-  time: number; // 弹幕速度
-  is_review: number; // 是否审核
+  status: number; // 状态
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
-  user?: UserInfoVO; // 用户信息
-}
-
-export interface RemarkReviewReq {
-  ids?: number[];
-  is_review: number; // 是否审核
+  user_info?: UserInfoVO; // 用户信息
+  client_info?: ClientInfoVO; // 客户端信息
 }
 
 export interface ResetPasswordReq {
@@ -584,17 +584,6 @@ export interface ResetPasswordReq {
   confirm_password: string; // 确认密码
   email: string;
   verify_code: string; // 验证码
-}
-
-export interface RestHeader {
-  header_app_name?: string;
-  header_country?: string;
-  header_language?: string;
-  header_timezone?: string;
-  header_timestamp?: string;
-  header_uid?: string;
-  header_token?: string;
-  header_authorization?: string;
 }
 
 export interface RewardQrCode {
@@ -675,7 +664,7 @@ export interface TalkBackVO {
   comment_count: number; // 评论量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfoVO; // 用户信息
+  user_info?: UserInfoVO; // 用户信息
 }
 
 export interface ThirdLoginReq {
@@ -730,9 +719,19 @@ export interface UpdateArticleTopReq {
   is_top: number; // 是否置顶
 }
 
+export interface UpdateCommentStatusReq {
+  ids?: number[];
+  status: number; // 状态
+}
+
 export interface UpdatePhotoDeleteReq {
   ids: number[]; // 主键
   is_delete: number; // 是否删除
+}
+
+export interface UpdateRemarkStatusReq {
+  ids?: number[];
+  status: number; // 状态
 }
 
 export interface UpdateRoleApisReq {
@@ -845,11 +844,10 @@ export interface UserInfoVO extends UserInfoExt {
 
 export interface UserLoginHistory {
   id?: number;
+  user_id: string; // 用户id
+  terminal_id: string; // 终端id
   login_type: string; // 登录类型
-  os: string; // 操作系统
-  browser: string; // 浏览器
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
+  app_name: string; // 应用名称
   login_at: number; // 登录时间
   logout_at: number; // 登出时间
 }
@@ -912,14 +910,10 @@ export interface VisitLogBackVO {
   user_id: string; // 用户id
   terminal_id: string; // 终端id
   page_name: string; // 页面
-  ip_address: string; // 操作ip地址
-  ip_source: string; // 操作ip归属地
-  os: string; // 操作系统
-  browser: string; // 浏览器
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfoVO; // 用户信息
-  visitor?: VisitorInfoVO; // 访客信息
+  user_info?: UserInfoVO; // 用户信息
+  client_info?: ClientInfoVO; // 客户端信息
 }
 
 export interface VisitTrendVO {
@@ -937,14 +931,6 @@ export interface VisitorBackVO {
   ip_source: string; // IP归属地
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface VisitorInfoVO {
-  terminal_id: string; // 终端ID
-  os: string; // 操作系统
-  browser: string; // 浏览器
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
 }
 
 export interface WebsiteConfigVO {

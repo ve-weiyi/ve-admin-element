@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import type { ListUploadFileReq } from "@/api/types";
-import { UploadAPI } from "@/api/upload_file.ts";
+import { UploadAPI } from "@/api/upload_file";
 
 const imgUrl = defineModel("modelValue", {
   type: String,

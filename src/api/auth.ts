@@ -134,7 +134,7 @@ export const AuthAPI = {
   logoutApi(data?: EmptyReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/admin-api/v1/logout",
-      method: "POST",
+      method: "GET",
       data: data,
     });
   },

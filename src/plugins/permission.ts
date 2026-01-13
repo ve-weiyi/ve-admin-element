@@ -1,14 +1,29 @@
 import type { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 import NProgress from "@/utils/nprogress";
-import { getAccessToken } from "@/utils/auth";
+import { getAccessToken, getTerminalId, setTerminalId } from "@/utils/token";
 import router from "@/router";
 import { usePermissionStore, useUserStore } from "@/store";
+import { AuthAPI } from "@/api/auth";
+
+// 获取客户端信息
+const getClientInfo = async (): Promise<void> => {
+  try {
+    const res = await AuthAPI.getClientInfoApi();
+    setTerminalId(res.data.terminal_id);
+  } catch {
+    console.error("获取客户端信息失败");
+  }
+};
 
 export function setupPermission() {
   const whiteList = ["/login"];
 
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
+
+    if (!getTerminalId()) {
+      await getClientInfo();
+    }
 
     try {
       const isLoggedIn = !!getAccessToken(); // 判断是否登录

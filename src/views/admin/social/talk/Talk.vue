@@ -18,10 +18,10 @@
       <div v-for="item of tableData" :key="item.id" class="talk-item">
         <!-- 用户信息 -->
         <div class="user-info-wrapper">
-          <el-avatar :size="36" :src="item.user?.avatar" class="user-avatar" />
+          <el-avatar :size="36" :src="item.user_info?.avatar" class="user-avatar" />
           <div class="user-detail-wrapper">
             <div class="user-nickname">
-              <div>{{ item.user?.nickname || "未知用户" }}</div>
+              <div>{{ item.user_info?.nickname || "未知用户" }}</div>
               <!-- 操作 -->
               <el-dropdown>
                 <el-icon style="color: #333; cursor: pointer">
@@ -156,15 +156,15 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, toRefs } from "vue";
 import VeTablePagination from "@/components/VeTable/TablePagination.vue";
-import { TalkAPI } from "@/api/talk.ts";
-import type { QueryTalkReq, TalkBackVO, NewTalkReq } from "@/api/types.ts";
+import { TalkAPI } from "@/api/talk";
+import type { QueryTalkReq, TalkBackVO, NewTalkReq } from "@/api/types";
 import { useRoute, useRouter } from "vue-router";
 import "@/styles/table.scss";
-import { formatDateTime } from "@/utils/date.ts";
+import { formatDateTime } from "@/utils/date";
 import { ElMessage } from "element-plus";
 import Editor from "@/components/Editor/index.vue";
 import EmojiList from "@/assets/emojis/qq_emoji.json";
-import { TalkStatusEnum, TalkTopEnum } from "@/enums/blog/index.ts";
+import { TalkStatusEnum, TalkTopEnum } from "@/enums/blog/index";
 
 const route = useRoute();
 const router = useRouter();

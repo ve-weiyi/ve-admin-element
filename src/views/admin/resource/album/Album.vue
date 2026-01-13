@@ -139,8 +139,8 @@ import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "elem
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
-import { AlbumAPI } from "@/api/album.ts";
-import type { AlbumBackVO, NewAlbumReq, QueryAlbumReq } from "@/api/types.ts";
+import { AlbumAPI } from "@/api/album";
+import type { AlbumBackVO, NewAlbumReq, QueryAlbumReq } from "@/api/types";
 
 // 响应式数据
 const loading = ref(false);

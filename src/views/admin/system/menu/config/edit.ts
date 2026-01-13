@@ -1,7 +1,7 @@
 import type { IModalConfig } from "@/components/CURD/types";
 import type { NewMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
-import { SwitchStatusEnum } from "@/enums/blog/index.ts";
+import { SwitchStatusEnum } from "@/enums/blog/index";
 
 const modalConfig: IModalConfig<NewMenuReq> = {
   permPrefix: "sys:menu",

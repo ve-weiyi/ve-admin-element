@@ -20,11 +20,11 @@
       @operate-click="handleOperateClick"
       @filter-change="handleFilterChange"
     >
-      <template #user="scope">
+      <template #user_info="scope">
         <UserInfo :user="scope.row[scope.prop]" />
       </template>
-      <template #visitor="scope">
-        <VisitorInfo :visitor="scope.row[scope.prop]" />
+      <template #client_info="scope">
+        <ClientInfo :client="scope.row[scope.prop]" />
       </template>
     </page-content>
   </div>
@@ -38,7 +38,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
-import VisitorInfo from "@/components/VisitorInfo/index.vue";
+import ClientInfo from "@/components/ClientInfo/index.vue";
 
 const {
   searchRef,

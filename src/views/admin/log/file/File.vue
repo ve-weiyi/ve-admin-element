@@ -17,7 +17,7 @@
       @operate-click="handleOperateClick"
       @filter-change="handleFilterChange"
     >
-      <template #creator="scope">
+      <template #user_info="scope">
         <UserInfo :user="scope.row[scope.prop]" />
       </template>
       <template #icon="scope">
@@ -48,8 +48,6 @@ import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-
-import { ref } from "vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 
 const {

@@ -18,10 +18,10 @@
       <div v-for="item of tableData" :key="item.id" class="talk-item">
         <!-- 用户信息 -->
         <div class="user-info-wrapper">
-          <el-avatar :size="36" :src="item.user?.avatar" class="user-avatar" />
+          <el-avatar :size="36" :src="item.user_info?.avatar" class="user-avatar" />
           <div class="user-detail-wrapper">
             <div class="user-nickname">
-              <div>{{ item.user?.nickname || "未知用户" }}</div>
+              <div>{{ item.user_info?.nickname || "未知用户" }}</div>
               <!-- 操作 -->
               <el-dropdown>
                 <el-icon style="color: #333; cursor: pointer">

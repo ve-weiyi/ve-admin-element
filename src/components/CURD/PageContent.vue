@@ -324,7 +324,7 @@
 </template>
 
 <script setup lang="ts">
-import { hasPerm } from "@/utils/auth";
+import { hasPerm } from "@/utils/auth.ts";
 import { useThrottleFn } from "@vueuse/core";
 import { formatDate } from "@/utils/date";
 import {

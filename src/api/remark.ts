@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { BatchResp, IdsReq, PageResp, QueryRemarkReq, RemarkReviewReq } from "./types";
+import type { BatchResp, IdsReq, PageResp, QueryRemarkReq, UpdateRemarkStatusReq } from "./types";
 
 export const RemarkAPI = {
   /** 删除留言 */
@@ -21,7 +21,7 @@ export const RemarkAPI = {
   },
 
   /** 更新留言 */
-  updateRemarkReviewApi(data?: RemarkReviewReq): Promise<IApiResponse<BatchResp>> {
+  updateRemarkStatusApi(data?: UpdateRemarkStatusReq): Promise<IApiResponse<BatchResp>> {
     return request({
       url: "/admin-api/v1/remark/update_remark_review",
       method: "PUT",

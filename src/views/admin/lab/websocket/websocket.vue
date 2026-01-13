@@ -92,7 +92,7 @@
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useStomp } from "@/hooks/websocket/core/useStomp.ts";
 import { useUserStoreHook } from "@/store/modules/user.store.ts";
-import { getAccessToken, getUid } from "@/utils/auth.ts";
+import { getAccessToken, getUid } from "@/utils/token.ts";
 
 const userStore = useUserStoreHook();
 // 用于手动调整 WebSocket 地址

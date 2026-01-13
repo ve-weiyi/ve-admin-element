@@ -14,15 +14,6 @@ import type {
 } from "./types";
 
 export const WebsiteAPI = {
-  /** 获取用户分布地区 */
-  getUserAreaStatsApi(data?: GetUserAreaStatsReq): Promise<IApiResponse<GetUserAreaStatsResp>> {
-    return request({
-      url: "/admin-api/v1/account/get_user_area_stats",
-      method: "POST",
-      data: data,
-    });
-  },
-
   /** 获取后台首页信息 */
   getAdminHomeInfoApi(data?: EmptyReq): Promise<IApiResponse<AdminHomeInfo>> {
     return request({
@@ -37,6 +28,24 @@ export const WebsiteAPI = {
     return request({
       url: "/admin-api/v1/admin/get_about_me",
       method: "GET",
+      data: data,
+    });
+  },
+
+  /** 获取服务器信息 */
+  getSystemStateApi(data?: EmptyReq): Promise<IApiResponse<Server>> {
+    return request({
+      url: "/admin-api/v1/admin/get_system_state",
+      method: "GET",
+      data: data,
+    });
+  },
+
+  /** 获取用户分布地区 */
+  getUserAreaStatsApi(data?: GetUserAreaStatsReq): Promise<IApiResponse<GetUserAreaStatsResp>> {
+    return request({
+      url: "/admin-api/v1/admin/get_user_area_stats",
+      method: "POST",
       data: data,
     });
   },
@@ -63,15 +72,6 @@ export const WebsiteAPI = {
   getWebsiteConfigApi(data?: EmptyReq): Promise<IApiResponse<WebsiteConfigVO>> {
     return request({
       url: "/admin-api/v1/admin/get_website_config",
-      method: "GET",
-      data: data,
-    });
-  },
-
-  /** 获取服务器信息 */
-  getSystemStateApi(data?: EmptyReq): Promise<IApiResponse<Server>> {
-    return request({
-      url: "/admin-api/v1/admin/system_state",
       method: "GET",
       data: data,
     });

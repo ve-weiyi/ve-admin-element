@@ -20,8 +20,11 @@
       @operate-click="handleOperateClick"
       @filter-change="handleFilterChange"
     >
-      <template #user="scope">
+      <template #user_info="scope">
         <UserInfo :user="scope.row[scope.prop]" />
+      </template>
+      <template #client_info="scope">
+        <ClientInfo :client="scope.row[scope.prop]" />
       </template>
       <template #request_method="scope">
         <div v-if="scope.row[scope.prop] === ''"></div>
@@ -42,9 +45,8 @@ import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { OperationLogAPI } from "@/api/operation_log";
-import type { CommentReviewReq } from "@/api/types";
 import UserInfo from "@/components/UserInfo/index.vue";
+import ClientInfo from "@/components/ClientInfo/index.vue";
 
 const {
   searchRef,

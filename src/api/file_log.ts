@@ -14,7 +14,7 @@ export const FileLogAPI = {
   /** 查询文件日志 */
   findFileLogListApi(data?: QueryFileLogReq): Promise<IApiResponse<PageResp>> {
     return request({
-      url: "/admin-api/v1/user/find_file_log_list",
+      url: "/admin-api/v1/file_log/find_file_log_list",
       method: "POST",
       data: data,
     });

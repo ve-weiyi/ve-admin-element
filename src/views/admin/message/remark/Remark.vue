@@ -20,19 +20,22 @@
       @operate-click="handleOperateClick"
       @filter-change="handleFilterChange"
     >
-      <template #user="scope">
+      <template #user_info="scope">
         <UserInfo :user="scope.row[scope.prop]" />
       </template>
-      <template #is_review="scope">
-        <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'warning'">
-          {{ scope.row[scope.prop] == 1 ? "通过" : "审核中" }}
-        </el-tag>
+      <template #client_info="scope">
+        <ClientInfo :client="scope.row[scope.prop]" />
       </template>
-      <template #type="scope">
-        <el-tag v-if="scope.row[scope.prop] === 1" type="success">文章</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 2" type="warning">友链</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 3" type="danger">说说</el-tag>
-        <el-tag v-else type="info">其他</el-tag>
+      <template #status="scope">
+        <el-tag v-if="scope.row[scope.prop] === CommentStatusEnum.NORMAL" type="success">
+          正常
+        </el-tag>
+        <el-tag v-else-if="scope.row[scope.prop] === CommentStatusEnum.EDITED" type="primary">
+          已编辑
+        </el-tag>
+        <el-tag v-else-if="scope.row[scope.prop] === CommentStatusEnum.DELETED" type="danger">
+          已删除
+        </el-tag>
       </template>
     </page-content>
   </div>
@@ -45,10 +48,9 @@ import contentConfig from "./config/content";
 import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { RemarkAPI } from "@/api/remark";
-import type { RemarkReviewReq } from "@/api/types";
-import { ElMessage } from "element-plus";
 import UserInfo from "@/components/UserInfo/index.vue";
+import ClientInfo from "@/components/ClientInfo/index.vue";
+import { CommentStatusEnum } from "@/enums/blog";
 
 const {
   searchRef,
@@ -73,18 +75,5 @@ function handleToolbarClick(name: string) {
 // 其他操作列
 function handleOperateClick(data: IOperateData) {
   console.log(data);
-
-  switch (data.name) {
-    case "review": {
-      const req: RemarkReviewReq = {
-        ids: [data.row.id],
-        is_review: data.row.is_review == 1 ? 2 : 1,
-      };
-      RemarkAPI.updateRemarkReviewApi(req).then(() => {
-        ElMessage.success("审核成功");
-        contentRef.value?.fetchPageData();
-      });
-    }
-  }
 }
 </script>

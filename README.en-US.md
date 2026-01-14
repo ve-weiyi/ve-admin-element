@@ -15,7 +15,7 @@
 ![](https://foruda.gitee.com/images/1708618984641188532/a7cca095_716974.png "rainbow.png")
 
 <div align="center">
- <a target="_blank" href="http://vue3.youlai.tech">👀 Live Preview</a> |  <a target="_blank" href="https://juejin.cn/post/7228990409909108793">📖 Read Documentation</a>  | 🌐 <a href="./README.md">中文
+ <a target="_blank" href="https://vue.youlai.tech/template">👀 Live Preview</a> |  <a target="_blank" href="https://juejin.cn/post/7228990409909108793">📖 Read Documentation</a>  | 🌐 <a href="./README.md">中文
 </div>
 
 

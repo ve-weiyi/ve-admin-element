@@ -1,6 +1,7 @@
-<template>
+﻿<template>
   <div class="app-container">
-    <div class="search-bar">
+    <!-- 搜索区域 -->
+    <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item prop="keywords" label="关键字">
           <el-input
@@ -11,19 +12,26 @@
           />
         </el-form-item>
 
-        <el-form-item>
+        <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-card shadow="never">
-      <div class="mb-10px">
-        <el-button type="success" icon="plus" @click="handleOpenDialog()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length === 0" icon="delete" @click="handleDelete()">
-          删除
-        </el-button>
+    <el-card shadow="hover" class="table-section">
+      <div class="table-section__toolbar">
+        <div class="table-section__toolbar--actions">
+          <el-button type="success" icon="plus" @click="handleOpenDialog()">新增</el-button>
+          <el-button
+            type="danger"
+            :disabled="ids.length === 0"
+            icon="delete"
+            @click="handleDelete()"
+          >
+            删除
+          </el-button>
+        </div>
       </div>
 
       <el-table
@@ -32,6 +40,7 @@
         :data="roleList"
         highlight-current-row
         border
+        class="table-section__content"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -50,6 +59,7 @@
         <el-table-column fixed="right" label="操作" width="220">
           <template #default="scope">
             <el-button
+              v-hasPerm="'sys:role:assign'"
               type="primary"
               size="small"
               link
@@ -85,7 +95,7 @@
         v-model:total="total"
         v-model:page="queryParams.pageNum"
         v-model:limit="queryParams.pageSize"
-        @pagination="handleQuery"
+        @pagination="fetchData"
       />
     </el-card>
 
@@ -133,8 +143,8 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit">确定</el-button>
+          <el-button @click="handleCloseDialog">取消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -143,7 +153,7 @@
     <el-drawer
       v-model="assignPermDialogVisible"
       :title="'【' + checkedRole.name + '】权限分配'"
-      size="500"
+      :size="drawerSize"
     >
       <div class="flex-x-between">
         <el-input v-model="permKeywords" clearable class="w-[150px]" placeholder="菜单权限名称">
@@ -194,8 +204,10 @@
       </el-tree>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleAssignPermSubmit">确 定</el-button>
-          <el-button @click="assignPermDialogVisible = false">取 消</el-button>
+          <el-button v-hasPerm="'sys:role:assign'" type="primary" @click="handleAssignPermSubmit">
+            确定
+          </el-button>
+          <el-button @click="assignPermDialogVisible = false">取消</el-button>
         </div>
       </template>
     </el-drawer>
@@ -203,13 +215,19 @@
 </template>
 
 <script setup lang="ts">
+import { useAppStore } from "@/store/modules/app";
+import { DeviceEnum } from "@/enums/settings";
+
+import RoleAPI from "@/api/system/role";
+import type { RolePageVo, RoleForm, RolePageQuery, OptionItem } from "@/types/api";
+import MenuAPI from "@/api/system/menu";
+
 defineOptions({
   name: "Role",
   inheritAttrs: false,
 });
 
-import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/system/role.api";
-import MenuAPI from "@/api/system/menu.api";
+const appStore = useAppStore();
 
 const queryFormRef = ref();
 const roleFormRef = ref();
@@ -225,15 +243,18 @@ const queryParams = reactive<RolePageQuery>({
 });
 
 // 角色表格数据
-const roleList = ref<RolePageVO[]>();
+const roleList = ref<RolePageVo[]>();
 // 菜单权限下拉
-const menuPermOptions = ref<OptionType[]>([]);
+const menuPermOptions = ref<OptionItem[]>([]);
 
 // 弹窗
 const dialog = reactive({
   title: "",
   visible: false,
 });
+
+const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
+
 // 角色表单
 const formData = reactive<RoleForm>({
   sort: 1,
@@ -260,24 +281,30 @@ const isExpanded = ref(true);
 
 const parentChildLinked = ref(true);
 
-// 查询
-function handleQuery() {
+// 获取数据
+function fetchData() {
   loading.value = true;
   RoleAPI.getPage(queryParams)
     .then((data) => {
-      roleList.value = data.list;
-      total.value = data.total;
+      roleList.value = data.data;
+      total.value = data.page?.total ?? 0;
     })
     .finally(() => {
       loading.value = false;
     });
 }
 
+// 查询（重置页码后获取数据）
+function handleQuery() {
+  queryParams.pageNum = 1;
+  fetchData();
+}
+
 // 重置查询
 function handleResetQuery() {
   queryFormRef.value.resetFields();
   queryParams.pageNum = 1;
-  handleQuery();
+  fetchData();
 }
 
 // 行复选框选中
@@ -338,7 +365,7 @@ function handleCloseDialog() {
 }
 
 // 删除角色
-function handleDelete(roleId?: string) {
+function handleDelete(roleId?: number) {
   const roleIds = [roleId || ids.value].join(",");
   if (!roleIds) {
     ElMessage.warning("请勾选删除项");
@@ -366,7 +393,7 @@ function handleDelete(roleId?: string) {
 }
 
 // 打开分配菜单权限弹窗
-async function handleOpenAssignPermDialog(row: RolePageVO) {
+async function handleOpenAssignPermDialog(row: RolePageVo) {
   const roleId = row.id;
   if (roleId) {
     assignPermDialogVisible.value = true;

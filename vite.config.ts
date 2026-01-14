@@ -21,8 +21,12 @@ const pathSrc = resolve(__dirname, "src");
 // Vite配置  https://cn.vitejs.dev/config
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
+  const basePath = env.VITE_APP_BASE_PATH || "/";
+  const baseApi = env.VITE_APP_BASE_API || "/dev-api";
+  const apiUrl = env.VITE_APP_API_URL || "http://localhost:18080";
+  const port = Number(env.VITE_APP_PORT) || 18082;
   return {
-    base: env.VITE_APP_BASE_PATH,
+    base: basePath,
     resolve: {
       alias: {
         "@": pathSrc,
@@ -41,15 +45,15 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     server: {
       host: "0.0.0.0",
-      port: +env.VITE_APP_PORT,
+      port,
       open: true,
       proxy: {
         // 代理 /dev-api 的请求
-        [env.VITE_APP_BASE_API]: {
+        [baseApi]: {
           changeOrigin: true,
           // 代理目标地址：https://api.youlai.tech
-          target: env.VITE_APP_API_URL,
-          rewrite: (path) => path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+          target: apiUrl,
+          rewrite: (path) => path.replace(new RegExp("^" + baseApi), ""),
         },
       },
     },
@@ -92,11 +96,25 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "pinia",
         "axios",
         "@vueuse/core",
+        "@element-plus/icons-vue",
+        "codemirror-editor-vue3",
+        "default-passive-events",
+        "nprogress",
+        "qs",
         "path-to-regexp",
         "echarts",
-        "@wangeditor/editor",
-        "@wangeditor/editor-for-vue",
+        "echarts/core",
+        "echarts/charts",
+        "echarts/components",
+        "echarts/renderers",
         "path-browserify",
+        "@wangeditor-next/editor-for-vue",
+        "vue-draggable-plus",
+        "element-plus/es",
+        "element-plus/es/locale/lang/en",
+        "element-plus/es/locale/lang/zh-cn",
+        "element-plus/es/components/base/style/css",
+        "element-plus/es/components/message/style/css",
         "element-plus/es/components/form/style/css",
         "element-plus/es/components/form-item/style/css",
         "element-plus/es/components/button/style/css",
@@ -127,6 +145,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "element-plus/es/components/breadcrumb/style/css",
         "element-plus/es/components/breadcrumb-item/style/css",
         "element-plus/es/components/table/style/css",
+        "element-plus/es/components/timeline/style/css",
+        "element-plus/es/components/timeline-item/style/css",
         "element-plus/es/components/tree-select/style/css",
         "element-plus/es/components/table-column/style/css",
         "element-plus/es/components/select/style/css",

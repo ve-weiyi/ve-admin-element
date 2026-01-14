@@ -1,7 +1,6 @@
 <!-- 单图上传组件 -->
 <template>
   <el-upload
-    v-model="modelValue"
     class="single-upload"
     list-type="picture-card"
     :show-file-list="false"
@@ -10,23 +9,32 @@
     :http-request="handleUpload"
     :on-success="onSuccess"
     :on-error="onError"
-    multiple
   >
     <template #default>
-      <el-image v-if="modelValue" :src="modelValue" />
-      <el-icon v-if="modelValue" class="single-upload__delete-btn" @click.stop="handleDelete">
-        <CircleCloseFilled />
-      </el-icon>
-      <el-icon v-else class="single-upload__add-btn">
-        <Plus />
-      </el-icon>
+      <template v-if="modelValue">
+        <el-image
+          class="single-upload__image"
+          :src="modelValue"
+          :preview-src-list="[modelValue]"
+          @click.stop="handlePreview"
+        />
+        <el-icon class="single-upload__delete-btn" @click.stop="handleDelete">
+          <CircleCloseFilled />
+        </el-icon>
+      </template>
+      <template v-else>
+        <el-icon>
+          <Plus />
+        </el-icon>
+      </template>
     </template>
   </el-upload>
 </template>
 
 <script setup lang="ts">
 import { UploadRawFile, UploadRequestOptions } from "element-plus";
-import FileAPI, { FileInfo } from "@/api/file.api";
+import FileAPI from "@/api/file";
+import type { FileInfo } from "@/types/api";
 
 const props = defineProps({
   /**
@@ -54,7 +62,7 @@ const props = defineProps({
   },
 
   /**
-   * 上传图片格式，默认支持所有图片(image/*)，指定格式示例：'.png,.jpg,.jpeg,.gif,.bmp'
+   * 上传图片格式，默认支持所有图片（image/*)，指定格式示例：'.png,.jpg,.jpeg,.gif,.bmp'
    */
   accept: {
     type: String,
@@ -84,7 +92,7 @@ const modelValue = defineModel("modelValue", {
  * 限制用户上传文件的格式和大小
  */
 function handleBeforeUpload(file: UploadRawFile) {
-  // 校验文件类型：虽然 accept 属性限制了用户在文件选择器中可选的文件类型，但仍需在上传时再次校验文件实际类型，确保符合 accept 的规则
+  // 校验文件类型：虽然 accept 属性限制了用户在文件选择器中可选的文件类型，但仍需在上传时再次校验文件实际类型，确保符合 accept 的规范
   const acceptTypes = props.accept.split(",").map((type) => type.trim());
 
   // 检查文件格式是否符合 accept
@@ -102,7 +110,7 @@ function handleBeforeUpload(file: UploadRawFile) {
   });
 
   if (!isValidType) {
-    ElMessage.warning(`上传文件的格式不正确，仅支持：${props.accept}`);
+    ElMessage.warning("上传文件的格式不正确，仅支持 " + props.accept);
     return false;
   }
 
@@ -140,6 +148,13 @@ function handleUpload(options: UploadRequestOptions) {
 }
 
 /**
+ * 预览图片
+ */
+function handlePreview() {
+  console.log("预览图片,停止冒泡");
+}
+
+/**
  * 删除图片
  */
 function handleDelete() {
@@ -167,21 +182,14 @@ const onError = (error: any) => {
 
 <style scoped lang="scss">
 :deep(.el-upload--picture-card) {
-  /*  width: var(--el-upload-picture-card-size);
-  height: var(--el-upload-picture-card-size); */
-  width: v-bind("props.style.width");
-  height: v-bind("props.style.height");
+  position: relative;
+  width: v-bind("props.style.width ?? '150px'");
+  height: v-bind("props.style.height ?? '150px'");
 }
 
 .single-upload {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px var(--el-border-color) solid;
-  border-radius: 5px;
-
-  &:hover {
-    border-color: var(--el-color-primary);
+  &__image {
+    border-radius: 6px;
   }
 
   &__delete-btn {

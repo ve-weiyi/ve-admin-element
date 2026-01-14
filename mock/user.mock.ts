@@ -10,8 +10,7 @@ export default defineMock([
         userId: 2,
         username: "admin",
         nickname: "系统管理员",
-        avatar:
-          "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
+        avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
         roles: ["ADMIN"],
         perms: [
           "sys:notice:edit",
@@ -53,39 +52,39 @@ export default defineMock([
   },
 
   {
-    url: "users/page",
+    url: "users",
     method: ["GET"],
     body: {
       code: "00000",
-      data: {
-        list: [
-          {
-            id: 2,
-            username: "admin",
-            nickname: "系统管理员",
-            mobile: "17621210366",
-            gender: 1,
-            avatar:
-              "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "",
-            status: 1,
-            deptId: 1,
-            roleIds: [2],
-          },
-          {
-            id: 3,
-            username: "test",
-            nickname: "测试小用户",
-            mobile: "17621210366",
-            gender: 1,
-            avatar:
-              "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "youlaitech@163.com",
-            status: 1,
-            deptId: 3,
-            roleIds: [3],
-          },
-        ],
+      data: [
+        {
+          id: 2,
+          username: "admin",
+          nickname: "系统管理员",
+          mobile: "17621210366",
+          gender: 1,
+          avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
+          email: "",
+          status: 1,
+          deptId: 1,
+          roleIds: [2],
+        },
+        {
+          id: 3,
+          username: "test",
+          nickname: "测试小用户",
+          mobile: "17621210366",
+          gender: 1,
+          avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
+          email: "youlaitech@163.com",
+          status: 1,
+          deptId: 3,
+          roleIds: [3],
+        },
+      ],
+      page: {
+        pageNum: 1,
+        pageSize: 10,
         total: 2,
       },
       msg: "一切ok",
@@ -158,13 +157,11 @@ export default defineMock([
 
   // 导出Excel
   {
-    url: "users/_export",
+    url: "users/export",
     method: ["GET"],
     headers: {
-      "Content-Disposition":
-        "attachment; filename=%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8.xlsx",
-      "Content-Type":
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": "attachment; filename=%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8.xlsx",
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     },
   },
 
@@ -177,8 +174,7 @@ export default defineMock([
         id: 2,
         username: "admin",
         nickname: "系统管理员",
-        avatar:
-          "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
+        avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
         gender: 1,
         mobile: "17621210366",
         email: null,
@@ -192,7 +188,7 @@ export default defineMock([
   {
     url: "users/profile",
     method: ["PUT"],
-    body({ query }) {
+    body() {
       return {
         code: "00000",
         data: null,
@@ -204,7 +200,7 @@ export default defineMock([
   {
     url: "users/password",
     method: ["PUT"],
-    body({ query }) {
+    body() {
       return {
         code: "00000",
         data: null,
@@ -222,8 +218,7 @@ const userMap: Record<string, any> = {
     nickname: "系统管理员",
     mobile: "17621210366",
     gender: 1,
-    avatar:
-      "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
+    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
     email: "",
     status: 1,
     deptId: 1,
@@ -235,8 +230,7 @@ const userMap: Record<string, any> = {
     nickname: "测试小用户",
     mobile: "17621210366",
     gender: 1,
-    avatar:
-      "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
+    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
     email: "youlaitech@163.com",
     status: 1,
     deptId: 3,

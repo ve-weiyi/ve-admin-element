@@ -1,6 +1,7 @@
-<template>
+﻿<template>
   <div class="app-container">
-    <div class="search-bar">
+    <!-- 搜索区域 -->
+    <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="keywords">
           <el-input
@@ -10,47 +11,55 @@
             @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item>
+
+        <el-form-item class="search-buttons">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-card shadow="never">
-      <div class="mb-10px">
-        <el-button
-          v-hasPerm="['sys:menu:add']"
-          type="success"
-          icon="plus"
-          @click="handleOpenDialog('0')"
-        >
-          新增
-        </el-button>
+    <el-card shadow="hover" class="table-section">
+      <div class="table-section__toolbar">
+        <div class="table-section__toolbar--actions">
+          <el-button
+            v-hasPerm="['sys:menu:create']"
+            type="success"
+            icon="plus"
+            @click="handleOpenDialog('0')"
+          >
+            新增
+          </el-button>
+        </div>
       </div>
 
       <el-table
+        ref="dataTableRef"
         v-loading="loading"
-        :data="menuTableData"
-        highlight-current-row
         row-key="id"
+        :data="menuTableData"
         :tree-props="{
           children: 'children',
           hasChildren: 'hasChildren',
         }"
+        class="table-section__content"
         @row-click="handleRowClick"
       >
         <el-table-column label="菜单名称" min-width="200">
           <template #default="scope">
-            <template v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')">
-              <el-icon style="vertical-align: -0.15em">
-                <component :is="scope.row.icon.replace('el-icon-', '')" />
-              </el-icon>
-            </template>
-            <template v-else-if="scope.row.icon">
-              <div :class="`i-svg:${scope.row.icon}`" />
-            </template>
-            {{ scope.row.name }}
+            <div class="menu-name-cell">
+              <span class="menu-name-cell__icon">
+                <template v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')">
+                  <el-icon style="vertical-align: -0.15em">
+                    <component :is="scope.row.icon.replace('el-icon-', '')" />
+                  </el-icon>
+                </template>
+                <template v-else-if="scope.row.icon">
+                  <span :class="`i-svg:${scope.row.icon}`" />
+                </template>
+              </span>
+              <span class="menu-name-cell__text">{{ scope.row.name }}</span>
+            </div>
           </template>
         </el-table-column>
 
@@ -59,7 +68,6 @@
             <el-tag v-if="scope.row.type === MenuTypeEnum.CATALOG" type="warning">目录</el-tag>
             <el-tag v-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
             <el-tag v-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">按钮</el-tag>
-            <el-tag v-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="路由名称" align="left" width="150" prop="routeName" />
@@ -77,7 +85,7 @@
           <template #default="scope">
             <el-button
               v-if="scope.row.type == MenuTypeEnum.CATALOG || scope.row.type == MenuTypeEnum.MENU"
-              v-hasPerm="['sys:menu:add']"
+              v-hasPerm="['sys:menu:create']"
               type="primary"
               link
               size="small"
@@ -88,7 +96,7 @@
             </el-button>
 
             <el-button
-              v-hasPerm="['sys:menu:edit']"
+              v-hasPerm="['sys:menu:update']"
               type="primary"
               link
               size="small"
@@ -112,7 +120,12 @@
       </el-table>
     </el-card>
 
-    <el-drawer v-model="dialog.visible" :title="dialog.title" size="50%" @close="handleCloseDialog">
+    <el-drawer
+      v-model="dialog.visible"
+      :title="dialog.title"
+      :size="drawerSize"
+      @close="handleCloseDialog"
+    >
       <el-form ref="menuFormRef" :model="formData" :rules="rules" label-width="100px">
         <el-form-item label="父级菜单" prop="parentId">
           <el-tree-select
@@ -131,23 +144,19 @@
 
         <el-form-item label="菜单类型" prop="type">
           <el-radio-group v-model="formData.type" @change="handleMenuTypeChange">
-            <el-radio v-for="config in MenuTypeConfig" :key="config.value" :value="config.value">
-              {{ config.label }}
-            </el-radio>
+            <el-radio :value="MenuTypeEnum.CATALOG">目录</el-radio>
+            <el-radio :value="MenuTypeEnum.MENU">菜单</el-radio>
+            <el-radio :value="MenuTypeEnum.BUTTON">按钮</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item v-if="formData.type == MenuTypeEnum.EXTLINK" label="外链地址" prop="path">
-          <el-input v-model="formData.routePath" placeholder="请输入外链完整路径" />
-        </el-form-item>
-
-        <el-form-item v-if="formData.type == MenuTypeEnum.MENU" prop="routeName">
+        <el-form-item v-if="formData.type == MenuTypeEnum.MENU && !isExternalLink" prop="routeName">
           <template #label>
             <div class="flex-y-center">
               路由名称
               <el-tooltip placement="bottom" effect="light">
                 <template #content>
-                  如果需要开启缓存，需保证页面 defineOptions 中的 name 与此处一致，建议使用驼峰。
+                  如果需要开启缓存，需保证页面 defineOptions 中的 name 与此处一致，建议使用驼峰式
                 </template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
@@ -181,10 +190,10 @@
             v-model="formData.routePath"
             placeholder="system"
           />
-          <el-input v-else v-model="formData.routePath" placeholder="user" />
+          <el-input v-else v-model="formData.routePath" placeholder="user 或 https://example.com" />
         </el-form-item>
 
-        <el-form-item v-if="formData.type == MenuTypeEnum.MENU" prop="component">
+        <el-form-item v-if="formData.type == MenuTypeEnum.MENU && !isExternalLink" prop="component">
           <template #label>
             <div class="flex-y-center">
               组件路径
@@ -205,7 +214,7 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item v-if="formData.type == MenuTypeEnum.MENU">
+        <el-form-item v-if="formData.type == MenuTypeEnum.MENU && !isExternalLink">
           <template #label>
             <div class="flex-y-center">
               路由参数
@@ -232,7 +241,7 @@
 
               <span class="mx-1">=</span>
 
-              <el-input v-model="item.value" placeholder="参数值" style="width: 100px" />
+              <el-input v-model="item.value" placeholder="参数名" style="width: 100px" />
 
               <el-icon
                 v-if="formData.params.indexOf(item) === formData.params.length - 1"
@@ -268,11 +277,11 @@
               始终显示
               <el-tooltip placement="bottom" effect="light">
                 <template #content>
-                  选择“是”，即使目录或菜单下只有一个子节点，也会显示父节点。
+                  选择"是"，即使目录或菜单下只有一个子节点，也会显示父节点。
                   <br />
-                  选择“否”，如果目录或菜单下只有一个子节点，则只显示该子节点，隐藏父节点。
+                  选择"否"，如果目录或菜单下只有一个子节点，则只显示该子节点，隐藏父节点。
                   <br />
-                  如果是叶子节点，请选择“否”。
+                  如果是叶子节点，请选择"否"。
                 </template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
@@ -287,7 +296,10 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item v-if="formData.type === MenuTypeEnum.MENU" label="缓存页面">
+        <el-form-item
+          v-if="formData.type === MenuTypeEnum.MENU && !isExternalLink"
+          label="缓存页面"
+        >
           <el-radio-group v-model="formData.keepAlive">
             <el-radio :value="1">开启</el-radio>
             <el-radio :value="0">关闭</el-radio>
@@ -305,7 +317,7 @@
 
         <!-- 权限标识 -->
         <el-form-item v-if="formData.type == MenuTypeEnum.BUTTON" label="权限标识" prop="perm">
-          <el-input v-model="formData.perm" placeholder="sys:user:add" />
+          <el-input v-model="formData.perm" placeholder="sys:user:create" />
         </el-form-item>
 
         <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" label="图标" prop="icon">
@@ -320,8 +332,8 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit">确定</el-button>
+          <el-button @click="handleCloseDialog">取消</el-button>
         </div>
       </template>
     </el-drawer>
@@ -329,13 +341,19 @@
 </template>
 
 <script setup lang="ts">
+import { useAppStore } from "@/store/modules/app";
+import { DeviceEnum } from "@/enums/settings";
+
+import MenuAPI from "@/api/system/menu";
+import type { MenuQuery, MenuForm, MenuVo, OptionItem } from "@/types/api";
+import { MenuTypeEnum } from "@/enums/business";
+
 defineOptions({
   name: "SysMenu",
   inheritAttrs: false,
 });
 
-import MenuAPI, { MenuQuery, MenuForm, MenuVO } from "@/api/system/menu.api";
-import { MenuTypeEnum, MenuTypeConfig } from "@/enums/system/menu.enum";
+const appStore = useAppStore();
 
 const queryFormRef = ref();
 const menuFormRef = ref();
@@ -346,12 +364,13 @@ const dialog = reactive({
   visible: false,
 });
 
+const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
 // 查询参数
 const queryParams = reactive<MenuQuery>({});
 // 菜单表格数据
-const menuTableData = ref<MenuVO[]>([]);
+const menuTableData = ref<MenuVo[]>([]);
 // 顶级菜单下拉选项
-const menuOptions = ref<OptionType[]>([]);
+const menuOptions = ref<OptionItem[]>([]);
 // 初始菜单表单数据
 const initialMenuFormData = ref<MenuForm>({
   id: undefined,
@@ -365,14 +384,34 @@ const initialMenuFormData = ref<MenuForm>({
 });
 // 菜单表单数据
 const formData = ref({ ...initialMenuFormData.value });
+const isExternalLink = computed(
+  () =>
+    formData.value.type === MenuTypeEnum.MENU &&
+    !!formData.value.routePath &&
+    /^https?:\/\//.test(formData.value.routePath)
+);
+const validateRouteName = (_: unknown, value: string, callback: () => void) => {
+  if (formData.value.type === MenuTypeEnum.MENU && !isExternalLink.value && !value) {
+    callback(new Error("请输入路由名称"));
+    return;
+  }
+  callback();
+};
+const validateComponent = (_: unknown, value: string, callback: () => void) => {
+  if (formData.value.type === MenuTypeEnum.MENU && !isExternalLink.value && !value) {
+    callback(new Error("请输入组件路径"));
+    return;
+  }
+  callback();
+};
 // 表单验证规则
 const rules = reactive({
   parentId: [{ required: true, message: "请选择父级菜单", trigger: "blur" }],
   name: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
   type: [{ required: true, message: "请选择菜单类型", trigger: "blur" }],
-  routeName: [{ required: true, message: "请输入路由名称", trigger: "blur" }],
+  routeName: [{ validator: validateRouteName, trigger: "blur" }],
   routePath: [{ required: true, message: "请输入路由路径", trigger: "blur" }],
-  component: [{ required: true, message: "请输入组件路径", trigger: "blur" }],
+  component: [{ validator: validateComponent, trigger: "blur" }],
   visible: [{ required: true, message: "请选择显示状态", trigger: "change" }],
 });
 
@@ -398,7 +437,7 @@ function handleResetQuery() {
 }
 
 // 行点击事件
-function handleRowClick(row: MenuVO) {
+function handleRowClick(row: MenuVo) {
   selectedMenuId.value = row.id;
 }
 
@@ -433,7 +472,7 @@ function handleMenuTypeChange() {
   // 如果菜单类型改变
   if (formData.value.type !== initialMenuFormData.value.type) {
     if (formData.value.type === MenuTypeEnum.MENU) {
-      // 目录切换到菜单时，清空组件路径
+      // 目录切换到菜单时，清空组件路径"
       if (initialMenuFormData.value.type === MenuTypeEnum.CATALOG) {
         formData.value.component = "";
       } else {
@@ -528,3 +567,26 @@ onMounted(() => {
   handleQuery();
 });
 </script>
+
+<style scoped>
+.menu-name-cell {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.menu-name-cell__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  min-width: 18px;
+  margin-right: 6px;
+}
+
+.menu-name-cell__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

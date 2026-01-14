@@ -1,7 +1,8 @@
-<!-- 字典 -->
+﻿<!-- 字典 -->
 <template>
   <div class="app-container">
-    <div class="search-bar">
+    <!-- 搜索区域 -->
+    <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="keywords">
           <el-input
@@ -11,19 +12,27 @@
             @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="search" @click="handleQuery()">搜索</el-button>
-          <el-button icon="refresh" @click="handleResetQuery()">重置</el-button>
+
+        <el-form-item class="search-buttons">
+          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+          <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-card shadow="never">
-      <div class="mb-[10px]">
-        <el-button type="success" icon="plus" @click="handleAddClick()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length === 0" icon="delete" @click="handleDelete()">
-          删除
-        </el-button>
+    <el-card shadow="hover" class="table-section">
+      <div class="table-section__toolbar">
+        <div class="table-section__toolbar--actions">
+          <el-button type="success" icon="plus" @click="handleAddClick()">新增</el-button>
+          <el-button
+            type="danger"
+            :disabled="ids.length === 0"
+            icon="delete"
+            @click="handleDelete()"
+          >
+            删除
+          </el-button>
+        </div>
       </div>
 
       <el-table
@@ -31,6 +40,7 @@
         highlight-current-row
         :data="tableData"
         border
+        class="table-section__content"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -79,7 +89,7 @@
         v-model:total="total"
         v-model:page="queryParams.pageNum"
         v-model:limit="queryParams.pageSize"
-        @pagination="handleQuery"
+        @pagination="fetchData"
       />
     </el-card>
 
@@ -90,33 +100,31 @@
       width="500px"
       @close="handleCloseDialog"
     >
-      <el-form ref="dataFormRef" :model="formData" :rules="computedRules" label-width="100px">
-        <el-card shadow="never">
-          <el-form-item label="字典名称" prop="name">
-            <el-input v-model="formData.name" placeholder="请输入字典名称" />
-          </el-form-item>
+      <el-form ref="dataFormRef" :model="formData" :rules="computedRules" label-width="80px">
+        <el-form-item label="字典名称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入字典名称" />
+        </el-form-item>
 
-          <el-form-item label="字典编码" prop="dictCode">
-            <el-input v-model="formData.dictCode" placeholder="请输入字典编码" />
-          </el-form-item>
+        <el-form-item label="字典编码" prop="dictCode">
+          <el-input v-model="formData.dictCode" placeholder="请输入字典编码" />
+        </el-form-item>
 
-          <el-form-item label="状态">
-            <el-radio-group v-model="formData.status">
-              <el-radio :value="1">启用</el-radio>
-              <el-radio :value="0">禁用</el-radio>
-            </el-radio-group>
-          </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="formData.status">
+            <el-radio :value="1">启用</el-radio>
+            <el-radio :value="0">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
 
-          <el-form-item label="备注">
-            <el-input v-model="formData.remark" type="textarea" placeholder="请输入备注" />
-          </el-form-item>
-        </el-card>
+        <el-form-item label="备注">
+          <el-input v-model="formData.remark" type="textarea" placeholder="请输入备注" />
+        </el-form-item>
       </el-form>
 
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="handleSubmitClick">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button @click="handleCloseDialog">确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -129,7 +137,9 @@ defineOptions({
   inherititems: false,
 });
 
-import DictAPI, { DictPageQuery, DictPageVO, DictForm } from "@/api/system/dict.api";
+import { ref, reactive } from "vue";
+import DictAPI from "@/api/system/dict";
+import type { DictPageQuery, DictPageVo, DictForm } from "@/types/api";
 
 import router from "@/router";
 
@@ -145,7 +155,7 @@ const queryParams = reactive<DictPageQuery>({
   pageSize: 10,
 });
 
-const tableData = ref<DictPageVO[]>();
+const tableData = ref<DictPageVo[]>();
 
 const dialog = reactive({
   title: "",
@@ -162,24 +172,30 @@ const computedRules = computed(() => {
   return rules;
 });
 
-// 查询
-function handleQuery() {
+// 获取数据
+function fetchData() {
   loading.value = true;
   DictAPI.getPage(queryParams)
     .then((data) => {
-      tableData.value = data.list;
-      total.value = data.total;
+      tableData.value = data.data;
+      total.value = data.page?.total ?? 0;
     })
     .finally(() => {
       loading.value = false;
     });
 }
 
+// 查询（重置页码后获取数据）
+function handleQuery() {
+  queryParams.pageNum = 1;
+  fetchData();
+}
+
 // 重置查询
 function handleResetQuery() {
   queryFormRef.value.resetFields();
   queryParams.pageNum = 1;
-  handleQuery();
+  fetchData();
 }
 
 // 行选择
@@ -247,7 +263,7 @@ function handleCloseDialog() {
  *
  * @param id 字典ID
  */
-function handleDelete(id?: string) {
+function handleDelete(id?: number) {
   const attrGroupIds = [id || ids.value].join(",");
   if (!attrGroupIds) {
     ElMessage.warning("请勾选删除项");
@@ -270,11 +286,11 @@ function handleDelete(id?: string) {
   );
 }
 
-// 打开字典项
-function handleOpenDictData(row: DictPageVO) {
+// 打开字典值"
+function handleOpenDictData(row: DictPageVo) {
   router.push({
-    path: "/system/dict-item",
-    query: { dictCode: row.dictCode, title: "【" + row.name + "】字典数据" },
+    name: "DictItem",
+    query: { dictCode: row.dictCode, title: `【${row.name}】字典数据` },
   });
 }
 

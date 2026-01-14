@@ -1,70 +1,128 @@
 import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from "axios";
 import qs from "qs";
-import { useUserStoreHook } from "@/store/modules/user.store";
-import { ResultCode } from "@/enums/common/result.enum";
-import { getAccessToken } from "@/utils/auth";
+import { ApiCodeEnum } from "@/enums/api";
+import { useUserStoreHook } from "@/store/modules/user";
+import { AuthStorage, redirectToLogin } from "@/utils/auth";
+import type { ApiResponse } from "@/types/api";
 
-// 创建 axios 实例
-const service = axios.create({
+// ============================================
+// HTTP 请求实例
+// ============================================
+
+const http = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
   paramsSerializer: (params) => qs.stringify(params),
 });
 
+// ============================================
 // 请求拦截器
-service.interceptors.request.use(
+// ============================================
+
+http.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const accessToken = getAccessToken();
-    // 如果 Authorization 设置为 no-auth，则不携带 Token
-    if (config.headers.Authorization !== "no-auth" && accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
+    const token = AuthStorage.getAccessToken();
+
+    if (config.headers.Authorization === "no-auth") {
       delete config.headers.Authorization;
+    } else if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
+// ============================================
 // 响应拦截器
-service.interceptors.response.use(
-  (response: AxiosResponse) => {
-    // 如果响应是二进制流，则直接返回，用于下载文件、Excel 导出等
-    if (response.config.responseType === "blob") {
+// ============================================
+
+http.interceptors.response.use(
+  (response: AxiosResponse<ApiResponse>) => {
+    // 二进制数据直接返回
+    const { responseType } = response.config;
+    if (responseType === "blob" || responseType === "arraybuffer") {
       return response;
     }
 
     const { code, data, msg } = response.data;
-    if (code === ResultCode.SUCCESS) {
+
+    if (code === ApiCodeEnum.SUCCESS) {
+      // 分页接口需要同时返回 data 与 page 元信息
+      const page = (response.data as any)?.page;
+      if (page != null) return { data, page };
       return data;
+    }
+
+    // 需要选择租户（特殊业务码，传递给调用方处理）
+    if (code === ApiCodeEnum.CHOOSE_TENANT) {
+      return Promise.reject({ code, data, msg });
     }
 
     ElMessage.error(msg || "系统出错");
     return Promise.reject(new Error(msg || "Error"));
   },
-  async (error: any) => {
-    // 非 2xx 状态码处理 401、403、500 等
-    const response = error.response;
-    if (response) {
-      const { code, msg } = response.data;
-      if (code === ResultCode.ACCESS_TOKEN_INVALID) {
-        ElMessageBox.confirm("当前页面已失效，请重新登录", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }).then(() => {
-          const userStore = useUserStoreHook();
-          userStore.clearSessionAndCache().then(() => {
-            location.reload();
-          });
-        });
-      } else {
-        ElMessage.error(msg || "系统出错");
-      }
+
+  async (error) => {
+    const { config, response } = error;
+
+    if (!response) {
+      ElMessage.error("网络连接失败");
+      return Promise.reject(error);
     }
-    return Promise.reject(error.message);
+
+    const { code, msg } = response.data as ApiResponse;
+
+    // Token 过期处理
+    if (code === ApiCodeEnum.ACCESS_TOKEN_INVALID) {
+      return retryWithRefresh(config);
+    }
+
+    if (code === ApiCodeEnum.REFRESH_TOKEN_INVALID) {
+      await redirectToLogin("登录已过期，请重新登录");
+      return Promise.reject(new Error(msg || "Token Invalid"));
+    }
+
+    ElMessage.error(msg || "请求失败");
+    return Promise.reject(new Error(msg || "Error"));
   }
 );
 
-export default service;
+export default http;
+
+// ============================================
+// Token 刷新重试
+// ============================================
+
+type Pending = { resolve: (v: unknown) => void; reject: (e: Error) => void };
+
+let refreshing = false;
+const queue: Pending[] = [];
+
+async function retryWithRefresh(config: InternalAxiosRequestConfig): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    queue.push({ resolve, reject });
+
+    if (refreshing) return;
+    refreshing = true;
+
+    useUserStoreHook()
+      .refreshToken()
+      .then(() => {
+        const token = AuthStorage.getAccessToken();
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+
+        queue.forEach(({ resolve }) => http(config).then(resolve).catch(reject));
+      })
+      .catch(async () => {
+        queue.forEach(({ reject }) => reject(new Error("Token refresh failed")));
+        await redirectToLogin("登录已过期，请重新登录");
+      })
+      .finally(() => {
+        queue.length = 0;
+        refreshing = false;
+      });
+  });
+}

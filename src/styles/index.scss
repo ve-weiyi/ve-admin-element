@@ -1,28 +1,12 @@
+// 1. 基础重置
 @use "./reset";
 
-.app-container {
-  padding: 15px;
-}
+// 2. 主题变量
+@use "./variables" as *;
 
-.search-bar {
-  padding: 18px 0 0 10px;
-  margin-bottom: 10px;
-  background-color: var(--el-bg-color-overlay);
-  border: 1px solid var(--el-border-color-light);
-  border-radius: 4px;
-  box-shadow: var(--el-box-shadow-light);
-}
+// 3. UI 框架适配
+@use "./element-plus";
+@use "./wangeditor";
 
-.table-container > .el-card__header {
-  padding: calc(var(--el-card-padding) - 8px) var(--el-card-padding);
-}
-
-.link-type,
-.link-type:focus {
-  color: #337ab7;
-  cursor: pointer;
-
-  &:hover {
-    color: rgb(32 160 255);
-  }
-}
+// 4. 业务通用样式
+@use "./common";

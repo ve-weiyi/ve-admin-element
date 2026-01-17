@@ -3,7 +3,6 @@ import qs from "qs";
 import { ApiCodeEnum } from "@/enums/api";
 import { useUserStoreHook } from "@/store/modules/user";
 import { AuthStorage, redirectToLogin } from "@/utils/auth";
-import type { ApiResponse } from "@/types/api";
 
 // ============================================
 // HTTP 请求实例
@@ -40,7 +39,7 @@ http.interceptors.request.use(
 // ============================================
 
 http.interceptors.response.use(
-  (response: AxiosResponse<ApiResponse>) => {
+  (response: AxiosResponse<any>) => {
     // 二进制数据直接返回
     const { responseType } = response.config;
     if (responseType === "blob" || responseType === "arraybuffer") {
@@ -56,11 +55,6 @@ http.interceptors.response.use(
       return data;
     }
 
-    // 需要选择租户（特殊业务码，传递给调用方处理）
-    if (code === ApiCodeEnum.CHOOSE_TENANT) {
-      return Promise.reject({ code, data, msg });
-    }
-
     ElMessage.error(msg || "系统出错");
     return Promise.reject(new Error(msg || "Error"));
   },
@@ -73,7 +67,7 @@ http.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const { code, msg } = response.data as ApiResponse;
+    const { code, msg } = response.data as any;
 
     // Token 过期处理
     if (code === ApiCodeEnum.ACCESS_TOKEN_INVALID) {

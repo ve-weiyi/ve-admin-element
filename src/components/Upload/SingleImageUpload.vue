@@ -33,8 +33,6 @@
 
 <script setup lang="ts">
 import { UploadRawFile, UploadRequestOptions } from "element-plus";
-import FileAPI from "@/api/file";
-import type { FileInfo } from "@/types/api";
 
 const props = defineProps({
   /**
@@ -127,23 +125,7 @@ function handleBeforeUpload(file: UploadRawFile) {
  */
 function handleUpload(options: UploadRequestOptions) {
   return new Promise((resolve, reject) => {
-    const file = options.file;
-
-    const formData = new FormData();
-    formData.append(props.name, file);
-
-    // 处理附加参数
-    Object.keys(props.data).forEach((key) => {
-      formData.append(key, props.data[key]);
-    });
-
-    FileAPI.upload(formData)
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    reject(new Error("上传功能已禁用"));
   });
 }
 
@@ -166,7 +148,7 @@ function handleDelete() {
  *
  * @param fileInfo 上传成功后的文件信息
  */
-const onSuccess = (fileInfo: FileInfo) => {
+const onSuccess = (fileInfo: any) => {
   ElMessage.success("上传成功");
   modelValue.value = fileInfo.url;
 };

@@ -40,8 +40,6 @@
 </template>
 <script setup lang="ts">
 import { UploadRawFile, UploadRequestOptions, UploadUserFile } from "element-plus";
-import FileAPI from "@/api/file";
-import type { FileInfo } from "@/types/api";
 
 const props = defineProps({
   /**
@@ -176,7 +174,7 @@ function handleExceed() {
 /**
  * 上传成功回调
  */
-const handleSuccess = (fileInfo: FileInfo, uploadFile: UploadUserFile) => {
+const handleSuccess = (fileInfo: any, uploadFile: UploadUserFile) => {
   ElMessage.success("上传成功");
   const index = fileList.value.findIndex((file) => file.uid === uploadFile.uid);
   if (index !== -1) {

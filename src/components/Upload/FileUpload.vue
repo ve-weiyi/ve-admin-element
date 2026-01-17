@@ -53,9 +53,6 @@ import {
   UploadRequestOptions,
 } from "element-plus";
 
-import FileAPI from "@/api/file";
-import type { FileInfo } from "@/types/api";
-
 const props = defineProps({
   /**
    * 请求携带的额外参�?
@@ -115,7 +112,7 @@ const props = defineProps({
   },
 });
 const modelValue = defineModel("modelValue", {
-  type: [Array] as PropType<FileInfo[]>,
+  type: [Array] as PropType<any[]>,
   required: true,
   default: () => [],
 });
@@ -204,9 +201,9 @@ const handleSuccess = (response: any, uploadFile: UploadFile, files: UploadFiles
     files.map((file: UploadFile) => {
       if (file.status === "success") {
         //只取携带response的才是刚上传�?
-        const res = file.response as FileInfo;
+        const res = file.response as any;
         if (res) {
-          fileInfos.push({ name: res.name, url: res.url } as FileInfo);
+          fileInfos.push({ name: res.name, url: res.url } as any);
         }
       } else {
         //失败上传 从fileList删掉，不展示

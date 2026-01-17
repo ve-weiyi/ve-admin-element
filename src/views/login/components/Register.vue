@@ -96,8 +96,6 @@
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
 import { Lock } from "@element-plus/icons-vue";
-import AuthAPI from "@/api/auth";
-import type { LoginRequest } from "@/types/api";
 
 const emit = defineEmits(["update:modelValue"]);
 const toLogin = () => emit("update:modelValue", "login");
@@ -110,7 +108,7 @@ const isCapsLock = ref(false); // 是否大写锁定
 const captchaBase64 = ref(); // 验证码图片Base64字符串
 const isRead = ref(false);
 
-interface Model extends LoginRequest {
+interface Model extends any {
   confirmPassword: string;
 }
 
@@ -183,12 +181,7 @@ const rules = computed(() => {
 const codeLoading = ref(false);
 function getCaptcha() {
   codeLoading.value = true;
-  AuthAPI.getCaptcha()
-    .then((data) => {
-      model.value.captchaId = data.captchaId;
-      captchaBase64.value = data.captchaBase64;
-    })
-    .finally(() => (codeLoading.value = false));
+  codeLoading.value = false;
 }
 
 // 检查输入大小写

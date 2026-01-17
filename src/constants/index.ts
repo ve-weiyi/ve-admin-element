@@ -31,10 +31,6 @@ export const STORAGE_KEYS = {
   REFRESH_TOKEN: `${APP_PREFIX}:auth:refresh_token`,
   REMEMBER_ME: `${APP_PREFIX}:auth:remember_me`,
 
-  // ===== 租户相关 =====
-  TENANT_ID: `${APP_PREFIX}:tenant:id`,
-  TENANT_INFO: `${APP_PREFIX}:tenant:info`,
-
   // ===== 系统相关 =====
   DICT_CACHE: `${APP_PREFIX}:system:dict_cache`,
 

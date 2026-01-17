@@ -26,10 +26,6 @@
           </li>
           <li>
             <span>✓</span>
-            支持多租户模式与租户隔离
-          </li>
-          <li>
-            <span>✓</span>
             数据安全与操作审计
           </li>
           <li>
@@ -48,13 +44,10 @@
             <div class="auth-panel__title-row">
               <span class="auth-panel__title">{{ appConfig.title }}</span>
             </div>
-            <div v-if="appConfig.version || tenantEnabled" class="auth-panel__version-row">
+            <div v-if="appConfig.version" class="auth-panel__version-row">
               <el-text size="small" type="info">VERSION</el-text>
               <el-tag v-if="appConfig.version" size="small" effect="light" round>
                 {{ `v${appConfig.version}` }}
-              </el-tag>
-              <el-tag v-if="tenantEnabled" type="success" size="small" effect="light" round>
-                多租�?
               </el-tag>
             </div>
           </div>
@@ -83,8 +76,6 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 type LayoutMap = "login" | "register" | "resetPwd";
 
 const component = ref<LayoutMap>("login");
-
-const tenantEnabled = appConfig.tenantEnabled;
 
 const formComponents = {
   login: defineAsyncComponent(() => import("./components/Login.vue")),

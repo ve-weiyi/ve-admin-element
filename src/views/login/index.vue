@@ -53,9 +53,15 @@
           </div>
         </div>
 
-        <transition name="fade-slide" mode="out-in">
-          <component :is="formComponents[component]" v-model="component" class="auth-panel__form" />
-        </transition>
+        <div style="min-height: 465px">
+          <transition name="fade-slide" mode="out-in">
+            <component
+              :is="formComponents[component]"
+              v-model="component"
+              class="auth-panel__form"
+            />
+          </transition>
+        </div>
 
         <footer class="auth-panel__footer">
           <el-text size="small">
@@ -73,7 +79,7 @@ import logo from "@/assets/images/logo.png";
 import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 
-type LayoutMap = "login" | "register" | "resetPwd";
+type LayoutMap = "login" | "register" | "resetPwd" | "email_login" | "phone_login";
 
 const component = ref<LayoutMap>("login");
 
@@ -81,6 +87,8 @@ const formComponents = {
   login: defineAsyncComponent(() => import("./components/Login.vue")),
   register: defineAsyncComponent(() => import("./components/Register.vue")),
   resetPwd: defineAsyncComponent(() => import("./components/ResetPwd.vue")),
+  email_login: defineAsyncComponent(() => import("./components/EmailLogin.vue")),
+  phone_login: defineAsyncComponent(() => import("./components/PhoneLogin.vue")),
 };
 
 let notificationInstance: ReturnType<typeof ElNotification> | null = null;

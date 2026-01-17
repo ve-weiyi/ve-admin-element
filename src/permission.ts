@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from "vue-router";
 import NProgress from "@/plugins/nprogress";
 import router from "@/router";
-import { usePermissionStore, useUserStore } from "@/store";
+import { usePermissionStoreHook, useUserStoreHook } from "@/store";
 
 /**
  * 路由权限守卫
@@ -15,11 +15,11 @@ export function setupPermissionGuard() {
     NProgress.start();
 
     try {
-      const isLoggedIn = useUserStore().isLoggedIn();
+      const isLoggedIn = useUserStoreHook().isLoggedIn();
 
       // 未登录处理
       if (!isLoggedIn) {
-        if (whiteList.includes(to.path)) {
+        if (whiteList.includes(to.path) || to.path.startsWith("/oauth/login")) {
           next();
         } else {
           next(`/login?redirect=${encodeURIComponent(to.fullPath)}`);
@@ -34,8 +34,8 @@ export function setupPermissionGuard() {
         return;
       }
 
-      const permissionStore = usePermissionStore();
-      const userStore = useUserStore();
+      const permissionStore = usePermissionStoreHook();
+      const userStore = useUserStoreHook();
 
       // 动态路由生成
       if (!permissionStore.isRouteGenerated) {
@@ -67,7 +67,7 @@ export function setupPermissionGuard() {
       next();
     } catch (error) {
       console.error("Route guard error:", error);
-      await useUserStore().resetAllState();
+      await useUserStoreHook().resetAllState();
       next("/login");
       NProgress.done();
     }

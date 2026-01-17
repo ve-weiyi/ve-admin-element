@@ -12,7 +12,24 @@
       <el-form-item prop="username">
         <el-input v-model.trim="loginFormData.username" placeholder="用户名">
           <template #prefix>
-            <el-icon><User /></el-icon>
+            <el-dropdown>
+              <div>
+                <el-icon>
+                  <User />
+                </el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="(item, index) in loginCredentials"
+                    :key="index"
+                    @click="setLoginCredentials(item.username, item.password)"
+                  >
+                    {{ item.nickname }}: {{ item.username }}/{{ item.password }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-input>
       </el-form-item>
@@ -36,10 +53,10 @@
       </el-tooltip>
 
       <!-- 验证码 -->
-      <el-form-item prop="captchaCode">
+      <el-form-item prop="captcha_code">
         <div flex items-center gap-10px>
           <el-input
-            v-model.trim="loginFormData.captchaCode"
+            v-model.trim="loginFormData.captcha_code"
             placeholder="验证码"
             clearable
             class="flex-1"
@@ -60,7 +77,7 @@
               object-cover
               shadow="[0_0_0_1px_var(--el-border-color)_inset]"
               :src="captchaBase64"
-              alt="captchaCode"
+              alt="captcha_code"
             />
             <el-text v-else type="info" size="small">点击获取验证码</el-text>
           </div>
@@ -68,7 +85,7 @@
       </el-form-item>
 
       <div class="flex-x-between w-full">
-        <el-checkbox v-model="loginFormData.rememberMe">记住我</el-checkbox>
+        <el-checkbox v-model="rememberMe">记住我</el-checkbox>
         <el-link type="primary" underline="never" @click="toOtherForm('resetPwd')">
           忘记密码？
         </el-link>
@@ -82,9 +99,19 @@
       </el-form-item>
     </el-form>
 
+    <!-- 登录方式切换 -->
     <div flex-center gap-10px>
-      <el-text size="default">您没有账号？</el-text>
-      <el-link type="primary" underline="never" @click="toOtherForm('register')">注 册</el-link>
+      <div class="w-full h-[20px] flex justify-between items-center">
+        <el-button
+          v-for="(item, index) in operates"
+          :key="index"
+          class="w-full mt-4!"
+          size="default"
+          @click="toOtherForm(item.key)"
+        >
+          {{ item.title }}
+        </el-button>
+      </div>
     </div>
 
     <!-- 第三方登录 -->
@@ -96,16 +123,16 @@
       </div>
       <div class="social-login">
         <div class="social-login__item">
-          <div class="i-svg:wechat" />
+          <div class="i-svg:wechat" @click="onThirdPartyLogin('wechat')" />
         </div>
         <div class="social-login__item">
-          <div class="i-svg:qq" />
+          <div class="i-svg:qq" @click="onThirdPartyLogin('qq')" />
         </div>
         <div class="social-login__item">
-          <div class="i-svg:github" />
+          <div class="i-svg:github" @click="onThirdPartyLogin('github')" />
         </div>
         <div class="social-login__item">
-          <div class="i-svg:gitee" />
+          <div class="i-svg:gitee" @click="onThirdPartyLogin('gitee')" />
         </div>
       </div>
     </div>
@@ -117,6 +144,8 @@ import type { FormInstance } from "element-plus";
 import router from "@/router";
 import { useUserStore } from "@/store";
 import { AuthStorage } from "@/utils/auth";
+import { LoginReq } from "@/api/types";
+import { AuthAPI } from "@/api/auth";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -128,14 +157,17 @@ const isCapsLock = ref(false);
 // 验证码图片 Base64
 const captchaBase64 = ref();
 // 记住我
-const rememberMe = AuthStorage.getRememberMe();
+const rememberMe = ref(AuthStorage.getRememberMe());
 
-const loginFormData = ref<any>({
-  username: "admin",
+watch(rememberMe, (val) => {
+  AuthStorage.setRememberMe(val);
+});
+
+const loginFormData = ref<LoginReq>({
+  username: "root",
   password: "123456",
-  captchaId: "",
-  captchaCode: "",
-  rememberMe,
+  captcha_key: "",
+  captcha_code: "",
 });
 
 onMounted(() => getCaptcha());
@@ -161,7 +193,7 @@ const loginRules = computed(() => {
         trigger: "blur",
       },
     ],
-    captchaCode: [
+    captcha_code: [
       {
         required: true,
         trigger: "blur",
@@ -173,19 +205,55 @@ const loginRules = computed(() => {
 
 // 获取验证码
 const codeLoading = ref(false);
+
 function getCaptcha() {
   codeLoading.value = true;
-  codeLoading.value = false;
+  AuthAPI.getCaptchaCodeApi({
+    height: 40,
+    width: 120,
+  })
+    .then((res) => {
+      loginFormData.value.captcha_key = res.data.captcha_key;
+      captchaBase64.value = res.data.captcha_base64;
+    })
+    .finally(() => (codeLoading.value = false));
 }
 
 /**
  * 登录提交
  */
 async function handleLoginSubmit() {
-  loading.value = true;
-  await userStore.login(loginFormData.value);
-  await router.push("/");
-  loading.value = false;
+  try {
+    // 1. 表单验证
+    const valid = await loginFormRef.value?.validate();
+    if (!valid) return;
+
+    if (!loginFormData.value.captcha_key) {
+      getCaptcha();
+      ElMessage.warning("验证码已刷新，请重新输入");
+      return;
+    }
+
+    loading.value = true;
+
+    // 2. 执行登录
+    try {
+      await userStore.login(loginFormData.value);
+      // 登录成功，跳转到目标页面
+      const redirectPath = (route.query.redirect as string) || "/";
+      await router.push(decodeURIComponent(redirectPath));
+    } catch (error: any) {
+      console.error("登录失败:", error);
+      // 其他错误，刷新验证码
+      getCaptcha();
+      throw error;
+    }
+  } catch (error) {
+    // 统一错误处理
+    console.error("登录失败:", error);
+  } finally {
+    loading.value = false;
+  }
 }
 
 // 检查输入大小写
@@ -197,9 +265,63 @@ function checkCapsLock(event: KeyboardEvent) {
 }
 
 const emit = defineEmits(["update:modelValue"]);
-function toOtherForm(type: "register" | "resetPwd") {
+
+function toOtherForm(type: string) {
   emit("update:modelValue", type);
 }
+
+const operates = [
+  { key: "email_login", icon: "i-svg:email", title: "邮箱登录" },
+  { key: "phone_login", icon: "i-svg:phone", title: "手机登录" },
+  { key: "register", icon: "i-svg:user-plus", title: "注册" },
+];
+
+const loginCredentials = [
+  {
+    username: "root",
+    password: "123456",
+    nickname: "超级管理员",
+  },
+  {
+    username: "admin",
+    password: "123456",
+    nickname: "系统管理员",
+  },
+  {
+    username: "test",
+    password: "123456",
+    nickname: "测试小游客",
+  },
+];
+
+// 设置登录凭证
+const setLoginCredentials = (username: string, password: string) => {
+  loginFormData.value.username = username;
+  loginFormData.value.password = password;
+};
+
+// 跳转第三方登录地址
+const onThirdPartyLogin = (platform: string) => {
+  const state = route.query.redirect as string;
+  AuthAPI.getOauthAuthorizeUrlApi({
+    platform: platform,
+    state: state,
+  })
+    .then((res) => {
+      if (res.data?.authorize_url) {
+        // 跳转到授权页面
+        let url = res.data.authorize_url;
+        console.log("第三方登录平台:", platform, state, url);
+        window.open(url, "_self");
+      } else {
+        ElMessage.error("获取授权地址失败");
+      }
+    })
+    .catch((error) => {
+      console.error("第三方登录失败:", error);
+      ElMessage.error("第三方登录失败，请稍后重试");
+    });
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <!-- drawer -->
     <template v-if="modalConfig.component === 'drawer'">
@@ -59,8 +59,8 @@
         </el-form>
 
         <template #footer>
-          <el-button v-if="!formDisable" type="primary" @click="handleSubmit">确定</el-button>
-          <el-button @click="handleClose">关闭</el-button>
+          <el-button v-if="!formDisable" type="primary" @click="handleSubmit">确 定</el-button>
+          <el-button @click="handleClose">{{ !formDisable ? "取 消" : "关闭" }}</el-button>
         </template>
       </el-drawer>
     </template>
@@ -124,8 +124,8 @@
         </el-form>
 
         <template #footer>
-          <el-button v-if="!formDisable" type="primary" @click="handleSubmit">确定</el-button>
-          <el-button @click="handleClose">关闭</el-button>
+          <el-button v-if="!formDisable" type="primary" @click="handleSubmit">确 定</el-button>
+          <el-button @click="handleClose">{{ !formDisable ? "取 消" : "关闭" }}</el-button>
         </template>
       </el-dialog>
     </template>
@@ -135,6 +135,24 @@
 <script setup lang="ts">
 import { useThrottleFn } from "@vueuse/core";
 import type { FormInstance, FormRules } from "element-plus";
+import {
+  ElInput,
+  ElSelect,
+  ElSwitch,
+  ElCascader,
+  ElInputNumber,
+  ElDatePicker,
+  ElTimePicker,
+  ElTimeSelect,
+  ElTreeSelect,
+  ElInputTag,
+  ElText,
+  ElRadioGroup,
+  ElCheckboxGroup,
+  ElOption,
+  ElRadio,
+  ElCheckbox,
+} from "element-plus";
 import type { IComponentType, IModalConfig, IObject } from "./types";
 import InputTag from "@/components/InputTag/index.vue";
 import IconSelect from "@/components/IconSelect/index.vue";
@@ -173,12 +191,12 @@ const childrenMap = new Map<IComponentType, any>([
 ]);
 
 const pk = props.modalConfig.pk ?? "id"; // 主键名，用于表单数据处理
-const modalVisible = ref(false); // 弹窗显示状态"
+const modalVisible = ref(false); // 弹窗显示状态
 const formRef = ref<FormInstance>(); // 表单实例
-const formItems = reactive(props.modalConfig.formItems ?? []); // 表单配置项"
+const formItems = reactive(props.modalConfig.formItems ?? []); // 表单配置项
 const formData = reactive<IObject>({}); // 表单数据
 const formRules: FormRules = {}; // 表单验证规则
-const formDisable = ref(false); // 表单禁用状态"
+const formDisable = ref(false); // 表单禁用状态
 
 // 获取 tooltip 提示框属性
 const getTooltipProps = (tips: string | IObject) => {

@@ -16,7 +16,6 @@ declare module 'vue' {
     CommandPalette: typeof import('./../components/CommandPalette/index.vue')['default']
     CopyButton: typeof import('./../components/CopyButton/index.vue')['default']
     DictSelect: typeof import('./../components/DictSelect/index.vue')['default']
-    DictTag: typeof import('./../components/DictTag/index.vue')['default']
     ECharts: typeof import('./../components/ECharts/index.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

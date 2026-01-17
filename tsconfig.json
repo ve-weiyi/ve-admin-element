@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["esnext", "dom"],
     "baseUrl": ".",
     "paths": {
@@ -23,6 +23,29 @@
     "sourceMap": true,
     "useDefineForClassFields": true,
     "allowJs": true,
+
+    // ---------------- 合并第二个配置的新增/修改项 ----------------
+    // 新增 JSX 支持
+    "jsx": "preserve",
+    // 细分严格规则（覆盖 strict: true 的默认行为）
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    // 实验性特性（装饰器支持）
+    "experimentalDecorators": true,
+    // 构建相关配置
+    "importHelpers": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    // 其他配置
+    "allowImportingTsExtensions": true,
 
     // 类型声明相关配置
     "types": ["node", "vite/client", "element-plus/global"]

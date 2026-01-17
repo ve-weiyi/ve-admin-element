@@ -11,6 +11,7 @@ import App from "./App.vue";
 // ===== 样式导入 =====
 import "element-plus/theme-chalk/dark/css-vars.css";
 import "@/styles/index.scss";
+import "@/styles/table.scss";
 import "uno.css";
 import "animate.css";
 
@@ -26,7 +27,7 @@ import * as ElementPlusIcons from "@element-plus/icons-vue";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
 
 // ===== 路由守卫 =====
-import { setupPermissionGuard } from "@/router/guards/permission";
+import { setupPermissionGuard } from "@/permission";
 
 // 创建 Vue 应用实例
 const app = createApp(App);

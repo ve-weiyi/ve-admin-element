@@ -2,87 +2,114 @@
 <template>
   <div>
     <el-upload
+      ref="uploadRef"
       v-model:file-list="fileList"
       :style="props.style"
-      :before-upload="handleBeforeUpload"
-      :http-request="handleUpload"
-      :on-success="handleSuccess"
-      :on-error="handleError"
-      :on-exceed="handleExceed"
       :accept="props.accept"
       :limit="props.limit"
+      :drag="props.drag"
+      :auto-upload="props.autoUpload"
       multiple
+      :before-upload="handleBeforeUpload"
+      :http-request="handleHttpRequest"
+      :on-success="handleSuccess"
+      :on-error="handleError"
+      :on-remove="handleRemove"
+      :on-progress="handleProgress"
+      :on-exceed="handleExceed"
     >
-      <!-- 上传文件按钮 -->
-      <el-button type="primary" :disabled="fileList.length >= props.limit">
-        {{ props.uploadBtnText }}
-      </el-button>
+      <template v-if="props.drag">
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
+        <div class="el-upload__text">
+          <span>将文件拖到此处，或</span>
+          <em>点击上传</em>
+        </div>
+      </template>
 
-      <!-- 文件列表 -->
+      <template v-if="props.tip != ''" #tip>
+        <div class="el-upload__tip">
+          {{ props.tip }}
+        </div>
+      </template>
+
       <template #file="{ file }">
-        <template v-if="file.status === 'success'">
-          <div class="el-upload-list__item-info">
-            <a class="el-upload-list__item-name" @click="handleDownload(file)">
-              <el-icon>
-                <Document />
-              </el-icon>
-              <span class="el-upload-list__item-file-name">{{ file.name }}</span>
-              <span class="el-icon--close" @click.stop="handleRemove(file.url!)">
-                <el-icon>
-                  <Close />
-                </el-icon>
-              </span>
-            </a>
-          </div>
-        </template>
-        <template v-else>
-          <div class="el-upload-list__item-info">
-            <el-progress style="display: inline-flex" :percentage="file.percentage" />
-          </div>
-        </template>
+        <div class="el-upload-list__item-info">
+          <a class="el-upload-list__item-name" @click="downloadFile(file)">
+            <el-icon>
+              <Document />
+            </el-icon>
+            <span class="el-upload-list__item-file-name">{{ file.name }}</span>
+            <span class="el-icon--close" @click.stop="handleRemove(file)">
+              <el-icon><Close /></el-icon>
+            </span>
+          </a>
+        </div>
       </template>
     </el-upload>
+    <el-progress
+      v-if="showUploadPercent"
+      :style="{
+        display: showUploadPercent ? 'inline-flex' : 'none',
+        width: '100%',
+      }"
+      :percentage="uploadPercent"
+      :color="customColorMethod"
+    />
   </div>
 </template>
 <script lang="ts" setup>
 import {
-  UploadRawFile,
-  UploadUserFile,
+  genFileId,
   UploadFile,
-  UploadFiles,
+  type UploadInstance,
+  UploadProgressEvent,
+  UploadRawFile,
   UploadRequestOptions,
+  UploadUserFile,
 } from "element-plus";
+
+import { uploadFile } from "@/utils/file";
+import { ref } from "vue";
 
 const props = defineProps({
   /**
-   * 请求携带的额外参�?
+   * 文件集合
    */
-  data: {
+  modelValue: {
+    type: Array<UploadUserFile>,
+    default: () => [],
+  },
+  uploadPath: {
+    type: String,
+    default: "/file",
+    required: false,
+  },
+  /**
+   * 单个文件上传大小限制(单位byte)
+   */
+  maxSize: {
+    type: Number,
+    default: 2 * 1024 * 1024,
+  },
+  /**
+   * 提示信息内容
+   */
+  tip: {
+    type: String,
+    default: "",
+  },
+  /**
+   * 样式
+   */
+  style: {
     type: Object,
     default: () => {
-      return {};
+      return {
+        width: "100%",
+      };
     },
-  },
-  /**
-   * 上传文件的参数名
-   */
-  name: {
-    type: String,
-    default: "file",
-  },
-  /**
-   * 文件上传数量限制
-   */
-  limit: {
-    type: Number,
-    default: 10,
-  },
-  /**
-   * 单个文件上传大小限制(单位MB)
-   */
-  maxFileSize: {
-    type: Number,
-    default: 10,
   },
   /**
    * 上传文件类型
@@ -92,164 +119,128 @@ const props = defineProps({
     default: "*",
   },
   /**
-   * 上传按钮文本
+   * 文件上传数量限制
    */
-  uploadBtnText: {
-    type: String,
-    default: "上传文件",
+  limit: {
+    type: Number,
+    default: 10,
   },
-
-  /**
-   * 样式
-   */
-  style: {
-    type: Object,
-    default: () => {
-      return {
-        width: "300px",
-      };
-    },
+  drag: {
+    type: Boolean,
+    default: false,
+  },
+  autoUpload: {
+    type: Boolean,
+    default: true,
   },
 });
-const modelValue = defineModel("modelValue", {
-  type: [Array] as PropType<any[]>,
-  required: true,
+
+const uploadRef = ref<UploadInstance>();
+const fileList = defineModel({
+  type: Array<UploadUserFile>,
   default: () => [],
+  required: true,
 });
-
-const fileList = ref([] as UploadFile[]);
-
-// 监听 modelValue 转换用于显示�?fileList
-watch(
-  modelValue,
-  (value) => {
-    fileList.value = value.map((item) => {
-      const name = item.name ? item.name : item.url?.substring(item.url.lastIndexOf("/") + 1);
-      return {
-        name,
-        url: item.url,
-        status: "success",
-        uid: getUid(),
-      } as UploadFile;
-    });
-  },
-  {
-    immediate: true,
-  }
-);
 
 /**
- * 上传前校�?
+ * 上传前
+ * 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
  */
 function handleBeforeUpload(file: UploadRawFile) {
-  // 限制文件大小
-  if (file.size > props.maxFileSize * 1024 * 1024) {
-    ElMessage.warning("上传文件不能大于" + props.maxFileSize + "M");
+  console.log("handleBeforeUpload", file.name, file.size);
+
+  if (file.size > props.maxSize) {
+    ElMessage.warning("上传文件不能大于" + Math.trunc(props.maxSize / 1024 / 1024) + "M");
     return false;
   }
+  uploadPercent.value = 0;
+  showUploadPercent.value = true;
+
   return true;
 }
 
-/*
- * 上传文件
- */
-function handleUpload(options: UploadRequestOptions) {
-  return new Promise((resolve, reject) => {
-    const file = options.file;
-    const formData = new FormData();
-    formData.append(props.name, file);
-
-    // 处理附加参数
-    Object.keys(props.data).forEach((key) => {
-      formData.append(key, props.data[key]);
-    });
-    FileAPI.upload(formData, (percent) => {
-      const uid = file.uid;
-      const fileItem = fileList.value.find((file) => file.uid === uid);
-      if (fileItem) {
-        fileItem.percentage = percent;
-      }
-    })
-      .then((res) => {
-        resolve(res);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-
 /**
- * 上传文件超出限制
+ * 上传中
  */
-function handleExceed() {
-  ElMessage.warning("最多只能上传 " + props.limit + " 个文件");
+function handleHttpRequest(options: UploadRequestOptions) {
+  console.log("handleHttpRequest", options.filename);
+  return uploadFile(options.file, props.uploadPath);
 }
 
 /**
  * 上传成功
  */
-const handleSuccess = (response: any, uploadFile: UploadFile, files: UploadFiles) => {
+function handleSuccess(response: any, file: UploadFile) {
+  console.log("handleSuccess", response);
+  showUploadPercent.value = false;
+  uploadPercent.value = 0;
   ElMessage.success("上传成功");
-  //只有当状态为success或者fail，代表文件上传全部完成了，失败也算完�?
-  if (
-    files.every((file: UploadFile) => {
-      return file.status === "success" || file.status === "fail";
-    })
-  ) {
-    const fileInfos = [] as FileInfo[];
-    files.map((file: UploadFile) => {
-      if (file.status === "success") {
-        //只取携带response的才是刚上传�?
-        const res = file.response as any;
-        if (res) {
-          fileInfos.push({ name: res.name, url: res.url } as any);
-        }
-      } else {
-        //失败上传 从fileList删掉，不展示
-        fileList.value.splice(
-          fileList.value.findIndex((e) => e.uid === file.uid),
-          1
-        );
-      }
-    });
-    if (fileInfos.length > 0) {
-      modelValue.value = [...modelValue.value, ...fileInfos];
-    }
-  }
-};
+  fileList.value.push({
+    name: file.name,
+    url: response.data.file_url,
+  });
+  return;
+}
 
 /**
  * 上传失败
  */
-const handleError = (_error: any) => {
-  console.error(_error);
+function handleError(error: any) {
+  console.log("handleError", error);
+  showUploadPercent.value = false;
+  uploadPercent.value = 0;
   ElMessage.error("上传失败");
-};
+}
 
 /**
  * 删除文件
  */
-function handleRemove(fileUrl: string) {
-  FileAPI.delete(fileUrl).then(() => {
-    modelValue.value = modelValue.value.filter((file) => file.url !== fileUrl);
-  });
+function handleRemove(removeFile: UploadUserFile) {
+  console.log("handleRemove", removeFile);
+  fileList.value = fileList.value.filter((file) => file.name !== removeFile.name);
 }
+
+/**
+ * 文件数量超出限制
+ */
+function handleExceed(files: File[]) {
+  console.log("handleExceed", files);
+  uploadRef.value!.clearFiles();
+  const file = files[0] as UploadRawFile;
+  file.uid = genFileId();
+  uploadRef.value!.handleStart(file);
+}
+
+/**
+ * 上传进度
+ */
+function handleProgress(event: UploadProgressEvent) {
+  console.log("handleProgress", event.percent);
+  uploadPercent.value = event.percent;
+}
+
+const showUploadPercent = ref(false);
+const uploadPercent = ref(0);
+
+const customColorMethod = (percentage: number) => {
+  if (percentage < 30) {
+    return "#909399";
+  }
+  if (percentage < 70) {
+    return "#375ee8";
+  }
+  return "#67c23a";
+};
 
 /**
  * 下载文件
  */
-function handleDownload(file: UploadUserFile) {
-  const { url, name } = file;
-  if (url) {
-    FileAPI.download(url, name);
+function downloadFile(file: UploadUserFile) {
+  console.log("downloadFile", file);
+  const filePath = file.url;
+  if (filePath) {
+    window.open(filePath);
   }
-}
-
-/** 获取一个不重复的id */
-function getUid(): number {
-  // 时间戳左�?3位（相当于乘�?192�?+ 4位随机数
-  return (Date.now() << 13) | Math.floor(Math.random() * 8192);
 }
 </script>
 <style lang="scss" scoped>
@@ -260,8 +251,8 @@ function getUid(): number {
   color: var(--el-text-color-regular);
   cursor: pointer;
   opacity: 0.75;
-  transform: translateY(-50%);
   transition: opacity var(--el-transition-duration);
+  transform: translateY(-50%);
 }
 
 :deep(.el-upload-list) {
@@ -270,5 +261,17 @@ function getUid(): number {
 
 :deep(.el-upload-list__item) {
   margin: 0;
+}
+
+.show-upload-btn {
+  :deep(.el-upload) {
+    display: inline-flex;
+  }
+}
+
+.hide-upload-btn {
+  :deep(.el-upload) {
+    display: none;
+  }
 }
 </style>

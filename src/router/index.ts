@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 
 export const Layout = () => import("@/layouts/index.vue");
 
@@ -24,19 +24,23 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
 
   {
+    path: "/oauth/login/:platform",
+    component: () => import("@/views/oauth/index.vue"),
+    meta: { hidden: true },
+  },
+
+  {
     path: "/",
     name: "/",
     component: Layout,
-    redirect: "/dashboard",
+    redirect: "/home",
     children: [
       {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
-        // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
-        name: "Dashboard",
+        path: "home",
+        component: () => import("@/views/admin/home/Home.vue"),
+        name: "Home",
         meta: {
-          title: "dashboard",
+          title: "首页",
           icon: "homepage",
           affix: true,
           keepAlive: true,
@@ -66,7 +70,8 @@ export const constantRoutes: RouteRecordRaw[] = [
  * 创建路由
  */
 const router = createRouter({
-  history: createWebHashHistory(),
+  // 使用createWebHashHistory模式会导致第三方授权回调无法识别查询参数
+  history: createWebHistory(),
   routes: constantRoutes,
   // 刷新时，滚动条位置还原
   scrollBehavior: () => ({ left: 0, top: 0 }),

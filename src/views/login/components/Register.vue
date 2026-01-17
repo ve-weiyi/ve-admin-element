@@ -29,10 +29,11 @@
         </el-form-item>
       </el-tooltip>
 
+      <!-- 确认密码 -->
       <el-tooltip :visible="isCapsLock" content="大写锁定已打开" placement="right">
         <el-form-item prop="confirmPassword">
           <el-input
-            v-model.trim="model.confirmPassword"
+            v-model.trim="model.confirm_password"
             placeholder="请再次确认密码"
             type="password"
             show-password
@@ -46,30 +47,28 @@
         </el-form-item>
       </el-tooltip>
 
+      <!-- 邮箱 -->
+      <el-form-item prop="email">
+        <el-input v-model.trim="model.email" placeholder="绑定邮箱">
+          <template #prefix>
+            <el-icon>
+              <Message />
+            </el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+
       <!-- 验证码 -->
-      <el-form-item prop="captchaCode">
-        <div flex>
-          <el-input v-model.trim="model.captchaCode" placeholder="验证码" @keyup.enter="submit">
+      <el-form-item prop="verify_code">
+        <div class="w-full flex justify-between">
+          <el-input v-model.trim="model.verify_code" placeholder="验证码" @keyup.enter="submit">
             <template #prefix>
               <div class="i-svg:captcha" />
             </template>
           </el-input>
-          <div cursor-pointer h="[40px]" w="[120px]" flex-center ml-10px @click="getCaptcha">
-            <el-icon v-if="codeLoading" class="is-loading"><Loading /></el-icon>
-
-            <img
-              v-else
-              h-full
-              w-full
-              block
-              object-cover
-              border-rd-4px
-              p-1px
-              shadow="[0_0_0_1px_var(--el-border-color)_inset]"
-              :src="captchaBase64"
-              alt="code"
-            />
-          </div>
+          <el-button :disabled="isDisabled" class="ml-2!" @click="sendCaptchaCode()">
+            {{ countdown > 0 ? `${countdown}s后重新发送` : "发送验证码" }}
+          </el-button>
         </div>
       </el-form-item>
 
@@ -83,7 +82,7 @@
       <!-- 注册按钮 -->
       <el-form-item>
         <el-button :loading="loading" type="success" class="w-full" @click="submit">
-          注册账号
+          注 册
         </el-button>
       </el-form-item>
     </el-form>
@@ -95,31 +94,19 @@
 </template>
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
-import { Lock } from "@element-plus/icons-vue";
+import { Lock, Message } from "@element-plus/icons-vue";
+import { RegisterReq } from "@/api/types";
+import { AuthAPI } from "@/api/auth";
 
 const emit = defineEmits(["update:modelValue"]);
 const toLogin = () => emit("update:modelValue", "login");
 
-onMounted(() => getCaptcha());
-
 const formRef = ref<FormInstance>();
 const loading = ref(false); // 按钮 loading 状态
 const isCapsLock = ref(false); // 是否大写锁定
-const captchaBase64 = ref(); // 验证码图片Base64字符串
 const isRead = ref(false);
 
-interface Model extends any {
-  confirmPassword: string;
-}
-
-const model = ref<Model>({
-  username: "admin",
-  password: "123456",
-  confirmPassword: "",
-  captchaId: "",
-  captchaCode: "",
-  rememberMe: false,
-});
+const model = ref<RegisterReq>(<RegisterReq>{});
 
 const rules = computed(() => {
   return {
@@ -167,7 +154,14 @@ const rules = computed(() => {
         message: "两次密码输入不一致",
       },
     ],
-    captchaCode: [
+    email: [
+      {
+        required: true,
+        trigger: "blur",
+        message: "请输入邮箱",
+      },
+    ],
+    verify_code: [
       {
         required: true,
         trigger: "blur",
@@ -178,11 +172,39 @@ const rules = computed(() => {
 });
 
 // 获取验证码
-const codeLoading = ref(false);
-function getCaptcha() {
-  codeLoading.value = true;
-  codeLoading.value = false;
+const countdown = ref(0); // 倒计时秒数
+const timer = ref<number | null>(null); // 定时器
+const isDisabled = computed(() => {
+  return countdown.value > 0 || !model.value.email;
+});
+
+function startCountdown() {
+  countdown.value = 60;
+  timer.value = window.setInterval(() => {
+    countdown.value--;
+    if (countdown.value <= 0 && timer.value) {
+      clearInterval(timer.value);
+      timer.value = null;
+    }
+  }, 1000);
 }
+
+function sendCaptchaCode() {
+  AuthAPI.sendEmailVerifyCodeApi({
+    email: model.value.email,
+    type: "register",
+  }).then(() => {
+    ElMessage.success("验证码已发送到您的邮箱，请注意查收");
+    startCountdown();
+  });
+}
+
+// 组件卸载时清除定时器
+onUnmounted(() => {
+  if (timer.value) {
+    clearInterval(timer.value);
+  }
+});
 
 // 检查输入大小写
 function checkCapsLock(event: KeyboardEvent) {

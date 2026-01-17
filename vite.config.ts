@@ -49,11 +49,16 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: true,
       proxy: {
         // 代理 /dev-api 的请求
-        [baseApi]: {
+        [env.VITE_APP_BASE_API]: {
           changeOrigin: true,
           // 代理目标地址：https://api.youlai.tech
-          target: apiUrl,
-          rewrite: (path) => path.replace(new RegExp("^" + baseApi), ""),
+          target: env.VITE_APP_API_URL,
+          rewrite: (path) => path.replace("", ""),
+          bypass(req, res, options) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log("proxyURL", proxyURL);
+            res.setHeader("x-req-proxyURL", proxyURL); // 设置响应头可以看到
+          },
         },
       },
     },

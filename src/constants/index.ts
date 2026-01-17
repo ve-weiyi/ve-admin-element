@@ -16,7 +16,7 @@ export const APP_PREFIX = "vea";
  * @description
  * 拥有系统最高权限，可以访问所有资源
  */
-export const ROLE_ROOT = "ROOT";
+export const ROLE_ROOT = "root";
 
 /**
  * 存储键名常量

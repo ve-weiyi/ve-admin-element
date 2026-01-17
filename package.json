@@ -1,11 +1,27 @@
 {
-  "name": "vue3-element-template",
+  "name": "ve-admin-element",
   "version": "4.0.0",
+  "description": "个人博客管理系统",
+  "keywords": [
+    "个人博客",
+    "管理系统",
+    "前端",
+    "全栈",
+    "vue3",
+    "vite",
+    "typescript",
+    "element-plus"
+  ],
+  "repository": "https://github.com/ve-weiyi/ve-admin-element.git",
+  "author": "791422171@qq.com",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev": "vite --mode development --host",
+    "prod": "vite --mode production --host",
+    "build": "vue-tsc --noEmit && vite --mode production build",
+    "build:dev": "vue-tsc --noEmit && vite --mode development build",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
@@ -45,6 +61,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@stomp/stompjs": "^7.2.1",
     "@vueuse/core": "^12.8.2",
     "@wangeditor-next/editor": "^5.6.34",
     "@wangeditor-next/editor-for-vue": "^5.1.14",
@@ -52,10 +69,14 @@
     "axios": "^1.8.2",
     "codemirror": "^5.65.20",
     "codemirror-editor-vue3": "^2.8.0",
+    "crypto-js": "^4.2.0",
     "default-passive-events": "^2.0.0",
     "echarts": "^5.6.0",
     "element-plus": "^2.9.6",
+    "exceljs": "^4.4.0",
+    "image-conversion": "^2.1.1",
     "lodash-es": "^4.17.21",
+    "md-editor-v3": "^6.3.1",
     "nprogress": "^0.2.0",
     "path-browserify": "^1.0.1",
     "path-to-regexp": "^8.2.0",
@@ -63,6 +84,7 @@
     "qs": "^6.14.0",
     "sortablejs": "^1.15.6",
     "vue": "^3.5.13",
+    "vue-cropper": "^0.6.5",
     "vue-draggable-plus": "^0.6.0",
     "vue-router": "^4.5.0"
   },
@@ -116,8 +138,5 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "repository": "https://gitee.com/youlaiorg/vue3-element-admin.git",
-  "author": "有来开源组织",
-  "license": "MIT"
+  }
 }

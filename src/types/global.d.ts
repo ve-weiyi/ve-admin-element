@@ -7,6 +7,14 @@ declare global {
   type TagView = import("@/types/ui").TagView;
   type AppSettings = import("@/types/ui").AppSettings;
 
+  interface IApiResponse<T = any> {
+    flag: number;
+    code: number;
+    data: T;
+    msg: string;
+    trace_id: string;
+  }
+
   const __APP_INFO__: {
     pkg: {
       name: string;

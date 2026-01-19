@@ -1,58 +1,80 @@
-@forward "element-plus/theme-chalk/src/common/var.scss" with (
-  $colors: (
-    "primary": (
-      "base": #4080ff,
-    ),
-    "success": (
-      "base": #23c343,
-    ),
-    "warning": (
-      "base": #ff9a2e,
-    ),
-    "danger": (
-      "base": #f76560,
-    ),
-    "info": (
-      "base": #a9aeb8,
-    ),
-  ),
+/**
+ * 项目主题变量
+ * 
+ * 结构：
+ * 1. SCSS 变量 - 布局尺寸（供 JS 导出和组件使用）
+ * 2. CSS 变量 - 侧边栏/菜单主题色
+ * 3. 主题模式 - 深蓝侧边栏、暗黑模式
+ * 4. 无障碍模式 - 色弱模式
+ */
 
-  $bg-color: (
-    "page": #f5f8fd,
-  )
-);
+// ============================================
+// 1. SCSS 变量 - 布局尺寸
+// ============================================
 
-/** 全局SCSS变量 */
+$sidebar-width: 210px;
+$sidebar-width-collapsed: 54px;
+$navbar-height: 50px;
+$tags-view-height: 34px;
+
+// ============================================
+// 2. CSS 变量 - 默认主题（浅色 + 白色侧边栏）
+// ============================================
 
 :root {
+  // 菜单
+  --menu-background: #fff;
+  --menu-text: #212121;
+  --menu-active-text: var(--el-menu-active-color);
+  --menu-hover: #e6f4ff;
+
+  // 侧边栏 Logo
+  --sidebar-logo-background: #f5f5f5;
+  --sidebar-logo-text-color: #333;
+}
+
+// SCSS 变量映射（供组件使用）
+$menu-background: var(--menu-background);
+$menu-text: var(--menu-text);
+$menu-active-text: var(--menu-active-text);
+$menu-hover: var(--menu-hover);
+$sidebar-logo-background: var(--sidebar-logo-background);
+$sidebar-logo-text-color: var(--sidebar-logo-text-color);
+
+// ============================================
+// 3. 主题模式
+// ============================================
+
+// 浅色主题 - 深蓝色侧边栏
+html.sidebar-color-blue {
   --menu-background: #304156;
   --menu-text: #bfcbd9;
   --menu-active-text: var(--el-menu-active-color);
   --menu-hover: #263445;
   --sidebar-logo-background: #2d3748;
-
-  // 修复表格 fixed 列被选中后由于透明色导致叠字的 bug
-  .el-table {
-    --el-table-current-row-bg-color: rgb(235 243 250);
-  }
+  --sidebar-logo-text-color: #fff;
 }
 
-/** 暗黑主题 */
+// 暗黑主题
 html.dark {
   --menu-background: var(--el-bg-color-overlay);
   --menu-text: #fff;
   --menu-active-text: var(--el-menu-active-color);
   --menu-hover: rgb(0 0 0 / 20%);
   --sidebar-logo-background: rgb(0 0 0 / 20%);
+  --sidebar-logo-text-color: #fff;
+
+  // Element Plus 表格选中行背景色
+  .el-table {
+    --el-table-current-row-bg-color: var(--el-fill-color-light);
+  }
 }
 
-$menu-background: var(--menu-background); // 菜单背景色
-$menu-text: var(--menu-text); // 菜单文字颜色
-$menu-active-text: var(--menu-active-text); // 菜单激活文字颜色
-$menu-hover: var(--menu-hover); // 菜单悬停背景色
-$sidebar-logo-background: var(--sidebar-logo-background); // 侧边栏 Logo 背景色
+// ============================================
+// 4. 无障碍模式
+// ============================================
 
-$sidebar-width: 210px; // 侧边栏宽度
-$sidebar-width-collapsed: 54px; // 侧边栏收缩宽度
-$navbar-height: 50px; // 导航栏高度
-$tags-view-height: 34px; // TagsView 高度
+// 色弱模式
+html.color-weak {
+  filter: invert(80%);
+}

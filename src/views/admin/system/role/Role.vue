@@ -21,9 +21,8 @@
       @filter-change="handleFilterChange"
     >
       <template #status="scope">
-        <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
-          {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
-        </el-tag>
+        <el-tag v-if="scope.row.status === RoleStatusEnum.NORMAL" type="success">正常</el-tag>
+        <el-tag v-if="scope.row.status === RoleStatusEnum.DISABLED" type="danger">禁用</el-tag>
       </template>
     </page-content>
 
@@ -58,6 +57,7 @@
             <Tree
               ref="menuTree"
               :tree-data="menuList"
+              :tree-props="{ children: 'children', label: 'title' }"
               :default-check-ids="roleResources.menu_ids"
               @on-node-check="onMenusChange"
             >
@@ -72,6 +72,7 @@
             <Tree
               ref="apiTree"
               :tree-data="apiList"
+              :tree-props="{ children: 'children', label: 'name' }"
               :default-check-ids="roleResources.api_ids"
               @on-node-check="onApiChange"
             >
@@ -93,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperateData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -107,6 +108,7 @@ import { RoleAPI } from "@/api/role";
 import { ApiAPI } from "@/api/api";
 import { MenuAPI } from "@/api/menu";
 import type { ApiBackVO, MenuBackVO, RoleBackVO, RoleResourcesResp } from "@/api/types";
+import { RoleStatusEnum } from "@/enums/blog";
 
 const {
   searchRef,
@@ -170,7 +172,6 @@ const openDrawer = (v: any) => {
     });
   }
 
-  console.log("row", v);
   formData.value = v as RoleBackVO;
   RoleAPI.findRoleResourcesApi({
     id: v.id,
@@ -210,7 +211,6 @@ function updateMenus() {
     : "[]";
 
   const isEqual = v1 === v2;
-  console.log("check", v1, isEqual, v1 != "[]" && !isEqual);
 
   if (!isEqual) {
     RoleAPI.updateRoleMenusApi({
@@ -231,7 +231,6 @@ function updateApis() {
     : "[]";
 
   const isEqual = v1 === v2;
-  console.log("check", v1, v2, isEqual, v1 != "[]" && !isEqual);
 
   if (!isEqual) {
     RoleAPI.updateRoleApisApi({

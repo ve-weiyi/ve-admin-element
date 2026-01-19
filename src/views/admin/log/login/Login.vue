@@ -38,9 +38,9 @@
         <el-tag v-else type="primary">{{ scope.row.login_type }}</el-tag>
       </template>
       <template #app_name="scope">
-        <el-tag v-if="scope.row.app_name === 'admin-web'" type="success">admin</el-tag>
-        <el-tag v-else-if="scope.row.app_name === 'blog-web'" type="danger">blog</el-tag>
-        <el-tag v-else type="primary">{{ scope.row.app_name }}</el-tag>
+        <el-tag v-if="scope.row.app_name === 'admin-web'" type="primary">admin</el-tag>
+        <el-tag v-else-if="scope.row.app_name === 'blog-web'" type="success">blog</el-tag>
+        <el-tag v-else type="danger">{{ scope.row.app_name }}</el-tag>
       </template>
     </page-content>
   </div>
@@ -55,7 +55,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import ClientInfo from "@/components/ClientInfo/index.vue";
-import { LoginTypeEnum } from "@/enums/blog/index";
+import { LoginTypeEnum } from "@/enums/blog";
 
 const {
   searchRef,

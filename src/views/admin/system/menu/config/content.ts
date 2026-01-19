@@ -60,7 +60,7 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       },
     },
     {
-      name: "addMenu",
+      name: "addCatalog",
       text: "新增目录",
       perm: "add",
       attrs: {
@@ -138,15 +138,15 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       align: "center",
     },
     {
-      label: "是否隐藏",
-      prop: "is_hidden",
+      label: "状态",
+      prop: "visible",
       width: 100,
       align: "center",
       templet: "custom",
     },
     {
-      label: "是否禁用",
-      prop: "is_disable",
+      label: "状态",
+      prop: "status",
       width: 100,
       align: "center",
       templet: "custom",
@@ -161,6 +161,16 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       dateFormat: "YYYY/MM/DD HH:mm:ss",
     },
     {
+      label: "更新时间",
+      prop: "updated_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+      show: false,
+    },
+    {
       label: "操作栏",
       align: "center",
       fixed: "right",
@@ -168,9 +178,9 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       templet: "tool",
       operat: [
         {
-          name: "addSubMenu",
-          text: "添加",
-          perm: "menu:addSubMenu",
+          name: "addMenu",
+          text: "新增菜单",
+          perm: "addMenu",
           attrs: {
             icon: "plus",
             type: "success",
@@ -179,7 +189,7 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
         {
           name: "editMenu",
           text: "编辑",
-          perm: "menu:editMenu",
+          perm: "editMenu",
           attrs: {
             icon: "edit",
             type: "primary",

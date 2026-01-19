@@ -5,8 +5,8 @@
 <script setup lang="ts">
 import { useResizeObserver } from "@vueuse/core";
 import * as echarts from "echarts";
-import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 import type { PropType } from "vue";
+import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 
 const chartDom = ref<HTMLElement>();
 const myChart = ref<echarts.EChartsType>();
@@ -147,23 +147,11 @@ function newOptions() {
   return option;
 }
 
-// watch(
-//   () => props.values,
-//   newValues => {
-//     console.log("newValues", newValues);
-//     myChart.value?.setOption(newOptions());
-//   },
-//   {
-//     deep: true
-//   }
-// );
-
 // watchEffect 会自动追踪依赖并在其变化时执行回调函数。
 watchEffect(() => {
   if (!myChart.value) {
     return;
   }
-  console.log("option.value", newOptions());
   myChart.value?.setOption(newOptions());
 });
 

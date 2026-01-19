@@ -46,7 +46,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 代理 /dev-api 的请求
         [env.VITE_APP_BASE_API]: {
           changeOrigin: true,
-          // 代理目标地址：https://api.youlai.tech
           target: env.VITE_APP_API_URL,
           rewrite: (path) => path.replace("", ""),
           bypass(req, res, options) {
@@ -59,9 +58,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      ...(env.VITE_MOCK_DEV_SERVER === "true" ? [mockDevServerPlugin()] : []),
+      env.VITE_MOCK_DEV_SERVER === "true"
+        ? mockDevServerPlugin({ include: ["mock/**/*.ts"] })
+        : null,
       UnoCSS(),
-      // API 自动导入
+      // 自动导入配置 https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
       AutoImport({
         imports: ["vue", "@vueuse/core", "pinia", "vue-router"],
         resolvers: [ElementPlusResolver()],
@@ -72,8 +73,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
         vueTemplate: true,
         // 导入函数类型声明文件路径 (false:关闭自动生成)
-        // dts: false,
-        dts: "src/types/auto-imports.d.ts",
+        dts: false,
+        // dts: "src/types/auto-imports.d.ts",
       }),
       Components({
         resolvers: [
@@ -96,11 +97,25 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "pinia",
         "axios",
         "@vueuse/core",
+        "@element-plus/icons-vue",
+        "codemirror-editor-vue3",
+        "default-passive-events",
+        "nprogress",
+        "qs",
         "path-to-regexp",
         "echarts",
-        "@wangeditor/editor",
-        "@wangeditor/editor-for-vue",
+        "echarts/core",
+        "echarts/charts",
+        "echarts/components",
+        "echarts/renderers",
         "path-browserify",
+        "@wangeditor-next/editor-for-vue",
+        "vue-draggable-plus",
+        "element-plus/es",
+        "element-plus/es/locale/lang/en",
+        "element-plus/es/locale/lang/zh-cn",
+        "element-plus/es/components/base/style/css",
+        "element-plus/es/components/message/style/css",
         "element-plus/es/components/form/style/css",
         "element-plus/es/components/form-item/style/css",
         "element-plus/es/components/button/style/css",
@@ -131,6 +146,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "element-plus/es/components/breadcrumb/style/css",
         "element-plus/es/components/breadcrumb-item/style/css",
         "element-plus/es/components/table/style/css",
+        "element-plus/es/components/timeline/style/css",
+        "element-plus/es/components/timeline-item/style/css",
         "element-plus/es/components/tree-select/style/css",
         "element-plus/es/components/table-column/style/css",
         "element-plus/es/components/select/style/css",
@@ -187,7 +204,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
       },
       rollupOptions: {
-        treeshake: false, // 尝试禁用 treeshake
         output: {
           // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
           entryFileNames: "js/[name].[hash].js",

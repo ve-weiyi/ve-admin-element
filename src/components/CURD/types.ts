@@ -1,5 +1,14 @@
-import type { DialogProps, DrawerProps, FormItemRule, PaginationProps } from "element-plus";
-import type { FormProps, TableProps, ColProps, ButtonProps, CardProps } from "element-plus";
+import type {
+  ButtonProps,
+  CardProps,
+  ColProps,
+  DialogProps,
+  DrawerProps,
+  FormItemRule,
+  FormProps,
+  PaginationProps,
+  TableProps,
+} from "element-plus";
 import type PageContent from "./PageContent.vue";
 import type PageModal from "./PageModal.vue";
 import type PageSearch from "./PageSearch.vue";

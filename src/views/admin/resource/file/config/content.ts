@@ -15,6 +15,10 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
     pageSize: 20,
     pageSizes: [10, 20, 30, 50],
   },
+  request: {
+    pageName: "page",
+    limitName: "limit",
+  },
   parseData: (res) => {
     return {
       total: res.data.total,
@@ -23,8 +27,8 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
   },
   indexAction: function (query) {
     return UploadAPI.listUploadFileApi({
-      limit: 20,
-      file_path: query.file_path,
+      limit: query.limit,
+      file_path: query.file_path || "",
     });
   },
   deleteAction: function (ids: string) {

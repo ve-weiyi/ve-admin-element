@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from "vue-router";
 
-const Layout = () => import("@/layout/index.vue");
+const Layout = () => import("@/layouts/index.vue");
 
 export default {
   path: "/message",

@@ -88,6 +88,7 @@
                       </el-icon>
                       <template #dropdown>
                         <el-dropdown-menu>
+                          <el-dropdown-item command="preview" icon="View">预览</el-dropdown-item>
                           <el-dropdown-item command="edit" icon="Edit">编辑</el-dropdown-item>
                           <el-dropdown-item command="delete" icon="Delete">删除</el-dropdown-item>
                         </el-dropdown-menu>
@@ -145,7 +146,7 @@
       </template>
     </el-dialog>
     <!-- 上传对话框 -->
-    <el-dialog v-model="upload" title="上传照片" width="60%" append-to-body>
+    <el-dialog v-model="upload" title="上传照片" width="50%" append-to-body>
       <multi-image-upload
         v-model:file-list="uploadList"
         list-type="picture-card"
@@ -170,11 +171,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { ElMessage, ElMessageBox, type FormInstance } from "element-plus";
 import type { UploadUserFile } from "element-plus";
+import { ElMessage, ElMessageBox, type FormInstance } from "element-plus";
 import { AlbumAPI } from "@/api/album";
 import { PhotoAPI } from "@/api/photo";
-import type { AlbumBackVO, PhotoBackVO, NewPhotoReq, QueryPhotoReq } from "@/api/types";
+import type { AlbumBackVO, NewPhotoReq, PhotoBackVO, QueryPhotoReq } from "@/api/types";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import MultiImageUpload from "@/components/Upload/MultiImageUpload.vue";
@@ -297,10 +298,19 @@ const handleDelete = async () => {
 };
 
 const handleCommand = (command: string, photo: PhotoBackVO) => {
-  if (command === "edit") {
+  if (command === "preview") {
+    handlePreview(photo);
+  } else if (command === "edit") {
     handleEdit(photo);
   } else if (command === "delete") {
     handleSingleDelete(photo);
+  }
+};
+
+const handlePreview = (photo: PhotoBackVO) => {
+  const img = document.querySelector(`img[src="${photo.photo_src}"]`) as HTMLImageElement;
+  if (img) {
+    img.click();
   }
 };
 
@@ -401,48 +411,55 @@ onMounted(() => {
   margin-top: 0.4rem;
 }
 
-.photo-item {
+.photo-cover {
   position: relative;
   width: 100%;
-  cursor: pointer;
-
-  margin-bottom: 1rem;
-
-  .photo-operation {
-    position: absolute;
-    top: 0.3rem;
-    right: 0.5rem;
-    z-index: 9;
-  }
-
-  .photo-cover {
-    width: 100%;
-    height: 7rem;
-    border-radius: 4px;
-  }
-
-  .photo-name {
-    font-size: 14px;
-    margin-top: 0.3rem;
-    text-align: center;
-  }
+  height: 8rem;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-.dialog-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.photo-cover::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: rgb(0 0 0 / 10%);
+}
+
+.photo-name {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.photo-item {
+  position: relative;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.photo-operation {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.8rem;
+  z-index: 1000;
 }
 
 .picture-list {
   :deep(.el-checkbox) {
     display: inline-block !important;
+    width: 100%;
   }
 
   :deep(.el-checkbox__input) {
     position: absolute !important;
     top: 0.3rem;
     left: 0.8rem;
+  }
+
+  :deep(.el-checkbox__label) {
+    width: 100%;
+    padding: 0;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 import type { ISearchConfig } from "@/components/CURD/types";
-import { ArticleTypeEnum } from "@/enums/blog/index";
+import { ArticleTypeEnum } from "@/enums/blog";
 
 const searchConfig: ISearchConfig = {
   permPrefix: "sys:user",

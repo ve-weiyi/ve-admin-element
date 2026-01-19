@@ -13,10 +13,9 @@ import pluginPrettier from "eslint-plugin-prettier"; // 运行 Prettier 规则
 
 // 解析自动导入配置
 import fs from "fs";
-
 const autoImportConfig = JSON.parse(fs.readFileSync(".eslintrc-auto-import.json", "utf-8"));
 
-/** @type {import("eslint").Linter.Config[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
   // 指定检查文件和忽略文件
   {
@@ -35,10 +34,10 @@ export default [
           PageResult: "readonly",
           OptionType: "readonly",
           ResponseData: "readonly",
-          IApiResponse: "readonly",
           ExcelResult: "readonly",
           TagView: "readonly",
           AppSettings: "readonly",
+          IApiResponse: "readonly",
           __APP_INFO__: "readonly",
         },
       },

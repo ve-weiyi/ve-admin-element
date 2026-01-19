@@ -21,42 +21,34 @@
       @filter-change="handleFilterChange"
     >
       <template #user_info="scope">
-        <UserInfo :user="scope.row[scope.prop]" />
+        <UserInfo :user="scope.row.user_info" />
       </template>
       <template #client_info="scope">
-        <ClientInfo :client="scope.row[scope.prop]" />
+        <ClientInfo :client="scope.row.client_info" />
       </template>
       <template #reply_user_info="scope">
-        <div v-if="scope.row[scope.prop]" style="display: flex; align-items: center; gap: 8px">
+        <div v-if="scope.row.reply_user_info" style="display: flex; align-items: center; gap: 8px">
           <el-image
-            :src="scope.row[scope.prop].avatar"
+            :src="scope.row.reply_user_info.avatar"
             :preview-teleported="true"
             :style="`width: ${scope.imageWidth ?? 40}px; height: ${scope.imageHeight ?? 40}px`"
           />
-          <span style="line-height: 1">{{ scope.row[scope.prop].nickname }}</span>
+          <span style="line-height: 1">{{ scope.row.reply_user_info.nickname }}</span>
         </div>
       </template>
       <template #status="scope">
-        <el-tag v-if="scope.row[scope.prop] === CommentStatusEnum.NORMAL" type="success">
-          正常
-        </el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === CommentStatusEnum.EDITED" type="primary">
+        <el-tag v-if="scope.row.status === CommentStatusEnum.NORMAL" type="success">正常</el-tag>
+        <el-tag v-else-if="scope.row.status === CommentStatusEnum.EDITED" type="primary">
           已编辑
         </el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === CommentStatusEnum.DELETED" type="danger">
+        <el-tag v-else-if="scope.row.status === CommentStatusEnum.DELETED" type="danger">
           已删除
         </el-tag>
       </template>
       <template #type="scope">
-        <el-tag v-if="scope.row[scope.prop] === CommentTypeEnum.ARTICLE" type="success">
-          文章
-        </el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === CommentTypeEnum.FRIEND" type="warning">
-          友链
-        </el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === CommentTypeEnum.TALK" type="danger">
-          说说
-        </el-tag>
+        <el-tag v-if="scope.row.type === CommentTypeEnum.ARTICLE" type="success">文章</el-tag>
+        <el-tag v-else-if="scope.row.type === CommentTypeEnum.FRIEND" type="warning">友链</el-tag>
+        <el-tag v-else-if="scope.row.type === CommentTypeEnum.TALK" type="danger">说说</el-tag>
         <el-tag v-else type="info">其他</el-tag>
       </template>
     </page-content>

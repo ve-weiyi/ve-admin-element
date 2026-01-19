@@ -10,8 +10,15 @@
       <div class="status-menu">
         <span>状态</span>
         <span :class="isActive(0)" @click="changeStatus(0)">全部</span>
-        <span :class="isActive(1)" @click="changeStatus(1)">公开</span>
-        <span :class="isActive(2)" @click="changeStatus(2)">私密</span>
+        <span :class="isActive(TalkStatusEnum.PUBLIC)" @click="changeStatus(TalkStatusEnum.PUBLIC)">
+          公开
+        </span>
+        <span
+          :class="isActive(TalkStatusEnum.PRIVATE)"
+          @click="changeStatus(TalkStatusEnum.PRIVATE)"
+        >
+          私密
+        </span>
       </div>
       <el-empty v-if="tableData == null" description="暂无说说" />
       <!-- 说说列表 -->
@@ -39,14 +46,14 @@
             </div>
             <!-- 发表时间 -->
             <div class="time">
-              {{ formatDateTime(item.created_at) }}
-              <span v-if="item.is_top === 1" class="top">
+              {{ useDateFormat(item.created_at) }}
+              <span v-if="item.is_top === TalkTopEnum.YES" class="top">
                 <el-icon style="color: #ff7242">
                   <Promotion />
                 </el-icon>
                 置顶
               </span>
-              <span v-if="item.status === 2" class="secret">
+              <span v-if="item.status === TalkStatusEnum.PRIVATE" class="secret">
                 <el-icon style="color: #ff9900">
                   <Lock />
                 </el-icon>
@@ -65,7 +72,13 @@
         </div>
       </div>
       <!-- 分页 -->
-      <VeTablePagination v-if="pageData.total > 0" v-model="pageData" @pagination="refreshList" />
+      <pagination
+        v-if="pageData.total > 0"
+        v-model:total="pageData.total"
+        v-model:page="pageData.currentPage"
+        v-model:limit="pageData.pageSize"
+        @pagination="refreshList"
+      />
       <!-- 添加或修改对话框 -->
       <el-dialog v-model="addModalVisible" width="60%">
         <div class="table-title">{{ title }}</div>
@@ -155,16 +168,15 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, toRefs } from "vue";
-import VeTablePagination from "@/components/VeTable/TablePagination.vue";
 import { TalkAPI } from "@/api/talk";
-import type { QueryTalkReq, TalkBackVO, NewTalkReq } from "@/api/types";
+import type { NewTalkReq, QueryTalkReq, TalkBackVO } from "@/api/types";
 import { useRoute, useRouter } from "vue-router";
 import "@/styles/table.scss";
-import { formatDateTime } from "@/utils/date";
+import { useDateFormat } from "@vueuse/core";
 import { ElMessage } from "element-plus";
 import Editor from "@/components/Editor/index.vue";
 import EmojiList from "@/assets/emojis/qq_emoji.json";
-import { TalkStatusEnum, TalkTopEnum } from "@/enums/blog/index";
+import { TalkStatusEnum, TalkTopEnum } from "@/enums/blog";
 
 const route = useRoute();
 const router = useRouter();
@@ -250,8 +262,8 @@ const title = computed(() => {
 // const route = useRoute();
 const emojiList = reactive<any>(EmojiList);
 const statusList = [
-  { status: 1, desc: "公开" },
-  { status: 2, desc: "私密" },
+  { status: TalkStatusEnum.PUBLIC, desc: "公开" },
+  { status: TalkStatusEnum.PRIVATE, desc: "私密" },
 ];
 const uploadList = ref([]);
 const showUpload = ref(false);
@@ -265,7 +277,6 @@ const editorRef = ref(null);
 function addEmoji(key, value) {
   const emojiTag = `<img src="${value}" width="24" height="24" alt="${key}" style="margin: 0 1px;display: inline;vertical-align: text-bottom"/>`;
   editorRef.value.addText(emojiTag);
-  console.log("talk.content", talk.content);
 }
 
 function saveOrUpdateTalk() {

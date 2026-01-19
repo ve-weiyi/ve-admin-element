@@ -35,15 +35,14 @@
         <el-tag v-if="scope.row.type === MenuTypeEnum.CATALOG" type="warning">目录</el-tag>
         <el-tag v-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
         <el-tag v-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">按钮</el-tag>
-        <el-tag v-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
       </template>
-      <template #is_disable="scope">
-        <el-tag v-if="scope.row.is_disable === 0" type="success">正常</el-tag>
-        <el-tag v-if="scope.row.is_disable === 1" type="danger">禁用</el-tag>
+      <template #visible="scope">
+        <el-tag v-if="scope.row.visible === MenuVisibleEnum.VISIBLE" type="success">显示</el-tag>
+        <el-tag v-if="scope.row.visible === MenuVisibleEnum.HIDDEN" type="danger">隐藏</el-tag>
       </template>
-      <template #is_hidden="scope">
-        <el-tag v-if="scope.row.is_hidden === 0" type="success">显示</el-tag>
-        <el-tag v-if="scope.row.is_hidden === 1" type="danger">隐藏</el-tag>
+      <template #status="scope">
+        <el-tag v-if="scope.row.status === ApiStatusEnum.NORMAL" type="success">正常</el-tag>
+        <el-tag v-if="scope.row.status === ApiStatusEnum.DISABLED" type="danger">禁用</el-tag>
       </template>
     </page-content>
 
@@ -71,7 +70,7 @@ import PageContent from "@/components/CURD/PageContent.vue";
 import MenuForm from "./form.vue";
 import type { NewMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
-import { MenuTypeEnum, SwitchStatusEnum } from "@/enums/blog";
+import { ApiStatusEnum, MenuStatusEnum, MenuTypeEnum, MenuVisibleEnum } from "@/enums/blog";
 import { usePermissionStore } from "@/store";
 
 const {
@@ -154,34 +153,6 @@ function parseComponentPath(componentStr?: string): string {
 }
 
 /**
- * 获取菜单类型
- */
-function getMenuType(route: RouteRecordRaw): string {
-  // 优先使用 meta 中明确定义的类型
-  if (route.meta?.type) {
-    return route.meta.type as string;
-  }
-
-  // 外链判断
-  if (route.path?.startsWith("http")) {
-    return MenuTypeEnum.EXTLINK;
-  }
-
-  // 无组件且有子路由 = 目录
-  if (!route.component && route.children?.length) {
-    return MenuTypeEnum.CATALOG;
-  }
-
-  // 有组件 = 菜单
-  if (route.component) {
-    return MenuTypeEnum.MENU;
-  }
-
-  // 默认为菜单
-  return MenuTypeEnum.MENU;
-}
-
-/**
  * 转换单个路由为菜单项
  */
 function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0): NewMenuReq {
@@ -191,16 +162,16 @@ function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0):
     name: route.name?.toString() || "",
     component: parseComponentPath(route.component?.toString()),
     redirect: route.redirect?.toString() || "",
-    type: getMenuType(route),
+    type: route.children?.length ? MenuTypeEnum.CATALOG : MenuTypeEnum.MENU,
     title: route.meta?.title || "",
     icon: route.meta?.icon || "",
     rank: index + 1,
     perm: (route.meta?.perm as string) || "",
     params: Array.isArray(route.meta?.params) ? route.meta.params : [],
-    keep_alive: route.meta?.keepAlive ? SwitchStatusEnum.ENABLED : SwitchStatusEnum.DISABLED,
-    always_show: route.meta?.alwaysShow ? SwitchStatusEnum.ENABLED : SwitchStatusEnum.DISABLED,
-    is_hidden: route.meta?.hidden ? SwitchStatusEnum.ENABLED : SwitchStatusEnum.DISABLED,
-    is_disable: SwitchStatusEnum.DISABLED,
+    keep_alive: route.meta?.keepAlive ? MenuStatusEnum.DISABLED : MenuStatusEnum.NORMAL,
+    always_show: route.meta?.alwaysShow ? MenuStatusEnum.DISABLED : MenuStatusEnum.NORMAL,
+    visible: route.meta?.hidden ? MenuVisibleEnum.HIDDEN : MenuVisibleEnum.VISIBLE,
+    status: ApiStatusEnum.NORMAL,
     children: route.children ? convertMenu(route.children) : [],
   };
 }
@@ -224,9 +195,10 @@ function refreshList() {
 
 // 其他工具栏
 function handleToolbarClick(name: string) {
+  console.log(name);
   switch (name) {
-    case "addMenu":
-      title.value = "新增菜单";
+    case "addCatalog":
+      title.value = "新增目录";
       menuFormData.value = {
         id: 0,
         parent_id: 0,
@@ -236,8 +208,8 @@ function handleToolbarClick(name: string) {
         redirect: "",
         children: [],
         type: MenuTypeEnum.CATALOG,
-        is_hidden: 0,
-        is_disable: 0,
+        visible: MenuVisibleEnum.VISIBLE,
+        status: ApiStatusEnum.NORMAL,
         always_show: 1,
         rank: 1,
       };
@@ -269,8 +241,8 @@ function handleToolbarClick(name: string) {
 // 其他操作列
 function handleOperateClick(data: IOperateData) {
   switch (data.name) {
-    case "addSubMenu":
-      title.value = "新增子菜单";
+    case "addMenu":
+      title.value = "新增菜单";
       menuFormData.value = {
         id: 0,
         parent_id: data.row.id,
@@ -279,9 +251,9 @@ function handleOperateClick(data: IOperateData) {
         component: "",
         redirect: "",
         children: [],
-        type: MenuTypeEnum.CATALOG,
-        is_hidden: 0,
-        is_disable: 0,
+        type: MenuTypeEnum.MENU,
+        visible: MenuVisibleEnum.VISIBLE,
+        status: ApiStatusEnum.NORMAL,
         always_show: 1,
         rank: 1,
       };

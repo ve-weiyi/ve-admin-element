@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <h3 text-center m-0 mb-20px>登录</h3>
-    <el-form ref="loginFormRef" :model="loginFormData" :rules="loginRules" size="large">
-      <!-- 用户名 -->
-      <el-form-item prop="username">
-        <el-input v-model.trim="loginFormData.username" placeholder="用户名">
+  <div class="auth-panel-form">
+    <h3 class="auth-panel-form__title" text-center>登 录</h3>
+    <el-form
+      ref="loginFormRef"
+      :model="loginFormData"
+      :rules="loginRules"
+      size="large"
+      :validate-on-rule-change="false"
+    >
+      <!-- 邮箱 -->
+      <el-form-item prop="email">
+        <el-input v-model.trim="loginFormData.email" placeholder="邮箱">
           <template #prefix>
             <el-dropdown>
               <div>
                 <el-icon>
-                  <User />
+                  <Message />
                 </el-icon>
               </div>
               <template #dropdown>
@@ -17,9 +23,9 @@
                   <el-dropdown-item
                     v-for="(item, index) in loginCredentials"
                     :key="index"
-                    @click="setLoginCredentials(item.username, item.password)"
+                    @click="setLoginCredentials(item.email, item.password)"
                   >
-                    {{ item.nickname }}: {{ item.username }}/{{ item.password }}
+                    {{ item.nickname }}: {{ item.email }}/{{ item.password }}
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -29,7 +35,7 @@
       </el-form-item>
 
       <!-- 密码 -->
-      <el-tooltip :visible="isCapsLock" content="大写锁定已开启" placement="right">
+      <el-tooltip :visible="isCapsLock" content="大写锁定已打开" placement="right">
         <el-form-item prop="password">
           <el-input
             v-model.trim="loginFormData.password"
@@ -40,40 +46,40 @@
             @keyup.enter="handleLoginSubmit"
           >
             <template #prefix>
-              <el-icon>
-                <Lock />
-              </el-icon>
+              <el-icon><Lock /></el-icon>
             </template>
           </el-input>
         </el-form-item>
       </el-tooltip>
 
       <!-- 验证码 -->
-      <el-form-item prop="captchaCode">
-        <div flex>
+      <el-form-item prop="captcha_code">
+        <div flex items-center gap-10px>
           <el-input
             v-model.trim="loginFormData.captcha_code"
             placeholder="验证码"
+            clearable
+            class="flex-1"
             @keyup.enter="handleLoginSubmit"
           >
             <template #prefix>
               <div class="i-svg:captcha" />
             </template>
           </el-input>
-          <div cursor-pointer h="[40px]" w="[120px]" flex-center ml-10px @click="getCaptcha">
-            <el-icon v-if="codeLoading" class="is-loading">
-              <Loading />
-            </el-icon>
-
+          <div cursor-pointer h-40px w-120px flex-center @click="getCaptcha">
+            <el-icon v-if="codeLoading" class="is-loading" size="20"><Loading /></el-icon>
             <img
-              v-else
-              object-cover
+              v-else-if="captchaBase64"
+              h-full
+              w-full
+              block
               border-rd-4px
-              p-1px
+              object-cover
               shadow="[0_0_0_1px_var(--el-border-color)_inset]"
               :src="captchaBase64"
-              alt="code"
+              alt="captcha_code"
             />
+            <el-text v-else type="info" size="small">点击获取验证码</el-text>
           </div>
         </div>
       </el-form-item>
@@ -81,91 +87,104 @@
       <div class="flex-x-between w-full">
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
         <el-link type="primary" underline="never" @click="toOtherForm('resetPwd')">
-          忘记密码
+          忘记密码？
         </el-link>
       </div>
 
       <!-- 登录按钮 -->
       <el-form-item>
         <el-button :loading="loading" type="primary" class="w-full" @click="handleLoginSubmit">
-          登录
+          登 录
         </el-button>
-      </el-form-item>
-
-      <!-- 登录方式切换 -->
-      <el-form-item>
-        <div class="w-full h-[20px] flex justify-between items-center">
-          <el-button
-            v-for="(item, index) in operates"
-            :key="index"
-            class="w-full mt-4!"
-            size="default"
-            @click="toOtherForm(item.key)"
-          >
-            {{ item.title }}
-          </el-button>
-        </div>
       </el-form-item>
     </el-form>
 
-    <!-- 第三方登录 -->
-    <el-form-item>
-      <el-divider>
-        <el-text size="small">其他登录方式</el-text>
-      </el-divider>
-      <div class="flex-center gap-x-5 w-full text-[var(--el-text-color-secondary)]">
-        <CommonWrapper>
-          <div text-20px class="i-svg:wechat" @click="onThirdPartyLogin('wechat')" />
-        </CommonWrapper>
-        <CommonWrapper>
-          <div text-20px cursor-pointer class="i-svg:qq" @click="onThirdPartyLogin('qq')" />
-        </CommonWrapper>
-        <CommonWrapper>
-          <div text-20px cursor-pointer class="i-svg:github" @click="onThirdPartyLogin('github')" />
-        </CommonWrapper>
-        <CommonWrapper>
-          <div text-20px cursor-pointer class="i-svg:gitee" @click="onThirdPartyLogin('gitee')" />
-        </CommonWrapper>
+    <!-- 登录方式切换 -->
+    <div flex-center gap-10px>
+      <div class="w-full h-[20px] flex justify-between items-center">
+        <el-button
+          v-for="(item, index) in operates"
+          :key="index"
+          class="w-full mt-4!"
+          size="default"
+          @click="toOtherForm(item.key)"
+        >
+          {{ item.title }}
+        </el-button>
       </div>
-    </el-form-item>
+    </div>
+
+    <!-- 第三方登录 -->
+    <div class="third-party-login">
+      <div class="divider-container">
+        <div class="divider-line"></div>
+        <span class="divider-text">其他</span>
+        <div class="divider-line"></div>
+      </div>
+      <div class="social-login">
+        <div class="social-login__item">
+          <div class="i-svg:wechat" @click="onThirdPartyLogin('wechat')" />
+        </div>
+        <div class="social-login__item">
+          <div class="i-svg:qq" @click="onThirdPartyLogin('qq')" />
+        </div>
+        <div class="social-login__item">
+          <div class="i-svg:github" @click="onThirdPartyLogin('github')" />
+        </div>
+        <div class="social-login__item">
+          <div class="i-svg:gitee" @click="onThirdPartyLogin('gitee')" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { FormInstance } from "element-plus";
-import { LocationQuery, RouteLocationRaw, useRoute } from "vue-router";
+import type { FormInstance, FormRules } from "element-plus";
+
 import router from "@/router";
 import { useUserStore } from "@/store";
-import CommonWrapper from "@/components/CommonWrapper/index.vue";
+import { AuthStorage } from "@/utils/auth";
+import { EmailLoginReq } from "@/api/types";
 import { AuthAPI } from "@/api/auth";
-import { LoginReq } from "@/api/types";
-import { ElMessage } from "element-plus";
+import { Message } from "@element-plus/icons-vue";
 
 const userStore = useUserStore();
 const route = useRoute();
 
-onMounted(() => getCaptcha());
-
 const loginFormRef = ref<FormInstance>();
-const loading = ref(false); // 按钮 loading 状态
-const isCapsLock = ref(false); // 是否大写锁定
-const captchaBase64 = ref(); // 验证码图片Base64字符串
-const rememberMe = ref(false); // 记住我
+const loading = ref(false);
+// 是否大写锁定
+const isCapsLock = ref(false);
+// 验证码图片 Base64
+const captchaBase64 = ref();
+// 记住我
+const rememberMe = ref(AuthStorage.getRememberMe());
 
-const loginFormData = ref<LoginReq>({
-  username: "root",
+watch(rememberMe, (val) => {
+  AuthStorage.setRememberMe(val);
+});
+
+const loginFormData = ref<EmailLoginReq>({
+  email: "root@qq.com",
   password: "123456",
   captcha_key: "",
   captcha_code: "",
-  // rememberMe: false,
 });
 
-const loginRules = computed(() => {
+onMounted(() => getCaptcha());
+
+const loginRules = computed<FormRules>(() => {
   return {
-    username: [
+    email: [
       {
         required: true,
         trigger: "blur",
-        message: "请输入用户名",
+        message: "请输入邮箱",
+      },
+      {
+        type: "email",
+        trigger: "blur",
+        message: "请输入正确的邮箱格式",
       },
     ],
     password: [
@@ -176,7 +195,7 @@ const loginRules = computed(() => {
       },
       {
         min: 6,
-        message: "密码长度不能小于6位",
+        message: "密码不能少于6位",
         trigger: "blur",
       },
     ],
@@ -206,57 +225,39 @@ function getCaptcha() {
     .finally(() => (codeLoading.value = false));
 }
 
-// 登录提交处理
+/**
+ * 登录提交
+ */
 async function handleLoginSubmit() {
   try {
     // 1. 表单验证
     const valid = await loginFormRef.value?.validate();
     if (!valid) return;
 
+    if (!loginFormData.value.captcha_key) {
+      getCaptcha();
+      ElMessage.warning("验证码已刷新，请重新输入");
+      return;
+    }
+
     loading.value = true;
 
     // 2. 执行登录
-    await userStore.login(loginFormData.value);
-
-    // 3. 获取用户信息
-    await userStore.getUserInfo();
-
-    // 4. 解析并跳转目标地址
-    const redirect = resolveRedirectTarget(route.query);
-    await router.push(redirect);
-
-    // TODO 5. 判断用户是否点击了记住我？采用明文保存或使用jsencrypt库？
+    try {
+      await userStore.emailLogin(loginFormData.value);
+      // 登录成功，跳转到目标页面
+      const redirectPath = (route.query.redirect as string) || "/";
+      await router.push(decodeURIComponent(redirectPath));
+    } catch (error: any) {
+      // 其他错误，刷新验证码
+      getCaptcha();
+      throw error;
+    }
   } catch (error) {
-    // 5. 统一错误处理
-    getCaptcha(); // 刷新验证码
-    console.error("登录失败:", error);
+    // 统一错误处理
+    ElMessage.error("登录失败。" + error);
   } finally {
     loading.value = false;
-  }
-}
-
-/**
- * 解析重定向目标
- * @param query 路由查询参数
- * @returns 标准化后的路由地址对象
- */
-function resolveRedirectTarget(query: LocationQuery): RouteLocationRaw {
-  // 默认跳转路径
-  const defaultPath = "/";
-
-  // 获取原始重定向路径
-  const rawRedirect = (query.redirect as string) || defaultPath;
-
-  try {
-    // 6. 使用Vue Router解析路径
-    const resolved = router.resolve(rawRedirect);
-    return {
-      path: resolved.path,
-      query: resolved.query,
-    };
-  } catch {
-    // 7. 异常处理：返回安全路径
-    return { path: defaultPath };
   }
 }
 
@@ -275,32 +276,31 @@ function toOtherForm(type: string) {
 }
 
 const operates = [
-  { key: "email_login", icon: "i-svg:email", title: "邮箱登录" },
-  { key: "phone_login", icon: "i-svg:phone", title: "手机登录" },
+  { key: "phone_login", icon: "i-svg:phone", title: "手机号登录" },
   { key: "register", icon: "i-svg:user-plus", title: "注册" },
 ];
 
 const loginCredentials = [
   {
-    username: "root",
+    email: "root@qq.com",
     password: "123456",
     nickname: "超级管理员",
   },
   {
-    username: "admin",
+    email: "admin@qq.com",
     password: "123456",
     nickname: "系统管理员",
   },
   {
-    username: "test",
+    email: "test@qq.com",
     password: "123456",
     nickname: "测试小游客",
   },
 ];
 
 // 设置登录凭证
-const setLoginCredentials = (username: string, password: string) => {
-  loginFormData.value.username = username;
+const setLoginCredentials = (email: string, password: string) => {
+  loginFormData.value.email = email;
   loginFormData.value.password = password;
 };
 
@@ -322,8 +322,66 @@ const onThirdPartyLogin = (platform: string) => {
       }
     })
     .catch((error) => {
-      console.error("第三方登录失败:", error);
-      ElMessage.error("第三方登录失败，请稍后重试");
+      ElMessage.error("第三方登录失败，请稍后重试。" + error);
     });
 };
 </script>
+
+<style lang="scss" scoped>
+.auth-panel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-panel-form__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.third-party-login {
+  .divider-container {
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--el-border-color-light), transparent);
+    }
+
+    .divider-text {
+      padding: 0 16px;
+      font-size: 12px;
+      color: var(--el-text-color-regular);
+      white-space: nowrap;
+    }
+  }
+
+  .social-login {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: var(--el-text-color-secondary);
+
+    &__item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: var(--el-fill-color);
+      }
+    }
+  }
+}
+</style>

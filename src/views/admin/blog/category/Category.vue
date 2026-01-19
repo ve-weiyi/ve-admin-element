@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperateData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";

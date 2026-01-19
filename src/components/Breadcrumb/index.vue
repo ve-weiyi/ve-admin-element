@@ -1,23 +1,21 @@
 <template>
   <el-breadcrumb class="flex-y-center">
-    <transition-group enter-active-class="animate__animated animate__fadeInRight">
-      <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
-        <span
-          v-if="item.redirect === 'noredirect' || index === breadcrumbs.length - 1"
-          class="color-gray-400"
-        >
-          {{ item.meta.title }}
-        </span>
-        <a v-else @click.prevent="handleLink(item)">
-          {{ item.meta.title }}
-        </a>
-      </el-breadcrumb-item>
-    </transition-group>
+    <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
+      <span
+        v-if="item.redirect === 'noredirect' || index === breadcrumbs.length - 1"
+        class="color-gray-400"
+      >
+        {{ item.meta.title ?? "" }}
+      </span>
+      <a v-else @click.prevent="handleLink(item)">
+        {{ item.meta.title ?? "" }}
+      </a>
+    </el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationMatched } from "vue-router";
+import { RouteLocationMatched } from "vue-router";
 import { compile } from "path-to-regexp";
 import router from "@/router";
 

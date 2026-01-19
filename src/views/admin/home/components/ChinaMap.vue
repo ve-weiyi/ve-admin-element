@@ -4,10 +4,10 @@
 
 <script setup lang="ts">
 import { useResizeObserver } from "@vueuse/core";
-import * as echarts from "echarts";
 import type { EChartsOption } from "echarts";
-import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
+import * as echarts from "echarts";
 import type { PropType } from "vue";
+import { markRaw, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 import chinaJson from "@/assets/china.json";
 
 const chartDom = ref<HTMLElement>();

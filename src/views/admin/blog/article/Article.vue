@@ -32,21 +32,23 @@
         </div>
       </template>
       <template #article_type="scope">
-        <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.ORIGINAL" type="success">
+        <el-tag v-if="scope.row.article_type === ArticleTypeEnum.ORIGINAL" type="success">
           原创
         </el-tag>
-        <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.REPRINT" type="warning">
+        <el-tag v-if="scope.row.article_type === ArticleTypeEnum.REPRINT" type="warning">
           转载
         </el-tag>
-        <el-tag v-if="scope.row[scope.prop] === ArticleTypeEnum.TRANSLATE" type="info">翻译</el-tag>
+        <el-tag v-if="scope.row.article_type === ArticleTypeEnum.TRANSLATE" type="info">
+          翻译
+        </el-tag>
       </template>
       <template #category_name="scope">
         <el-tag type="success">
-          {{ scope.row[scope.prop] }}
+          {{ scope.row.category_name }}
         </el-tag>
       </template>
       <template #tag_name_list="scope">
-        <el-tag v-for="item of scope.row[scope.prop]" type="primary">
+        <el-tag v-for="item of scope.row.tag_name_list" type="primary">
           {{ item }}
         </el-tag>
       </template>
@@ -58,7 +60,7 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import type { IObject, IOperateData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import contentConfig from "./config/content";
 import searchConfig from "./config/search";
@@ -66,7 +68,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { ArticleAPI } from "@/api/article";
 import "@/styles/table.scss";
-import { ArticleDeleteEnum, ArticleStatusEnum, ArticleTypeEnum } from "@/enums/blog/index";
+import { ArticleDeleteEnum, ArticleStatusEnum, ArticleTypeEnum } from "@/enums/blog";
 
 const route = useRoute();
 const router = useRouter();
@@ -106,18 +108,18 @@ function handleOperateClick(data: IOperateData) {
     case "deleteArticle":
       ArticleAPI.updateArticleDeleteApi({
         id: data.row.id,
-        is_delete: 1,
+        is_delete: ArticleDeleteEnum.YES,
       }).then(() => {
-        data.row.is_delete = 1;
+        data.row.is_delete = ArticleDeleteEnum.YES;
         ElMessage.success("删除功");
       });
       break;
     case "restoreArticle":
       ArticleAPI.updateArticleDeleteApi({
         id: data.row.id,
-        is_delete: 0,
+        is_delete: ArticleDeleteEnum.NO,
       }).then(() => {
-        data.row.is_delete = 0;
+        data.row.is_delete = ArticleDeleteEnum.NO;
         ElMessage.success("恢复成功");
       });
       break;

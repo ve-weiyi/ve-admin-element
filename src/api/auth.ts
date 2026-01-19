@@ -12,6 +12,7 @@ import type {
   LoginReq,
   LoginResp,
   PhoneLoginReq,
+  RefreshTokenReq,
   RegisterReq,
   ResetPasswordReq,
   SendEmailVerifyCodeReq,
@@ -71,6 +72,15 @@ export const AuthAPI = {
   phoneLoginApi(data?: PhoneLoginReq): Promise<IApiResponse<LoginResp>> {
     return request({
       url: "/admin-api/v1/phone_login",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 刷新token */
+  refreshTokenApi(data?: RefreshTokenReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin-api/v1/refresh_token",
       method: "POST",
       data: data,
     });

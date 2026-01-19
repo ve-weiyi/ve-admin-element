@@ -103,20 +103,17 @@
           <el-input v-model="formData.album_desc" />
         </el-form-item>
         <el-form-item label="相册封面" prop="album_cover">
-          <el-radio-group v-model="isUpload">
-            <el-radio :value="true">上传文件</el-radio>
-            <el-radio :value="false">填写链接</el-radio>
+          <el-radio-group v-model="uploadType">
+            <el-radio value="upload">上传文件</el-radio>
+            <el-radio value="select">选择文件</el-radio>
+            <el-radio value="input">填写链接</el-radio>
           </el-radio-group>
         </el-form-item>
-        <div>
-          <single-image-upload
-            v-if="isUpload"
-            v-model="formData.album_cover"
-            accept="image/*"
-            upload-path="blog/album/"
-          />
-          <el-input v-else v-model="formData.album_cover" placeholder="请输入图片链接" />
-        </div>
+        <option-image-upload
+          v-model="formData.album_cover"
+          :upload-type="uploadType"
+          upload-path="blog/album/"
+        />
         <el-form-item label="发布形式" prop="status">
           <el-radio-group v-model="formData.status">
             <el-radio :value="1">公开</el-radio>
@@ -141,6 +138,7 @@ import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import { AlbumAPI } from "@/api/album";
 import type { AlbumBackVO, NewAlbumReq, QueryAlbumReq } from "@/api/types";
+import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
 
 // 响应式数据
 const loading = ref(false);
@@ -156,7 +154,7 @@ const count = ref(0);
 // 表单相关
 const modalVisible = ref(false);
 const formRef = ref<FormInstance>();
-const isUpload = ref(true);
+const uploadType = ref("upload");
 
 const initFormData: NewAlbumReq = {
   id: 0,
@@ -218,13 +216,11 @@ const resetSearch = () => {
 // 表单操作
 const handleAdd = () => {
   Object.assign(formData.value, initFormData);
-  isUpload.value = true;
   modalVisible.value = true;
 };
 
 const handleEdit = (data: AlbumBackVO) => {
   Object.assign(formData.value, data);
-  isUpload.value = true;
   modalVisible.value = true;
 };
 
@@ -300,7 +296,7 @@ onMounted(() => {
 .album-cover {
   position: relative;
   width: 100%;
-  height: 170px;
+  height: 11rem;
   border-radius: 4px;
 }
 

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h3 text-center m-0 mb-20px>重置密码</h3>
     <el-form ref="formRef" :model="model" :rules="rules" size="large">
@@ -7,7 +7,7 @@
         <el-input v-model.trim="model.email" placeholder="邮箱">
           <template #prefix>
             <el-icon>
-              <User />
+              <Message />
             </el-icon>
           </template>
         </el-input>
@@ -73,22 +73,22 @@
 
     <div flex-center gap-10px>
       <el-text size="default">想起密码了？</el-text>
-      <el-link type="primary" underline="never" @click="toLogin">登录</el-link>
+      <el-link type="primary" underline="never" @click="toLogin">登 录</el-link>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { FormInstance } from "element-plus";
-import { ResetPasswordReq } from "@/api/types";
-import { AuthAPI } from "@/api/auth";
-import { Lock } from "@element-plus/icons-vue";
+import type { FormInstance, FormRules } from "element-plus";
+import { ResetPasswordReq } from "@/api/types.ts";
+import { AuthAPI } from "@/api/auth.ts";
+import { Lock, Message } from "@element-plus/icons-vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const toLogin = () => emit("update:modelValue", "login");
 
 const model = ref<ResetPasswordReq>(<ResetPasswordReq>{});
 
-const rules = computed(() => {
+const rules = computed<FormRules>(() => {
   return {
     email: [
       {

@@ -1,8 +1,11 @@
-export * from "./settings/layout.enum";
-export * from "./settings/theme.enum";
-export * from "./settings/locale.enum";
-export * from "./settings/device.enum";
+/**
+ * 枚举统一导出
+ *
+ * @description
+ * 按业务域分组的枚举定义
+ */
 
-export * from "./common/result.enum";
-
-export * from "./system/menu.enum";
+export * from "./api";
+export * from "./business";
+export * from "./common";
+export * from "./settings";

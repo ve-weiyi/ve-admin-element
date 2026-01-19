@@ -25,7 +25,7 @@
             :disabled="!hasSelectedPhotos"
             @click="handleDelete"
           >
-            批量删除
+            批量销毁
           </el-button>
         </el-col>
         <el-col :span="1.5">
@@ -174,7 +174,7 @@ const handleRecover = async () => {
 
 const handleDelete = async () => {
   try {
-    await ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+    await ElMessageBox.confirm("确认销毁已选中的数据项?", "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning",
@@ -182,12 +182,12 @@ const handleDelete = async () => {
 
     await PhotoAPI.deletesPhotoApi({ ids: selectPhotoIdList.value });
 
-    ElMessage.success("删除成功");
+    ElMessage.success("销毁成功");
     selectPhotoIdList.value = [];
     refreshList();
   } catch (error: any) {
     if (error !== "cancel") {
-      ElMessage.error("删除失败: " + error.message);
+      ElMessage.error("销毁失败: " + error.message);
     }
   }
 };
@@ -199,7 +199,7 @@ const refreshList = async () => {
     const data: QueryPhotoReq = {
       page: queryParams.value.page,
       page_size: queryParams.value.page_size,
-      is_delete: 1, // 只查询已删除的照片
+      is_delete: 1, // 只查询已销毁的照片
     };
 
     const res = await PhotoAPI.findPhotoListApi(data);
@@ -242,34 +242,48 @@ onMounted(() => {
   margin-top: 0.4rem;
 }
 
-.photo-item {
+.photo-cover {
   position: relative;
   width: 100%;
-  cursor: pointer;
+  height: 8rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.photo-cover::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: rgb(0 0 0 / 20%);
+}
+
+.photo-name {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.photo-item {
+  position: relative;
   margin-bottom: 1rem;
-
-  .photo-cover {
-    width: 100%;
-    height: 7rem;
-    border-radius: 4px;
-  }
-
-  .photo-name {
-    font-size: 14px;
-    margin-top: 0.3rem;
-    text-align: center;
-  }
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .picture-list {
   :deep(.el-checkbox) {
     display: inline-block !important;
+    width: 100%;
   }
 
   :deep(.el-checkbox__input) {
     position: absolute !important;
     top: 0.3rem;
     left: 0.8rem;
+  }
+
+  :deep(.el-checkbox__label) {
+    width: 100%;
+    padding: 0;
   }
 }
 </style>

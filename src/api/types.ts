@@ -31,7 +31,7 @@ export interface ApiBackVO {
   path: string; // api路径
   method: string; // api请求方法
   traceable: number; // 是否追溯操作记录 0需要，1是
-  is_disable?: number; // 是否禁用 0否 1是
+  status?: number; // 状态 0正常 1禁用
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   children: ApiBackVO[];
@@ -254,6 +254,8 @@ export interface LoginReq {
 }
 
 export interface LoginResp {
+  user_id: string; // 用户id
+  scope: string; // 作用域
   token?: Token;
 }
 
@@ -278,8 +280,8 @@ export interface MenuMeta {
   params?: MenuMetaParams[]; // 参数
   keep_alive?: number; // 是否缓存
   always_show?: number; // 是否一直显示菜单
-  is_hidden?: number; // 是否隐藏
-  is_disable?: number; // 是否禁用
+  visible?: number; // 菜单是否可见
+  status?: number; // 是否禁用
 }
 
 export interface MenuMetaParams {
@@ -308,7 +310,7 @@ export interface NewApiReq {
   path: string; // api路径
   method: string; // api请求方法
   traceable: number; // 是否追溯操作记录 0需要，1是
-  is_disable?: number; // 是否禁用 0否 1是
+  status?: number; // 状态 0正常 1禁用
 }
 
 export interface NewArticleReq {
@@ -371,8 +373,8 @@ export interface NewRoleReq {
   role_key: string; // 角色名
   role_label: string; // 角色标签
   role_comment: string; // 角色备注
-  is_disable: number; // 是否禁用  0否 1是
   is_default: number; // 是否默认角色 0否 1是
+  status: number; // 状态 0正常 1禁用
 }
 
 export interface NewTagReq {
@@ -452,9 +454,8 @@ export interface PingResp {
   env: string;
   name: string;
   version: string;
-  runtime: string;
   description: string;
-  rpc_status: string[];
+  runtime: string;
 }
 
 export interface QueryAccountReq extends PageQuery {
@@ -535,7 +536,7 @@ export interface QueryRemarkReq extends PageQuery {
 export interface QueryRoleReq extends PageQuery {
   role_key?: string; // 角色名
   role_label?: string; // 角色标签
-  is_disable?: number; // 是否禁用  0否 1是
+  status?: number; // 状态 0正常 1禁用
 }
 
 export interface QueryTagReq extends PageQuery {
@@ -557,6 +558,12 @@ export interface QueryVisitLogReq extends PageQuery {
 export interface QueryVisitorReq extends PageQuery {
   terminal_id?: string; // 终端id
   ip_source?: string; // IP归属地
+}
+
+export interface RefreshTokenReq {
+  user_id: string; // 用户id
+  grant_type: string; // 授权类型
+  refresh_token: string; // 刷新令牌
 }
 
 export interface RegisterReq {
@@ -597,8 +604,8 @@ export interface RoleBackVO {
   role_key: string; // 角色名
   role_label: string; // 角色标签
   role_comment: string; // 角色备注
-  is_disable: number; // 是否禁用  0否 1是
   is_default: number; // 是否默认角色 0否 1是
+  status: number; // 状态 0正常 1禁用
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -680,13 +687,12 @@ export interface ThirdPlatformInfo {
 }
 
 export interface Token {
-  user_id: string; // 用户id
-  token_type: string; // token类型,Bearer
-  access_token: string; // 访问token,过期时间较短。2h
-  expires_in: number; // 访问token过期时间
-  refresh_token: string; // 刷新token,过期时间较长。30d
-  refresh_expires_in: number; // 刷新token过期时间
-  scope: string; // 作用域
+  token_type: string; // Token 类型（如 "Bearer"）
+  access_token: string; // 访问令牌：用于接口访问，有效期短
+  expires_in: number; // AccessToken 有效期（秒），如 3600（1小时）
+  refresh_token: string; // 刷新令牌：仅用于刷新 AccessToken，有效期长
+  refresh_expires_in: number; // RefreshToken 有效期（秒），如 604800（7天）
+  refresh_expires_at: number; // RefreshToken 过期时间戳（秒）
 }
 
 export interface UpdateAccountPasswordReq {

@@ -99,6 +99,16 @@ const contentConfig: IContentConfig<QueryFileLogReq> = {
       dateFormat: "YYYY/MM/DD HH:mm:ss",
     },
     {
+      label: "更新时间",
+      prop: "updated_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+      show: false,
+    },
+    {
       label: "操作栏",
       align: "center",
       fixed: "right",

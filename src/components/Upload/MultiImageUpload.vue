@@ -1,34 +1,16 @@
-<!-- 文件上传组件 -->
+<!-- 多图上传组件 -->
 <template>
   <div>
     <el-upload
-      v-show="fileList.length === 0"
-      multiple
-      :file-list="fileList"
-      :drag="true"
-      :auto-upload="props.autoUpload"
-      :before-upload="handleBeforeUpload"
-      :http-request="handleHttpRequest"
-      :on-success="handleSuccess"
-      :show-file-list="false"
-      accept="image/*"
-    >
-      <el-icon class="el-icon--upload">
-        <upload-filled />
-      </el-icon>
-      <div class="el-upload__text">
-        将文件拖到此处，或
-        <em>点击上传</em>
-      </div>
-    </el-upload>
-
-    <el-upload
-      v-show="fileList.length !== 0"
       ref="uploadRef"
-      list-type="picture-card"
-      :file-list="fileList"
-      v-bind="props"
+      v-model:file-list="fileList"
+      :list-type="fileList.length === 0 ? 'picture' : 'picture-card'"
+      :drag="fileList.length === 0"
+      :show-file-list="fileList.length !== 0"
       multiple
+      accept="image/*"
+      :auto-upload="props.autoUpload"
+      :limit="props.limit"
       :before-upload="handleBeforeUpload"
       :http-request="handleHttpRequest"
       :on-success="handleSuccess"
@@ -38,25 +20,25 @@
       :on-progress="handleProgress"
       :on-exceed="handleExceed"
     >
-      <slot>
+      <template v-if="fileList.length === 0">
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
+        <div class="el-upload__text">
+          将文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+      </template>
+      <template v-else>
         <el-icon>
           <Plus />
         </el-icon>
-      </slot>
-
-      <!--      <template v-if="props.tip != ''" #tip>-->
-      <!--        <div class="el-upload__tip">-->
-      <!--          {{ props.tip }}-->
-      <!--        </div>-->
-      <!--      </template>-->
+      </template>
     </el-upload>
 
     <el-progress
       v-if="showUploadPercent"
-      :style="{
-        display: showUploadPercent ? 'inline-flex' : 'none',
-        width: '100%',
-      }"
+      :style="{ width: '100%' }"
       :percentage="uploadPercent"
       :color="customColorMethod"
     />
@@ -64,7 +46,7 @@
     <el-image-viewer
       v-if="viewVisible"
       :zoom-rate="1.2"
-      :initialIndex="initialIndex"
+      :initial-index="initialIndex"
       :url-list="previewList"
       @close="closePreview"
     />
@@ -74,6 +56,7 @@
 import {
   genFileId,
   UploadFile,
+  UploadFiles,
   type UploadInstance,
   UploadProgressEvent,
   UploadProps,
@@ -85,122 +68,65 @@ import {
 import { compressImage, uploadFile } from "@/utils/file";
 import { ref } from "vue";
 
-type IUpload = Partial<Omit<UploadProps, "modelValue">> & {
-  uploadPath: string; // 上传路径
-  compress?: boolean; // 是否压缩文件
-};
-
-const props = withDefaults(defineProps<IUpload>(), {
-  uploadPath: "file",
-  compress: false,
-  showFileList: true,
-  autoUpload: true,
-  // /**
-  //  * 文件集合
-  //  */
-  // modelValue: {
-  //   type: Array<UploadUserFile>,  // uploadPath: {
-  //   type: String,
-  //   default: "/file",
-  //   required: true,
-  // },
-  //   default: () => [],
-  // },
-  // /**
-  //  * 单个文件上传大小限制(单位byte)
-  //  */
-  // maxSize: {
-  //   type: Number,
-  //   default: 2 * 1024 * 1024,
-  // },
-
-  // /**
-  //  * 提示信息内容
-  //  */
-  // tip: {
-  //   type: String,
-  //   default: "",
-  // },
-  // /**
-  //  * 样式
-  //  */
-  // style: {
-  //   type: Object,
-  //   default: () => {
-  //     return {
-  //       width: "100%",
-  //     };
-  //   },
-  // },
-  // /**
-  //  * 上传文件类型
-  //  */
-  // accept: {
-  //   type: String,
-  //   default: "*",
-  // },
-  // /**
-  //  * 文件上传数量限制
-  //  */
-  // limit: {
-  //   type: Number,
-  //   default: 10,
-  // },
-  // drag: {
-  //   type: Boolean,
-  //   default: false,
-  // },
-  // autoUpload: {
-  //   type: Boolean,
-  //   default: true,
-  // },
-  // showFileList: {
-  //   type: Boolean,
-  //   default: true,
-  // },
+const props = defineProps({
+  uploadPath: {
+    type: String,
+    default: "/file",
+    required: false,
+  },
+  autoUpload: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   * 文件上传数量限制
+   */
+  limit: {
+    type: Number,
+    default: 10,
+  },
+  /**
+   * 单个文件上传大小限制(单位MB)
+   */
+  maxFileSize: {
+    type: Number,
+    default: 10,
+  },
+  /**
+   * 是否压缩图片
+   */
+  compress: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const uploadRef = ref<UploadInstance>();
-const fileList = defineModel("fileList", {
-  type: Array<UploadUserFile>,
+const fileList = defineModel<UploadUserFile[]>("fileList", {
   default: () => [],
-  required: true,
 });
 
-watch(
-  () => fileList.value,
-  (newValue) => {
-    console.log("fileList", newValue);
-  }
-);
+const showUploadPercent = ref(false);
+const uploadPercent = ref(0);
 
 /**
  * 上传前
- * 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
  */
 function handleBeforeUpload(file: UploadRawFile) {
   console.log("handleBeforeUpload", file.name, file.size);
 
-  // if (file.size > props.maxSize) {
-  //   ElMessage.warning(
-  //     "上传文件不能大于" + Math.trunc(props.maxSize / 1024 / 1024) + "M"
-  //   );
-  //   return false;
-  // }
-  // uploadPercent.value = 0;
-  // showUploadPercent.value = true;
-  //
-  // return true;
+  // 限制文件大小
+  if (file.size > props.maxFileSize * 1024 * 1024) {
+    if (props.compress) {
+      ElMessage.warning("上传文件大于" + props.maxFileSize + "M" + "，正在压缩...");
+      return compressImage(file);
+    }
 
-  if (!props.compress) {
-    return true;
+    ElMessage.warning("上传文件不能大于" + props.maxFileSize + "M");
+    return false;
   }
 
-  if (file.size / 1024 < 500) {
-    return true;
-  }
-
-  return compressImage(file);
+  return true;
 }
 
 /**
@@ -214,15 +140,22 @@ function handleHttpRequest(options: UploadRequestOptions) {
 /**
  * 上传成功
  */
-function handleSuccess(response: any, file: UploadFile) {
+function handleSuccess(response: any, file: UploadFile, files?: UploadFiles) {
   console.log("handleSuccess", response);
-  showUploadPercent.value = false;
-  uploadPercent.value = 0;
   ElMessage.success("上传成功");
-  fileList.value.push({
-    name: file.name,
-    url: response.data.file_url,
-  });
+
+  // 更新文件的 url
+  const index = fileList.value.findIndex((f) => f.uid === file.uid);
+  if (index !== -1) {
+    fileList.value[index].url = response.data.file_url;
+    fileList.value[index].status = "success";
+  }
+
+  // 延迟隐藏进度条
+  setTimeout(() => {
+    showUploadPercent.value = false;
+    uploadPercent.value = 0;
+  }, 500);
 }
 
 /**
@@ -230,18 +163,20 @@ function handleSuccess(response: any, file: UploadFile) {
  */
 function handleError(error: any) {
   console.log("handleError", error);
-  showUploadPercent.value = false;
-  uploadPercent.value = 0;
-  ElMessage.error("上传失败");
+  ElMessage.error(error?.message || "上传失败");
+
+  setTimeout(() => {
+    showUploadPercent.value = false;
+    uploadPercent.value = 0;
+  }, 500);
 }
 
 /**
  * 删除文件
  */
-function handleRemove(file: UploadUserFile) {
-  console.log("handleRemove", file);
-
-  const index = fileList.value.findIndex((item) => item.url === file.url);
+function handleRemove(removeFile: UploadUserFile) {
+  console.log("handleRemove", removeFile);
+  const index = fileList.value.findIndex((item) => item.uid === removeFile.uid);
   if (index !== -1) {
     fileList.value.splice(index, 1);
   }
@@ -252,10 +187,7 @@ function handleRemove(file: UploadUserFile) {
  */
 function handleExceed(files: File[]) {
   console.log("handleExceed", files);
-  uploadRef.value!.clearFiles();
-  const file = files[0] as UploadRawFile;
-  file.uid = genFileId();
-  uploadRef.value!.handleStart(file);
+  ElMessage.warning(`最多只能上传 ${props.limit} 张图片`);
 }
 
 /**
@@ -265,9 +197,6 @@ function handleProgress(event: UploadProgressEvent) {
   console.log("handleProgress", event.percent);
   uploadPercent.value = event.percent;
 }
-
-const showUploadPercent = ref(false);
-const uploadPercent = ref(0);
 
 const customColorMethod = (percentage: number) => {
   if (percentage < 30) {

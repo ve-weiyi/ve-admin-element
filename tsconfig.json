@@ -1,30 +1,33 @@
 {
   "compilerOptions": {
-    // 编译目标和模块化配置
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "bundler",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "WebWorker"
-    ],
-
-    // JSX 配置
-    "jsx": "preserve",
-
-    // 模块解析配置
+    "lib": ["esnext", "dom"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
 
-    // 类型声明相关配置
-    "types": ["node", "vite/client", "element-plus/global"],
+    // 严格性和类型检查相关配置
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
 
-    // 类型检查配置
-    "strict": false,
+    // 模块和兼容性相关配置
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+
+    // 调试和兼容性相关配置
+    "sourceMap": true,
+    "useDefineForClassFields": true,
+    "allowJs": true,
+
+    // ---------------- 合并第二个配置的新增/修改项 ----------------
+    // 新增 JSX 支持
+    "jsx": "preserve",
+    // 细分严格规则（覆盖 strict: true 的默认行为）
     "strictNullChecks": false,
     "strictFunctionTypes": false,
     "strictBindCallApply": false,
@@ -35,40 +38,19 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-
-    // 实验性特性支持
+    // 实验性特性（装饰器支持）
     "experimentalDecorators": true,
-    "useDefineForClassFields": true,
-//    "verbatimModuleSyntax": true,
-
-    // 构建和兼容性配置
+    // 构建相关配置
     "importHelpers": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
     "isolatedModules": true,
-
-    // 源码映射
-    "sourceMap": true,
-
-    // 输出配置
     "noEmit": true,
-
     // 其他配置
     "allowImportingTsExtensions": true,
-    "allowJs": false,
-    "resolveJsonModule": true
+
+    // 类型声明相关配置
+    "types": ["node", "vite/client", "element-plus/global"]
   },
 
-  "include": [
-    "mock/*.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/types/*.d.ts",
-    "vite.config.ts",
-    "env.d.ts",
-  ],
-  "exclude": ["node_modules", "dist"]
+  "include": ["mock/**/*.ts", "src/**/*.ts", "src/**/*.vue", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "src/lang/**", "src/components/LangSelect/**"]
 }

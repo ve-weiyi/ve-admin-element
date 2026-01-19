@@ -351,7 +351,7 @@
 
     <el-row class="data-card" style="margin-top: 32px">
       <div class="title">文章贡献统计🎉</div>
-      <Calender style="width: 100%" :values="homeInfoData.article_statistics" />
+      <Calender style="width: 100%" :values="homeInfoData.article_statistics || []" />
     </el-row>
 
     <!-- 用户地域分布 -->
@@ -364,7 +364,7 @@
             <el-radio :value="1">游客</el-radio>
           </el-radio-group>
         </div>
-        <ChinaMap :values="userAreaData" />
+        <ChinaMap :values="userAreaData || []" />
       </div>
     </el-card>
   </div>
@@ -377,17 +377,17 @@ defineOptions({
 });
 
 import { dayjs } from "element-plus";
-import { useUserStore } from "@/store/modules/user.store";
-import { useTransition, useDateFormat } from "@vueuse/core";
+import { useUserStore } from "@/store/modules/user";
+import { useDateFormat, useTransition } from "@vueuse/core";
 import { Connection, Failed } from "@element-plus/icons-vue";
 import { useOnlineCount } from "@/hooks/websocket/services/useOnlineCount";
 import {
-  UserAreaVO,
   AdminHomeInfo,
-  GetVisitStatsResp,
-  GetVisitTrendResp,
   ArticleViewVO,
   CategoryVO,
+  GetVisitStatsResp,
+  GetVisitTrendResp,
+  UserAreaVO,
 } from "@/api/types";
 import { WebsiteAPI } from "@/api/website";
 import ECharts from "@/components/ECharts/index.vue";
@@ -590,7 +590,6 @@ const fetchVisitTrendData = () => {
  * @param data - 访问趋势数据
  */
 const updateVisitTrendChartOptions = (data: GetVisitTrendResp) => {
-  console.log("Updating visit trend chart options");
 
   const dates = [];
   const pvs = [];

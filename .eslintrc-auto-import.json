@@ -307,7 +307,6 @@
     "setActivePinia": true,
     "setMapStoreSuffix": true,
     "useClipboardItems": true,
-    "useI18n": true,
     "useId": true,
     "useLink": true,
     "useModel": true,

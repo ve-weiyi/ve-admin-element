@@ -153,7 +153,11 @@
               <el-radio value="input">填写链接</el-radio>
             </el-radio-group>
           </el-form-item>
-          <option-image-upload v-model="article.article_cover" :upload-type="uploadType" />
+          <option-image-upload
+            v-model="article.article_cover"
+            :upload-type="uploadType"
+            upload-path="blog/article/"
+          />
           <el-form-item label="置顶">
             <el-switch
               v-model="article.is_top"
@@ -187,18 +191,18 @@ import "md-editor-v3/lib/style.css";
 import { CategoryAPI } from "@/api/category";
 import { TagAPI } from "@/api/tag";
 import { ArticleAPI } from "@/api/article";
-import type { ArticleBackVO, NewArticleReq, CategoryBackVO, TagBackVO } from "@/api/types";
+import type { ArticleBackVO, CategoryBackVO, NewArticleReq, TagBackVO } from "@/api/types";
 import { ElMessage } from "element-plus";
 import { uploadFile } from "@/utils/file";
-import { formatDate } from "@/utils/date";
+import { useDateFormat } from "@vueuse/core";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";
-import { ArticleTopEnum } from "@/enums/blog/index";
+import { ArticleTopEnum } from "@/enums/blog";
 
 const route = useRoute();
 const router = useRouter();
 const article = ref<ArticleBackVO>({
   id: 0,
-  article_title: formatDate(new Date(), "YYYY-MM-DD"),
+  article_title: useDateFormat(new Date(), "YYYY-MM-DD").value,
   article_content: "",
   article_cover: "",
   category_name: null,
@@ -334,7 +338,7 @@ function saveOrUpdateArticle() {
 }
 
 function autoSaveArticle() {
-  console.log("autoSaveArticle", article.value);
+  console.log("autoSaveArticle");
   if (
     autoSave.value &&
     article.value.article_title.trim() !== "" &&
@@ -470,7 +474,6 @@ onMounted(() => {
     getArticle(Number(articleId));
   } else {
     const articleData = sessionStorage.getItem("article");
-    console.log("articleData", articleData);
     if (articleData) {
       article.value = JSON.parse(articleData);
     }

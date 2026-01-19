@@ -92,7 +92,11 @@
             <el-radio value="input">填写链接</el-radio>
           </el-radio-group>
         </el-form-item>
-        <option-image-upload v-model="formData.page_cover" :upload-type="uploadType" />
+        <option-image-upload
+          v-model="formData.page_cover"
+          :upload-type="uploadType"
+          upload-path="blog/page/"
+        />
       </el-form>
       <template #footer>
         <el-button @click="modalVisible = false">取 消</el-button>
@@ -103,11 +107,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, reactive } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import { PageAPI } from "@/api/page";
-import type { PageBackVO, NewPageReq, QueryPageReq } from "@/api/types";
+import type { NewPageReq, PageBackVO, QueryPageReq } from "@/api/types";
 import "@/styles/table.scss";
 import RightToolbar from "@/components/RightToolbar/index.vue";
 import OptionImageUpload from "@/components/Upload/OptionImageUpload.vue";

@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import IconSelect from "@/components/IconSelect/index.vue";
 import type { MenuBackVO, NewMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
-import { MenuTypeEnum, SwitchStatusEnum } from "@/enums/blog";
+import { MenuTypeEnum } from "@/enums/blog";
 import { CirclePlusFilled, DeleteFilled, QuestionFilled } from "@element-plus/icons-vue";
 
 interface OptionType {
@@ -13,20 +13,39 @@ interface OptionType {
   children?: OptionType[];
 }
 
-const menuForm = defineModel<NewMenuReq>({
-  default: () => {},
-});
+const menuOptions = ref<OptionType[]>([]);
+
+const menuForm = defineModel<NewMenuReq>({ required: true });
+
+const isExternalLink = computed(
+  () =>
+    menuForm.value.type === MenuTypeEnum.MENU &&
+    !!menuForm.value.path &&
+    /^https?:\/\//.test(menuForm.value.path)
+);
 
 const menuFormRef = ref<FormInstance>();
 const menuFormRules = reactive<FormRules>({
-  title: [{ required: true, message: "菜单名称不能为空", trigger: "blur" }],
-  name: [{ required: true, message: "路由名称不能为空", trigger: "blur" }],
-  path: [
-    { required: true, message: "路由地址不能为空", trigger: "blur" },
+  title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
+  type: [{ required: true, message: "请选择菜单类型", trigger: "blur" }],
+  name: [
     {
       validator: (rule, value, callback) => {
-        if (menuForm.value.type === MenuTypeEnum.CATALOG && value && !value.startsWith("/")) {
-          callback(new Error("目录路径必须以 / 开头"));
+        if (menuForm.value.type === MenuTypeEnum.MENU && !isExternalLink.value && !value) {
+          callback(new Error("请输入路由名称"));
+          return;
+        }
+        callback();
+      },
+      trigger: "blur",
+    },
+  ],
+  path: [
+    { required: true, message: "请输入路由路径", trigger: "blur" },
+    {
+      validator: (rule, value, callback) => {
+        if (menuForm.value.type === MenuTypeEnum.CATALOG) {
+          callback(new Error("目录的路由路径必须以 / 开头"));
         } else {
           callback();
         }
@@ -37,19 +56,17 @@ const menuFormRules = reactive<FormRules>({
   component: [
     {
       validator: (rule, value, callback) => {
-        if (menuForm.value.type === MenuTypeEnum.MENU && !value) {
-          callback(new Error("组件路径不能为空"));
-        } else {
-          callback();
+        if (menuForm.value.type === MenuTypeEnum.MENU && !isExternalLink.value && !value) {
+          callback(new Error("请输入组件路径"));
+          return;
         }
+        callback();
       },
       trigger: "blur",
     },
   ],
-  rank: [{ required: true, message: "排序不能为空", trigger: "blur" }],
+  visible: [{ required: true, message: "请选择显示状态", trigger: "change" }],
 });
-
-const menuOptions = ref<OptionType[]>([]);
 
 function pushMenuOptions(list: MenuBackVO[]): OptionType[] {
   let ops = [];
@@ -102,7 +119,7 @@ onMounted(() => {
       </el-form-item>
 
       <el-form-item label="菜单名称" prop="name">
-        <el-input v-model="menuForm.name" placeholder="请输入菜单名称" />
+        <el-input v-model="menuForm.title" placeholder="请输入菜单名称" />
       </el-form-item>
 
       <el-form-item label="菜单类型" prop="type">
@@ -110,23 +127,18 @@ onMounted(() => {
           <el-radio :value="MenuTypeEnum.CATALOG">目录</el-radio>
           <el-radio :value="MenuTypeEnum.MENU">菜单</el-radio>
           <el-radio :value="MenuTypeEnum.BUTTON">按钮</el-radio>
-          <el-radio :value="MenuTypeEnum.EXTLINK">外链</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item v-if="menuForm.type == MenuTypeEnum.EXTLINK" label="外链地址" prop="path">
-        <el-input v-model="menuForm.path" placeholder="请输入外链完整路径" />
-      </el-form-item>
-
-      <el-form-item v-if="menuForm.type == MenuTypeEnum.MENU" prop="name">
+      <el-form-item v-if="menuForm.type == MenuTypeEnum.MENU && !isExternalLink" prop="name">
         <template #label>
-          <div>
+          <div class="flex-y-center">
             路由名称
             <el-tooltip placement="bottom" effect="light">
               <template #content>
-                如果需要开启缓存，需保证页面 defineOptions 中的 name 与此处一致，建议使用驼峰。
+                如果需要开启缓存，需保证页面 defineOptions 中的 name 与此处一致，建议使用驼峰式
               </template>
-              <el-icon style="vertical-align: -0.15em" size="16">
+              <el-icon class="ml-1 cursor-pointer">
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
@@ -140,14 +152,14 @@ onMounted(() => {
         prop="path"
       >
         <template #label>
-          <div>
+          <div class="flex-y-center">
             路由路径
             <el-tooltip placement="bottom" effect="light">
               <template #content>
                 定义应用中不同页面对应的 URL 路径，目录需以 / 开头，菜单项不用。例如：系统管理目录
                 /system，系统管理下的用户管理菜单 user。
               </template>
-              <el-icon style="vertical-align: -0.15em" size="16">
+              <el-icon class="ml-1 cursor-pointer">
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
@@ -158,18 +170,18 @@ onMounted(() => {
           v-model="menuForm.path"
           placeholder="system"
         />
-        <el-input v-else v-model="menuForm.path" placeholder="user" />
+        <el-input v-else v-model="menuForm.path" placeholder="user 或 https://example.com" />
       </el-form-item>
 
-      <el-form-item v-if="menuForm.type == MenuTypeEnum.MENU" prop="component">
+      <el-form-item v-if="menuForm.type == MenuTypeEnum.MENU && !isExternalLink" prop="component">
         <template #label>
-          <div>
+          <div class="flex-y-center">
             组件路径
             <el-tooltip placement="bottom" effect="light">
               <template #content>
                 组件页面完整路径，相对于 src/views/，如 system/user/index，缺省后缀 .vue
               </template>
-              <el-icon style="vertical-align: -0.15em" size="16">
+              <el-icon class="ml-1 cursor-pointer">
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
@@ -182,13 +194,13 @@ onMounted(() => {
         </el-input>
       </el-form-item>
 
-      <el-form-item v-if="menuForm.type == MenuTypeEnum.MENU">
+      <el-form-item v-if="menuForm.type == MenuTypeEnum.MENU && !isExternalLink">
         <template #label>
-          <div>
+          <div class="flex-y-center">
             路由参数
             <el-tooltip placement="bottom" effect="light">
               <template #content>组件页面使用 `useRoute().query.参数名` 获取路由参数值。</template>
-              <el-icon style="vertical-align: -0.15em" size="16">
+              <el-icon class="ml-1 cursor-pointer">
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
@@ -210,9 +222,9 @@ onMounted(() => {
             <el-input v-model="item.value" placeholder="参数值" style="width: 100px" />
 
             <el-icon
+              v-if="menuForm.params.indexOf(item) === menuForm.params.length - 1"
               class="ml-2 cursor-pointer color-[var(--el-color-success)]"
               style="vertical-align: -0.15em"
-              v-if="menuForm.params.indexOf(item) === menuForm.params.length - 1"
               @click="menuForm.params.push({ key: '', value: '' })"
             >
               <CirclePlusFilled />
@@ -229,9 +241,9 @@ onMounted(() => {
       </el-form-item>
 
       <el-form-item v-if="menuForm.type !== MenuTypeEnum.BUTTON" prop="visible" label="显示状态">
-        <el-radio-group v-model="menuForm.is_hidden">
-          <el-radio :value="SwitchStatusEnum.DISABLED">显示</el-radio>
-          <el-radio :value="SwitchStatusEnum.ENABLED">隐藏</el-radio>
+        <el-radio-group v-model="menuForm.visible">
+          <el-radio :value="1">显示</el-radio>
+          <el-radio :value="0">隐藏</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -239,17 +251,17 @@ onMounted(() => {
         v-if="menuForm.type === MenuTypeEnum.CATALOG || menuForm.type === MenuTypeEnum.MENU"
       >
         <template #label>
-          <div>
+          <div class="flex-y-center">
             始终显示
             <el-tooltip placement="bottom" effect="light">
               <template #content>
-                选择“是”，即使目录或菜单下只有一个子节点，也会显示父节点。
+                选择"是"，即使目录或菜单下只有一个子节点，也会显示父节点。
                 <br />
-                选择“否”，如果目录或菜单下只有一个子节点，则只显示该子节点，隐藏父节点。
+                选择"否"，如果目录或菜单下只有一个子节点，则只显示该子节点，隐藏父节点。
                 <br />
-                如果是叶子节点，请选择“否”。
+                如果是叶子节点，请选择"否"。
               </template>
-              <el-icon style="vertical-align: -0.15em" size="16">
+              <el-icon class="ml-1 cursor-pointer">
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
@@ -262,7 +274,7 @@ onMounted(() => {
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item v-if="menuForm.type === MenuTypeEnum.MENU" label="页面缓存">
+      <el-form-item v-if="menuForm.type === MenuTypeEnum.MENU && !isExternalLink" label="缓存页面">
         <el-radio-group v-model="menuForm.keep_alive">
           <el-radio :value="1">开启</el-radio>
           <el-radio :value="0">关闭</el-radio>
@@ -280,7 +292,7 @@ onMounted(() => {
 
       <!-- 权限标识 -->
       <el-form-item v-if="menuForm.type == MenuTypeEnum.BUTTON" label="权限标识" prop="perm">
-        <el-input v-model="menuForm.perm" placeholder="sys:user:add" />
+        <el-input v-model="menuForm.perm" placeholder="sys:user:create" />
       </el-form-item>
 
       <el-form-item v-if="menuForm.type !== MenuTypeEnum.BUTTON" label="图标" prop="icon">

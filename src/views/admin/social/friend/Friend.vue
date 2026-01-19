@@ -21,8 +21,8 @@
       @filter-change="handleFilterChange"
     >
       <template #status="scope">
-        <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
-          {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
+        <el-tag :type="scope.row.status == FriendStatusEnum.DISABLED ? 'success' : 'info'">
+          {{ scope.row.status == FriendStatusEnum.DISABLED ? "启用" : "禁用" }}
         </el-tag>
       </template>
     </page-content>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperateData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -53,6 +53,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
+import { FriendStatusEnum } from "@/enums/blog";
 
 const {
   searchRef,

@@ -65,12 +65,17 @@ const loginRules = computed(() => {
         trigger: "blur",
         message: "请输入手机号",
       },
+      {
+        pattern: /^1[3-9]\d{9}$/,
+        trigger: "blur",
+        message: "请输入正确的手机号格式",
+      },
     ],
     verify_code: [
       {
         required: true,
         trigger: "blur",
-        message: "请输入验证码",
+        message: "请输入短信验证码",
       },
     ],
   };
@@ -98,7 +103,7 @@ async function handleLoginSubmit() {
     // TODO 5. 判断用户是否点击了记住我？采用明文保存或使用jsencrypt库？
   } catch (error) {
     // 5. 统一错误处理
-    console.error("登录失败:", error);
+    ElMessage.error("登录失败。" + error);
   } finally {
     loading.value = false;
   }
@@ -157,9 +162,13 @@ function sendCaptchaCode() {
   AuthAPI.sendPhoneVerifyCodeApi({
     phone: loginFormData.value.phone,
     type: "login",
-  }).then(() => {
-    ElMessage.success("验证码已发送，请注意查收");
-    startCountdown();
-  });
+  })
+    .then(() => {
+      ElMessage.success("验证码已发送，请注意查收");
+      startCountdown();
+    })
+    .catch((error) => {
+      ElMessage.error("发送验证码失败，请稍后重试。" + error.message);
+    });
 }
 </script>

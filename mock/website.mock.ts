@@ -1,0 +1,121 @@
+import { defineMock } from "./base";
+
+export default defineMock([
+  {
+    url: "/admin-api/v1/admin",
+    method: ["GET"],
+    body: {
+      code: 200,
+      data: {
+        user_count: 1234,
+        article_count: 89,
+        remark_count: 567,
+        category_list: [
+          { id: 1, category_name: "前端开发", article_count: 25 },
+          { id: 2, category_name: "后端开发", article_count: 18 },
+          { id: 3, category_name: "数据库", article_count: 12 },
+          { id: 4, category_name: "运维部署", article_count: 15 },
+          { id: 5, category_name: "算法", article_count: 10 },
+          { id: 6, category_name: "其他", article_count: 9 },
+        ],
+        tag_list: [
+          { id: 1, tag_name: "Vue", article_count: 20 },
+          { id: 2, tag_name: "React", article_count: 15 },
+          { id: 3, tag_name: "TypeScript", article_count: 18 },
+          { id: 4, tag_name: "Node.js", article_count: 12 },
+          { id: 5, tag_name: "Go", article_count: 10 },
+          { id: 6, tag_name: "MySQL", article_count: 8 },
+          { id: 7, tag_name: "Redis", article_count: 7 },
+          { id: 8, tag_name: "Docker", article_count: 9 },
+          { id: 9, tag_name: "Kubernetes", article_count: 6 },
+          { id: 10, tag_name: "微服务", article_count: 5 },
+        ],
+        article_view_ranks: [
+          { id: 1, article_title: "Vue3 + TypeScript 项目实战", view_count: 2580 },
+          { id: 2, article_title: "Go 语言微服务架构设计", view_count: 2150 },
+          { id: 3, article_title: "Docker 容器化部署实践", view_count: 1890 },
+          { id: 4, article_title: "MySQL 性能优化技巧", view_count: 1650 },
+          { id: 5, article_title: "前端工程化最佳实践", view_count: 1420 },
+        ],
+        article_statistics: [
+          { date: "2024-01-01", count: 2 },
+          { date: "2024-01-05", count: 1 },
+          { date: "2024-01-10", count: 3 },
+          { date: "2024-01-15", count: 2 },
+          { date: "2024-01-20", count: 4 },
+          { date: "2024-01-25", count: 1 },
+          { date: "2024-02-01", count: 2 },
+          { date: "2024-02-10", count: 3 },
+          { date: "2024-02-15", count: 1 },
+          { date: "2024-02-20", count: 2 },
+        ],
+      },
+      msg: "一切ok",
+    },
+  },
+  {
+    url: "/admin-api/v1/admin/get_visit_stats",
+    method: ["GET"],
+    body: {
+      code: 200,
+      data: {
+        today_uv_count: 156,
+        total_uv_count: 12580,
+        uv_growth_rate: 0.15,
+        today_pv_count: 892,
+        total_pv_count: 45670,
+        pv_growth_rate: 0.23,
+      },
+      msg: "一切ok",
+    },
+  },
+  {
+    url: "/admin-api/v1/admin/get_visit_trend",
+    method: ["POST"],
+    body: {
+      code: 200,
+      data: {
+        visit_trend: [
+          { date: "2024-01-01", uv_count: 120, pv_count: 580 },
+          { date: "2024-01-02", uv_count: 135, pv_count: 620 },
+          { date: "2024-01-03", uv_count: 145, pv_count: 680 },
+          { date: "2024-01-04", uv_count: 128, pv_count: 590 },
+          { date: "2024-01-05", uv_count: 156, pv_count: 720 },
+          { date: "2024-01-06", uv_count: 142, pv_count: 650 },
+          { date: "2024-01-07", uv_count: 138, pv_count: 610 },
+        ],
+      },
+      msg: "一切ok",
+    },
+  },
+  {
+    url: "/admin-api/v1/admin/get_user_area_stats",
+    method: ["POST"],
+    body: {
+      code: 200,
+      data: {
+        user_areas: [
+          { name: "广东", value: 2580 },
+          { name: "北京", value: 1890 },
+          { name: "上海", value: 1650 },
+          { name: "浙江", value: 1420 },
+          { name: "江苏", value: 1280 },
+          { name: "四川", value: 980 },
+          { name: "湖北", value: 850 },
+          { name: "福建", value: 720 },
+        ],
+        tourist_areas: [
+          { name: "广东", value: 3200 },
+          { name: "北京", value: 2100 },
+          { name: "上海", value: 1950 },
+          { name: "浙江", value: 1680 },
+          { name: "江苏", value: 1450 },
+          { name: "四川", value: 1120 },
+          { name: "湖北", value: 980 },
+          { name: "福建", value: 850 },
+        ],
+      },
+      msg: "一切ok",
+    },
+  },
+]);

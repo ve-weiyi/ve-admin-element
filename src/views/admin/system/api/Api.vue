@@ -20,18 +20,17 @@
       @operate-click="handleOperateClick"
       @filter-change="handleFilterChange"
     >
-      <template #status="scope">
-        <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
-          {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
-        </el-tag>
-      </template>
       <template #method="scope">
-        <div v-if="scope.row[scope.prop] === ''"></div>
-        <el-tag v-else-if="scope.row[scope.prop] === 'GET'" type="success">GET</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'POST'" type="primary">POST</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'PUT'" type="warning">PUT</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'DELETE'" type="danger">DELETE</el-tag>
-        <el-tag v-else type="info">{{ scope.row[scope.prop] }}</el-tag>
+        <div v-if="scope.row.method === ''"></div>
+        <el-tag v-else-if="scope.row.method === 'GET'" type="success">GET</el-tag>
+        <el-tag v-else-if="scope.row.method === 'POST'" type="primary">POST</el-tag>
+        <el-tag v-else-if="scope.row.method === 'PUT'" type="warning">PUT</el-tag>
+        <el-tag v-else-if="scope.row.method === 'DELETE'" type="danger">DELETE</el-tag>
+        <el-tag v-else type="info">{{ scope.row.method }}</el-tag>
+      </template>
+      <template #status="scope">
+        <el-tag v-if="scope.row.status === ApiStatusEnum.NORMAL" type="success">正常</el-tag>
+        <el-tag v-if="scope.row.status === ApiStatusEnum.DISABLED" type="danger">禁用</el-tag>
       </template>
     </page-content>
 
@@ -52,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IObject, IOperateData } from "@/components/CURD/types";
+import type { IOperateData } from "@/components/CURD/types";
 import usePage from "@/components/CURD/usePage";
 import addModalConfig from "./config/add";
 import contentConfig from "./config/content";
@@ -62,6 +61,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import { ApiAPI } from "@/api/api";
+import { ApiStatusEnum } from "@/enums/blog";
 
 const {
   searchRef,

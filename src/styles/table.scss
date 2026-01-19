@@ -61,6 +61,7 @@
 
 // 分页
 .el-pagination {
+  justify-content: flex-end;
   // 参考 Bootstrap 的响应式设计 WIDTH = 768
   @media screen and (max-width: 768px) {
     .el-pagination__total,

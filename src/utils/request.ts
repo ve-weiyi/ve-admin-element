@@ -1,8 +1,8 @@
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import qs from "qs";
 import MD5 from "crypto-js/md5";
-import { useUserStore } from "@/store";
-import { getAccessToken, getTerminalId, getUid } from "./token";
+import { APP_NAME, AuthStorage, redirectToLogin } from "./auth";
+import { useUserStoreHook } from "@/store/modules/user";
 
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
@@ -30,15 +30,15 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     // 请求携带用户token
-    const uid = getUid();
-    const accessToken = getAccessToken();
+    const uid = AuthStorage.getUid();
+    const accessToken = AuthStorage.getAccessToken();
     // 签名
-    const terminalId = getTerminalId() || "";
+    const terminalId = AuthStorage.getTerminalId() || "";
     const timestamp = Math.floor(Date.now() / 1000).toString();
     const terminalToken = MD5(terminalId + timestamp).toString();
 
     config.headers = Object.assign({}, config.headers, {
-      [HeaderAppName]: "admin-web",
+      [HeaderAppName]: APP_NAME,
       [HeaderTimestamp]: timestamp,
       [HeaderXTerminalId]: terminalId,
       [HeaderXTerminalToken]: terminalToken,
@@ -53,7 +53,7 @@ axiosInstance.interceptors.request.use(
 );
 // 配置响应拦截器
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
+  async (response: AxiosResponse) => {
     // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
     if (response.config.responseType === "blob" || response.config.responseType === "arraybuffer") {
       return response;
@@ -61,30 +61,24 @@ axiosInstance.interceptors.response.use(
 
     const { code, data, msg } = response.data;
 
-    // 接口错误码
+    // 接口响应成功，判断业务错误码
     switch (code) {
       case 200:
         break;
+      case 400:
+        return Promise.reject(new Error(msg || "请求参数错误"));
       case 401:
-        ElMessage.error("用户未登录");
-        return Promise.reject(msg);
+        return Promise.reject(new Error(msg || "用户未登录"));
       case 402:
-        useUserStore().clearSessionAndCache();
-        ElMessage.error("用户登录过期");
-        return Promise.reject(msg);
+        return retryWithRefresh(response.config);
       case 403:
-        ElMessage.error("无权限访问");
-        return Promise.reject(msg);
-      case 500:
-        ElMessage.error(msg);
-        return Promise.reject(msg);
+        return Promise.reject(new Error(msg || "无权限访问"));
       default:
-        ElMessage.error(msg || "系统出错");
-        return Promise.reject(new Error(msg || "Error"));
+        return Promise.reject(new Error(msg || "系统错误"));
     }
     return response.data;
   },
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
     console.error("request error", error); // for debug
     let { message } = error;
     if (message == "Network Error") {
@@ -101,3 +95,39 @@ axiosInstance.interceptors.response.use(
 
 // 对外暴露
 export default axiosInstance;
+
+// ============================================
+// Token 刷新重试
+// ============================================
+
+type Pending = { resolve: (v: unknown) => void; reject: (e: Error) => void };
+
+let refreshing = false;
+const queue: Pending[] = [];
+
+async function retryWithRefresh(config: InternalAxiosRequestConfig): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    queue.push({ resolve, reject });
+
+    if (refreshing) return;
+    refreshing = true;
+
+    useUserStoreHook()
+      .refreshToken({
+        user_id: AuthStorage.getUid() || "",
+        grant_type: "refresh_token",
+        refresh_token: AuthStorage.getRefreshToken() || "",
+      })
+      .then(() => {
+        queue.forEach(({ resolve }) => axiosInstance(config).then(resolve).catch(reject));
+      })
+      .catch(async () => {
+        queue.forEach(({ reject }) => reject(new Error("Token refresh failed")));
+        await redirectToLogin("登录已过期，请重新登录");
+      })
+      .finally(() => {
+        queue.length = 0;
+        refreshing = false;
+      });
+  });
+}

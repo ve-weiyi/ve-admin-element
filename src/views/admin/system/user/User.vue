@@ -21,7 +21,7 @@
       @filter-change="handleFilterChange"
     >
       <template #roles="scope">
-        <el-tag v-for="(item, index) in scope.row[scope.prop]">
+        <el-tag v-for="(item, index) in scope.row.roles">
           {{ item.role_key }}
         </el-tag>
       </template>
@@ -51,7 +51,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageModal from "@/components/CURD/PageModal.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
-import { LoginTypeEnum } from "@/enums/blog/index";
+import { LoginTypeEnum } from "@/enums/blog";
 import { AccountAPI } from "@/api/account";
 
 const {
@@ -80,7 +80,15 @@ function handleOperateClick(data: IOperateData) {
 
   switch (data.name) {
     case "edit":
-      handleEditClick(data.row);
+      handleEditClick(data.row, (row) => {
+        return {
+          ...row,
+          role_ids: row.roles?.map((r: any) => r.role_id) || [],
+        };
+      });
+      break;
+    case "delete":
+      ElMessage.warning("暂不支持删除用户操作");
       break;
     case "reset_password":
       ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {

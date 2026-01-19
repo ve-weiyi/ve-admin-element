@@ -1,6 +1,7 @@
 import type { IModalConfig } from "@/components/CURD/types";
 import type { NewRoleReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
+import { RoleDefaultEnum, RoleStatusEnum } from "@/enums/blog";
 
 const modalConfig: IModalConfig<NewRoleReq> = {
   permPrefix: "sys:user",
@@ -42,7 +43,9 @@ const modalConfig: IModalConfig<NewRoleReq> = {
       rules: [{ required: true, message: "角色备注不能为空", trigger: "blur" }],
       type: "input",
       attrs: {
+        type: "textarea",
         placeholder: "角色备注",
+        rows: 3,
       },
     },
     {
@@ -50,17 +53,18 @@ const modalConfig: IModalConfig<NewRoleReq> = {
       prop: "is_default",
       type: "switch",
       attrs: {
-        "active-value": 1,
-        "inactive-value": 0,
+        "active-value": RoleDefaultEnum.YES,
+        "inactive-value": RoleDefaultEnum.NO,
       },
+      tips: "用户创建时分配的角色",
     },
     {
-      label: "是否禁用",
-      prop: "is_disable",
+      label: "状态",
+      prop: "status",
       type: "switch",
       attrs: {
-        "active-value": 1,
-        "inactive-value": 0,
+        "active-value": RoleStatusEnum.DISABLED,
+        "inactive-value": RoleStatusEnum.NORMAL,
       },
     },
   ],

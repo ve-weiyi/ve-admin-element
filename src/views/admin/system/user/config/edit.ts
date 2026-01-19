@@ -3,13 +3,6 @@ import type { UpdateAccountRolesReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
 import { AccountAPI } from "@/api/account";
 
-const roleOptions = [];
-RoleAPI.findRoleListApi({}).then((res) => {
-  res.data.list.forEach((item) => {
-    roleOptions.push({ label: item.role_label, value: item.id });
-  });
-});
-
 const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
   permPrefix: "sys:user",
   component: "dialog",
@@ -51,6 +44,30 @@ const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
       },
     },
     {
+      label: "邮箱",
+      prop: "email",
+      type: "input",
+      attrs: {
+        disabled: true,
+      },
+    },
+    {
+      label: "手机号",
+      prop: "phone",
+      type: "input",
+      attrs: {
+        disabled: true,
+      },
+    },
+    {
+      label: "注册方式",
+      prop: "register_type",
+      type: "input",
+      attrs: {
+        disabled: true,
+      },
+    },
+    {
       label: "角色",
       prop: "role_ids",
       rules: [{ required: true, message: "用户角色不能为空", trigger: "blur" }],
@@ -59,8 +76,14 @@ const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
         placeholder: "请选择",
         multiple: true,
       },
-      options: roleOptions,
-      initialValue: [],
+      options: [],
+      async initFn(item) {
+        const res = await RoleAPI.findRoleListApi({});
+        item.options = res.data.list.map((role) => ({
+          label: role.role_label,
+          value: role.id,
+        }));
+      },
     },
   ],
 };

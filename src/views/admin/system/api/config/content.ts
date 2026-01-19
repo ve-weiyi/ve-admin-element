@@ -1,7 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryApiReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
-import { SwitchStatusEnum } from "@/enums/blog/index";
+import { ApiStatusEnum, ApiTraceableEnum } from "@/enums/blog";
 
 const contentConfig: IContentConfig<QueryApiReq> = {
   pageTitle: "接口管理",
@@ -13,6 +13,7 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       children: "children",
       hasChildren: "hasChildren",
     },
+    defaultExpandAll: false, // 默认全部展开
   },
   pagination: {
     background: true,
@@ -60,7 +61,15 @@ const contentConfig: IContentConfig<QueryApiReq> = {
         type: "info",
       },
     },
-    "add",
+    {
+      name: "add",
+      text: "新增模块",
+      perm: "add",
+      attrs: {
+        icon: "plus",
+        type: "warning",
+      },
+    },
     "delete",
   ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
@@ -77,23 +86,24 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       width: 70,
       align: "center",
       sortable: true,
+      show: false,
     },
     {
-      label: "名称",
+      label: "接口名称",
       prop: "name",
-      width: 0,
-      align: "center",
+      minWidth: 140,
+      align: "left",
     },
     {
-      label: "路径",
+      label: "接口路径",
       prop: "path",
-      width: 0,
+      minWidth: 150,
       align: "center",
     },
     {
-      label: "方法",
+      label: "请求方法",
       prop: "method",
-      width: 0,
+      width: 100,
       align: "center",
       templet: "custom",
     },
@@ -103,21 +113,17 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       width: 120,
       align: "center",
       templet: "switch",
-      activeValue: SwitchStatusEnum.ENABLED,
-      inactiveValue: SwitchStatusEnum.DISABLED,
+      activeValue: ApiTraceableEnum.YES,
+      inactiveValue: ApiTraceableEnum.NO,
       activeText: "记录",
       inactiveText: "不记录",
     },
     {
-      label: "是否禁用",
-      prop: "is_disable",
+      label: "状态",
+      prop: "status",
       width: 100,
       align: "center",
-      templet: "switch",
-      activeValue: SwitchStatusEnum.ENABLED,
-      inactiveValue: SwitchStatusEnum.DISABLED,
-      activeText: "禁用",
-      inactiveText: "启用",
+      templet: "custom",
     },
     {
       label: "创建时间",
@@ -129,15 +135,25 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       dateFormat: "YYYY/MM/DD HH:mm:ss",
     },
     {
+      label: "更新时间",
+      prop: "updated_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+      show: false,
+    },
+    {
       label: "操作栏",
       align: "center",
       fixed: "right",
-      width: 200,
+      width: 220,
       templet: "tool",
       operat: [
         {
           name: "addSubApi",
-          text: "添加",
+          text: "新增接口",
           perm: "addSubApi",
           attrs: {
             icon: "plus",

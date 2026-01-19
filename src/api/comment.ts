@@ -20,10 +20,10 @@ export const CommentAPI = {
     });
   },
 
-  /** 更新评论审核状态 */
+  /** 更新评论状态 */
   updateCommentStatusApi(data?: UpdateCommentStatusReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/comment/update_comment_review",
+      url: "/admin-api/v1/comment/update_comment_status",
       method: "PUT",
       data: data,
     });

@@ -23,7 +23,7 @@
       <template #icon="scope">
         <img
           v-if="scope.row.file_type === ''"
-          src="@/assets/dir.png"
+          src="@/assets/images/dir.png"
           class="article-cover"
           style="cursor: pointer"
         />

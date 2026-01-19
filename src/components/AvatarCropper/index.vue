@@ -67,12 +67,7 @@
       </el-col>
       <el-col
         :span="12"
-        style="
-          height: 300px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
+        style="height: 300px; display: flex; align-items: center; justify-content: center"
       >
         <!-- :style="{ 'aspect-ratio': aspectRatio }" -->
         <div class="preview-box" :style="previews.img">
@@ -109,9 +104,7 @@
         </el-row>
       </el-col>
       <el-col :span="4" :offset="8" style="margin-left: 22.3%">
-        <el-button type="primary" @click="determine(cropperBlob)">
-          提 交
-        </el-button>
+        <el-button type="primary" @click="determine(cropperBlob)">提 交</el-button>
       </el-col>
     </el-row>
   </el-dialog>
@@ -128,12 +121,7 @@ import * as imageConversion from "image-conversion";
 import { computed, getCurrentInstance, reactive, ref } from "vue";
 import type { UploadRawFile, UploadRequestOptions } from "element-plus";
 
-import {
-  Minus,
-  Plus,
-  RefreshLeft,
-  RefreshRight,
-} from "@element-plus/icons-vue";
+import { Minus, Plus, RefreshLeft, RefreshRight } from "@element-plus/icons-vue";
 
 const { proxy } = getCurrentInstance() as any;
 

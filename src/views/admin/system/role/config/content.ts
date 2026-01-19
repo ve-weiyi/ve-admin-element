@@ -1,7 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryRoleReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
-import { SwitchStatusEnum } from "@/enums/blog";
+import { RoleDefaultEnum, RoleStatusEnum } from "@/enums/blog";
 
 const contentConfig: IContentConfig<QueryRoleReq> = {
   pageTitle: "角色管理",
@@ -54,7 +54,7 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
       sortable: true,
     },
     {
-      label: "角色名称",
+      label: "角色标识",
       prop: "role_key",
       width: 120,
       align: "center",
@@ -69,7 +69,7 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
       label: "角色备注",
       prop: "role_comment",
       width: 0,
-      minWidth: 200,
+      minWidth: 220,
       align: "center",
     },
     {
@@ -78,21 +78,17 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
       width: 120,
       align: "center",
       templet: "switch",
-      activeValue: 1,
-      inactiveValue: 0,
+      activeValue: RoleDefaultEnum.YES,
+      inactiveValue: RoleDefaultEnum.NO,
       activeText: "默认",
       inactiveText: "非默认",
     },
     {
-      label: "是否禁用",
-      prop: "is_disable",
+      label: "状态",
+      prop: "status",
       width: 100,
       align: "center",
-      templet: "switch",
-      activeValue: SwitchStatusEnum.ENABLED,
-      inactiveValue: SwitchStatusEnum.DISABLED,
-      activeText: "禁用",
-      inactiveText: "启用",
+      templet: "custom",
     },
     {
       label: "创建时间",
@@ -104,14 +100,22 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
       dateFormat: "YYYY/MM/DD HH:mm:ss",
     },
     {
+      label: "更新时间",
+      prop: "updated_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+      show: false,
+    },
+    {
       label: "操作栏",
       align: "center",
       fixed: "right",
       width: 220,
       templet: "tool",
       operat: [
-        "edit",
-        "delete",
         {
           name: "perm",
           text: "分配权限",
@@ -121,6 +125,8 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
             type: "success",
           },
         },
+        "edit",
+        "delete",
       ],
     },
   ],

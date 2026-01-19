@@ -1,5 +1,5 @@
 import type { ISearchConfig } from "@/components/CURD/types";
-import { CommentStatusEnum, CommentTypeEnum, } from "@/enums/blog";
+import { CommentStatusEnum, CommentTypeEnum } from "@/enums/blog";
 
 const searchConfig: ISearchConfig = {
   permPrefix: "sys:user",

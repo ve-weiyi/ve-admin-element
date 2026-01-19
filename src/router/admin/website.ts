@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from "vue-router";
 
-const Layout = () => import("@/layout/index.vue");
+const Layout = () => import("@/layouts/index.vue");
 
 export default {
   path: "/website",
@@ -14,8 +14,8 @@ export default {
   },
   children: [
     {
-      path: "/website/profile",
-      component: () => import("@/views/admin/website/profile/Profile.vue"),
+      path: "/website/config",
+      component: () => import("@/views/admin/website/config/Config.vue"),
       name: "Config",
       meta: { title: "网站设置" },
     },

@@ -20,10 +20,10 @@ export const RemarkAPI = {
     });
   },
 
-  /** 更新留言 */
+  /** 更新留言状态 */
   updateRemarkStatusApi(data?: UpdateRemarkStatusReq): Promise<IApiResponse<BatchResp>> {
     return request({
-      url: "/admin-api/v1/remark/update_remark_review",
+      url: "/admin-api/v1/remark/update_remark_status",
       method: "PUT",
       data: data,
     });

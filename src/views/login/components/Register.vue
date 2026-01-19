@@ -1,20 +1,20 @@
-<template>
+﻿<template>
   <div>
-    <h3 text-center m-0 mb-20px>注册</h3>
+    <h3 text-center m-0 mb-20px>注 册</h3>
     <el-form ref="formRef" :model="model" :rules="rules" size="large">
-      <!-- 用户名 -->
-      <el-form-item prop="username">
-        <el-input v-model.trim="model.username" placeholder="用户名">
+      <!-- 邮箱 -->
+      <el-form-item prop="email">
+        <el-input v-model.trim="model.email" placeholder="邮箱">
           <template #prefix>
             <el-icon>
-              <User />
+              <Message />
             </el-icon>
           </template>
         </el-input>
       </el-form-item>
 
       <!-- 密码 -->
-      <el-tooltip :visible="isCapsLock" content="大写锁定已开启" placement="right">
+      <el-tooltip :visible="isCapsLock" content="大写锁定已打开" placement="right">
         <el-form-item prop="password">
           <el-input
             v-model.trim="model.password"
@@ -25,45 +25,29 @@
             @keyup.enter="submit"
           >
             <template #prefix>
-              <el-icon>
-                <Lock />
-              </el-icon>
+              <el-icon><Lock /></el-icon>
             </template>
           </el-input>
         </el-form-item>
       </el-tooltip>
 
-      <!-- 确认密码
-      <el-tooltip :visible="isCapsLock" content="大写锁定已开启" placement="right">
+      <!-- 确认密码 -->
+      <el-tooltip :visible="isCapsLock" content="大写锁定已打开" placement="right">
         <el-form-item prop="confirmPassword">
           <el-input
             v-model.trim="model.confirm_password"
-            placeholder="确认密码"
+            placeholder="请再次确认密码"
             type="password"
             show-password
             @keyup="checkCapsLock"
             @keyup.enter="submit"
           >
             <template #prefix>
-              <el-icon>
-                <Lock />
-              </el-icon>
+              <el-icon><Lock /></el-icon>
             </template>
           </el-input>
         </el-form-item>
       </el-tooltip>
-      -->
-
-      <!-- 邮箱 -->
-      <el-form-item prop="email">
-        <el-input v-model.trim="model.email" placeholder="绑定邮箱">
-          <template #prefix>
-            <el-icon>
-              <Message />
-            </el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
 
       <!-- 验证码 -->
       <el-form-item prop="verify_code">
@@ -79,19 +63,18 @@
         </div>
       </el-form-item>
 
-      <div class="flex-x-between w-full">
-        <el-checkbox v-model="isRead">
-          <div class="flex items-center">
-            我已仔细阅读并接受
-            <el-link type="primary" underline="never">《用户协议》</el-link>
-          </div>
-        </el-checkbox>
-        <!--        <el-link type="primary" underline="never" @click="toLogin">登录</el-link>-->
-      </div>
+      <el-form-item>
+        <div class="flex-y-center w-full gap-10px">
+          <el-checkbox v-model="isRead">我已同意并阅读</el-checkbox>
+          <el-link type="primary" underline="never">用户协议</el-link>
+        </div>
+      </el-form-item>
 
       <!-- 注册按钮 -->
       <el-form-item>
-        <el-button :loading="loading" type="success" class="w-full" @click="submit">注册</el-button>
+        <el-button :loading="loading" type="success" class="w-full" @click="submit">
+          注 册
+        </el-button>
       </el-form-item>
     </el-form>
     <div flex-center gap-10px>
@@ -101,11 +84,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { FormInstance } from "element-plus";
+import type { FormInstance, FormRules } from "element-plus";
 import { Lock, Message } from "@element-plus/icons-vue";
 import { RegisterReq } from "@/api/types";
 import { AuthAPI } from "@/api/auth";
-import { verify } from "node:crypto";
 
 const emit = defineEmits(["update:modelValue"]);
 const toLogin = () => emit("update:modelValue", "login");
@@ -117,13 +99,18 @@ const isRead = ref(false);
 
 const model = ref<RegisterReq>(<RegisterReq>{});
 
-const rules = computed(() => {
+const rules = computed<FormRules>(() => {
   return {
-    username: [
+    email: [
       {
         required: true,
         trigger: "blur",
-        message: "请输入用户名",
+        message: "请输入邮箱",
+      },
+      {
+        type: "email",
+        trigger: "blur",
+        message: "请输入正确的邮箱格式",
       },
     ],
     password: [
@@ -134,34 +121,33 @@ const rules = computed(() => {
       },
       {
         min: 6,
-        message: "密码长度不能小于6位",
+        message: "密码不能少于6位",
         trigger: "blur",
       },
     ],
-    // confirm_password: [
-    //   {
-    //     required: true,
-    //     trigger: "blur",
-    //     message: "请输入确认密码",
-    //   },
-    //   {
-    //     min: 6,
-    //     message: "密码长度不能小于6位",
-    //     trigger: "blur",
-    //   },
-    //   {
-    //     validator: (_: any, value: string) => {
-    //       return value === model.value.password;
-    //     },
-    //     trigger: "blur",
-    //     message: "两次输入的密码不一致",
-    //   },
-    // ],
-    email: [
+    confirm_password: [
       {
         required: true,
         trigger: "blur",
-        message: "请输入邮箱",
+        message: "请输入密码",
+      },
+      {
+        min: 6,
+        message: "密码不能少于6位",
+        trigger: "blur",
+      },
+      {
+        validator: (rule: any, value: any, callback: any) => {
+          if (value === "") {
+            callback(new Error("请输入密码"));
+          } else if (value !== model.value.password) {
+            callback(new Error("两次密码输入不一致"));
+          } else {
+            callback();
+          }
+        },
+        trigger: "blur",
+        message: "两次密码输入不一致",
       },
     ],
     verify_code: [
@@ -196,10 +182,14 @@ function sendCaptchaCode() {
   AuthAPI.sendEmailVerifyCodeApi({
     email: model.value.email,
     type: "register",
-  }).then(() => {
-    ElMessage.success("验证码已发送，请注意查收");
-    startCountdown();
-  });
+  })
+    .then(() => {
+      ElMessage.success("验证码已发送到您的邮箱，请注意查收");
+      startCountdown();
+    })
+    .catch((error) => {
+      ElMessage.error("验证码发送失败：" + error.message);
+    });
 }
 
 // 组件卸载时清除定时器
@@ -218,7 +208,25 @@ function checkCapsLock(event: KeyboardEvent) {
 }
 
 const submit = async () => {
+  if (!isRead.value) {
+    ElMessage.warning("请先阅读并同意用户协议");
+    return;
+  }
   await formRef.value?.validate();
-  ElMessage.warning("开发中 ...");
+  loading.value = true;
+  AuthAPI.registerApi({
+    username: model.value.email,
+    ...model.value,
+  })
+    .then(() => {
+      ElMessage.success("注册成功");
+      toLogin();
+    })
+    .catch((error) => {
+      ElMessage.error("注册失败：" + error.message);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 </script>

@@ -1,7 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryArticleReq } from "@/api/types";
 import { ArticleAPI } from "@/api/article";
-import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog/index";
+import { ArticleDeleteEnum, ArticleTopEnum } from "@/enums/blog";
 
 const contentConfig: IContentConfig<QueryArticleReq> = {
   pageTitle: "文章管理",
@@ -131,6 +131,16 @@ const contentConfig: IContentConfig<QueryArticleReq> = {
       sortable: true,
       templet: "date",
       dateFormat: "YYYY/MM/DD HH:mm:ss",
+    },
+    {
+      label: "更新时间",
+      prop: "updated_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+      show: false,
     },
     {
       label: "操作栏",

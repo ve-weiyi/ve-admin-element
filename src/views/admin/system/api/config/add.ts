@@ -1,8 +1,8 @@
 import type { IModalConfig } from "@/components/CURD/types";
 import type { NewApiReq } from "@/api/types";
 import { ApiAPI } from "@/api/api";
-import { HTTP_METHODS_WITH_EMPTY } from "@/utils/constants";
-import { SwitchStatusEnum } from "@/enums/blog/index";
+import { HTTP_METHODS_WITH_EMPTY } from "@/utils/option";
+import { ApiStatusEnum, ApiTraceableEnum } from "@/enums/blog";
 
 const modalConfig: IModalConfig<NewApiReq> = {
   permPrefix: "sys:api",
@@ -22,20 +22,20 @@ const modalConfig: IModalConfig<NewApiReq> = {
     console.log("提交之前处理", data);
   },
   formItems: [
-    {
-      label: "父菜单ID",
-      prop: "parent_id",
-      type: "input-number",
-      initialValue: 0,
-      attrs: {
-        placeholder: "父级ID",
-        disabled: true,
-        controls: false,
-        style: {
-          textAlign: "left",
-        },
-      },
-    },
+    // {
+    //   label: "父菜单ID",
+    //   prop: "parent_id",
+    //   type: "input-number",
+    //   initialValue: 0,
+    //   attrs: {
+    //     placeholder: "父级ID",
+    //     disabled: true,
+    //     controls: false,
+    //     style: {
+    //       textAlign: "left",
+    //     },
+    //   },
+    // },
     {
       label: "父级菜单",
       prop: "parent_name",
@@ -81,17 +81,17 @@ const modalConfig: IModalConfig<NewApiReq> = {
       prop: "traceable",
       type: "switch",
       attrs: {
-        activeValue: SwitchStatusEnum.ENABLED,
-        inactiveValue: SwitchStatusEnum.DISABLED,
+        activeValue: ApiTraceableEnum.YES,
+        inactiveValue: ApiTraceableEnum.NO,
       },
     },
     {
-      label: "是否禁用",
-      prop: "is_disable",
+      label: "状态",
+      prop: "status",
       type: "switch",
       attrs: {
-        activeValue: SwitchStatusEnum.ENABLED,
-        inactiveValue: SwitchStatusEnum.DISABLED,
+        activeValue: ApiStatusEnum.DISABLED,
+        inactiveValue: ApiStatusEnum.NORMAL,
       },
     },
   ],

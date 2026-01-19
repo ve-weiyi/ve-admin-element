@@ -91,8 +91,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useStomp } from "@/hooks/websocket/core/useStomp";
-import { useUserStoreHook } from "@/store/modules/user.store";
-import { getAccessToken, getUid } from "@/utils/token";
+import { useUserStoreHook } from "@/store/modules/user";
+import { AuthStorage } from "@/utils/auth";
 
 const userStore = useUserStoreHook();
 // 用于手动调整 WebSocket 地址
@@ -113,8 +113,8 @@ const receiver = ref("root");
 // 调用 useStomp hook，默认使用 socketEndpoint 和 token（此处用 getAccessToken()）
 const { isConnected, connect, subscribe, disconnect, client } = useStomp({
   debug: true,
-  token: getAccessToken(),
-  login: getUid(),
+  token: AuthStorage.getAccessToken(),
+  login: AuthStorage.getUid(),
 });
 
 watch(

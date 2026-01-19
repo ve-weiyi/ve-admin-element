@@ -1,7 +1,7 @@
 import type { App } from "vue";
-import { createRouter, createWebHashHistory, createWebHistory, type RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 
-export const Layout = () => import("@/layout/index.vue");
+export const Layout = () => import("@/layouts/index.vue");
 
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
@@ -55,6 +55,12 @@ export const constantRoutes: RouteRecordRaw[] = [
         path: "404",
         component: () => import("@/views/error/404.vue"),
         meta: { hidden: true },
+      },
+      {
+        path: "profile",
+        name: "Profile",
+        component: () => import("@/views/profile/index.vue"),
+        meta: { title: "个人中心", icon: "user", hidden: true },
       },
     ],
   },

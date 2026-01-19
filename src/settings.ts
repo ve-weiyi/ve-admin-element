@@ -1,35 +1,51 @@
-import { AppLanguage, ThemeMode, LayoutMode, ComponentSize } from "./enums";
+/**
+ * 应用配置
+ */
 
+import { LayoutMode, ComponentSize, SidebarColor, ThemeMode, LanguageEnum } from "@/enums";
+
+const env = import.meta.env;
 const { pkg } = __APP_INFO__;
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-// 检查用户的操作系统是否使用深色模式
-const mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
+// ============================================
+// 应用配置
+// ============================================
+export const appConfig = {
+  name: pkg.name as string,
+  version: pkg.version as string,
+  title: (env.VITE_APP_TITLE as string) || pkg.name,
+} as const;
 
-const defaultSettings: AppSettings = {
-  // 系统Title
-  title: pkg.name,
-  // 系统版本
-  version: pkg.version,
-  // 是否显示设置
-  showSettings: true,
-  // 是否显示标签视图
-  tagsView: true,
-  // 是否显示侧边栏Logo
-  sidebarLogo: true,
-  // 布局方式，默认为左侧布局
-  layout: LayoutMode.LEFT,
-  // 主题，根据操作系统的色彩方案自动选择
-  theme: mediaQueryList.matches ? ThemeMode.DARK : ThemeMode.LIGHT,
-  // 组件大小 default | medium | small | large
-  size: ComponentSize.DEFAULT,
-  // 语言
-  language: AppLanguage.ZH_CN,
-  // 主题颜色
+// ============================================
+// 用户偏好默认值
+// ============================================
+export const defaults = {
+  theme: prefersDark ? ThemeMode.DARK : ThemeMode.LIGHT,
   themeColor: "#4080FF",
-  // 是否开启水印
-  watermarkEnabled: false,
-  // 水印内容
+  sidebarColorScheme: SidebarColor.CLASSIC_BLUE,
+  layout: LayoutMode.LEFT,
+  size: ComponentSize.DEFAULT,
+  language: LanguageEnum.ZH_CN,
+  showTagsView: true,
+  showAppLogo: true,
+  showWatermark: false,
+  showSettings: true,
   watermarkContent: pkg.name,
-};
+} as const;
 
-export default defaultSettings;
+// ============================================
+// 主题色预设
+// ============================================
+export const themeColorPresets = [
+  "#4080FF",
+  "#1890FF",
+  "#409EFF",
+  "#FA8C16",
+  "#722ED1",
+  "#13C2C2",
+  "#52C41A",
+  "#F5222D",
+  "#2F54EB",
+  "#EB2F96",
+] as const;

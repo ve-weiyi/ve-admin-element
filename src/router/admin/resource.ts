@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from "vue-router";
 
-const Layout = () => import("@/layout/index.vue");
+const Layout = () => import("@/layouts/index.vue");
 
 export default {
   path: "/resource",
@@ -15,7 +15,7 @@ export default {
   children: [
     {
       path: "/resource/file",
-      component: () => import("@/views/admin/resource/file/index.vue"),
+      component: () => import("@/views/admin/resource/file/File.vue"),
       name: "File",
       meta: { title: "文件管理", keepAlive: true },
     },

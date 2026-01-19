@@ -8,21 +8,21 @@
           </el-icon>
         </template>
       </el-input>
-      <div>
-        <el-checkbox v-model="isExpandAll" @change="handleCheckedTreeExpand">展开/折叠</el-checkbox>
-        <el-checkbox v-model="isSelectAll" @change="handleCheckedTreeNodeAll">
-          全选/全不选
-        </el-checkbox>
-        <el-checkbox v-model="isStrictly" @change="handleCheckedTreeConnect">父子联动</el-checkbox>
-        <el-tooltip placement="bottom">
-          <template #content>
-            如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动
-          </template>
-          <el-icon class="ml-1 color-[--el-color-primary] inline-block cursor-pointer">
-            <QuestionFilled />
-          </el-icon>
-        </el-tooltip>
-      </div>
+    </div>
+    <div class="mt-2">
+      <el-checkbox v-model="isSelectAll" @change="handleCheckedTreeNodeAll">
+        全选/全不选
+      </el-checkbox>
+      <el-checkbox v-model="isExpandAll" @change="handleCheckedTreeExpand">展开/折叠</el-checkbox>
+      <el-checkbox v-model="isStrictly" @change="handleCheckedTreeConnect">父子联动</el-checkbox>
+      <el-tooltip placement="bottom">
+        <template #content>
+          如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动
+        </template>
+        <el-icon class="ml-1 color-[--el-color-primary] inline-block cursor-pointer">
+          <QuestionFilled />
+        </el-icon>
+      </el-tooltip>
     </div>
     <div class="tree-content">
       <el-tree
@@ -69,6 +69,14 @@ const props = defineProps({
       return [];
     },
   },
+  treeProps: {
+    type: Object,
+    required: false,
+    default: () => ({
+      children: "children",
+      label: "label",
+    }),
+  },
 });
 
 // 子组件向父组件通讯
@@ -86,10 +94,7 @@ const isStrictly = ref(data.isStrictly);
 
 const filterText = ref("");
 const treeRef = ref<InstanceType<typeof ElTree>>();
-const treeProps = ref({
-  children: "children",
-  label: "label",
-});
+const treeProps = ref(props.treeProps);
 
 const treeData = ref<any[]>(props.treeData);
 const defaultCheckIds = ref<number[]>(props.defaultCheckIds);
@@ -119,14 +124,14 @@ const handleCheckedTreeNodeAll = (value: CheckboxValueType) => {
 };
 
 const handleCheckedTreeConnect = (value: CheckboxValueType) => {
-  isStrictly.value = isStrictly.value ? true : false;
+  isStrictly.value = !!isStrictly.value;
 };
 
-const filterNodeMethod = (value, data) => {
+const filterNodeMethod = (value, data, node) => {
   if (!value) {
     return true;
   }
-  return data.name.includes(value);
+  return JSON.stringify(data).includes(value);
 };
 
 const onQueryChanged = (value: string) => {

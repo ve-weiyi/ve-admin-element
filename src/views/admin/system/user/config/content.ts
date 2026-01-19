@@ -2,6 +2,7 @@ import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryAccountReq } from "@/api/types";
 import { AccountAPI } from "@/api/account";
 import { useUserStore } from "@/store";
+import { UserStatusEnum } from "@/enums/blog";
 
 const contentConfig: IContentConfig<QueryAccountReq> = {
   pageTitle: "用户管理",
@@ -94,19 +95,19 @@ const contentConfig: IContentConfig<QueryAccountReq> = {
       width: 100,
       align: "center",
       templet: "switch",
-      activeValue: 1,
-      inactiveValue: 0,
+      activeValue: UserStatusEnum.DISABLED,
+      inactiveValue: UserStatusEnum.NORMAL,
       activeText: "禁用",
       inactiveText: "正常",
     },
     {
-      label: "IP地址",
+      label: "注册IP地址",
       prop: "ip_address",
       width: 140,
       align: "center",
     },
     {
-      label: "IP来源",
+      label: "注册IP归属地",
       prop: "ip_source",
       width: 0,
       minWidth: 160,
@@ -120,6 +121,16 @@ const contentConfig: IContentConfig<QueryAccountReq> = {
       sortable: true,
       templet: "date",
       dateFormat: "YYYY/MM/DD HH:mm:ss",
+    },
+    {
+      label: "更新时间",
+      prop: "updated_at",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
+      show: false,
     },
     {
       label: "操作栏",

@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useStomp } from "@/hooks";
 import { ElMessage } from "element-plus";
-import { getAccessToken, getUid } from "@/utils/token";
+import { AuthStorage } from "@/utils/auth";
 
 /**
  * 在线用户计数Hook
@@ -28,8 +28,8 @@ export function useOnlineCount() {
     disconnect,
     isConnected: stompConnected,
   } = useStomp({
-    token: getAccessToken(),
-    login: getUid(),
+    token: AuthStorage.getAccessToken(),
+    login: AuthStorage.getUid(),
     reconnectDelay: 15000, // 重连基础延迟
     maxReconnectAttempts: 3, // 重连次数上限
     connectionTimeout: 10000, // 连接超时
@@ -74,7 +74,7 @@ export function useOnlineCount() {
       try {
         const data = message.body;
 
-        console.error("收到在线用户计数消息:", data);
+        console.info("收到在线用户计数消息:", data);
         const jsonData = JSON.parse(data);
         const count = typeof jsonData === "number" ? jsonData : jsonData.count;
 
@@ -102,7 +102,7 @@ export function useOnlineCount() {
     }
 
     // 检查是否有可用的令牌
-    const hasToken = !!getAccessToken();
+    const hasToken = !!AuthStorage.getAccessToken();
     if (!hasToken) {
       console.log("没有检测到有效令牌，不尝试WebSocket连接");
       return;
@@ -124,7 +124,7 @@ export function useOnlineCount() {
         closeWebSocket();
         setTimeout(() => {
           // 再次检查令牌有效性
-          if (getAccessToken()) {
+          if (AuthStorage.getAccessToken()) {
             initWebSocket();
           } else {
             console.log("令牌无效，放弃重连");

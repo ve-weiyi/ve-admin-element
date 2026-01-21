@@ -10,7 +10,7 @@ export default {
   meta: {
     title: "资源管理",
     icon: "el-icon-folder",
-    rank: 5,
+    rank: 4,
   },
   children: [
     {
@@ -23,7 +23,7 @@ export default {
       path: "/resource/page",
       component: () => import("@/views/admin/resource/page/Page.vue"),
       name: "Page",
-      meta: { title: "页面管理" },
+      meta: { title: "页面管理", keepAlive: true },
     },
     {
       path: "/resource/picture",
@@ -40,18 +40,18 @@ export default {
           path: "/resource/albums",
           name: "Albums",
           component: () => import("@/views/admin/resource/album/Album.vue"),
-          meta: { title: "相册管理" },
+          meta: { title: "相册管理", keepAlive: true },
         },
         {
           path: "/resource/albums/:id",
-          name: "Photo",
+          name: "AlbumDetails",
           component: () => import("@/views/admin/resource/album/AlbumDetails.vue"),
           meta: { title: "相册详情", hidden: true },
         },
         {
           path: "/resource/photo/delete",
           name: "PhotoDelete",
-          component: () => import("@/views/admin/resource/album/Delete.vue"),
+          component: () => import("@/views/admin/resource/album/PhotoDelete.vue"),
           meta: { title: "相片回收站", hidden: true },
         },
       ],

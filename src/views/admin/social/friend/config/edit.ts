@@ -4,9 +4,11 @@ import { FriendAPI } from "@/api/friend";
 
 const modalConfig: IModalConfig<NewFriendReq> = {
   permPrefix: "website:friend",
-  component: "drawer",
-  drawer: {
+  component: "dialog",
+  dialog: {
     title: "修改友链",
+    width: 600,
+    draggable: true,
   },
   pk: "id",
   formAction: function (data) {

@@ -62,7 +62,7 @@
               @on-node-check="onMenusChange"
             >
               <template #default="{ node, data }">
-                <span>{{ data.title }} {{ data.path }}</span>
+                <span>{{ data.title }} {{ data.perm }}</span>
               </template>
             </Tree>
           </el-scrollbar>

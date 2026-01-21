@@ -22,11 +22,9 @@ const contentConfig: IContentConfig<QueryFriendReq> = {
     };
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return FriendAPI.deletesFriendApi(data);
+    return FriendAPI.deletesFriendApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   indexAction: function (params: QueryFriendReq) {
     if (!params.sorts) {
@@ -36,7 +34,26 @@ const contentConfig: IContentConfig<QueryFriendReq> = {
     return FriendAPI.findFriendListApi(params);
   },
   pk: "id",
-  toolbar: ["add", "delete"],
+  toolbar: [
+    {
+      name: "add",
+      text: "新增",
+      perm: "add",
+      attrs: {
+        icon: "plus",
+        type: "success",
+      },
+    },
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
   cols: [
     {
@@ -104,7 +121,26 @@ const contentConfig: IContentConfig<QueryFriendReq> = {
       fixed: "right",
       width: 160,
       templet: "tool",
-      operat: ["edit", "delete"],
+      operat: [
+        {
+          name: "edit",
+          text: "编辑",
+          perm: "edit",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
+        },
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
+      ],
     },
   ],
 };

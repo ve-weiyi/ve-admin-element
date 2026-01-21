@@ -21,10 +21,10 @@
       @filter-change="handleFilterChange"
     >
       <template #user_info="scope">
-        <UserInfo :user="scope.row[scope.prop]" />
+        <UserInfo :user="scope.row.user_info" />
       </template>
       <template #client_info="scope">
-        <ClientInfo :client="scope.row[scope.prop]" />
+        <ClientInfo :client="scope.row.client_info" />
       </template>
     </page-content>
   </div>

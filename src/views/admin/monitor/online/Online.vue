@@ -21,7 +21,7 @@
       @filter-change="handleFilterChange"
     >
       <template #roles="scope">
-        <el-tag v-for="(item, index) in scope.row[scope.prop]">
+        <el-tag v-for="(item, index) in scope.row.roles">
           {{ item.role_key }}
         </el-tag>
       </template>

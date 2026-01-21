@@ -9,7 +9,7 @@ export default defineMock([
       data: {
         user_count: 1234,
         article_count: 89,
-        remark_count: 567,
+        message_count: 567,
         category_list: [
           { id: 1, category_name: "前端开发", article_count: 25 },
           { id: 2, category_name: "后端开发", article_count: 18 },

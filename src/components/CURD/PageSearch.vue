@@ -156,7 +156,7 @@ onMounted(() => {
     } else if (item.type === "input-number") {
       queryParams[item.prop] = item.initialValue ?? null;
     } else {
-      queryParams[item.prop] = item.initialValue ?? "";
+      queryParams[item.prop] = item.initialValue ?? null;
     }
   });
 });

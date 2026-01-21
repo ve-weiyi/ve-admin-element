@@ -4,7 +4,7 @@ import { FileLogAPI } from "@/api/file_log";
 
 const contentConfig: IContentConfig<QueryFileLogReq> = {
   pageTitle: "文件日志",
-  permPrefix: "log:upload",
+  permPrefix: "log:file",
   table: {
     border: false,
     highlightCurrentRow: true,
@@ -25,14 +25,22 @@ const contentConfig: IContentConfig<QueryFileLogReq> = {
     return FileLogAPI.findFileLogListApi(query);
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return FileLogAPI.deletesFileLogApi(data);
+    return FileLogAPI.deletesFileLogApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   pk: "id",
-  toolbar: ["delete"],
+  toolbar: [
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
@@ -127,7 +135,15 @@ const contentConfig: IContentConfig<QueryFileLogReq> = {
             return row.file_type != "";
           },
         },
-        "delete",
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
       ],
     },
   ],

@@ -4,7 +4,7 @@ import { TagAPI } from "@/api/tag";
 
 const contentConfig: IContentConfig<QueryTagReq> = {
   pageTitle: "标签管理",
-  permPrefix: "sys:tag",
+  permPrefix: "blog:tag",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -22,11 +22,9 @@ const contentConfig: IContentConfig<QueryTagReq> = {
     };
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return TagAPI.deletesTagApi(data);
+    return TagAPI.deletesTagApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   indexAction: function (params: QueryTagReq) {
     if (!params.sorts) {
@@ -36,7 +34,26 @@ const contentConfig: IContentConfig<QueryTagReq> = {
     return TagAPI.findTagListApi(params);
   },
   pk: "id",
-  toolbar: ["add", "delete"],
+  toolbar: [
+    {
+      name: "add",
+      text: "新增",
+      perm: "add",
+      attrs: {
+        icon: "plus",
+        type: "success",
+      },
+    },
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
   cols: [
     {
@@ -89,7 +106,26 @@ const contentConfig: IContentConfig<QueryTagReq> = {
       fixed: "right",
       width: 160,
       templet: "tool",
-      operat: ["edit", "delete"],
+      operat: [
+        {
+          name: "edit",
+          text: "编辑",
+          perm: "edit",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
+        },
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
+      ],
     },
   ],
 };

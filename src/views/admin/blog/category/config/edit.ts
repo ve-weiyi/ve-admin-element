@@ -3,10 +3,12 @@ import type { NewCategoryReq } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
 const modalConfig: IModalConfig<NewCategoryReq> = {
-  permPrefix: "sys:user",
-  component: "drawer",
-  drawer: {
+  permPrefix: "blog:category",
+  component: "dialog",
+  dialog: {
     title: "修改分类",
+    width: 600,
+    draggable: true,
   },
   pk: "id",
   formAction: function (data) {

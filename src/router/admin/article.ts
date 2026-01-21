@@ -29,19 +29,19 @@ export default {
       path: "/article/list",
       name: "ArticleList",
       component: () => import("@/views/admin/blog/article/Article.vue"),
-      meta: { title: "文章列表" },
+      meta: { title: "文章列表", keepAlive: true },
     },
     {
       path: "/article/category",
       name: "Category",
       component: () => import("@/views/admin/blog/category/Category.vue"),
-      meta: { title: "分类管理" },
+      meta: { title: "分类管理", keepAlive: true },
     },
     {
       path: "/article/tag",
       name: "Tag",
       component: () => import("@/views/admin/blog/tag/Tag.vue"),
-      meta: { title: "标签管理" },
+      meta: { title: "标签管理", keepAlive: true },
     },
   ],
 } satisfies RouteRecordRaw;

@@ -134,7 +134,6 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import RightToolbar from "@/components/RightToolbar/index.vue";
-import SingleImageUpload from "@/components/Upload/SingleImageUpload.vue";
 import "@/styles/table.scss";
 import { AlbumAPI } from "@/api/album";
 import type { AlbumBackVO, NewAlbumReq, QueryAlbumReq } from "@/api/types";

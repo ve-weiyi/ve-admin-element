@@ -10,38 +10,38 @@ export default {
   meta: {
     title: "系统管理",
     icon: "el-icon-operation",
-    rank: 4,
+    rank: 6,
   },
   children: [
     {
       path: "/system/user",
       component: () => import("@/views/admin/system/user/User.vue"),
       name: "User",
-      meta: { title: "用户管理" },
+      meta: { title: "用户管理", keepAlive: true },
     },
     {
       path: "/system/role",
       component: () => import("@/views/admin/system/role/Role.vue"),
       name: "Role",
-      meta: { title: "角色管理" },
+      meta: { title: "角色管理", keepAlive: true },
     },
     {
       path: "/system/menu",
       component: () => import("@/views/admin/system/menu/Menu.vue"),
       name: "Menu",
-      meta: { title: "菜单管理" },
+      meta: { title: "菜单管理", keepAlive: true },
     },
     {
       path: "/system/api",
       component: () => import("@/views/admin/system/api/Api.vue"),
       name: "Api",
-      meta: { title: "接口管理" },
+      meta: { title: "接口管理", keepAlive: true },
     },
     {
       path: "/system/visitor",
       component: () => import("@/views/admin/system/visitor/Visitor.vue"),
       name: "Visitor",
-      meta: { title: "游客管理" },
+      meta: { title: "游客管理", keepAlive: true },
     },
   ],
 } satisfies RouteRecordRaw;

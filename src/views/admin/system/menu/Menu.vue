@@ -72,6 +72,7 @@ import type { NewMenuReq } from "@/api/types";
 import { MenuAPI } from "@/api/menu";
 import { ApiStatusEnum, MenuStatusEnum, MenuTypeEnum, MenuVisibleEnum } from "@/enums/blog";
 import { usePermissionStore } from "@/store";
+import { collectButtonsFromConfigs } from "@/utils/collect-buttons.ts";
 
 const {
   searchRef,
@@ -126,7 +127,10 @@ function handleSync() {
   })
     .then(async () => {
       try {
-        const menus = convertMenu(constantRoutes as RouteRecordRaw[]);
+        const buttonsCache = collectButtonsFromConfigs();
+        const menus = convertMenu(constantRoutes as RouteRecordRaw[], buttonsCache);
+
+        console.log(menus);
         await MenuAPI.syncMenuListApi({ menus });
         ElMessage.success("同步成功");
 
@@ -155,12 +159,46 @@ function parseComponentPath(componentStr?: string): string {
 /**
  * 转换单个路由为菜单项
  */
-function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0): NewMenuReq {
+function convertRouteToMenu(
+  route: RouteRecordRaw,
+  index: number,
+  buttonsCache: Record<string, any>,
+  parentId = 0
+): NewMenuReq {
+  const component = parseComponentPath(route.component?.toString());
+  console.log("component:", component);
+  const buttonList = buttonsCache[component] || [];
+  console.log("buttonList:", buttonList);
+  const children: NewMenuReq[] = route.children
+    ? route.children.map((child, i) => convertRouteToMenu(child, i, buttonsCache))
+    : [];
+
+  buttonList.forEach((btn: any, idx: number) => {
+    children.push({
+      parent_id: 0,
+      path: "",
+      name: "",
+      component: "",
+      redirect: "",
+      type: MenuTypeEnum.BUTTON,
+      title: btn.text,
+      icon: "",
+      rank: idx + 1,
+      perm: btn.perm,
+      params: [],
+      keep_alive: MenuStatusEnum.NORMAL,
+      always_show: MenuStatusEnum.NORMAL,
+      visible: MenuVisibleEnum.VISIBLE,
+      status: ApiStatusEnum.NORMAL,
+      children: [],
+    });
+  });
+
   return {
     parent_id: parentId,
     path: route.path || "",
     name: route.name?.toString() || "",
-    component: parseComponentPath(route.component?.toString()),
+    component,
     redirect: route.redirect?.toString() || "",
     type: route.children?.length ? MenuTypeEnum.CATALOG : MenuTypeEnum.MENU,
     title: route.meta?.title || "",
@@ -172,17 +210,17 @@ function convertRouteToMenu(route: RouteRecordRaw, index: number, parentId = 0):
     always_show: route.meta?.alwaysShow ? MenuStatusEnum.DISABLED : MenuStatusEnum.NORMAL,
     visible: route.meta?.hidden ? MenuVisibleEnum.HIDDEN : MenuVisibleEnum.VISIBLE,
     status: ApiStatusEnum.NORMAL,
-    children: route.children ? convertMenu(route.children) : [],
+    children,
   };
 }
 
 /**
  * 转换路由数组为菜单数组
  */
-function convertMenu(routes: RouteRecordRaw[]): NewMenuReq[] {
+function convertMenu(routes: RouteRecordRaw[], buttonsCache: Record<string, any>): NewMenuReq[] {
   if (!routes?.length) return [];
 
-  return routes.map((route, index) => convertRouteToMenu(route, index));
+  return routes.map((route, index) => convertRouteToMenu(route, index, buttonsCache));
 }
 
 /**
@@ -197,7 +235,7 @@ function refreshList() {
 function handleToolbarClick(name: string) {
   console.log(name);
   switch (name) {
-    case "addCatalog":
+    case "catalog":
       title.value = "新增目录";
       menuFormData.value = {
         id: 0,
@@ -215,10 +253,10 @@ function handleToolbarClick(name: string) {
       };
       addOrUpdate.value = true;
       break;
-    case "syncMenu":
+    case "sync":
       handleSync();
       break;
-    case "clearMenu":
+    case "clear":
       ElMessageBox.confirm("确认要清空所有菜单吗?", "系统提示", {
         type: "warning",
       })
@@ -241,7 +279,7 @@ function handleToolbarClick(name: string) {
 // 其他操作列
 function handleOperateClick(data: IOperateData) {
   switch (data.name) {
-    case "addMenu":
+    case "add":
       title.value = "新增菜单";
       menuFormData.value = {
         id: 0,
@@ -259,7 +297,7 @@ function handleOperateClick(data: IOperateData) {
       };
       addOrUpdate.value = true;
       break;
-    case "editMenu":
+    case "edit":
       title.value = "编辑菜单";
       menuFormData.value = data.row as NewMenuReq;
       addOrUpdate.value = true;

@@ -2,10 +2,18 @@ export interface AboutMeVO {
   content: string;
 }
 
+export interface AddNoticeReq {
+  title: string; // 通知标题
+  content: string; // 通知内容
+  type: string; // 通知类型
+  level: string; // 通知等级
+  app_name?: string; // 目标应用名称
+}
+
 export interface AdminHomeInfo {
   user_count: number; // 用户量
   article_count: number; // 文章量
-  remark_count: number; // 留言量
+  message_count: number; // 留言量
   category_list: CategoryVO[]; // 分类列表
   tag_list: TagVO[]; // 标签列表
   article_view_ranks: ArticleViewVO[]; // 文章浏览量排行
@@ -289,6 +297,18 @@ export interface MenuMetaParams {
   value?: string;
 }
 
+export interface MessageBackVO {
+  id?: number; // 主键id
+  user_id: string; // 用户ID
+  terminal_id: string; // 终端id
+  message_content: string; // 留言内容
+  status: number; // 状态
+  created_at: number; // 发布时间
+  updated_at: number; // 更新时间
+  user_info?: UserInfoVO; // 用户信息
+  client_info?: ClientInfoVO; // 客户端信息
+}
+
 export interface MultiUploadFileReq {
   files?: any[]; // 文件列表
   file_path?: string; // 文件路径
@@ -388,6 +408,21 @@ export interface NewTalkReq {
   img_list: string[]; // 图片URL列表
   is_top: number; // 是否置顶
   status: number; // 状态 1.公开 2.私密
+}
+
+export interface NoticeBackVO {
+  id?: number; // 主键ID
+  title: string; // 通知标题
+  content: string; // 通知内容
+  type: string; // 通知类型
+  level: string; // 通知等级
+  app_name: string; // 目标应用名称
+  publisher_id: string; // 发布人ID
+  publish_status: number; // 发布状态
+  publish_time: number; // 发布时间
+  revoke_time: number; // 撤回时间
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
 }
 
 export interface OperationLogBackVO {
@@ -517,6 +552,18 @@ export interface QueryMenuReq extends PageQuery {
   title?: string; // 菜单标题
 }
 
+export interface QueryMessageReq extends PageQuery {
+  user_id?: string; // 用户ID
+  status?: number; // 状态
+}
+
+export interface QueryNoticeReq extends PageQuery {
+  type?: string; // 通知类型
+  level?: string; // 通知等级
+  publish_status?: number; // 发布状态
+  app_name?: string; // 目标应用名称
+}
+
 export interface QueryOperationLogReq extends PageQuery {}
 
 export interface QueryPageReq extends PageQuery {
@@ -526,11 +573,6 @@ export interface QueryPageReq extends PageQuery {
 export interface QueryPhotoReq extends PageQuery {
   album_id?: number; // 相册id
   is_delete?: number; // 是否删除
-}
-
-export interface QueryRemarkReq extends PageQuery {
-  user_id?: string; // 用户ID
-  status?: number; // 状态
 }
 
 export interface QueryRoleReq extends PageQuery {
@@ -548,6 +590,8 @@ export interface QueryTalkReq extends PageQuery {
 }
 
 export interface QueryUserLoginHistoryReq extends PageQuery {}
+
+export interface QueryUserNoticeReq extends PageQuery {}
 
 export interface QueryVisitLogReq extends PageQuery {
   user_id?: string; // 用户id
@@ -572,18 +616,6 @@ export interface RegisterReq {
   confirm_password: string; // 确认密码
   email: string; // 邮箱
   verify_code: string; // 验证码
-}
-
-export interface RemarkBackVO {
-  id?: number; // 主键id
-  user_id: string; // 用户ID
-  terminal_id: string; // 终端id
-  message_content: string; // 留言内容
-  status: number; // 状态
-  created_at: number; // 发布时间
-  updated_at: number; // 更新时间
-  user_info?: UserInfoVO; // 用户信息
-  client_info?: ClientInfoVO; // 客户端信息
 }
 
 export interface ResetPasswordReq {
@@ -730,14 +762,28 @@ export interface UpdateCommentStatusReq {
   status: number; // 状态
 }
 
+export interface UpdateMessageStatusReq {
+  ids?: number[];
+  status: number; // 状态
+}
+
+export interface UpdateNoticeReq {
+  id: number; // 主键ID
+  title: string; // 通知标题
+  content: string; // 通知内容
+  type: string; // 通知类型
+  level: string; // 通知等级
+  app_name?: string; // 目标应用名称
+}
+
+export interface UpdateNoticeStatusReq {
+  id: number; // 主键ID
+  publish_status: number; // 发布状态
+}
+
 export interface UpdatePhotoDeleteReq {
   ids: number[]; // 主键
   is_delete: number; // 是否删除
-}
-
-export interface UpdateRemarkStatusReq {
-  ids?: number[];
-  status: number; // 状态
 }
 
 export interface UpdateRoleApisReq {

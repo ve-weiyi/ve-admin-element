@@ -100,16 +100,23 @@ function handleSync() {
 function handleToolbarClick(name: string) {
   console.log(name);
   switch (name) {
-    case "syncApi":
+    case "sync":
       handleSync();
       break;
-    case "clearApi":
+    case "clear":
       ApiAPI.cleanApiListApi().then((res) => {
         ElMessage.success("清空成功");
         //根据检索条件刷新列表数据
         const queryParams = searchRef.value?.getQueryParams();
         contentRef.value?.fetchPageData(queryParams, true);
       });
+      break;
+    case "module":
+      addModalRef.value?.setFormData({
+        parent_id: 0,
+        parent_name: "",
+      });
+      addModalRef.value?.setModalVisible(true);
       break;
     default:
       break;
@@ -120,7 +127,7 @@ function handleToolbarClick(name: string) {
 function handleOperateClick(data: IOperateData) {
   console.log(data);
   switch (data.name) {
-    case "addSubApi":
+    case "add":
       addModalRef.value?.setFormData({
         parent_id: data.row.id,
         parent_name: data.row.name,

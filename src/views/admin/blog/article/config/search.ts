@@ -2,7 +2,7 @@ import type { ISearchConfig } from "@/components/CURD/types";
 import { ArticleTypeEnum } from "@/enums/blog";
 
 const searchConfig: ISearchConfig = {
-  permPrefix: "sys:user",
+  permPrefix: "blog:article",
   formItems: [
     {
       type: "input",

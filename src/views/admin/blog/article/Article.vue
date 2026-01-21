@@ -92,7 +92,7 @@ const {
 function handleToolbarClick(name: string) {
   console.log(name);
   switch (name) {
-    case "writeArticle":
+    case "write":
       router.push({ path: `/article/publish` });
   }
 }
@@ -102,10 +102,10 @@ function handleOperateClick(data: IOperateData) {
   console.log(data);
 
   switch (data.name) {
-    case "editArticle":
+    case "edit":
       router.push({ path: `/article/edit/${data.row.id}` });
       break;
-    case "deleteArticle":
+    case "delete":
       ArticleAPI.updateArticleDeleteApi({
         id: data.row.id,
         is_delete: ArticleDeleteEnum.YES,
@@ -114,7 +114,7 @@ function handleOperateClick(data: IOperateData) {
         ElMessage.success("删除功");
       });
       break;
-    case "restoreArticle":
+    case "restore":
       ArticleAPI.updateArticleDeleteApi({
         id: data.row.id,
         is_delete: ArticleDeleteEnum.NO,
@@ -123,7 +123,7 @@ function handleOperateClick(data: IOperateData) {
         ElMessage.success("恢复成功");
       });
       break;
-    case "destroyArticle":
+    case "destroy":
       ArticleAPI.deleteArticleApi({
         id: data.row.id,
       }).then(() => {

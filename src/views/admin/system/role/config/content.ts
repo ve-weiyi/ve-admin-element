@@ -1,7 +1,7 @@
 import type { IContentConfig } from "@/components/CURD/types";
 import type { QueryRoleReq } from "@/api/types";
 import { RoleAPI } from "@/api/role";
-import { RoleDefaultEnum, RoleStatusEnum } from "@/enums/blog";
+import { RoleDefaultEnum } from "@/enums/blog";
 
 const contentConfig: IContentConfig<QueryRoleReq> = {
   pageTitle: "角色管理",
@@ -23,11 +23,9 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
     };
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return RoleAPI.deletesRoleApi(data);
+    return RoleAPI.deletesRoleApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   indexAction: function (params: QueryRoleReq) {
     return RoleAPI.findRoleListApi(params);
@@ -37,7 +35,26 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
     return RoleAPI.updateRoleApi(data);
   },
   pk: "id",
-  toolbar: ["add", "delete"],
+  toolbar: [
+    {
+      name: "add",
+      text: "新增",
+      perm: "add",
+      attrs: {
+        icon: "plus",
+        type: "success",
+      },
+    },
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
   cols: [
     {
@@ -125,8 +142,24 @@ const contentConfig: IContentConfig<QueryRoleReq> = {
             type: "success",
           },
         },
-        "edit",
-        "delete",
+        {
+          name: "edit",
+          text: "编辑",
+          perm: "edit",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
+        },
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
       ],
     },
   ],

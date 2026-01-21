@@ -140,9 +140,9 @@ const contentConfig: IContentConfig<QueryAccountReq> = {
       templet: "tool",
       operat: [
         {
-          name: "reset_password",
+          name: "reset",
           text: "重置密码",
-          perm: "password:reset",
+          perm: "reset",
           attrs: {
             icon: "refresh-left",
             type: "primary",
@@ -154,8 +154,24 @@ const contentConfig: IContentConfig<QueryAccountReq> = {
             );
           },
         },
-        "edit",
-        "delete",
+        {
+          name: "edit",
+          text: "编辑",
+          perm: "edit",
+          attrs: {
+            icon: "edit",
+            type: "primary",
+          },
+        },
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
       ],
     },
   ],

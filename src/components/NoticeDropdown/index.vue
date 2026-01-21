@@ -13,18 +13,37 @@
         <template v-if="list.length > 0">
           <div v-for="item in list" :key="item.id" class="w-500px py-3">
             <div class="flex-y-center">
-              <el-tag size="small" type="info">通知</el-tag>
+              <el-tag
+                size="small"
+                :type="
+                  item.level === NoticeLevelEnum.WARNING
+                    ? 'warning'
+                    : item.level === NoticeLevelEnum.ERROR
+                      ? 'danger'
+                      : 'info'
+                "
+              >
+                {{
+                  item.type === NoticeTypeEnum.SYSTEM
+                    ? "系统"
+                    : item.type === NoticeTypeEnum.MAINTENANCE
+                      ? "维护"
+                      : item.type === NoticeTypeEnum.UPDATE
+                        ? "更新"
+                        : "提醒"
+                }}
+              </el-tag>
               <el-text
                 size="small"
                 class="w-200px cursor-pointer !ml-2 !flex-1"
                 truncated
-                @click="read(item.id)"
+                @click="read(String(item.id))"
               >
                 {{ item.title }}
               </el-text>
 
               <div class="text-xs text-gray">
-                {{ item.publishTime }}
+                {{ formatTime(item.publish_time) }}
               </div>
             </div>
           </div>
@@ -60,11 +79,11 @@
       <div class="flex-y-center mb-16px text-13px text-color-secondary">
         <span class="flex-y-center">
           <el-icon><User /></el-icon>
-          {{ detail.publisherName }}
+          {{ detail.publisher_id }}
         </span>
         <span class="ml-2 flex-y-center">
           <el-icon><Timer /></el-icon>
-          {{ detail.publishTime }}
+          {{ formatTime(detail.publish_time) }}
         </span>
       </div>
 
@@ -76,9 +95,16 @@
 </template>
 
 <script setup lang="ts">
+import { useDateFormat } from "@vueuse/core";
 import { useNotice } from "./useNotice";
+import { NoticeTypeEnum, NoticeLevelEnum } from "@/enums/blog";
 
 const { list, detail, dialogVisible, read, readAll, goMore } = useNotice();
+
+const formatTime = (timestamp: number | null) => {
+  if (!timestamp) return "";
+  return useDateFormat(timestamp, "YYYY-MM-DD HH:mm:ss").value;
+};
 </script>
 
 <style lang="scss" scoped>

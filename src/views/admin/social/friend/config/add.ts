@@ -4,6 +4,7 @@ import { FriendAPI } from "@/api/friend";
 
 const modalConfig: IModalConfig<NewFriendReq> = {
   permPrefix: "website:friend",
+  component: "dialog",
   dialog: {
     title: "新增友链",
     width: 600,

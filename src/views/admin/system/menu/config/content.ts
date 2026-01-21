@@ -26,11 +26,9 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
     };
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return MenuAPI.deletesMenuApi(data);
+    return MenuAPI.deletesMenuApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   indexAction: function (params: QueryMenuReq) {
     if (!params.sorts) {
@@ -42,7 +40,7 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
   pk: "id",
   toolbar: [
     {
-      name: "syncMenu",
+      name: "sync",
       text: "同步菜单",
       perm: "sync",
       attrs: {
@@ -51,7 +49,7 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       },
     },
     {
-      name: "clearMenu",
+      name: "clear",
       text: "清空菜单",
       perm: "clear",
       attrs: {
@@ -60,15 +58,23 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       },
     },
     {
-      name: "addCatalog",
+      name: "catalog",
       text: "新增目录",
-      perm: "add",
+      perm: "catalog",
       attrs: {
         icon: "plus",
         type: "warning",
       },
     },
-    "delete",
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
   ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
   cols: [
@@ -178,24 +184,32 @@ const contentConfig: IContentConfig<QueryMenuReq> = {
       templet: "tool",
       operat: [
         {
-          name: "addMenu",
-          text: "新增菜单",
-          perm: "addMenu",
+          name: "add",
+          text: "新增",
+          perm: "add",
           attrs: {
             icon: "plus",
             type: "success",
           },
         },
         {
-          name: "editMenu",
+          name: "edit",
           text: "编辑",
-          perm: "editMenu",
+          perm: "edit",
           attrs: {
             icon: "edit",
             type: "primary",
           },
         },
-        "delete",
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
       ],
     },
   ],

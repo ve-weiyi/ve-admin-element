@@ -25,7 +25,17 @@ const contentConfig: IContentConfig<QueryLoginLogReq> = {
     return LoginLogAPI.findLoginLogListApi(query);
   },
   pk: "id",
-  toolbar: ["delete"],
+  toolbar: [
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {

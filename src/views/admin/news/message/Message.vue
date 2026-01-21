@@ -21,18 +21,19 @@
       @filter-change="handleFilterChange"
     >
       <template #user_info="scope">
-        <UserInfo :user="scope.row[scope.prop]" />
+        <UserInfo :user="scope.row.user_info" />
       </template>
       <template #client_info="scope">
-        <ClientInfo :client="scope.row[scope.prop]" />
+        <ClientInfo :client="scope.row.client_info" />
       </template>
-      <template #request_method="scope">
-        <div v-if="scope.row[scope.prop] === ''"></div>
-        <el-tag v-else-if="scope.row[scope.prop] === 'GET'" type="success">GET</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'POST'" type="primary">POST</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'PUT'" type="warning">PUT</el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === 'DELETE'" type="danger">DELETE</el-tag>
-        <el-tag v-else type="info">{{ scope.row[scope.prop] }}</el-tag>
+      <template #status="scope">
+        <el-tag v-if="scope.row.status === MessageStatusEnum.NORMAL" type="success">正常</el-tag>
+        <el-tag v-else-if="scope.row.status === MessageStatusEnum.EDITED" type="primary">
+          已编辑
+        </el-tag>
+        <el-tag v-else-if="scope.row.status === MessageStatusEnum.DELETED" type="danger">
+          已删除
+        </el-tag>
       </template>
     </page-content>
   </div>
@@ -47,6 +48,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import ClientInfo from "@/components/ClientInfo/index.vue";
+import { MessageStatusEnum } from "@/enums/blog";
 
 const {
   searchRef,

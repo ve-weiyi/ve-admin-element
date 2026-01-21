@@ -24,7 +24,7 @@
     <el-row :gutter="10" class="mt-5">
       <!-- 在线用户数量 -->
       <el-col :xs="8" :sm="8" :md="4">
-        <el-card shadow="never">
+        <el-card shadow="never" class="h-full">
           <template #header>
             <div class="flex-x-between">
               <span class="text-gray">在线用户</span>
@@ -58,9 +58,9 @@
 
       <!-- 访客数(UV) -->
       <el-col :xs="8" :sm="8" :md="4">
-        <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
+        <el-skeleton :loading="visitStatsLoading" :rows="5" animated class="h-full">
           <template #template>
-            <el-card>
+            <el-card class="h-full">
               <template #header>
                 <div>
                   <el-skeleton-item variant="h3" style="width: 40%" />
@@ -79,7 +79,7 @@
             </el-card>
           </template>
           <template v-if="!visitStatsLoading">
-            <el-card shadow="never">
+            <el-card shadow="never" class="h-full">
               <template #header>
                 <div class="flex-x-between">
                   <span class="text-gray">访客数(UV)</span>
@@ -118,9 +118,9 @@
 
       <!-- 浏览量(PV) -->
       <el-col :xs="8" :sm="8" :md="4">
-        <el-skeleton :loading="visitStatsLoading" :rows="5" animated>
+        <el-skeleton :loading="visitStatsLoading" :rows="5" animated class="h-full">
           <template #template>
-            <el-card>
+            <el-card class="h-full">
               <template #header>
                 <div>
                   <el-skeleton-item variant="h3" style="width: 40%" />
@@ -139,7 +139,7 @@
             </el-card>
           </template>
           <template v-if="!visitStatsLoading">
-            <el-card shadow="never">
+            <el-card shadow="never" class="h-full">
               <template #header>
                 <div class="flex-x-between">
                   <span class="text-gray">浏览量(PV)</span>
@@ -178,7 +178,7 @@
 
       <!-- 用户量 -->
       <el-col :xs="8" :sm="8" :md="4">
-        <el-card shadow="never" :loading="homeInfoLoading">
+        <el-card shadow="never" :loading="homeInfoLoading" class="h-full">
           <template #header>
             <div class="flex-x-between">
               <span class="text-gray">用户量</span>
@@ -202,7 +202,7 @@
 
       <!-- 文章量 -->
       <el-col :xs="8" :sm="8" :md="4">
-        <el-card shadow="never" :loading="homeInfoLoading">
+        <el-card shadow="never" :loading="homeInfoLoading" class="h-full">
           <template #header>
             <div class="flex-x-between">
               <span class="text-gray">文章量</span>
@@ -226,7 +226,7 @@
 
       <!-- 留言量 -->
       <el-col :xs="8" :sm="8" :md="4">
-        <el-card shadow="never" :loading="homeInfoLoading">
+        <el-card shadow="never" :loading="homeInfoLoading" class="h-full">
           <template #header>
             <div class="flex-x-between">
               <span class="text-gray">留言量</span>
@@ -236,14 +236,14 @@
 
           <div class="flex-x-between mt-2">
             <div class="flex-y-center">
-              <span class="text-lg">{{ Math.round(transitionRemarkCount) }}</span>
+              <span class="text-lg">{{ Math.round(transitionMessageCount) }}</span>
             </div>
             <div class="i-svg:message w-8 h-8" />
           </div>
 
           <div class="flex-x-between mt-2 text-sm text-gray">
             <span>留言总数</span>
-            <span>{{ Math.round(transitionRemarkCount) }}</span>
+            <span>{{ Math.round(transitionMessageCount) }}</span>
           </div>
         </el-card>
       </el-col>
@@ -590,7 +590,6 @@ const fetchVisitTrendData = () => {
  * @param data - 访问趋势数据
  */
 const updateVisitTrendChartOptions = (data: GetVisitTrendResp) => {
-
   const dates = [];
   const pvs = [];
   const uvs = [];
@@ -707,7 +706,7 @@ const homeInfoLoading = ref(true);
 const homeInfoData = ref<AdminHomeInfo>({
   user_count: 0,
   article_count: 0,
-  remark_count: 0,
+  message_count: 0,
   category_list: [],
   tag_list: [],
   article_view_ranks: [],
@@ -731,8 +730,8 @@ const transitionArticleCount = useTransition(
   }
 );
 
-const transitionRemarkCount = useTransition(
-  computed(() => homeInfoData.value.remark_count),
+const transitionMessageCount = useTransition(
+  computed(() => homeInfoData.value.message_count),
   {
     duration: 1000,
     transition: [0.25, 0.1, 0.25, 1.0],

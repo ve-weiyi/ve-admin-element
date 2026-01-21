@@ -21,21 +21,18 @@
       @filter-change="handleFilterChange"
     >
       <template #user_info="scope">
-        <UserInfo :user="scope.row[scope.prop]" />
+        <UserInfo :user="scope.row.user_info" />
       </template>
       <template #client_info="scope">
-        <ClientInfo :client="scope.row[scope.prop]" />
+        <ClientInfo :client="scope.row.client_info" />
       </template>
-      <template #status="scope">
-        <el-tag v-if="scope.row[scope.prop] === CommentStatusEnum.NORMAL" type="success">
-          正常
-        </el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === CommentStatusEnum.EDITED" type="primary">
-          已编辑
-        </el-tag>
-        <el-tag v-else-if="scope.row[scope.prop] === CommentStatusEnum.DELETED" type="danger">
-          已删除
-        </el-tag>
+      <template #request_method="scope">
+        <div v-if="scope.row.request_method === ''"></div>
+        <el-tag v-else-if="scope.row.request_method === 'GET'" type="success">GET</el-tag>
+        <el-tag v-else-if="scope.row.request_method === 'POST'" type="primary">POST</el-tag>
+        <el-tag v-else-if="scope.row.request_method === 'PUT'" type="warning">PUT</el-tag>
+        <el-tag v-else-if="scope.row.request_method === 'DELETE'" type="danger">DELETE</el-tag>
+        <el-tag v-else type="info">{{ scope.row.request_method }}</el-tag>
       </template>
     </page-content>
   </div>
@@ -50,7 +47,6 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import ClientInfo from "@/components/ClientInfo/index.vue";
-import { CommentStatusEnum } from "@/enums/blog";
 
 const {
   searchRef,

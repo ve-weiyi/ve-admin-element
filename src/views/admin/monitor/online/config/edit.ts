@@ -11,7 +11,7 @@ RoleAPI.findRoleListApi({}).then((res) => {
 });
 
 const modalConfig: IModalConfig<UpdateAccountRolesReq> = {
-  permPrefix: "sys:user",
+  permPrefix: "monitor:online",
   component: "dialog",
   dialog: {
     title: "编辑用户",

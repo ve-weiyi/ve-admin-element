@@ -1,8 +1,8 @@
 import type { ISearchConfig } from "@/components/CURD/types";
-import { CommentStatusEnum } from "@/enums/blog";
+import { CommentStatusEnum, CommentTypeEnum } from "@/enums/blog";
 
 const searchConfig: ISearchConfig = {
-  permPrefix: "sys:user",
+  permPrefix: "news:comment",
   formItems: [
     {
       type: "input",
@@ -15,6 +15,25 @@ const searchConfig: ISearchConfig = {
           width: "150px",
         },
       },
+    },
+    {
+      type: "select",
+      label: "评论来源",
+      prop: "type",
+      attrs: {
+        placeholder: "全部",
+        clearable: true,
+        style: {
+          width: "150px",
+        },
+      },
+      initialValue: 0,
+      options: [
+        { label: "全部", value: CommentTypeEnum.ALL },
+        { label: "文章", value: CommentTypeEnum.ARTICLE },
+        { label: "友链", value: CommentTypeEnum.FRIEND },
+        { label: "说说", value: CommentTypeEnum.TALK },
+      ],
     },
     {
       type: "select",

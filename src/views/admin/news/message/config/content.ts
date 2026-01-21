@@ -1,10 +1,10 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { QueryCommentReq } from "@/api/types";
-import { CommentAPI } from "@/api/comment";
+import type { QueryMessageReq } from "@/api/types";
+import { MessageAPI } from "@/api/message";
 
-const contentConfig: IContentConfig<QueryCommentReq> = {
-  pageTitle: "评论管理",
-  permPrefix: "message:comment",
+const contentConfig: IContentConfig<QueryMessageReq> = {
+  pageTitle: "留言管理",
+  permPrefix: "news:message",
   table: {
     border: true,
     highlightCurrentRow: true,
@@ -21,18 +21,26 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
       list: res.data.list || [],
     };
   },
-  indexAction: function (query: QueryCommentReq) {
-    return CommentAPI.findCommentBackListApi(query);
+  indexAction: function (query: QueryMessageReq) {
+    return MessageAPI.findMessageListApi(query);
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return CommentAPI.deletesCommentApi(data);
+    return MessageAPI.deletesMessageApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   pk: "id",
-  toolbar: ["delete"],
+  toolbar: [
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
@@ -49,7 +57,7 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
       sortable: true,
     },
     {
-      label: "评论人",
+      label: "留言人",
       prop: "user_info",
       width: 150,
       align: "center",
@@ -63,21 +71,8 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
       templet: "custom",
     },
     {
-      label: "回复人",
-      prop: "reply_user",
-      width: 150,
-      align: "center",
-      templet: "custom",
-    },
-    {
-      label: "文章标题",
-      prop: "topic_title",
-      width: 160,
-      align: "center",
-    },
-    {
-      label: "评论内容",
-      prop: "comment_content",
+      label: "留言内容",
+      prop: "message_content",
       minWidth: 200,
       width: 0,
       align: "center",
@@ -90,11 +85,19 @@ const contentConfig: IContentConfig<QueryCommentReq> = {
       templet: "custom",
     },
     {
-      label: "类型",
-      prop: "type",
+      label: "IP地址",
+      prop: "ip_address",
+      width: 140,
       align: "center",
-      width: 80,
-      templet: "custom",
+      show: false,
+    },
+    {
+      label: "IP来源",
+      prop: "ip_address",
+      width: 0,
+      minWidth: 160,
+      align: "center",
+      show: false,
     },
     {
       label: "创建时间",

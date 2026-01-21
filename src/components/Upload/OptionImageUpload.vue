@@ -3,7 +3,6 @@
   <single-image-upload
     v-if="props.uploadType === 'upload'"
     v-model="imgUrl"
-    accept="image/*"
     :upload-path="props.uploadPath"
   />
   <el-select

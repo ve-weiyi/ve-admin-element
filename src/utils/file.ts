@@ -45,3 +45,60 @@ export async function multipleUploadFile(files: Blob[], path: string) {
   };
   return UploadAPI.multiUploadFileApi(data);
 }
+
+export const calculateFileSize = (size: number, isInteger = false) => {
+  if (size === 0) {
+    return "--";
+  }
+  const B = 1024;
+  const KB = Math.pow(1024, 2);
+  const MB = Math.pow(1024, 3);
+  const GB = Math.pow(1024, 4);
+  if (isInteger) {
+    // 截取为整数
+    if (size < B) {
+      return `${size}B`;
+    } else if (size < KB) {
+      return `${(size / B).toFixed(0)}KB`;
+    } else if (size < MB) {
+      return `${(size / KB).toFixed(0)}MB`;
+    } else if (size < GB) {
+      return `${(size / MB).toFixed(0)}GB`;
+    } else {
+      return `${(size / GB).toFixed(0)}TB`;
+    }
+  } else {
+    // 保留小数位
+    if (size < B) {
+      return `${size}B`;
+    } else if (size < KB) {
+      return `${(size / B).toFixed(0)}KB`;
+    } else if (size < MB) {
+      return `${(size / KB).toFixed(1)}MB`;
+    } else if (size < GB) {
+      return `${(size / MB).toFixed(2)}GB`;
+    } else {
+      return `${(size / GB).toFixed(3)}TB`;
+    }
+  }
+};
+
+export function downloadFile(url: string, filename: string) {
+  fetch(url)
+    .then((res) => res.blob())
+    .then((blob) => {
+      // 创建下载链接
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = filename;
+
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+
+      // 清理
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    });
+}

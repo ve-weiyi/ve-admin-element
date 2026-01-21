@@ -106,7 +106,7 @@ import FileUpload from "@/components/Upload/FileUpload.vue";
 
 import { ref } from "vue";
 import { type FormInstance, type FormRules, type UploadUserFile } from "element-plus";
-import { multipleUploadFile } from "@/utils/file";
+import { calculateFileSize, downloadFile, multipleUploadFile } from "@/utils/file";
 import type { FileInfoVO } from "@/api/types";
 
 const {
@@ -125,7 +125,7 @@ const {
 function handleToolbarClick(name: string) {
   console.log(name);
   switch (name) {
-    case "addFile":
+    case "upload":
       importFormData.file_path = currentPath.value;
       importModalVisible.value = true;
       break;
@@ -138,20 +138,8 @@ function handleToolbarClick(name: string) {
 function handleOperateClick(data: IOperateData) {
   console.log(data);
   switch (data.name) {
-    case "edit":
-      handleEditClick(data.row);
-      break;
     case "download":
-      fetch(data.row.file_url)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = data.row.file_name;
-          a.click();
-          URL.revokeObjectURL(url);
-        });
+      downloadFile(data.row.file_url, data.row.file_name);
       break;
     default:
       break;
@@ -201,43 +189,6 @@ async function handleImport() {
     ElMessage.success("文件上传成功");
   });
 }
-
-const calculateFileSize = (size: number, isInteger = false) => {
-  if (size === 0) {
-    return "--";
-  }
-  const B = 1024;
-  const KB = Math.pow(1024, 2);
-  const MB = Math.pow(1024, 3);
-  const GB = Math.pow(1024, 4);
-  if (isInteger) {
-    // 截取为整数
-    if (size < B) {
-      return `${size}B`;
-    } else if (size < KB) {
-      return `${(size / B).toFixed(0)}KB`;
-    } else if (size < MB) {
-      return `${(size / KB).toFixed(0)}MB`;
-    } else if (size < GB) {
-      return `${(size / MB).toFixed(0)}GB`;
-    } else {
-      return `${(size / GB).toFixed(0)}TB`;
-    }
-  } else {
-    // 保留小数位
-    if (size < B) {
-      return `${size}B`;
-    } else if (size < KB) {
-      return `${(size / B).toFixed(0)}KB`;
-    } else if (size < MB) {
-      return `${(size / KB).toFixed(1)}MB`;
-    } else if (size < GB) {
-      return `${(size / MB).toFixed(2)}GB`;
-    } else {
-      return `${(size / GB).toFixed(3)}TB`;
-    }
-  }
-};
 
 const currentPath = ref("");
 

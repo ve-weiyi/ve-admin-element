@@ -3,7 +3,8 @@ import type { NewTagReq } from "@/api/types";
 import { TagAPI } from "@/api/tag";
 
 const modalConfig: IModalConfig<NewTagReq> = {
-  permPrefix: "sys:user",
+  permPrefix: "blog:tag",
+  component: "dialog",
   dialog: {
     title: "新增标签",
     width: 600,

@@ -42,13 +42,13 @@ const contentConfig: IContentConfig<QueryArticleReq> = {
   pk: "id",
   toolbar: [
     {
-      name: "writeArticle",
+      name: "write",
+      text: "新增文章",
+      perm: "write",
       attrs: {
         icon: "plus",
         type: "primary",
       },
-      text: "新增文章",
-      perm: "write",
     },
   ],
   defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
@@ -150,49 +150,49 @@ const contentConfig: IContentConfig<QueryArticleReq> = {
       templet: "tool",
       operat: [
         {
-          name: "editArticle",
-          perm: "article:editArticle",
+          name: "edit",
+          text: "编辑",
+          perm: "edit",
           attrs: {
             icon: "edit",
             type: "primary",
           },
-          text: "编辑",
           render(row) {
             return row.is_delete != ArticleDeleteEnum.YES;
           },
         },
         {
-          name: "deleteArticle",
-          perm: "article:deleteArticle",
+          name: "delete",
+          text: "删除",
+          perm: "delete",
           attrs: {
             icon: "refresh",
             type: "danger",
           },
-          text: "删除",
           render(row) {
             return row.is_delete != ArticleDeleteEnum.YES;
           },
         },
         {
-          name: "restoreArticle",
-          perm: "article:restoreArticle",
+          name: "restore",
+          text: "恢复",
+          perm: "restore",
           attrs: {
             icon: "refreshLeft",
             type: "success",
           },
-          text: "恢复",
           render(row) {
             return row.is_delete == ArticleDeleteEnum.YES;
           },
         },
         {
-          name: "destroyArticle",
-          perm: "article:destroyArticle",
+          name: "destroy",
+          text: "销毁",
+          perm: "destroy",
           attrs: {
             icon: "delete",
             type: "info",
           },
-          text: "销毁",
           render(row) {
             return row.is_delete == ArticleDeleteEnum.YES;
           },

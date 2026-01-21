@@ -17,13 +17,13 @@ export default {
       path: "/social/talk",
       component: () => import("@/views/admin/social/talk/Talk.vue"),
       name: "Talk",
-      meta: { title: "说说管理" },
+      meta: { title: "说说管理", keepAlive: true },
     },
     {
       path: "/social/friend",
       component: () => import("@/views/admin/social/friend/Friend.vue"),
       name: "Friend",
-      meta: { title: "友链管理" },
+      meta: { title: "友链管理", keepAlive: true },
     },
   ],
 } satisfies RouteRecordRaw;

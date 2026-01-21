@@ -39,15 +39,23 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
   pk: "file_path",
   toolbar: [
     {
-      name: "addFile",
-      text: "上传文件",
-      perm: "addFile",
+      name: "upload",
+      text: "上传",
+      perm: "upload",
       attrs: {
         icon: "plus",
         type: "primary",
       },
     },
-    "delete",
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
   ],
   defaultToolbar: [
     {
@@ -132,7 +140,15 @@ const contentConfig: IContentConfig<ListUploadFileReq> = {
             return row.file_type != "";
           },
         },
-        "delete",
+        {
+          name: "delete",
+          text: "删除",
+          perm: "delete",
+          attrs: {
+            icon: "delete",
+            type: "danger",
+          },
+        },
       ],
     },
   ],

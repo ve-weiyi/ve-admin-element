@@ -21,10 +21,10 @@
       @filter-change="handleFilterChange"
     >
       <template #user_info="scope">
-        <UserInfo :user="scope.row[scope.prop]" />
+        <UserInfo :user="scope.row.user_info" />
       </template>
       <template #client_info="scope">
-        <ClientInfo :client="scope.row[scope.prop]" />
+        <ClientInfo :client="scope.row.client_info" />
       </template>
       <template #login_type="scope">
         <el-tag v-if="scope.row.login_type === LoginTypeEnum.USERNAME" type="success">
@@ -38,8 +38,8 @@
         <el-tag v-else type="primary">{{ scope.row.login_type }}</el-tag>
       </template>
       <template #app_name="scope">
-        <el-tag v-if="scope.row.app_name === 'admin-web'" type="primary">admin</el-tag>
-        <el-tag v-else-if="scope.row.app_name === 'blog-web'" type="success">blog</el-tag>
+        <el-tag v-if="scope.row.app_name === NoticeAppEnum.BLOG" type="success">blog</el-tag>
+        <el-tag v-else-if="scope.row.app_name === NoticeAppEnum.ADMIN" type="primary">admin</el-tag>
         <el-tag v-else type="danger">{{ scope.row.app_name }}</el-tag>
       </template>
     </page-content>
@@ -55,7 +55,7 @@ import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
 import ClientInfo from "@/components/ClientInfo/index.vue";
-import { LoginTypeEnum } from "@/enums/blog";
+import { LoginTypeEnum, NoticeAppEnum } from "@/enums/blog";
 
 const {
   searchRef,

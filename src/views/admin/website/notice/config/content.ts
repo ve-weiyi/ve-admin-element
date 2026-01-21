@@ -1,19 +1,13 @@
 import type { IContentConfig } from "@/components/CURD/types";
-import type { QueryApiReq } from "@/api/types";
-import { ApiAPI } from "@/api/api";
-import { ApiTraceableEnum } from "@/enums/blog";
+import type { QueryNoticeReq } from "@/api/types";
+import { NoticeAPI } from "@/api/notice";
 
-const contentConfig: IContentConfig<QueryApiReq> = {
-  pageTitle: "接口管理",
-  permPrefix: "sys:api",
+const contentConfig: IContentConfig<QueryNoticeReq> = {
+  pageTitle: "通知管理",
+  permPrefix: "website:notice",
   table: {
     border: true,
     highlightCurrentRow: true,
-    treeProps: {
-      children: "children",
-      hasChildren: "hasChildren",
-    },
-    defaultExpandAll: false, // 默认全部展开
   },
   pagination: {
     background: true,
@@ -23,49 +17,27 @@ const contentConfig: IContentConfig<QueryApiReq> = {
   },
   parseData: (res) => {
     return {
-      total: -1,
+      total: res.data.total,
       list: res.data.list || [],
     };
   },
+  indexAction: function (query: QueryNoticeReq) {
+    return NoticeAPI.findNoticeListApi(query);
+  },
   deleteAction: function (ids: string) {
-    return ApiAPI.deletesApiApi({
+    return NoticeAPI.deletesNoticeApi({
       ids: ids.split(",").map((id) => parseInt(id)),
     });
-  },
-  indexAction: function (params: QueryApiReq) {
-    return ApiAPI.findApiListApi(params);
-  },
-  modifyAction(row, field, value) {
-    const data = Object.assign(row);
-    return ApiAPI.updateApiApi(data);
   },
   pk: "id",
   toolbar: [
     {
-      name: "sync",
-      text: "同步接口",
-      perm: "sync",
-      attrs: {
-        icon: "refresh",
-        type: "primary",
-      },
-    },
-    {
-      name: "clear",
-      text: "清空接口",
-      perm: "clear",
-      attrs: {
-        icon: "delete",
-        type: "info",
-      },
-    },
-    {
-      name: "module",
-      text: "新增模块",
-      perm: "module",
+      name: "add",
+      text: "新增",
+      perm: "add",
       attrs: {
         icon: "plus",
-        type: "warning",
+        type: "success",
       },
     },
     {
@@ -78,7 +50,7 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       },
     },
   ],
-  defaultToolbar: ["refresh", "filter", "imports", "exports", "search"],
+  defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {
       type: "selection",
@@ -92,44 +64,58 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       width: 70,
       align: "center",
       sortable: true,
+    },
+    {
+      label: "通知标题",
+      prop: "title",
+      minWidth: 200,
+      width: 0,
+      align: "center",
+    },
+    {
+      label: "通知内容",
+      prop: "content",
+      minWidth: 300,
+      width: 0,
+      align: "center",
       show: false,
     },
     {
-      label: "接口名称",
-      prop: "name",
-      minWidth: 140,
-      align: "left",
-    },
-    {
-      label: "接口路径",
-      prop: "path",
-      minWidth: 150,
-      align: "center",
-    },
-    {
-      label: "请求方法",
-      prop: "method",
-      width: 100,
-      align: "center",
-      templet: "custom",
-    },
-    {
-      label: "是否记录日志",
-      prop: "traceable",
+      label: "目标应用",
+      prop: "app_name",
       width: 120,
       align: "center",
-      templet: "switch",
-      activeValue: ApiTraceableEnum.YES,
-      inactiveValue: ApiTraceableEnum.NO,
-      activeText: "记录",
-      inactiveText: "不记录",
+      templet: "custom",
     },
     {
-      label: "状态",
-      prop: "status",
+      label: "通知类型",
+      prop: "type",
       width: 100,
       align: "center",
       templet: "custom",
+    },
+    {
+      label: "通知等级",
+      prop: "level",
+      width: 100,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "发布状态",
+      prop: "publish_status",
+      width: 100,
+      align: "center",
+      templet: "custom",
+    },
+    {
+      label: "发布时间",
+      prop: "publish_time",
+      width: 170,
+      align: "center",
+      sortable: true,
+      templet: "date",
+      dateFormat: "YYYY/MM/DD HH:mm:ss",
     },
     {
       label: "创建时间",
@@ -158,13 +144,18 @@ const contentConfig: IContentConfig<QueryApiReq> = {
       templet: "tool",
       operat: [
         {
-          name: "add",
-          text: "新增",
-          perm: "add",
-          attrs: {
-            icon: "plus",
-            type: "success",
-          },
+          name: "publish",
+          text: "发布",
+          perm: "publish",
+          attrs: { link: true, size: "small", type: "success" },
+          render: (row: any) => row.publish_status === 0,
+        },
+        {
+          name: "revoke",
+          text: "撤回",
+          perm: "revoke",
+          attrs: { link: true, size: "small", type: "warning" },
+          render: (row: any) => row.publish_status === 1,
         },
         {
           name: "edit",

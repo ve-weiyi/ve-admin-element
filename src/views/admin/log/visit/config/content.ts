@@ -25,14 +25,22 @@ const contentConfig: IContentConfig<QueryVisitLogReq> = {
     return VisitLogAPI.findVisitLogListApi(query);
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return VisitLogAPI.deletesVisitLogApi(data);
+    return VisitLogAPI.deletesVisitLogApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   pk: "id",
-  toolbar: ["delete"],
+  toolbar: [
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {

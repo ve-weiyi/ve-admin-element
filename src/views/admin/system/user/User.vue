@@ -90,7 +90,7 @@ function handleOperateClick(data: IOperateData) {
     case "delete":
       ElMessage.warning("暂不支持删除用户操作");
       break;
-    case "reset_password":
+    case "reset":
       ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

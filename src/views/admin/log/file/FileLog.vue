@@ -18,7 +18,7 @@
       @filter-change="handleFilterChange"
     >
       <template #user_info="scope">
-        <UserInfo :user="scope.row[scope.prop]" />
+        <UserInfo :user="scope.row.user_info" />
       </template>
       <template #icon="scope">
         <img
@@ -49,6 +49,7 @@ import searchConfig from "./config/search";
 import PageSearch from "@/components/CURD/PageSearch.vue";
 import PageContent from "@/components/CURD/PageContent.vue";
 import UserInfo from "@/components/UserInfo/index.vue";
+import { calculateFileSize, downloadFile } from "@/utils/file";
 
 const {
   contentRef,
@@ -75,50 +76,13 @@ function handleToolbarClick(name: string) {
 function handleOperateClick(data: IOperateData) {
   console.log(data);
   switch (data.name) {
-    case "edit":
-      handleEditClick(data.row);
+    case "download":
+      downloadFile(data.row.file_url, data.row.file_name);
       break;
     default:
       break;
   }
 }
-
-const calculateFileSize = (size: number, isInteger = false) => {
-  if (size === 0) {
-    return "--";
-  }
-  const B = 1024;
-  const KB = Math.pow(1024, 2);
-  const MB = Math.pow(1024, 3);
-  const GB = Math.pow(1024, 4);
-  if (isInteger) {
-    // 截取为整数
-    if (size < B) {
-      return `${size}B`;
-    } else if (size < KB) {
-      return `${(size / B).toFixed(0)}KB`;
-    } else if (size < MB) {
-      return `${(size / KB).toFixed(0)}MB`;
-    } else if (size < GB) {
-      return `${(size / MB).toFixed(0)}GB`;
-    } else {
-      return `${(size / GB).toFixed(0)}TB`;
-    }
-  } else {
-    // 保留小数位
-    if (size < B) {
-      return `${size}B`;
-    } else if (size < KB) {
-      return `${(size / B).toFixed(0)}KB`;
-    } else if (size < MB) {
-      return `${(size / KB).toFixed(1)}MB`;
-    } else if (size < GB) {
-      return `${(size / MB).toFixed(2)}GB`;
-    } else {
-      return `${(size / GB).toFixed(3)}TB`;
-    }
-  }
-};
 </script>
 <style scoped>
 .article-cover {

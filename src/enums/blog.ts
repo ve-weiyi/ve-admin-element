@@ -62,6 +62,15 @@ export enum CommentStatusEnum {
 }
 
 /**
+ * 留言状态枚举
+ */
+export enum MessageStatusEnum {
+  NORMAL = 0, // 正常状态
+  EDITED = 1, // 已编辑
+  DELETED = 2, // 已删除（软删除）
+}
+
+/**
  * 评论类型枚举
  */
 export enum CommentTypeEnum {
@@ -152,4 +161,41 @@ export enum ApiStatusEnum {
 export enum ApiTraceableEnum {
   NO = 0, // 不记录
   YES = 1, // 记录
+}
+
+/**
+ * 通知发布状态枚举
+ */
+export enum NoticePublishStatusEnum {
+  DRAFT = 1, // 草稿
+  PUBLISHED = 2, // 已发布
+  REVOKED = 3, // 已撤回
+}
+
+/**
+ * 通知类型枚举
+ */
+export enum NoticeTypeEnum {
+  SYSTEM = "system", // 系统公告
+  MAINTENANCE = "maintenance", // 维护通知
+  UPDATE = "update", // 功能更新
+  REMIND = "remind", // 重要提醒
+}
+
+/**
+ * 通知等级枚举
+ */
+export enum NoticeLevelEnum {
+  INFO = "info", // 普通
+  SUCCESS = "success", // 提醒
+  WARNING = "warning", // 警告
+  ERROR = "error", // 紧急
+}
+
+/**
+ * 通知应用枚举
+ */
+export enum NoticeAppEnum {
+  BLOG = "blog-web", // 博客
+  ADMIN = "admin-web", // 管理
 }

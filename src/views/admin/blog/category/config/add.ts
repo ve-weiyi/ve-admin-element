@@ -3,7 +3,8 @@ import type { NewCategoryReq } from "@/api/types";
 import { CategoryAPI } from "@/api/category";
 
 const modalConfig: IModalConfig<NewCategoryReq> = {
-  permPrefix: "sys:user",
+  permPrefix: "blog:category",
+  component: "dialog",
   dialog: {
     title: "新增用户",
     width: 600,

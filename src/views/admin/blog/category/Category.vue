@@ -21,8 +21,8 @@
       @filter-change="handleFilterChange"
     >
       <template #status="scope">
-        <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
-          {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
+        <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
+          {{ scope.row.status == 1 ? "启用" : "禁用" }}
         </el-tag>
       </template>
     </page-content>

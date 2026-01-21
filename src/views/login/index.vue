@@ -22,11 +22,11 @@
         <ul class="auth-feature__highlights">
           <li>
             <span>✓</span>
-            角色权限与安全管控
+            多种登录方式灵活切换
           </li>
           <li>
             <span>✓</span>
-            多种登录方式灵活切换
+            角色权限与安全管控
           </li>
           <li>
             <span>✓</span>

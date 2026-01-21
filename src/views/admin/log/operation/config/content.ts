@@ -25,14 +25,22 @@ const contentConfig: IContentConfig<QueryOperationLogReq> = {
     return OperationLogAPI.findOperationLogListApi(query);
   },
   deleteAction: function (ids: string) {
-    const data = {
-      ids: [],
-    };
-    ids.split(",").forEach((id) => data.ids.push(parseInt(id)));
-    return OperationLogAPI.deletesOperationLogApi(data);
+    return OperationLogAPI.deletesOperationLogApi({
+      ids: ids.split(",").map((id) => parseInt(id)),
+    });
   },
   pk: "id",
-  toolbar: ["delete"],
+  toolbar: [
+    {
+      name: "delete",
+      text: "删除",
+      perm: "delete",
+      attrs: {
+        icon: "delete",
+        type: "danger",
+      },
+    },
+  ],
   defaultToolbar: ["refresh", "filter", "search"],
   cols: [
     {

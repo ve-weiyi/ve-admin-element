@@ -4,12 +4,12 @@ import { RoleAPI } from "@/api/role";
 import { RoleDefaultEnum, RoleStatusEnum } from "@/enums/blog";
 
 const modalConfig: IModalConfig<NewRoleReq> = {
-  permPrefix: "sys:user",
+  permPrefix: "sys:role",
+  component: "dialog",
   dialog: {
-    title: "新增用户",
+    title: "新增角色",
     width: 600,
     draggable: true,
-    transition: undefined,
   },
   form: {
     labelWidth: 100,

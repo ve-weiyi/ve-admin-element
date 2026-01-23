@@ -1,11 +1,11 @@
 <template>
   <BaseLayout>
-    <!-- 左侧菜单�?-->
+    <!-- 左侧菜单�?-->
     <div class="layout__sidebar" :class="{ 'layout__sidebar--collapsed': !isSidebarOpen }">
       <div :class="{ 'has-logo': showLogo }" class="layout-sidebar">
         <LayoutLogo v-if="showLogo" :collapse="!isSidebarOpen" />
         <el-scrollbar>
-          <LayoutSidebar :data="routes" base-path="" />
+          <LayoutSidebar :data="routes as RouteRecordRaw[]" base-path="" />
         </el-scrollbar>
       </div>
     </div>
@@ -33,6 +33,7 @@ import LayoutNavbar from "./components/LayoutNavbar.vue";
 import LayoutTagsView from "./components/LayoutTagsView.vue";
 import LayoutMain from "./components/LayoutMain.vue";
 import LayoutSidebar from "./components/LayoutSidebar.vue";
+import { RouteRecordRaw } from "vue-router";
 
 const { showTagsView, showLogo, isSidebarOpen, routes } = useLayout();
 </script>
@@ -91,7 +92,7 @@ const { showTagsView, showLogo, isSidebarOpen, routes } = useLayout();
   }
 }
 
-/* 移动端样�?*/
+/* 移动端样�?*/
 .mobile {
   .layout__sidebar {
     width: $sidebar-width !important;

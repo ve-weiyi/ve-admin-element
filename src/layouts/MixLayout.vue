@@ -51,7 +51,7 @@
             <LayoutSidebarItem
               v-for="item in sideMenuRoutes"
               :key="item.path"
-              :item="item"
+              :item="item as RouteRecordRaw"
               :base-path="resolvePath(item.path)"
             />
           </el-menu>
@@ -180,7 +180,7 @@ function handleTopMenuSelect(menuPath: string) {
 
   appStore.activeTopMenu(menuPath);
   permissionStore.setMixLayoutSideMenus(menuPath);
-  navigateToFirstMenu(permissionStore.mixLayoutSideMenus);
+  navigateToFirstMenu(permissionStore.mixLayoutSideMenus as RouteRecordRaw[]);
 }
 
 // 导航到第一个可访问菜单

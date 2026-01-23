@@ -1,64 +1,82 @@
-<!-- 图片上传组件 -->
+<!-- 多图上传组件 -->
 <template>
-  <el-upload
-    v-model:file-list="fileList"
-    list-type="picture-card"
-    :before-upload="handleBeforeUpload"
-    :http-request="handleUpload"
-    :on-success="handleSuccess"
-    :on-error="handleError"
-    :on-exceed="handleExceed"
-    :accept="props.accept"
-    :limit="props.limit"
-    multiple
-  >
-    <el-icon><Plus /></el-icon>
-    <template #file="{ file }">
-      <div style="width: 100%">
-        <img class="el-upload-list__item-thumbnail" :src="file.url" />
-        <span class="el-upload-list__item-actions">
-          <!-- 预览 -->
-          <span @click="handlePreviewImage(file.url!)">
-            <el-icon><zoom-in /></el-icon>
-          </span>
-          <!-- 删除 -->
-          <span @click="handleRemove(file.url!)">
-            <el-icon><Delete /></el-icon>
-          </span>
-        </span>
-      </div>
-    </template>
-  </el-upload>
+  <div>
+    <el-upload
+      ref="uploadRef"
+      v-model:file-list="fileList"
+      :list-type="fileList.length === 0 ? 'picture' : 'picture-card'"
+      :drag="fileList.length === 0"
+      :show-file-list="fileList.length !== 0"
+      multiple
+      accept="image/*"
+      :auto-upload="props.autoUpload"
+      :limit="props.limit"
+      :before-upload="handleBeforeUpload"
+      :http-request="handleHttpRequest"
+      :on-success="handleSuccess"
+      :on-error="handleError"
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :on-progress="handleProgress"
+      :on-exceed="handleExceed"
+    >
+      <template v-if="fileList.length === 0">
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
+        <div class="el-upload__text">
+          将文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+      </template>
+      <template v-else>
+        <el-icon>
+          <Plus />
+        </el-icon>
+      </template>
+    </el-upload>
 
-  <el-image-viewer
-    v-if="previewVisible"
-    :zoom-rate="1.2"
-    :initial-index="previewImageIndex"
-    :url-list="modelValue"
-    @close="handlePreviewClose"
-  />
+    <el-progress
+      v-if="showUploadPercent"
+      :style="{ width: '100%' }"
+      :percentage="uploadPercent"
+      :color="customColorMethod"
+    />
+
+    <el-image-viewer
+      v-if="viewVisible"
+      :zoom-rate="1.2"
+      :initial-index="initialIndex"
+      :url-list="previewList"
+      @close="closePreview"
+    />
+  </div>
 </template>
-<script setup lang="ts">
-import { UploadRawFile, UploadRequestOptions, UploadUserFile } from "element-plus";
-import FileAPI from "@/api/file";
-import type { FileInfo } from "@/types/api";
+<script lang="ts" setup>
+import {
+  genFileId,
+  UploadFile,
+  UploadFiles,
+  type UploadInstance,
+  UploadProgressEvent,
+  UploadProps,
+  UploadRawFile,
+  UploadRequestOptions,
+  UploadUserFile,
+} from "element-plus";
+
+import { compressImage, uploadFile } from "@/utils/file";
+import { ref } from "vue";
 
 const props = defineProps({
-  /**
-   * 请求携带的额外参数
-   */
-  data: {
-    type: Object,
-    default: () => {
-      return {};
-    },
-  },
-  /**
-   * 上传文件的参数名
-   */
-  name: {
+  uploadPath: {
     type: String,
-    default: "file",
+    default: "/file",
+    required: false,
+  },
+  autoUpload: {
+    type: Boolean,
+    default: true,
   },
   /**
    * 文件上传数量限制
@@ -68,149 +86,147 @@ const props = defineProps({
     default: 10,
   },
   /**
-   * 单个文件的最大允许大小
+   * 单个文件上传大小限制(单位MB)
    */
   maxFileSize: {
     type: Number,
     default: 10,
   },
   /**
-   * 上传文件类型
+   * 是否压缩图片
    */
-  accept: {
-    type: String,
-    default: "image/*", // 默认支持所有图片格式，如果需要指定格式，格式如下：.png,.jpg,.jpeg,.gif,.bmp
+  compress: {
+    type: Boolean,
+    default: false,
   },
 });
 
-const previewVisible = ref(false); // 是否显示预览
-const previewImageIndex = ref(0); // 预览图片的索引
-
-const modelValue = defineModel("modelValue", {
-  type: [Array] as PropType<string[]>,
+const uploadRef = ref<UploadInstance>();
+const fileList = defineModel<UploadUserFile[]>("fileList", {
   default: () => [],
 });
 
-const fileList = ref<UploadUserFile[]>([]);
+const showUploadPercent = ref(false);
+const uploadPercent = ref(0);
 
 /**
- * 删除图片
- */
-function handleRemove(imageUrl: string) {
-  FileAPI.delete(imageUrl).then(() => {
-    const index = modelValue.value.indexOf(imageUrl);
-    if (index !== -1) {
-      // 直接修改数组避免触发整体更新
-      modelValue.value.splice(index, 1);
-      fileList.value.splice(index, 1); // 同步更新 fileList
-    }
-  });
-}
-
-/**
- * 上传前校验
+ * 上传前
  */
 function handleBeforeUpload(file: UploadRawFile) {
-  // 校验文件类型：虽然 accept 属性限制了用户在文件选择器中可选的文件类型，但仍需在上传时再次校验文件实际类型，确保符合 accept 的规范
-  const acceptTypes = props.accept.split(",").map((type) => type.trim());
-
-  // 检查文件格式是否符合 accept
-  const isValidType = acceptTypes.some((type) => {
-    if (type === "image/*") {
-      // 如果是 image/*，检查 MIME 类型是否以 "image/" 开头
-      return file.type.startsWith("image/");
-    } else if (type.startsWith(".")) {
-      // 如果是扩展名 (.png, .jpg)，检查文件名是否以指定扩展名结尾
-      return file.name.toLowerCase().endsWith(type);
-    } else {
-      // 如果是具体的 MIME 类型 (image/png, image/jpeg)，检查是否完全匹配
-      return file.type === type;
-    }
-  });
-
-  if (!isValidType) {
-    ElMessage.warning("上传文件的格式不正确，仅支持 " + props.accept);
-    return false;
-  }
+  console.log("handleBeforeUpload", file.name, file.size);
 
   // 限制文件大小
   if (file.size > props.maxFileSize * 1024 * 1024) {
-    ElMessage.warning("上传图片不能大于" + props.maxFileSize + "M");
+    if (props.compress) {
+      ElMessage.warning("上传文件大于" + props.maxFileSize + "M" + "，正在压缩...");
+      return compressImage(file);
+    }
+
+    ElMessage.warning("上传文件不能大于" + props.maxFileSize + "M");
     return false;
   }
+
   return true;
 }
 
-/*
- * 上传文件
+/**
+ * 上传中
  */
-function handleUpload(options: UploadRequestOptions) {
-  return new Promise((resolve, reject) => {
-    const file = options.file;
-
-    const formData = new FormData();
-    formData.append(props.name, file);
-
-    // 处理附加参数
-    Object.keys(props.data).forEach((key) => {
-      formData.append(key, props.data[key]);
-    });
-
-    FileAPI.upload(formData)
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+function handleHttpRequest(options: UploadRequestOptions) {
+  console.log("handleHttpRequest", options.filename);
+  return uploadFile(options.file, props.uploadPath);
 }
 
 /**
- * 上传文件超出限制
+ * 上传成功
  */
-function handleExceed() {
-  ElMessage.warning("最多只能上传 " + props.limit + " 张图片");
-}
-
-/**
- * 上传成功回调
- */
-const handleSuccess = (fileInfo: FileInfo, uploadFile: UploadUserFile) => {
+function handleSuccess(response: any, file: UploadFile, files?: UploadFiles) {
+  console.log("handleSuccess", response);
   ElMessage.success("上传成功");
-  const index = fileList.value.findIndex((file) => file.uid === uploadFile.uid);
+
+  // 更新文件的 url
+  const index = fileList.value.findIndex((f) => f.uid === file.uid);
   if (index !== -1) {
-    fileList.value[index].url = fileInfo.url;
+    fileList.value[index].url = response.data.file_url;
     fileList.value[index].status = "success";
-    modelValue.value[index] = fileInfo.url;
   }
-};
+
+  // 延迟隐藏进度条
+  setTimeout(() => {
+    showUploadPercent.value = false;
+    uploadPercent.value = 0;
+  }, 500);
+}
 
 /**
- * 上传失败回调
+ * 上传失败
  */
-const handleError = (error: any) => {
-  console.log("handleError");
-  ElMessage.error("上传失败: " + error.message);
+function handleError(error: any) {
+  console.log("handleError", error);
+  ElMessage.error(error?.message || "上传失败");
+
+  setTimeout(() => {
+    showUploadPercent.value = false;
+    uploadPercent.value = 0;
+  }, 500);
+}
+
+/**
+ * 删除文件
+ */
+function handleRemove(removeFile: UploadUserFile) {
+  console.log("handleRemove", removeFile);
+  const index = fileList.value.findIndex((item) => item.uid === removeFile.uid);
+  if (index !== -1) {
+    fileList.value.splice(index, 1);
+  }
+}
+
+/**
+ * 文件数量超出限制
+ */
+function handleExceed(files: File[]) {
+  console.log("handleExceed", files);
+  ElMessage.warning(`最多只能上传 ${props.limit} 张图片`);
+}
+
+/**
+ * 上传进度
+ */
+function handleProgress(event: UploadProgressEvent) {
+  console.log("handleProgress", event.percent);
+  uploadPercent.value = event.percent;
+}
+
+const customColorMethod = (percentage: number) => {
+  if (percentage < 30) {
+    return "#909399";
+  }
+  if (percentage < 70) {
+    return "#375ee8";
+  }
+  return "#67c23a";
 };
+
+const viewVisible = ref(false);
+const previewList = ref<string[]>([]);
+const initialIndex = ref(0);
 
 /**
  * 预览图片
  */
-const handlePreviewImage = (imageUrl: string) => {
-  previewImageIndex.value = modelValue.value.findIndex((url) => url === imageUrl);
-  previewVisible.value = true;
+const handlePreview: UploadProps["onPreview"] = (uploadFile: UploadFile) => {
+  console.log("handlePreview", uploadFile);
+  previewList.value = fileList.value.map((file) => file.url!);
+  initialIndex.value = fileList.value.findIndex((file) => file.url === uploadFile.url);
+  viewVisible.value = true;
 };
 
 /**
  * 关闭预览
  */
-const handlePreviewClose = () => {
-  previewVisible.value = false;
+const closePreview = () => {
+  viewVisible.value = false;
 };
-
-onMounted(() => {
-  fileList.value = modelValue.value.map((url) => ({ url }) as UploadUserFile);
-});
 </script>
 <style lang="scss" scoped></style>

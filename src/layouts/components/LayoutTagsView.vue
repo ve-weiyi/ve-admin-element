@@ -161,7 +161,7 @@ const extractAffixTags = (routes: RouteRecordRaw[], basePath = "/"): TagView[] =
  * 初始化固定标签
  */
 const initAffixTags = () => {
-  const affixTags = extractAffixTags(permissionStore.routes);
+  const affixTags = extractAffixTags(permissionStore.routes as RouteRecordRaw[]);
 
   affixTags.forEach((tag) => {
     if (tag.name) {

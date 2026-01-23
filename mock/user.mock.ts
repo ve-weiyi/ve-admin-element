@@ -2,238 +2,178 @@ import { defineMock } from "./base";
 
 export default defineMock([
   {
-    url: "users/me",
+    url: "/admin-api/v1/user/get_user_info",
     method: ["GET"],
     body: {
-      code: "00000",
+      code: 200,
       data: {
-        userId: 2,
+        user_id: "2",
         username: "admin",
-        nickname: "系统管理员",
-        avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-        roles: ["ADMIN"],
-        perms: [
-          "sys:notice:edit",
-          "sys:menu:delete",
-          "sys:dict:edit",
-          "sys:notice:query",
-          "sys:dict:delete",
-          "sys:config:add",
-          "sys:config:refresh",
-          "sys:menu:add",
-          "sys:user:add",
-          "sys:user:export",
-          "sys:role:edit",
-          "sys:dept:delete",
-          "sys:config:update",
-          "sys:user:password:reset",
-          "sys:notice:revoke",
-          "sys:user:import",
-          "sys:user:delete",
-          "sys:dict_type:delete",
-          "sys:dict:add",
-          "sys:role:add",
-          "sys:notice:publish",
-          "sys:notice:delete",
-          "sys:dept:edit",
-          "sys:dict_type:edit",
-          "sys:user:query",
-          "sys:user:edit",
-          "sys:config:delete",
-          "sys:dept:add",
-          "sys:notice:add",
-          "sys:role:delete",
-          "sys:menu:edit",
-          "sys:config:query",
+        nickname: "管理员",
+        avatar: "https://mms1.baidu.com/it/u=2815887849,1501151317&fm=253&app=138&f=JPEG",
+        email: "admin@example.com",
+        phone: "13800138000",
+        created_at: 1640000000,
+        register_type: "email",
+        gender: 1,
+        intro: "系统管理员",
+        website: "https://veweiyi.cn",
+        third_party: [],
+        roles: ["admin"],
+        perms: ["*:*:*"],
+      },
+      msg: "一切ok",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/get_user_menus",
+    method: ["GET"],
+    body: {
+      code: 200,
+      data: {
+        list: [
+          {
+            id: 1,
+            parent_id: 0,
+            path: "/dashboard",
+            name: "Dashboard",
+            component: "Layout",
+            redirect: "/dashboard/index",
+            meta: { title: "首页", icon: "dashboard", affix: true },
+            created_at: 1640000000,
+            updated_at: 1640000000,
+          },
         ],
       },
       msg: "一切ok",
     },
   },
-
   {
-    url: "users",
+    url: "/admin-api/v1/user/get_user_roles",
     method: ["GET"],
     body: {
-      code: "00000",
-      data: [
-        {
-          id: 2,
-          username: "admin",
-          nickname: "系统管理员",
-          mobile: "17621210366",
-          gender: 1,
-          avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-          email: "",
-          status: 1,
-          deptId: 1,
-          roleIds: [2],
-        },
-        {
-          id: 3,
-          username: "test",
-          nickname: "测试小用户",
-          mobile: "17621210366",
-          gender: 1,
-          avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-          email: "youlaitech@163.com",
-          status: 1,
-          deptId: 3,
-          roleIds: [3],
-        },
-      ],
-      page: {
-        pageNum: 1,
-        pageSize: 10,
-        total: 2,
+      code: 200,
+      data: {
+        list: [
+          {
+            id: 1,
+            parent_id: 0,
+            role_key: "admin",
+            role_label: "管理员",
+            role_comment: "系统管理员",
+          },
+        ],
       },
       msg: "一切ok",
     },
   },
-
-  // 新增用户
   {
-    url: "users",
-    method: ["POST"],
-    body({ body }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "新增用户" + body.nickname + "成功",
-      };
-    },
-  },
-
-  // 获取用户表单数据
-  {
-    url: "users/:userId/form",
-    method: ["GET"],
-    body: ({ params }) => {
-      return {
-        code: "00000",
-        data: userMap[params.userId],
-        msg: "一切ok",
-      };
-    },
-  },
-  // 修改用户
-  {
-    url: "users/:userId",
-    method: ["PUT"],
-    body({ body }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "修改用户" + body.nickname + "成功",
-      };
-    },
-  },
-
-  // 删除用户
-  {
-    url: "users/:userId",
-    method: ["DELETE"],
-    body({ params }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "删除用户" + params.id + "成功",
-      };
-    },
-  },
-
-  // 重置密码
-  {
-    url: "users/:userId/password/reset",
-    method: ["PUT"],
-    body({ query }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "重置密码成功，新密码为：" + query.password,
-      };
-    },
-  },
-
-  // 导出Excel
-  {
-    url: "users/export",
-    method: ["GET"],
-    headers: {
-      "Content-Disposition": "attachment; filename=%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8.xlsx",
-      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    },
-  },
-
-  {
-    url: "users/profile",
+    url: "/admin-api/v1/user/get_user_apis",
     method: ["GET"],
     body: {
-      code: "00000",
+      code: 200,
       data: {
-        id: 2,
-        username: "admin",
-        nickname: "系统管理员",
-        avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-        gender: 1,
-        mobile: "17621210366",
-        email: null,
-        deptName: "有来技术",
-        roleNames: "系统管理员",
-        createTime: "2019-10-10",
+        list: [
+          {
+            id: 1,
+            parent_id: 0,
+            name: "用户管理",
+            path: "/admin-api/v1/user/*",
+            method: "*",
+            created_at: 1640000000,
+            updated_at: 1640000000,
+            children: [],
+          },
+        ],
       },
+      msg: "一切ok",
     },
   },
-
   {
-    url: "users/profile",
-    method: ["PUT"],
-    body() {
-      return {
-        code: "00000",
-        data: null,
-        msg: "修改个人信息成功",
-      };
+    url: "/admin-api/v1/user/get_user_login_history_list",
+    method: ["POST"],
+    body: {
+      code: 200,
+      data: {
+        list: [
+          {
+            id: 1,
+            user_id: "2",
+            ip_address: "127.0.0.1",
+            ip_source: "本地",
+            browser: "Chrome",
+            os: "macOS",
+            login_time: 1640000000,
+          },
+        ],
+        total: 1,
+        page: 1,
+        page_size: 10,
+      },
+      msg: "一切ok",
     },
   },
-
   {
-    url: "users/password",
+    url: "/admin-api/v1/user/update_user_info",
     method: ["PUT"],
-    body() {
-      return {
-        code: "00000",
-        data: null,
-        msg: "修改密码成功",
-      };
+    body: {
+      code: 200,
+      data: {},
+      msg: "更新成功",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/update_user_avatar",
+    method: ["PUT"],
+    body: {
+      code: 200,
+      data: {},
+      msg: "更新成功",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/update_user_password",
+    method: ["PUT"],
+    body: {
+      code: 200,
+      data: {},
+      msg: "密码修改成功",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/update_user_bind_email",
+    method: ["PUT"],
+    body: {
+      code: 200,
+      data: {},
+      msg: "邮箱绑定成功",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/update_user_bind_phone",
+    method: ["PUT"],
+    body: {
+      code: 200,
+      data: {},
+      msg: "手机绑定成功",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/update_user_bind_third_party",
+    method: ["PUT"],
+    body: {
+      code: 200,
+      data: {},
+      msg: "第三方账号绑定成功",
+    },
+  },
+  {
+    url: "/admin-api/v1/user/delete_user_bind_third_party",
+    method: ["POST"],
+    body: {
+      code: 200,
+      data: {},
+      msg: "解绑成功",
     },
   },
 ]);
-
-// 用户映射表数据
-const userMap: Record<string, any> = {
-  2: {
-    id: 2,
-    username: "admin",
-    nickname: "系统管理员",
-    mobile: "17621210366",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "",
-    status: 1,
-    deptId: 1,
-    roleIds: [2],
-  },
-  3: {
-    id: 3,
-    username: "test",
-    nickname: "测试小用户",
-    mobile: "17621210366",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "youlaitech@163.com",
-    status: 1,
-    deptId: 3,
-    roleIds: [3],
-  },
-};

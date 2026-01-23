@@ -1,57 +1,151 @@
 import request from "@/utils/request";
-import type { LoginRequest, LoginResponse, CaptchaInfo } from "@/types/api/auth";
+import type {
+  EmailLoginReq,
+  EmptyReq,
+  EmptyResp,
+  GetCaptchaCodeReq,
+  GetCaptchaCodeResp,
+  GetClientInfoReq,
+  GetClientInfoResp,
+  GetOauthAuthorizeUrlReq,
+  GetOauthAuthorizeUrlResp,
+  LoginReq,
+  LoginResp,
+  PhoneLoginReq,
+  RefreshTokenReq,
+  RegisterReq,
+  ResetPasswordReq,
+  SendEmailVerifyCodeReq,
+  SendPhoneVerifyCodeReq,
+  ThirdLoginReq,
+} from "./types";
 
-const AUTH_BASE_URL = "/api/v1/auth";
-
-const AuthAPI = {
-  /** 登录接口*/
-  login(data: LoginRequest) {
-    const payload: Record<string, any> = {
-      username: data.username,
-      password: data.password,
-      captchaId: data.captchaId ?? "",
-      captchaCode: data.captchaCode ?? "",
-    };
-
-    // tenantId is optional — include only when provided (multi-tenant feature)
-    if (typeof data.tenantId !== "undefined") {
-      payload.tenantId = data.tenantId;
-    }
-
-    return request<any, LoginResponse>({
-      url: `${AUTH_BASE_URL}/login`,
-      method: "post",
-      data: payload,
-    });
-  },
-
-  /** 刷新 token 接口*/
-  refreshToken(refreshToken: string) {
-    return request<any, LoginResponse>({
-      url: `${AUTH_BASE_URL}/refresh-token`,
-      method: "post",
-      params: { refreshToken },
-      headers: {
-        Authorization: "no-auth",
-      },
-    });
-  },
-
-  /** 退出登录接口 */
-  logout() {
+export const AuthAPI = {
+  /** 获取客户端信息 */
+  getClientInfoApi(data?: GetClientInfoReq): Promise<IApiResponse<GetClientInfoResp>> {
     return request({
-      url: `${AUTH_BASE_URL}/logout`,
-      method: "delete",
+      url: "/admin-api/v1/get_client_info",
+      method: "GET",
+      data: data,
     });
   },
 
-  /** 获取验证码接口*/
-  getCaptcha() {
-    return request<any, CaptchaInfo>({
-      url: `${AUTH_BASE_URL}/captcha`,
-      method: "get",
+  /** 邮箱登录 */
+  emailLoginApi(data?: EmailLoginReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin-api/v1/email_login",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 获取验证码 */
+  getCaptchaCodeApi(data?: GetCaptchaCodeReq): Promise<IApiResponse<GetCaptchaCodeResp>> {
+    return request({
+      url: "/admin-api/v1/get_captcha_code",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 第三方登录授权地址 */
+  getOauthAuthorizeUrlApi(
+    data?: GetOauthAuthorizeUrlReq
+  ): Promise<IApiResponse<GetOauthAuthorizeUrlResp>> {
+    return request({
+      url: "/admin-api/v1/get_oauth_authorize_url",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 登录 */
+  loginApi(data?: LoginReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin-api/v1/login",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 手机登录 */
+  phoneLoginApi(data?: PhoneLoginReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin-api/v1/phone_login",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 刷新token */
+  refreshTokenApi(data?: RefreshTokenReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin-api/v1/refresh_token",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 注册 */
+  registerApi(data?: RegisterReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/register",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 重置密码 */
+  resetPasswordApi(data?: ResetPasswordReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/reset_password",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 发送邮件验证码 */
+  sendEmailVerifyCodeApi(data?: SendEmailVerifyCodeReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/send_email_verify_code",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 发送手机验证码 */
+  sendPhoneVerifyCodeApi(data?: SendPhoneVerifyCodeReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/send_phone_verify_code",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 第三方登录 */
+  thirdLoginApi(data?: ThirdLoginReq): Promise<IApiResponse<LoginResp>> {
+    return request({
+      url: "/admin-api/v1/third_login",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 注销 */
+  logoffApi(data?: EmptyReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/logoff",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 登出 */
+  logoutApi(data?: EmptyReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/admin-api/v1/logout",
+      method: "GET",
+      data: data,
     });
   },
 };
-
-export default AuthAPI;

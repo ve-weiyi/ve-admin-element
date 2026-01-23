@@ -1,11 +1,11 @@
 import vue from "@vitejs/plugin-vue";
-import { type UserConfig, type ConfigEnv, loadEnv, defineConfig } from "vite";
+import { type ConfigEnv, type UserConfig, loadEnv, defineConfig, PluginOption } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
-import mockDevServerPlugin from "vite-plugin-mock-dev-server";
+import { mockDevServerPlugin } from "vite-plugin-mock-dev-server";
 
 import UnoCSS from "unocss/vite";
 import { resolve } from "path";
@@ -21,12 +21,8 @@ const pathSrc = resolve(__dirname, "src");
 // Vite配置  https://cn.vitejs.dev/config
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
-  const basePath = env.VITE_APP_BASE_PATH || "/";
-  const baseApi = env.VITE_APP_BASE_API || "/dev-api";
-  const apiUrl = env.VITE_APP_API_URL || "http://localhost:18080";
-  const port = Number(env.VITE_APP_PORT) || 18082;
   return {
-    base: basePath,
+    base: env.VITE_APP_BASE_PATH,
     resolve: {
       alias: {
         "@": pathSrc,
@@ -36,7 +32,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         // 定义全局 SCSS 变量
         scss: {
-          api: "modern-compiler",
           additionalData: `
             @use "@/styles/variables.scss" as *;
           `,
@@ -45,21 +40,27 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     server: {
       host: "0.0.0.0",
-      port,
+      port: Number(env.VITE_APP_PORT),
       open: true,
       proxy: {
         // 代理 /dev-api 的请求
-        [baseApi]: {
+        [env.VITE_APP_BASE_API]: {
           changeOrigin: true,
-          // 代理目标地址：https://api.youlai.tech
-          target: apiUrl,
-          rewrite: (path) => path.replace(new RegExp("^" + baseApi), ""),
+          target: env.VITE_APP_API_URL,
+          rewrite: (path) => path.replace("", ""),
+          bypass(req, res, options) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log("proxyURL", proxyURL);
+            res.setHeader("x-req-proxyURL", proxyURL); // 设置响应头可以看到
+          },
         },
       },
     },
     plugins: [
       vue(),
-      env.VITE_MOCK_DEV_SERVER === "true" ? mockDevServerPlugin() : null,
+      env.VITE_MOCK_DEV_SERVER === "true"
+        ? mockDevServerPlugin({ include: ["mock/**/*.ts"] })
+        : null,
       UnoCSS(),
       // 自动导入配置 https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
       AutoImport({
@@ -86,7 +87,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         dts: false,
         // dts: "src/types/components.d.ts",
       }),
-    ],
+    ] as PluginOption[],
     // 预加载项目必需的组件
     optimizeDeps: {
       include: [
@@ -190,11 +191,13 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     build: {
       chunkSizeWarningLimit: 2000, // 消除打包大小超过500kb警告
       minify: "terser", // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
+      outDir: env.VITE_APP_DIST_NAME,
       terserOptions: {
         compress: {
           keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题
-          drop_console: true, // 生产环境去除 console
+          drop_console: true, // 生产环境去除 console.log, console.warn, console.error 等
           drop_debugger: true, // 生产环境去除 debugger
+          // pure_funcs: ["console.log", "console.info"], // 移除指定的函数调用
         },
         format: {
           comments: false, // 删除注释

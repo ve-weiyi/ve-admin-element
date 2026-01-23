@@ -13,28 +13,28 @@
       <section class="auth-feature">
         <div class="auth-feature__badge">
           <span class="auth-feature__dot" />
-          Enterprise Ready
+          Blog Management System
         </div>
-        <h1 class="auth-feature__title">企业级管理系统</h1>
+        <h1 class="auth-feature__title">博客管理系统</h1>
         <p class="auth-feature__subtitle">
-          提供安全、高效、可扩展的管理解决方案，助力企业数字化转型与业务增长。
+          基于 Vue 3 + TypeScript 构建的现代化博客管理平台，提供优雅的写作体验和强大的内容管理能力。
         </p>
         <ul class="auth-feature__highlights">
           <li>
             <span>✓</span>
-            统一身份认证与权限管理
+            多种登录方式灵活切换
           </li>
           <li>
             <span>✓</span>
-            支持多租户模式与租户隔离
+            角色权限与安全管控
           </li>
           <li>
             <span>✓</span>
-            数据安全与操作审计
+            文章分类与标签管理
           </li>
           <li>
             <span>✓</span>
-            灵活扩展与高可用架构
+            评论互动与访客统计
           </li>
         </ul>
       </section>
@@ -48,26 +48,29 @@
             <div class="auth-panel__title-row">
               <span class="auth-panel__title">{{ appConfig.title }}</span>
             </div>
-            <div v-if="appConfig.version || tenantEnabled" class="auth-panel__version-row">
+            <div v-if="appConfig.version" class="auth-panel__version-row">
               <el-text size="small" type="info">VERSION</el-text>
               <el-tag v-if="appConfig.version" size="small" effect="light" round>
                 {{ `v${appConfig.version}` }}
-              </el-tag>
-              <el-tag v-if="tenantEnabled" type="success" size="small" effect="light" round>
-                多租户
               </el-tag>
             </div>
           </div>
         </div>
 
-        <transition name="fade-slide" mode="out-in">
-          <component :is="formComponents[component]" v-model="component" class="auth-panel__form" />
-        </transition>
+        <div style="min-height: 450px">
+          <transition name="fade-slide" mode="out-in">
+            <component
+              :is="formComponents[component]"
+              v-model="component"
+              class="auth-panel__form"
+            />
+          </transition>
+        </div>
 
         <footer class="auth-panel__footer">
           <el-text size="small">
-            Copyright © 2021 - 2025 youlai.tech
-            <a href="http://beian.miit.gov.cn/" target="_blank">皖ICP备00064962号</a>
+            Copyright © 2022 - 2025 与梦
+            <a href="http://beian.miit.gov.cn/" target="_blank">桂ICP备2023013735号-1</a>
           </el-text>
         </footer>
       </section>
@@ -80,24 +83,29 @@ import logo from "@/assets/images/logo.png";
 import { appConfig } from "@/settings";
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
 
-type LayoutMap = "login" | "register" | "resetPwd";
+type LayoutMap = "login" | "register" | "resetPwd" | "email_login" | "phone_login";
 
 const component = ref<LayoutMap>("login");
-
-const tenantEnabled = appConfig.tenantEnabled;
 
 const formComponents = {
   login: defineAsyncComponent(() => import("./components/Login.vue")),
   register: defineAsyncComponent(() => import("./components/Register.vue")),
   resetPwd: defineAsyncComponent(() => import("./components/ResetPwd.vue")),
+  phone_login: defineAsyncComponent(() => import("./components/PhoneLogin.vue")),
 };
 
 let notificationInstance: ReturnType<typeof ElNotification> | null = null;
 
 const showVoteNotification = () => {
   notificationInstance = ElNotification({
-    title: "Gitee 2025 开源评选 · 诚邀支持",
-    message: `我正在参与 Gitee 2025 最受欢迎开源软件投票活动，欢迎支持！<br/><a href="https://gitee.com/activity/2025opensource?ident=I6VXEH" target="_blank" style="color: var(--el-color-primary); text-decoration: none; font-weight: 500;">点击投票</a>`,
+    title: "欢迎使用博客管理系统",
+    message: `
+开始你的创作之旅，记录生活点滴，分享技术心得~
+<br/>
+<a href="https://blog.veweiyi.com" target="_blank" style="color: var(--el-color-primary); text-decoration: none; font-weight: 500;">📖 访问博客前台</a>
+<br/>
+<a href="https://admin.veweiyi.com" target="_blank" style="color: var(--el-color-primary); text-decoration: none; font-weight: 500;">⚙️ 进入管理后台</a>
+`,
     type: "success",
     position: "bottom-left",
     duration: 0,
@@ -194,7 +202,7 @@ onBeforeUnmount(() => {
   }
 }
 
-/* 应用内暗黑主题下顶部设置面板的深色样式 */
+/* 应用内暗黑主题下顶部设置面板的深色样�?*/
 .dark .auth-view__toolbar {
   background-color: rgba(24, 28, 43, 0.9);
   border-color: rgba(64, 128, 255, 0.35);

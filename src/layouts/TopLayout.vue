@@ -7,7 +7,7 @@
           <LayoutLogo :collapse="isLogoCollapsed" />
         </div>
         <div class="layout__header-menu">
-          <LayoutSidebar :data="topMenuItems" menu-mode="horizontal" base-path="" />
+          <LayoutSidebar :data="topMenuItems as RouteRecordRaw[]" menu-mode="horizontal" base-path="" />
         </div>
       </div>
       <div class="layout__header-right">
@@ -33,6 +33,7 @@ import LayoutSidebar from "./components/LayoutSidebar.vue";
 import LayoutToolbar from "./components/LayoutToolbar.vue";
 import LayoutTagsView from "./components/LayoutTagsView.vue";
 import LayoutMain from "./components/LayoutMain.vue";
+import { RouteRecordRaw } from "vue-router";
 
 const { showTagsView, showLogo } = useLayout();
 const { width } = useWindowSize();

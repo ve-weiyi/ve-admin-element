@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 
 export const Layout = () => import("@/layouts/index.vue");
 
@@ -20,6 +20,12 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/login",
     component: () => import("@/views/login/index.vue"),
+    meta: { hidden: true },
+  },
+
+  {
+    path: "/oauth/login/:platform",
+    component: () => import("@/views/oauth/index.vue"),
     meta: { hidden: true },
   },
 
@@ -58,12 +64,6 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/profile/index.vue"),
         meta: { title: "个人中心", icon: "user", hidden: true },
       },
-      {
-        path: "my-notice",
-        name: "MyNotice",
-        component: () => import("@/views/profile/notice/index.vue"),
-        meta: { title: "我的通知", icon: "user", hidden: true },
-      },
     ],
   },
 ];
@@ -72,7 +72,8 @@ export const constantRoutes: RouteRecordRaw[] = [
  * 创建路由
  */
 const router = createRouter({
-  history: createWebHashHistory(),
+  // 使用createWebHashHistory模式会导致第三方授权回调无法识别查询参数
+  history: createWebHistory(),
   routes: constantRoutes,
   // 刷新时，滚动条位置还原
   scrollBehavior: () => ({ left: 0, top: 0 }),

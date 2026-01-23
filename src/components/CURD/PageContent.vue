@@ -1,24 +1,27 @@
-﻿<template>
+<template>
   <div
     class="rounded bg-[var(--el-bg-color)] border border-[var(--el-border-color)] p-5 h-full md:flex flex-1 flex-col md:overflow-auto"
   >
-    <!-- 表格工具 -->
+    <!-- 表格工具栏 -->
     <div class="flex flex-col md:flex-row justify-between gap-y-2.5 mb-2.5">
-      <!-- 左侧工具 -->
-      <div class="toolbar-left flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
-        <template v-for="(btn, index) in toolbarLeftBtn" :key="index">
-          <el-button
-            v-hasPerm="btn.perm ?? '*:*:*'"
-            v-bind="btn.attrs"
-            :disabled="btn.name === 'delete' && removeIds.length === 0"
-            @click="handleToolbar(btn.name)"
-          >
-            {{ btn.text }}
-          </el-button>
-        </template>
+      <!-- 左侧工具栏 -->
+      <div>
+        <a class="table-title">{{ contentConfig.pageTitle }}</a>
       </div>
-      <!-- 右侧工具 -->
+      <!-- 右侧工具栏 -->
       <div class="toolbar-right flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
+        <div class="toolbar-left flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
+          <template v-for="(btn, index) in toolbarLeftBtn" :key="index">
+            <el-button
+              v-hasPerm="btn.perm ?? '*:*:*'"
+              v-bind="btn.attrs"
+              :disabled="btn.name === 'delete' && removeIds.length === 0"
+              @click="handleToolbar(btn.name)"
+            >
+              {{ btn.text }}
+            </el-button>
+          </template>
+        </div>
         <template v-for="(btn, index) in toolbarRightBtn" :key="index">
           <el-popover v-if="btn.name === 'filter'" placement="bottom" trigger="click">
             <template #reference>
@@ -39,7 +42,7 @@
         </template>
       </div>
     </div>
-
+    <slot name="table-header"></slot>
     <!-- 列表 -->
     <el-table
       ref="tableRef"
@@ -78,7 +81,7 @@
                 </template>
               </template>
             </template>
-            <!-- 根据行的selectList属性返回对应列表 -->
+            <!-- 根据行的selectList属性返回对应列表值 -->
             <template v-else-if="col.templet === 'list'">
               <template v-if="col.prop">
                 {{ (col.selectList ?? {})[scope.row[col.prop]] }}
@@ -92,7 +95,7 @@
                 </el-link>
               </template>
             </template>
-            <!-- 生成开关组 -->
+            <!-- 生成开关组件 -->
             <template v-else-if="col.templet === 'switch'">
               <template v-if="col.prop">
                 <!-- pageData.length>0: 解决el-switch组件会在表格初始化的时候触发一次change事件 -->
@@ -111,7 +114,7 @@
                 />
               </template>
             </template>
-            <!-- 生成输入框组 -->
+            <!-- 生成输入框组件 -->
             <template v-else-if="col.templet === 'input'">
               <template v-if="col.prop">
                 <el-input
@@ -125,7 +128,7 @@
             <!-- 格式化为价格 -->
             <template v-else-if="col.templet === 'price'">
               <template v-if="col.prop">
-                {{ `${col.priceFormat ?? ""}${scope.row[col.prop]}` }}
+                {{ `${col.priceFormat ?? "￥"}${scope.row[col.prop]}` }}
               </template>
             </template>
             <!-- 格式化为百分比 -->
@@ -151,7 +154,6 @@
                 {{
                   scope.row[col.prop]
                     ? useDateFormat(scope.row[col.prop], col.dateFormat ?? "YYYY-MM-DD HH:mm:ss")
-                        .value
                     : ""
                 }}
               </template>
@@ -220,7 +222,7 @@
           <el-form-item label="工作表名" prop="sheetname">
             <el-input v-model="exportsFormData.sheetname" clearable />
           </el-form-item>
-          <el-form-item label="数据来源" prop="origin">
+          <el-form-item label="数据源" prop="origin">
             <el-select v-model="exportsFormData.origin">
               <el-option label="当前数据 (当前页的数据)" :value="ExportsOriginEnum.CURRENT" />
               <el-option
@@ -247,8 +249,8 @@
       <!-- 弹窗底部操作按钮 -->
       <template #footer>
         <div style="padding-right: var(--el-dialog-padding-primary)">
-          <el-button type="primary" @click="handleExportsSubmit">确定</el-button>
-          <el-button @click="handleCloseExportsModal">取消</el-button>
+          <el-button type="primary" @click="handleExportsSubmit">确 定</el-button>
+          <el-button @click="handleCloseExportsModal">取 消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -270,7 +272,7 @@
           :model="importFormData"
           :rules="importFormRules"
         >
-          <el-form-item label="文件" prop="files">
+          <el-form-item label="文件名" prop="files">
             <el-upload
               ref="uploadRef"
               v-model:file-list="importFormData.files"
@@ -283,7 +285,7 @@
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <div class="el-upload__text">
-                <span>将文件拖到此处，或点击上传</span>
+                <span>将文件拖到此处，或</span>
                 <em>点击上传</em>
               </div>
               <template #tip>
@@ -312,9 +314,9 @@
             :disabled="importFormData.files.length === 0"
             @click="handleImportSubmit"
           >
-            确定
+            确 定
           </el-button>
-          <el-button @click="handleCloseImportModal">取消</el-button>
+          <el-button @click="handleCloseImportModal">取 消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -427,7 +429,7 @@ const toolbarRightBtn = computed(() => {
 const tableToolbar = config.value.cols[config.value.cols.length - 1].operat ?? ["edit", "delete"];
 const tableToolbarBtn = createToolbar(tableToolbar, { link: true, size: "small" });
 
-// 表格相关
+// 表格列
 const cols = ref(
   props.contentConfig.cols.map((col) => {
     if (col.initFn) {
@@ -472,8 +474,8 @@ const pagination = reactive(
 );
 // 分页相关的请求参数
 const request = props.contentConfig.request ?? {
-  pageName: "pageNum",
-  limitName: "pageSize",
+  pageName: "page",
+  limitName: "page_size",
 };
 
 const tableRef = ref<TableInstance>();
@@ -517,7 +519,7 @@ function handleDelete(id?: number | string) {
           .then(() => {
             ElMessage.success("删除成功");
             removeIds.value = [];
-            // 清空选中项
+            //清空选中项
             tableRef.value?.clearSelection();
             handleRefresh(true);
           })
@@ -551,7 +553,7 @@ const exportsFormData = reactive({
 });
 const exportsFormRules: FormRules = {
   fields: [{ required: true, message: "请选择字段" }],
-  origin: [{ required: true, message: "请选择数据来源" }],
+  origin: [{ required: true, message: "请选择数据源" }],
 };
 // 打开导出弹窗
 function handleOpenExportsModal() {
@@ -709,7 +711,7 @@ function handleImports() {
   fileReader.onload = (ev) => {
     if (ev.target !== null && ev.target.result !== null) {
       const result = ev.target.result as ArrayBuffer;
-      // 从 buffer 中加载并解析数据
+      // 从 buffer中加载数据解析
       workbook.xlsx
         .load(result)
         .then((workbook) => {
@@ -753,7 +755,7 @@ function handleImports() {
   };
 }
 
-// 操作人"
+// 操作栏
 function handleToolbar(name: string) {
   switch (name) {
     case "refresh":
@@ -786,7 +788,7 @@ function handleToolbar(name: string) {
   }
 }
 
-// 操作人"
+// 操作列
 function handleOperate(data: IOperateData) {
   switch (data.name) {
     case "delete":
@@ -805,11 +807,14 @@ function handleOperate(data: IOperateData) {
 // 属性修改
 function handleModify(field: string, value: boolean | string | number, row: Record<string, any>) {
   if (props.contentConfig.modifyAction) {
-    props.contentConfig.modifyAction({
-      [pk]: row[pk],
-      field,
-      value,
-    });
+    props.contentConfig
+      .modifyAction(row, field, value)
+      .then(() => {
+        ElMessage.success("修改成功");
+      })
+      .catch((error) => {
+        ElMessage.error(`修改失败: ${error.message}`);
+      });
   } else {
     ElMessage.error("未配置modifyAction");
   }
@@ -870,19 +875,13 @@ function fetchPageData(formData: IObject = {}, isRestart = false) {
     )
     .then((data) => {
       if (showPagination) {
-        let parsed: any = data;
         if (props.contentConfig.parseData) {
-          parsed = props.contentConfig.parseData(data);
-        } else if ((data as any)?.data && Array.isArray((data as any).data)) {
-          parsed = {
-            list: (data as any).data,
-            total: (data as any)?.page?.total ?? 0,
-          };
+          data = props.contentConfig.parseData(data);
         }
-        pagination.total = parsed?.total ?? 0;
-        pageData.value = parsed?.list ?? [];
+        pagination.total = data.total;
+        pageData.value = data.list;
       } else {
-        pageData.value = (data as any)?.data ?? data;
+        pageData.value = data;
       }
     })
     .finally(() => {
@@ -936,5 +935,13 @@ defineExpose({ fetchPageData, exportPageData, getFilterParams, getSelectionData,
     margin-right: 0 !important;
     margin-left: 0 !important;
   }
+}
+//表头加粗，显示card标题
+.table-title {
+  margin-top: 0;
+  margin-left: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #202a34;
 }
 </style>

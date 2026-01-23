@@ -224,21 +224,6 @@ function handleSettingsClick() {
   .user-profile__name {
     color: rgba(255, 255, 255, 0.85);
   }
-
-  // 租户选择器在白色文字模式下的样式
-  ::v-deep(.tenant-switcher__trigger) {
-    color: rgba(255, 255, 255, 0.85);
-  }
-  ::v-deep(.tenant-switcher__trigger .tenant-switcher__icon) {
-    color: rgba(255, 255, 255, 0.85);
-  }
-  ::v-deep(.tenant-switcher__trigger:hover) {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-  }
-  ::v-deep(.tenant-switcher__trigger:hover .tenant-switcher__icon) {
-    color: #fff;
-  }
 }
 
 // 深色文字样式（用于浅色背景：明亮主题下的左侧布局）
@@ -259,21 +244,6 @@ function handleSettingsClick() {
 
   .user-profile__name {
     color: var(--el-text-color-regular) !important;
-  }
-
-  // 租户选择器在深色文字模式下的样式
-  ::v-deep(.tenant-switcher__trigger) {
-    color: var(--el-text-color-regular) !important;
-  }
-  ::v-deep(.tenant-switcher__trigger .tenant-switcher__icon) {
-    color: var(--el-text-color-regular) !important;
-  }
-  ::v-deep(.tenant-switcher__trigger:hover) {
-    color: var(--el-color-primary) !important;
-    background: rgba(0, 0, 0, 0.04);
-  }
-  ::v-deep(.tenant-switcher__trigger:hover .tenant-switcher__icon) {
-    color: var(--el-color-primary) !important;
   }
 }
 

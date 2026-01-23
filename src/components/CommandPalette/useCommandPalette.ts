@@ -188,7 +188,7 @@ export function useCommandPalette() {
   // ============================================
 
   onMounted(() => {
-    loadRoutes(permissionStore.routes);
+    loadRoutes(permissionStore.routes as RouteRecordRaw[]);
     loadHistory();
     document.addEventListener("keydown", handleKeydown);
   });

@@ -1,8 +1,5 @@
 ﻿<template>
   <div class="dashboard-container">
-    <!-- github 角标 -->
-    <github-corner class="github-corner" />
-
     <el-card shadow="never" class="mt-2">
       <div class="flex flex-wrap">
         <!-- 左侧问候语区域 -->
@@ -17,101 +14,6 @@
           <div class="ml-5">
             <p>{{ greetings }}</p>
             <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
-          </div>
-        </div>
-
-        <!-- 右侧图标区域 - PC端-->
-        <div class="hidden sm:block">
-          <div class="flex items-end space-x-6">
-            <!-- 仓库 -->
-            <div>
-              <div class="font-bold color-#ff9a2e text-sm flex items-center">
-                <el-icon class="mr-2px"><Folder /></el-icon>
-                仓库
-              </div>
-              <div class="mt-3 whitespace-nowrap">
-                <el-link href="https://gitee.com/youlaiorg/vue3-element-admin" target="_blank">
-                  <div class="i-svg:gitee text-lg color-#F76560" />
-                </el-link>
-                <el-divider direction="vertical" />
-                <el-link href="https://github.com/youlaitech/vue3-element-admin" target="_blank">
-                  <div class="i-svg:github text-lg color-#4080FF" />
-                </el-link>
-                <el-divider direction="vertical" />
-                <el-link href="https://gitcode.com/youlai/vue3-element-admin" target="_blank">
-                  <div class="i-svg:gitcode text-lg color-#FF9A2E" />
-                </el-link>
-              </div>
-            </div>
-
-            <!-- 文档 -->
-            <div>
-              <div class="font-bold color-#4080ff text-sm flex items-center">
-                <el-icon class="mr-2px"><Document /></el-icon>
-                文档
-              </div>
-              <div class="mt-3 whitespace-nowrap">
-                <el-link href="https://juejin.cn/post/7228990409909108793" target="_blank">
-                  <div class="i-svg:juejin text-lg" />
-                </el-link>
-                <el-divider direction="vertical" />
-                <el-link
-                  href="https://youlai.blog.csdn.net/article/details/130191394"
-                  target="_blank"
-                >
-                  <div class="i-svg:csdn text-lg" />
-                </el-link>
-                <el-divider direction="vertical" />
-                <el-link href="https://www.cnblogs.com/haoxianrui/p/17331952.html" target="_blank">
-                  <div class="i-svg:cnblogs text-lg" />
-                </el-link>
-              </div>
-            </div>
-
-            <!-- 视频 -->
-            <div>
-              <div class="font-bold color-#f76560 text-sm flex items-center">
-                <el-icon class="mr-2px"><VideoCamera /></el-icon>
-                视频
-              </div>
-              <div class="mt-3 whitespace-nowrap">
-                <el-link href="https://www.bilibili.com/video/BV1eFUuYyEFj" target="_blank">
-                  <div class="i-svg:bilibili text-lg" />
-                </el-link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 移动端图标区域-->
-        <div class="w-full sm:hidden mt-3">
-          <div class="flex justify-end space-x-4 overflow-x-auto">
-            <!-- 仓库图标 -->
-            <el-link href="https://gitee.com/youlaiorg/vue3-element-admin" target="_blank">
-              <div class="i-svg:gitee text-lg color-#F76560" />
-            </el-link>
-            <el-link href="https://github.com/youlaitech/vue3-element-admin" target="_blank">
-              <div class="i-svg:github text-lg color-#4080FF" />
-            </el-link>
-            <el-link href="https://gitcode.com/youlai/vue3-element-admin" target="_blank">
-              <div class="i-svg:gitcode text-lg color-#FF9A2E" />
-            </el-link>
-
-            <!-- 文档图标 -->
-            <el-link href="https://juejin.cn/post/7228990409909108793" target="_blank">
-              <div class="i-svg:juejin text-lg" />
-            </el-link>
-            <el-link href="https://youlai.blog.csdn.net/article/details/130191394" target="_blank">
-              <div class="i-svg:csdn text-lg" />
-            </el-link>
-            <el-link href="https://www.cnblogs.com/haoxianrui/p/17331952.html" target="_blank">
-              <div class="i-svg:cnblogs text-lg" />
-            </el-link>
-
-            <!-- 视频图标 -->
-            <el-link href="https://www.bilibili.com/video/BV1eFUuYyEFj" target="_blank">
-              <div class="i-svg:bilibili text-lg" />
-            </el-link>
           </div>
         </div>
       </div>
@@ -358,8 +260,7 @@ defineOptions({
 
 import { dayjs } from "element-plus";
 import { ref } from "vue";
-import StatisticsAPI from "@/api/system/statistics";
-import type { VisitStatsVo, VisitTrendVo } from "@/types/api";
+
 import { useUserStore } from "@/store/modules/user";
 import { formatGrowthRate } from "@/utils";
 import { useTransition, useDateFormat } from "@vueuse/core";
@@ -438,7 +339,7 @@ const greetings = computed(() => {
 // 访客统计数据加载状态
 const visitStatsLoading = ref(true);
 // 访客统计数据
-const visitStatsData = ref<VisitStatsVo>({
+const visitStatsData = ref<any>({
   todayUvCount: 0,
   uvGrowthRate: 0,
   totalUvCount: 0,
@@ -503,13 +404,7 @@ const visitTrendChartOptions = ref();
  * 获取访客统计数据
  */
 const fetchVisitStatsData = () => {
-  StatisticsAPI.getVisitOverview()
-    .then((data) => {
-      visitStatsData.value = data;
-    })
-    .finally(() => {
-      visitStatsLoading.value = false;
-    });
+  visitStatsLoading.value = false;
 };
 
 /**
@@ -520,13 +415,7 @@ const fetchVisitTrendData = () => {
     .subtract(visitTrendDateRange.value - 1, "day")
     .toDate();
   const endDate = new Date();
-
-  StatisticsAPI.getVisitTrend({
-    startDate: dayjs(startDate).format("YYYY-MM-DD"),
-    endDate: dayjs(endDate).format("YYYY-MM-DD"),
-  }).then((data) => {
-    updateVisitTrendChartOptions(data);
-  });
+  updateVisitTrendChartOptions({ dates: [], pvList: [], ipList: [] });
 };
 
 /**
@@ -534,7 +423,7 @@ const fetchVisitTrendData = () => {
  *
  * @param data - 访问趋势数据
  */
-const updateVisitTrendChartOptions = (data: VisitTrendVo) => {
+const updateVisitTrendChartOptions = (data: any) => {
   visitTrendChartOptions.value = {
     tooltip: {
       trigger: "axis",

@@ -16,6 +16,7 @@ permissions:
 env:
   IMAGE_NAME: ve-admin-element
   EXPOSE_PORT: 9421
+  DOCKERFILE: deploy/Dockerfile
 
 jobs:
   build-and-push:
@@ -45,7 +46,7 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$IMAGE_TAG .
+          docker build -f $DOCKERFILE -t ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$IMAGE_TAG .
 
       - name: Push Docker image
         run: |

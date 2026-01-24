@@ -4,8 +4,8 @@ services:
   # 前端服务
   ve-blog-element:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: deploy/Dockerfile
     image: ve-admin-element:latest  # 设置新的镜像名称和标签
     container_name: ve-admin-element
     restart: always

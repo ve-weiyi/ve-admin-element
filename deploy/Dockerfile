@@ -26,7 +26,7 @@ FROM nginx:stable-alpine AS production-stage
 COPY --from=build-stage /app/dist/admin /usr/share/nginx/html
 
 # 复制 Nginx 配置文件
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY deploy/nginx.conf /etc/nginx/nginx.conf
 
 # 暴露端口
 EXPOSE 80

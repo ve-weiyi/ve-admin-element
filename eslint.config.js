@@ -15,6 +15,38 @@ import pluginPrettier from "eslint-plugin-prettier"; // 运行 Prettier 规则
 import fs from "fs";
 const autoImportConfig = JSON.parse(fs.readFileSync(".eslintrc-auto-import.json", "utf-8"));
 
+// Element Plus组件
+const elementPlusComponents = {
+  // Element Plus 组件添加为全局变量，避免 no-undef 报错
+  ElInput: "readonly",
+  ElSelect: "readonly",
+  ElSwitch: "readonly",
+  ElCascader: "readonly",
+  ElInputNumber: "readonly",
+  ElTimePicker: "readonly",
+  ElTimeSelect: "readonly",
+  ElDatePicker: "readonly",
+  ElTreeSelect: "readonly",
+  ElText: "readonly",
+  ElRadioGroup: "readonly",
+  ElCheckboxGroup: "readonly",
+  ElOption: "readonly",
+  ElRadio: "readonly",
+  ElCheckbox: "readonly",
+  ElInputTag: "readonly",
+  ElForm: "readonly",
+  ElFormItem: "readonly",
+  ElTable: "readonly",
+  ElTableColumn: "readonly",
+  ElButton: "readonly",
+  ElDialog: "readonly",
+  ElPagination: "readonly",
+  ElMessage: "readonly",
+  ElMessageBox: "readonly",
+  ElNotification: "readonly",
+  ElTree: "readonly",
+};
+
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   // 指定检查文件和忽略文件
@@ -29,11 +61,14 @@ export default [
         ...globals.browser,
         ...globals.node,
         ...autoImportConfig.globals,
+        ...elementPlusComponents,
         ...{
           PageQuery: "readonly",
           PageResult: "readonly",
           OptionType: "readonly",
+          OptionItem: "readonly",
           ResponseData: "readonly",
+          ApiResponse: "readonly",
           ExcelResult: "readonly",
           TagView: "readonly",
           AppSettings: "readonly",

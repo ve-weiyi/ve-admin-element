@@ -1,28 +1,19 @@
-@use "./reset";
+/**
+ * 样式总入口
+ * 严格按照 ITCSS 架构顺序导入
+ */
 
-.app-container {
-  padding: 15px;
-}
+// 1. 基础层
+@use "./base/variables" as *;
+@use "./base/theme";
+@use "./base/reset";
 
-.search-bar {
-  padding: 18px 0 0 10px;
-  margin-bottom: 10px;
-  background-color: var(--el-bg-color-overlay);
-  border: 1px solid var(--el-border-color-light);
-  border-radius: 4px;
-  box-shadow: var(--el-box-shadow-light);
-}
+// 2. 第三方适配层
+@use "./vendors/element-plus";
+@use "./vendors/element-plus-override";
+@use "./vendors/vxe-table";
+@use "./vendors/wangeditor";
+@use "./vendors/nprogress";
 
-.table-container > .el-card__header {
-  padding: calc(var(--el-card-padding) - 8px) var(--el-card-padding);
-}
-
-.link-type,
-.link-type:focus {
-  color: #337ab7;
-  cursor: pointer;
-
-  &:hover {
-    color: rgb(32 160 255);
-  }
-}
+// 3. 布局层
+@use "./layout/layout";

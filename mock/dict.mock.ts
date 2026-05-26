@@ -2,21 +2,38 @@ import { defineMock } from "./base";
 
 export default defineMock([
   {
-    url: "dicts/page",
+    url: "dicts",
     method: ["GET"],
     body: {
       code: "00000",
-      data: {
-        list: [
-          {
-            id: 1,
-            name: "性别",
-            dictCode: "gender",
-            status: 1,
-          },
-        ],
+      data: [
+        {
+          id: "1",
+          name: "性别",
+          dictCode: "gender",
+          status: 1,
+        },
+      ],
+      page: {
+        pageNum: 1,
+        pageSize: 10,
         total: 1,
       },
+      msg: "一切ok",
+    },
+  },
+
+  {
+    url: "dicts/options",
+    method: ["GET"],
+    body: {
+      code: "00000",
+      data: [
+        {
+          value: "gender",
+          label: "性别",
+        },
+      ],
       msg: "一切ok",
     },
   },
@@ -79,37 +96,39 @@ export default defineMock([
 
   // 字典项分页列表
   {
-    url: "dicts/:dictCode/items/page",
+    url: "dicts/:dictCode/items",
     method: ["GET"],
     body: {
       code: "00000",
-      data: {
-        list: [
-          {
-            id: 1,
-            dictCode: "gender",
-            label: "男",
-            value: "1",
-            sort: 1,
-            status: 1,
-          },
-          {
-            id: 2,
-            dictCode: "gender",
-            label: "女",
-            value: "2",
-            sort: 2,
-            status: 1,
-          },
-          {
-            id: 3,
-            dictCode: "gender",
-            label: "保密",
-            value: "0",
-            sort: 3,
-            status: 1,
-          },
-        ],
+      data: [
+        {
+          id: "1",
+          dictCode: "gender",
+          label: "男",
+          value: "1",
+          sort: 1,
+          status: 1,
+        },
+        {
+          id: "2",
+          dictCode: "gender",
+          label: "女",
+          value: "2",
+          sort: 2,
+          status: 1,
+        },
+        {
+          id: "3",
+          dictCode: "gender",
+          label: "保密",
+          value: "0",
+          sort: 3,
+          status: 1,
+        },
+      ],
+      page: {
+        pageNum: 1,
+        pageSize: 10,
         total: 3,
       },
       msg: "一切ok",
@@ -117,7 +136,7 @@ export default defineMock([
   },
   // 字典项列表
   {
-    url: "dicts/:dictCode/items",
+    url: "dicts/:dictCode/items/options",
     method: ["GET"],
     body: ({ params }) => {
       const dictCode = params.dictCode;
@@ -257,7 +276,7 @@ const dictMap: Record<string, any> = {
   1: {
     code: "00000",
     data: {
-      id: 1,
+      id: "1",
       name: "性别",
       dictCode: "gender",
       status: 1,
@@ -271,7 +290,7 @@ const dictItemMap: Record<string, any> = {
   1: {
     code: "00000",
     data: {
-      id: 1,
+      id: "1",
       value: "1",
       label: "男",
       sort: 1,
@@ -283,7 +302,7 @@ const dictItemMap: Record<string, any> = {
   2: {
     code: "00000",
     data: {
-      id: 2,
+      id: "2",
       value: "2",
       label: "女",
       sort: 2,
@@ -295,7 +314,7 @@ const dictItemMap: Record<string, any> = {
   3: {
     code: "00000",
     data: {
-      id: 3,
+      id: "3",
       value: "0",
       label: "保密",
       sort: 3,

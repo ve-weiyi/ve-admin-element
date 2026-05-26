@@ -1,388 +1,368 @@
 <template>
-  <div class="login">
-    <!-- 登录页头部 -->
-    <div class="login-header">
-      <div class="flex-y-center">
-        <el-switch
-          v-model="isDark"
-          inline-prompt
-          active-icon="Moon"
-          inactive-icon="Sunny"
-          @change="toggleTheme"
-        />
-      </div>
-    </div>
-
-    <!-- 登录页内容 -->
-    <div class="login-form">
-      <el-form ref="loginFormRef" :model="loginFormData" :rules="loginRules">
-        <div class="form-title">
-          <h2>{{ defaultSettings.title }}</h2>
-          <el-dropdown style="position: absolute; right: 0">
-            <div class="cursor-pointer">
-              <el-icon>
-                <arrow-down />
-              </el-icon>
+  <div class="login-page">
+    <div class="login-page__body">
+      <section class="login-card">
+        <div class="login-card__brand">
+          <div class="login-card__logo-wrap">
+            <el-image :src="logo" class="login-card__logo" />
+          </div>
+          <div class="login-card__meta">
+            <div class="login-card__title-row">
+              <span class="login-card__title">{{ appConfig.title }}</span>
             </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-tag>{{ defaultSettings.version }}</el-tag>
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('root', '123456')">
-                  超级管理员：root/123456
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('admin', '123456')">
-                  系统管理员：admin/123456
-                </el-dropdown-item>
-                <el-dropdown-item @click="setLoginCredentials('test', '123456')">
-                  测试小游客：test/123456
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+            <div v-if="appConfig.version" class="login-card__version-row">
+              <el-text size="small" type="info">VERSION</el-text>
+              <el-tag size="small" effect="light" round>
+                {{ `v${appConfig.version}` }}
+              </el-tag>
+            </div>
+          </div>
         </div>
 
-        <!-- 用户名 -->
-        <el-form-item prop="username">
-          <div class="input-wrapper">
-            <el-icon class="mx-2">
-              <User />
-            </el-icon>
-            <el-input
-              ref="username"
-              v-model="loginFormData.username"
-              placeholder="用户名"
-              name="username"
-              size="large"
-              class="h-[48px]"
-            />
-          </div>
-        </el-form-item>
+        <div class="login-card__form">
+          <h3 class="login-form__title text-center">用户登录</h3>
+          <el-form
+            ref="loginFormRef"
+            :model="loginFormData"
+            :rules="loginRules"
+            size="large"
+            :validate-on-rule-change="false"
+          >
+            <el-form-item prop="username">
+              <el-input v-model.trim="loginFormData.username" placeholder="用户名">
+                <template #prefix>
+                  <el-icon><User /></el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
 
-        <!-- 密码 -->
-        <el-tooltip :visible="isCapslock" content="大写锁定已打开" placement="right">
-          <el-form-item prop="password">
-            <div class="input-wrapper">
-              <el-icon class="mx-2">
-                <Lock />
-              </el-icon>
-              <el-input
-                v-model="loginFormData.password"
-                placeholder="密码"
-                type="password"
-                name="password"
-                size="large"
-                class="h-[48px] pr-2"
-                show-password
-                @keyup="checkCapslock"
-                @keyup.enter="handleLoginSubmit"
-              />
+            <el-tooltip :visible="isCapsLock" content="大写锁定已开启" placement="right">
+              <el-form-item prop="password">
+                <el-input
+                  v-model.trim="loginFormData.password"
+                  placeholder="密码"
+                  type="password"
+                  show-password
+                  @keyup="checkCapsLock"
+                  @keyup.enter="handleLoginSubmit"
+                >
+                  <template #prefix>
+                    <el-icon><Lock /></el-icon>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-tooltip>
+
+            <el-form-item prop="captchaCode">
+              <div flex items-center gap-10px>
+                <el-input
+                  v-model.trim="loginFormData.captchaCode"
+                  placeholder="验证码"
+                  clearable
+                  class="flex-1"
+                  @keyup.enter="handleLoginSubmit"
+                >
+                  <template #prefix>
+                    <div class="i-svg:captcha" />
+                  </template>
+                </el-input>
+                <div cursor-pointer h-44px w-140px flex-center @click="getCaptcha">
+                  <el-icon v-if="codeLoading" class="is-loading" size="20"><Loading /></el-icon>
+                  <img
+                    v-else-if="captchaBase64"
+                    border-rd-4px
+                    w-full
+                    h-full
+                    block
+                    object-cover
+                    shadow="[0_0_0_1px_var(--el-border-color)_inset]"
+                    :src="captchaBase64"
+                    alt="captchaCode"
+                    title="点击刷新验证码"
+                    @error="getCaptcha"
+                  />
+                  <el-text v-else type="info" size="small">点击获取验证码</el-text>
+                </div>
+              </div>
+            </el-form-item>
+
+            <div class="flex-x-between w-full">
+              <el-checkbox v-model="loginFormData.rememberMe">记住我</el-checkbox>
             </div>
-          </el-form-item>
-        </el-tooltip>
 
-        <!-- 验证码 -->
-        <el-form-item prop="captchaCode">
-          <div class="input-wrapper">
-            <div class="i-svg:captcha mx-2" />
-
-            <el-input
-              v-model="loginFormData.captchaCode"
-              auto-complete="off"
-              size="large"
-              class="flex-1"
-              placeholder="验证码"
-              @keyup.enter="handleLoginSubmit"
-            />
-
-            <el-image :src="captchaBase64" class="captcha-img" @click="getCaptcha" />
-          </div>
-        </el-form-item>
-
-        <div class="flex-x-between w-full py-1">
-          <el-checkbox>记住我</el-checkbox>
-
-          <el-link type="primary" href="/forget-password">忘记密码</el-link>
+            <el-form-item>
+              <el-button
+                :loading="loading"
+                type="primary"
+                class="w-full"
+                @click="handleLoginSubmit"
+              >
+                登 录
+              </el-button>
+            </el-form-item>
+          </el-form>
         </div>
 
-        <!-- 登录按钮 -->
-        <el-button
-          :loading="loading"
-          type="primary"
-          size="large"
-          class="w-full"
-          @click.prevent="handleLoginSubmit"
-        >
-          登录
-        </el-button>
-      </el-form>
-    </div>
-
-    <!-- 登录页底部 -->
-    <div class="login-footer">
-      <el-text size="small">
-        Copyright © 2021 - 2025 youlai.tech All Rights Reserved.
-        <a href="http://beian.miit.gov.cn/" target="_blank">皖ICP备20006496号-2</a>
-      </el-text>
+        <footer class="login-card__footer">
+          <el-text size="small">Copyright © 2021 - 2025 youlai.tech</el-text>
+        </footer>
+      </section>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { LocationQuery, useRoute } from "vue-router";
-
-import AuthAPI, { type LoginFormData } from "@/api/auth.api";
+<script setup>
+import { User, Lock, Loading } from "@element-plus/icons-vue";
+import AuthAPI from "@/api/auth";
 import router from "@/router";
-
-import type { FormInstance } from "element-plus";
-
-import defaultSettings from "@/settings";
-import { ThemeMode } from "@/enums/settings/theme.enum";
-
-import { useSettingsStore, useUserStore } from "@/store";
+import { useUserStore } from "@/stores";
+import { AuthStorage } from "@/utils/auth";
+import logo from "@/assets/images/logo.png";
+import { appConfig } from "@/settings";
 
 const userStore = useUserStore();
-const settingsStore = useSettingsStore();
-
 const route = useRoute();
-const loginFormRef = ref<FormInstance>();
 
-const isDark = ref(settingsStore.theme === ThemeMode.DARK); // 是否暗黑模式
-const loading = ref(false); // 按钮 loading 状态
-const isCapslock = ref(false); // 是否大写锁定
-const captchaBase64 = ref(); // 验证码图片Base64字符串
+const loginFormRef = ref();
+const loading = ref(false);
+const isCapsLock = ref(false);
+const captchaBase64 = ref();
+const codeLoading = ref(false);
 
-const loginFormData = ref<LoginFormData>({
+const rememberMe = AuthStorage.getRememberMe();
+const loginFormData = ref({
   username: "admin",
   password: "123456",
-  captchaKey: "",
+  captchaId: "",
   captchaCode: "",
+  rememberMe,
 });
 
-const loginRules = computed(() => {
-  return {
-    username: [
-      {
-        required: true,
-        trigger: "blur",
-        message: "请输入用户名",
-      },
-    ],
-    password: [
-      {
-        required: true,
-        trigger: "blur",
-        message: "请输入密码",
-      },
-      {
-        min: 6,
-        message: "密码长度不能小于6位",
-        trigger: "blur",
-      },
-    ],
-    captchaCode: [
-      {
-        required: true,
-        trigger: "blur",
-        message: "请输入验证码",
-      },
-    ],
-  };
-});
+const loginRules = computed(() => ({
+  username: [{ required: true, trigger: "blur", message: "请输入用户名" }],
+  password: [
+    { required: true, trigger: "blur", message: "请输入密码" },
+    { min: 6, message: "密码长度不能少于6位", trigger: "blur" },
+  ],
+  captchaCode: [{ required: true, trigger: "blur", message: "请输入验证码" }],
+}));
 
-// 获取验证码
 function getCaptcha() {
-  AuthAPI.getCaptcha().then((data) => {
-    loginFormData.value.captchaKey = data.captchaKey;
-    captchaBase64.value = data.captchaBase64;
-  });
+  codeLoading.value = true;
+  AuthAPI.getCaptcha()
+    .then((data) => {
+      loginFormData.value.captchaId = data.captchaId;
+      captchaBase64.value = data.captchaBase64;
+    })
+    .finally(() => (codeLoading.value = false));
 }
 
-// 登录
 async function handleLoginSubmit() {
-  loginFormRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      loading.value = true;
-      userStore
-        .login(loginFormData.value)
-        .then(async () => {
-          await userStore.getUserInfo();
-          // 跳转到登录前的页面
-          const { path, queryParams } = parseRedirect();
-          console.log("跳转到登录前的页面", path, queryParams);
-          router.push({ path: path, query: queryParams });
-        })
-        .catch(() => {
-          getCaptcha();
-        })
-        .finally(() => {
-          loading.value = false;
-        });
-    }
-  });
-}
+  const valid = await loginFormRef.value?.validate().then(
+    () => true,
+    () => false
+  );
+  if (!valid) return;
 
-/**
- * 解析 redirect 字符串 为 path 和  queryParams
- *
- * @returns { path: string, queryParams: Record<string, string> } 解析后的 path 和 queryParams
- */
-function parseRedirect(): {
-  path: string;
-  queryParams: Record<string, string>;
-} {
-  const query: LocationQuery = route.query;
-  const redirect = (query.redirect as string) ?? "/";
-
-  const url = new URL(redirect, window.location.origin);
-  const path = url.pathname;
-  const queryParams: Record<string, string> = {};
-
-  url.searchParams.forEach((value, key) => {
-    queryParams[key] = value;
-  });
-
-  return { path, queryParams };
-}
-
-// 主题切换
-const toggleTheme = () => {
-  const newTheme = settingsStore.theme === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK;
-  settingsStore.changeTheme(newTheme);
-};
-
-// 检查输入大小写
-function checkCapslock(event: KeyboardEvent) {
-  // 防止浏览器密码自动填充时报错
-  if (event instanceof KeyboardEvent) {
-    isCapslock.value = event.getModifierState("CapsLock");
+  loading.value = true;
+  try {
+    await userStore.login(loginFormData.value).then(
+      async () => {
+        const redirectPath = route.query.redirect || "/";
+        await router.push(decodeURIComponent(redirectPath));
+      },
+      () => {
+        getCaptcha();
+      }
+    );
+  } finally {
+    loading.value = false;
   }
 }
 
-// 设置登录凭证
-const setLoginCredentials = (username: string, password: string) => {
-  loginFormData.value.username = username;
-  loginFormData.value.password = password;
-};
+function checkCapsLock(event) {
+  if (event instanceof KeyboardEvent) {
+    isCapsLock.value = event.getModifierState("CapsLock");
+  }
+}
 
-onMounted(() => {
-  getCaptcha();
-});
+onMounted(() => getCaptcha());
 </script>
 
 <style lang="scss" scoped>
-.login {
+.login-page {
+  --login-card-bg: rgb(255 255 255 / 90%);
+  --login-card-border: rgb(0 0 0 / 6%);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem);
+  overflow: hidden;
+  background: #f5f8ff;
+
+  &::before {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background: url("@/assets/images/login/bg.svg") center/cover no-repeat;
+  }
+}
+
+.dark .login-page {
+  --login-card-bg: rgb(22 26 36 / 90%);
+  --login-card-border: rgb(255 255 255 / 7%);
+
+  background: #0b0f19;
+
+  &::before {
+    background-image: url("@/assets/images/login/bg-dark.svg");
+  }
+}
+
+.login-page__body {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
-  padding: 20px;
-  overflow-y: auto;
-  background: url("@/assets/images/login-bg.jpg") no-repeat center right;
-
-  .login-header {
-    position: absolute;
-    top: 0;
-    display: flex;
-    justify-content: right;
-    width: 100%;
-    padding: 15px;
-
-    .logo {
-      width: 26px;
-      height: 26px;
-    }
-
-    .title {
-      margin: auto 5px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #3b82f6;
-    }
-  }
-
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 460px;
-    padding: 40px;
-    overflow: hidden;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: var(--el-box-shadow-light);
-
-    @media (width <= 460px) {
-      width: 100%;
-      padding: 20px;
-    }
-
-    .form-title {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 0 20px;
-      text-align: center;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
-
-    .captcha-img {
-      height: 48px;
-      cursor: pointer;
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
-    }
-  }
-
-  .login-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 10px 0;
-    text-align: center;
-  }
+  padding: clamp(1.5rem, 2vw, 2.5rem);
 }
 
-:deep(.el-form-item) {
-  background: var(--el-input-bg-color);
-  border: 1px solid var(--el-border-color);
-  border-radius: 5px;
+.login-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(420px, 100%);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  margin-inline: auto;
+  background: var(--login-card-bg);
+  border: 1px solid var(--login-card-border);
+  border-radius: 20px;
+  box-shadow:
+    0 2px 4px rgb(0 0 0 / 2%),
+    0 12px 32px rgb(0 0 0 / 6%);
+  backdrop-filter: blur(16px);
+  animation: cardIn 0.7s ease;
 }
 
-:deep(.el-input) {
-  .el-input__wrapper {
-    padding: 0;
-    background-color: transparent;
-    box-shadow: none;
+.login-card__brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--login-card-border);
+}
 
-    &.is-focus,
+.login-card__logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background: var(--el-color-primary-light-9);
+  border-radius: 14px;
+}
+
+.login-card__logo {
+  width: 26px;
+  height: 26px;
+}
+
+.login-card__meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.login-card__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.05rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.login-card__version-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 2px;
+  font-size: 0.72rem;
+}
+
+.login-form__title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.login-card__form {
+  :deep(.el-form-item) {
+    margin-bottom: 18px;
+  }
+
+  :deep(.el-input__wrapper) {
+    background: rgb(0 0 0 / 2%);
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 6%) inset;
+    transition: all 0.2s;
+
     &:hover {
-      box-shadow: none !important;
+      box-shadow: 0 0 0 1px rgb(0 0 0 / 10%) inset;
     }
 
-    input:-webkit-autofill {
-      /* 通过延时渲染背景色变相去除背景颜色 */
-      transition: background-color 1000s ease-in-out 0s;
+    &.is-focus {
+      background: transparent;
+      box-shadow: 0 0 0 1.5px var(--el-color-primary) inset;
     }
   }
 }
 
-html.dark {
-  .login {
-    background: url("@/assets/images/login-bg-dark.jpg") no-repeat center right;
+.dark .login-card__form {
+  :deep(.el-input__wrapper) {
+    background: rgb(255 255 255 / 3%);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 8%) inset;
 
-    .login-form {
-      background: transparent;
-      box-shadow: var(--el-box-shadow);
+    &:hover {
+      box-shadow: 0 0 0 1px rgb(255 255 255 / 14%) inset;
     }
+
+    &.is-focus {
+      background: rgb(255 255 255 / 5%);
+      box-shadow: 0 0 0 1.5px var(--el-color-primary) inset;
+    }
+  }
+}
+
+.login-card__footer {
+  padding-top: 14px;
+  font-size: 0.78rem;
+  color: var(--el-text-color-placeholder);
+  text-align: center;
+  border-top: 1px solid var(--login-card-border);
+}
+
+@media (max-width: 768px) {
+  .login-page__body {
+    padding: 0.5rem;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 </style>

@@ -1,7 +1,6 @@
-<!-- 字典 -->
 <template>
   <div class="app-container">
-    <div class="search-bar">
+    <div class="filter-section">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="keywords">
           <el-input
@@ -11,19 +10,27 @@
             @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="search" @click="handleQuery()">搜索</el-button>
-          <el-button icon="refresh" @click="handleResetQuery()">重置</el-button>
+
+        <el-form-item class="search-buttons">
+          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+          <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-card shadow="never">
-      <div class="mb-[10px]">
-        <el-button type="success" icon="plus" @click="handleAddClick()">新增</el-button>
-        <el-button type="danger" :disabled="ids.length === 0" icon="delete" @click="handleDelete()">
-          删除
-        </el-button>
+    <el-card shadow="hover" class="table-section">
+      <div class="table-section__toolbar">
+        <div class="table-section__toolbar--actions">
+          <el-button type="success" icon="plus" @click="handleCreateClick()">新增</el-button>
+          <el-button
+            type="danger"
+            :disabled="ids.length === 0"
+            icon="delete"
+            @click="handleDelete()"
+          >
+            删除
+          </el-button>
+        </div>
       </div>
 
       <el-table
@@ -31,6 +38,7 @@
         highlight-current-row
         :data="tableData"
         border
+        class="table-section__content"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -45,7 +53,7 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" align="center" width="220">
           <template #default="scope">
-            <el-button type="primary" link size="small" @click.stop="handleOpenDictData(scope.row)">
+            <el-button type="primary" link size="small" @click.stop="openDictData(scope.row)">
               <template #icon>
                 <Collection />
               </template>
@@ -79,44 +87,41 @@
         v-model:total="total"
         v-model:page="queryParams.pageNum"
         v-model:limit="queryParams.pageSize"
-        @pagination="handleQuery"
+        @pagination="fetchData"
       />
     </el-card>
 
-    <!--字典弹窗-->
     <el-dialog
-      v-model="dialog.visible"
-      :title="dialog.title"
+      v-model="dialogState.visible"
+      :title="dialogState.title"
       width="500px"
-      @close="handleCloseDialog"
+      @close="closeDialog"
     >
-      <el-form ref="dataFormRef" :model="formData" :rules="computedRules" label-width="100px">
-        <el-card shadow="never">
-          <el-form-item label="字典名称" prop="name">
-            <el-input v-model="formData.name" placeholder="请输入字典名称" />
-          </el-form-item>
+      <el-form ref="dataFormRef" :model="formData" :rules="rules" label-width="80px">
+        <el-form-item label="字典名称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入字典名称" />
+        </el-form-item>
 
-          <el-form-item label="字典编码" prop="dictCode">
-            <el-input v-model="formData.dictCode" placeholder="请输入字典编码" />
-          </el-form-item>
+        <el-form-item label="字典编码" prop="dictCode">
+          <el-input v-model="formData.dictCode" placeholder="请输入字典编码" />
+        </el-form-item>
 
-          <el-form-item label="状态">
-            <el-radio-group v-model="formData.status">
-              <el-radio :value="1">启用</el-radio>
-              <el-radio :value="0">禁用</el-radio>
-            </el-radio-group>
-          </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="formData.status">
+            <el-radio :value="1">启用</el-radio>
+            <el-radio :value="0">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
 
-          <el-form-item label="备注">
-            <el-input v-model="formData.remark" type="textarea" placeholder="请输入备注" />
-          </el-form-item>
-        </el-card>
+        <el-form-item label="备注">
+          <el-input v-model="formData.remark" type="textarea" placeholder="请输入备注" />
+        </el-form-item>
       </el-form>
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmitClick">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit">确 定</el-button>
+          <el-button @click="closeDialog">取 消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -126,89 +131,112 @@
 <script setup lang="ts">
 defineOptions({
   name: "Dict",
-  inherititems: false,
+  inheritAttrs: false,
 });
 
-import DictAPI, { DictPageQuery, DictPageVO, DictForm } from "@/api/system/dict.api";
-
+import DictAPI, {
+  type DictTypeQueryParams,
+  type DictTypeItem,
+  type DictTypeForm,
+} from "@/api/system/dict";
+import type { FormInstance, FormRules } from "element-plus";
 import router from "@/router";
 
-const queryFormRef = ref();
-const dataFormRef = ref();
+// 表单引用
+const queryFormRef = ref<FormInstance>();
+const dataFormRef = ref<FormInstance>();
 
-const loading = ref(false);
-const ids = ref<number[]>([]);
-const total = ref(0);
-
-const queryParams = reactive<DictPageQuery>({
+// 查询参数
+const queryParams = reactive<DictTypeQueryParams>({
   pageNum: 1,
   pageSize: 10,
 });
 
-const tableData = ref<DictPageVO[]>();
+// 列表数据
+const tableData = ref<DictTypeItem[]>();
+const total = ref(0);
+const loading = ref(false);
+const ids = ref<string[]>([]);
 
-const dialog = reactive({
+// 弹窗状态
+const dialogState = reactive({
   title: "",
   visible: false,
 });
 
-const formData = reactive<DictForm>({});
+// 表单数据
+const formData = reactive<DictTypeForm>({});
 
-const computedRules = computed(() => {
-  const rules: Partial<Record<string, any>> = {
-    name: [{ required: true, message: "请输入字典名称", trigger: "blur" }],
-    dictCode: [{ required: true, message: "请输入字典编码", trigger: "blur" }],
-  };
-  return rules;
-});
+// 验证规则
+const rules: FormRules = {
+  name: [{ required: true, message: "请输入字典名称", trigger: "blur" }],
+  dictCode: [{ required: true, message: "请输入字典编码", trigger: "blur" }],
+};
 
-// 查询
-function handleQuery() {
+/**
+ * 加载字典列表数据
+ */
+function fetchData(): void {
   loading.value = true;
   DictAPI.getPage(queryParams)
     .then((data) => {
       tableData.value = data.list;
-      total.value = data.total;
+      total.value = data.total ?? 0;
     })
     .finally(() => {
       loading.value = false;
     });
 }
 
-// 重置查询
-function handleResetQuery() {
-  queryFormRef.value.resetFields();
+/**
+ * 查询按钮点击事件
+ */
+function handleQuery(): void {
   queryParams.pageNum = 1;
-  handleQuery();
-}
-
-// 行选择
-function handleSelectionChange(selection: any) {
-  ids.value = selection.map((item: any) => item.id);
-}
-
-// 新增字典
-function handleAddClick() {
-  dialog.visible = true;
-  dialog.title = "新增字典";
+  fetchData();
 }
 
 /**
- * 编辑字典
- *
+ * 重置查询
+ */
+function handleResetQuery(): void {
+  queryFormRef.value?.resetFields();
+  queryParams.pageNum = 1;
+  fetchData();
+}
+
+/**
+ * 表格选择变化事件
+ */
+function handleSelectionChange(selection: DictTypeItem[]): void {
+  ids.value = selection.map((item) => item.id);
+}
+
+/**
+ * 新增按钮点击事件
+ */
+function handleCreateClick(): void {
+  dialogState.visible = true;
+  dialogState.title = "新增字典";
+}
+
+/**
+ * 编辑按钮点击事件
  * @param id 字典ID
  */
-function handleEditClick(id: string) {
-  dialog.visible = true;
-  dialog.title = "修改字典";
+function handleEditClick(id: string): void {
+  dialogState.visible = true;
+  dialogState.title = "修改字典";
   DictAPI.getFormData(id).then((data) => {
     Object.assign(formData, data);
   });
 }
 
-// 提交字典表单
-function handleSubmitClick() {
-  dataFormRef.value.validate((isValid: boolean) => {
+/**
+ * 提交表单
+ */
+function handleSubmit(): void {
+  dataFormRef.value?.validate((isValid) => {
     if (isValid) {
       loading.value = true;
       const id = formData.id;
@@ -216,7 +244,7 @@ function handleSubmitClick() {
         DictAPI.update(id, formData)
           .then(() => {
             ElMessage.success("修改成功");
-            handleCloseDialog();
+            closeDialog();
             handleQuery();
           })
           .finally(() => (loading.value = false));
@@ -224,7 +252,7 @@ function handleSubmitClick() {
         DictAPI.create(formData)
           .then(() => {
             ElMessage.success("新增成功");
-            handleCloseDialog();
+            closeDialog();
             handleQuery();
           })
           .finally(() => (loading.value = false));
@@ -233,21 +261,21 @@ function handleSubmitClick() {
   });
 }
 
-// 关闭字典弹窗
-function handleCloseDialog() {
-  dialog.visible = false;
-
-  dataFormRef.value.resetFields();
-  dataFormRef.value.clearValidate();
-
+/**
+ * 关闭弹窗
+ */
+function closeDialog(): void {
+  dialogState.visible = false;
+  dataFormRef.value?.resetFields();
+  dataFormRef.value?.clearValidate();
   formData.id = undefined;
 }
+
 /**
  * 删除字典
- *
  * @param id 字典ID
  */
-function handleDelete(id?: string) {
+function handleDelete(id?: number): void {
   const attrGroupIds = [id || ids.value].join(",");
   if (!attrGroupIds) {
     ElMessage.warning("请勾选删除项");
@@ -270,12 +298,25 @@ function handleDelete(id?: string) {
   );
 }
 
-// 打开字典项
-function handleOpenDictData(row: DictPageVO) {
-  router.push({
-    path: "/system/dict-item",
-    query: { dictCode: row.dictCode, title: "【" + row.name + "】字典数据" },
-  });
+/**
+ * 打开字典数据页面
+ * @param row 字典数据
+ */
+function openDictData(row: DictTypeItem): void {
+  try {
+    const route = router.resolve({
+      name: "DictItem",
+      query: { dictCode: row.dictCode, title: `【${row.name}】字典数据` },
+    });
+    if (route.matched.length === 0) {
+      ElMessage.error("路由未注册，请刷新页面后重试");
+      return;
+    }
+    router.push(route);
+  } catch (error) {
+    console.error("路由跳转失败:", error);
+    ElMessage.error("页面跳转失败，请刷新页面后重试");
+  }
 }
 
 onMounted(() => {

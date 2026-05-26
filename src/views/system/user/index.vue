@@ -1,22 +1,18 @@
-<!-- 用户管理 -->
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!-- 部门树 -->
       <el-col :lg="4" :xs="24" class="mb-[12px]">
-        <DeptTree v-model="queryParams.deptId" @node-click="handleQuery" />
+        <UserDeptTree v-model="queryParams.deptId" @node-click="handleQuery" />
       </el-col>
 
-      <!-- 用户列表 -->
       <el-col :lg="20" :xs="24">
-        <div class="search-bar">
-          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+        <div class="filter-section">
+          <el-form ref="queryFormRef" :model="queryParams" :inline="true" label-width="auto">
             <el-form-item label="关键字" prop="keywords">
               <el-input
                 v-model="queryParams.keywords"
                 placeholder="用户名/昵称/手机号"
                 clearable
-                style="width: 200px"
                 @keyup.enter="handleQuery"
               />
             </el-form-item>
@@ -26,7 +22,7 @@
                 v-model="queryParams.status"
                 placeholder="全部"
                 clearable
-                class="!w-[100px]"
+                style="width: 100px"
               >
                 <el-option label="正常" :value="1" />
                 <el-option label="禁用" :value="0" />
@@ -37,7 +33,6 @@
               <el-date-picker
                 v-model="queryParams.createTime"
                 :editable="false"
-                class="!w-[240px]"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始时间"
@@ -46,21 +41,21 @@
               />
             </el-form-item>
 
-            <el-form-item>
+            <el-form-item class="search-buttons">
               <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
               <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
 
-        <el-card shadow="never">
-          <div class="flex-x-between mb-10px">
-            <div>
+        <el-card shadow="hover" class="table-section">
+          <div class="table-section__toolbar">
+            <div class="table-section__toolbar--actions">
               <el-button
-                v-hasPerm="['sys:user:add']"
+                v-hasPerm="['sys:user:create']"
                 type="success"
                 icon="plus"
-                @click="handleOpenDialog()"
+                @click="handleCreateClick"
               >
                 新增
               </el-button>
@@ -68,67 +63,72 @@
                 v-hasPerm="'sys:user:delete'"
                 type="danger"
                 icon="delete"
-                :disabled="selectIds.length === 0"
+                :disabled="!hasSelection"
                 @click="handleDelete()"
               >
                 删除
               </el-button>
             </div>
-            <div>
-              <el-button
-                v-hasPerm="'sys:user:import'"
-                icon="upload"
-                @click="handleOpenImportDialog"
-              >
+            <div class="table-section__toolbar--tools">
+              <el-button v-hasPerm="'sys:user:import'" icon="upload" @click="openImportDialog">
                 导入
               </el-button>
 
-              <el-button v-hasPerm="'sys:user:export'" icon="download" @click="handleExport">
+              <el-button v-hasPerm="'sys:user:export'" icon="download" @click="exportUsers">
                 导出
               </el-button>
             </div>
           </div>
 
-          <el-table v-loading="loading" :data="pageData" @selection-change="handleSelectionChange">
+          <el-table
+            v-loading="loading"
+            :data="userList"
+            border
+            stripe
+            highlight-current-row
+            class="table-section__content"
+            row-key="id"
+            @selection-change="handleSelectionChange"
+          >
             <el-table-column type="selection" width="50" align="center" />
-            <el-table-column label="用户名" prop="username" />
-            <el-table-column label="昵称" width="150" align="center" prop="nickname" />
+            <el-table-column label="用户名" prop="username" min-width="120" show-overflow-tooltip />
+            <el-table-column label="昵称" width="200" align="center" prop="nickname" />
             <el-table-column label="性别" width="100" align="center">
               <template #default="scope">
-                <!-- 性别字典翻译 -->
-                <DictLabel v-model="scope.row.gender" code="gender" />
+                <DictTag v-model="scope.row.gender" code="gender" />
               </template>
             </el-table-column>
             <el-table-column label="部门" width="120" align="center" prop="deptName" />
+            <el-table-column label="角色" align="center" prop="roleNames" min-width="160" />
             <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
             <el-table-column label="邮箱" align="center" prop="email" width="160" />
             <el-table-column label="状态" align="center" prop="status" width="80">
               <template #default="scope">
-                <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
-                  {{ scope.row.status == 1 ? "正常" : "禁用" }}
+                <el-tag :type="scope.row.status === CommonStatus.ENABLED ? 'success' : 'info'">
+                  {{ scope.row.status === CommonStatus.ENABLED ? "正常" : "禁用" }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="创建时间" align="center" prop="createTime" width="150" />
+            <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
             <el-table-column label="操作" fixed="right" width="220">
               <template #default="scope">
                 <el-button
-                  v-hasPerm="'sys:user:password:reset'"
+                  v-hasPerm="'sys:user:reset-password'"
                   type="primary"
                   icon="RefreshLeft"
                   size="small"
                   link
-                  @click="hancleResetPassword(scope.row)"
+                  @click="handleResetPassword(scope.row)"
                 >
                   重置密码
                 </el-button>
                 <el-button
-                  v-hasPerm="'sys:user:edit'"
+                  v-hasPerm="'sys:user:update'"
                   type="primary"
                   icon="edit"
                   link
                   size="small"
-                  @click="handleOpenDialog(scope.row.id)"
+                  @click="handleEditClick(scope.row.id)"
                 >
                   编辑
                 </el-button>
@@ -151,18 +151,18 @@
             v-model:total="total"
             v-model:page="queryParams.pageNum"
             v-model:limit="queryParams.pageSize"
-            @pagination="handleQuery"
+            @pagination="fetchList"
           />
         </el-card>
       </el-col>
     </el-row>
 
-    <!-- 用户表单 -->
     <el-drawer
-      v-model="dialog.visible"
-      :title="dialog.title"
+      v-model="dialogState.visible"
+      :title="dialogState.title"
       append-to-body
-      @close="handleCloseDialog"
+      :size="drawerSize"
+      @close="closeDialog"
     >
       <el-form ref="userFormRef" :model="formData" :rules="rules" label-width="80px">
         <el-form-item label="用户名" prop="username">
@@ -189,7 +189,7 @@
         </el-form-item>
 
         <el-form-item label="性别" prop="gender">
-          <Dict v-model="formData.gender" code="gender" />
+          <DictSelect v-model="formData.gender" code="gender" />
         </el-form-item>
 
         <el-form-item label="角色" prop="roleIds">
@@ -217,8 +217,8 @@
             inline-prompt
             active-text="正常"
             inactive-text="禁用"
-            :active-value="1"
-            :inactive-value="0"
+            :active-value="CommonStatus.ENABLED"
+            :inactive-value="CommonStatus.DISABLED"
           />
         </el-form-item>
       </el-form>
@@ -226,248 +226,301 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button @click="closeDialog">取 消</el-button>
         </div>
       </template>
     </el-drawer>
 
-    <!-- 用户导入 -->
-    <UserImport v-model="importDialogVisible" @import-success="handleQuery()" />
+    <UserImportDialog v-model="importDialogVisible" @import-success="handleQuery()" />
   </div>
 </template>
 
 <script setup lang="ts">
-import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/system/user.api";
-
-import DeptAPI from "@/api/system/dept.api";
-import RoleAPI from "@/api/system/role.api";
-
-import DeptTree from "./components/DeptTree.vue";
-import UserImport from "./components/UserImport.vue";
+import { computed, onMounted, reactive, ref } from "vue";
+import { useDebounceFn } from "@vueuse/core";
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
+import UserAPI, { type UserForm, type UserQueryParams, type UserItem } from "@/api/system/user";
+import { downloadFile } from "@/utils";
+import DeptAPI from "@/api/system/dept";
+import RoleAPI from "@/api/system/role";
+import { useUserStore, useAppStore } from "@/stores";
+import { DeviceEnum, DialogMode, CommonStatus } from "@/enums";
+import { useTableSelection } from "@/composables";
+import UserDeptTree from "./components/UserDeptTree.vue";
+import UserImportDialog from "./components/UserImportDialog.vue";
 
 defineOptions({
   name: "User",
   inheritAttrs: false,
 });
-const queryFormRef = ref();
-const userFormRef = ref();
 
-const queryParams = reactive<UserPageQuery>({
+const appStore = useAppStore();
+const userStore = useUserStore();
+
+// 表单引用
+const queryFormRef = ref<FormInstance>();
+const userFormRef = ref<FormInstance>();
+
+// 查询参数
+const queryParams = reactive<UserQueryParams>({
   pageNum: 1,
   pageSize: 10,
 });
 
-const pageData = ref<UserPageVO[]>();
+// 列表数据
+const userList = ref<UserItem[]>([]);
 const total = ref(0);
 const loading = ref(false);
 
-const dialog = reactive({
+// 弹窗状态
+const dialogState = reactive({
   visible: false,
   title: "新增用户",
+  mode: DialogMode.CREATE,
 });
 
-const formData = reactive<UserForm>({
-  status: 1,
-});
-
-const rules = reactive({
-  username: [{ required: true, message: "用户名不能为空", trigger: "blur" }],
-  nickname: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
-  deptId: [{ required: true, message: "所属部门不能为空", trigger: "blur" }],
-  roleIds: [{ required: true, message: "用户角色不能为空", trigger: "blur" }],
-  email: [
-    {
-      pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/,
-      message: "请输入正确的邮箱地址",
-      trigger: "blur",
-    },
-  ],
-  mobile: [
-    {
-      pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-      message: "请输入正确的手机号码",
-      trigger: "blur",
-    },
-  ],
-});
-
-// 选中的用户ID
-const selectIds = ref<number[]>([]);
-// 部门下拉数据源
-const deptOptions = ref<OptionType[]>();
-// 角色下拉数据源
-const roleOptions = ref<OptionType[]>();
-// 导入弹窗显示状态
+// 导入弹窗状态
 const importDialogVisible = ref(false);
 
-// 查询
-function handleQuery() {
+// 表单初始数据
+const initialFormData: UserForm = {
+  status: CommonStatus.ENABLED,
+};
+
+// 表单数据
+const formData = reactive<UserForm>({ ...initialFormData });
+
+// 下拉选项
+const deptOptions = ref<OptionItem[]>();
+const roleOptions = ref<OptionItem[]>();
+
+const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
+
+const rules: FormRules = {
+  username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  nickname: [{ required: true, message: "请输入用户昵称", trigger: "blur" }],
+  deptId: [{ required: true, message: "请选择所属部门", trigger: "change" }],
+  roleIds: [{ required: true, message: "请选择用户角色", trigger: "change" }],
+  email: [{ type: "email", message: "请输入正确的邮箱地址", trigger: "blur" }],
+  mobile: [{ pattern: /^1[3-9]\d{9}$/, message: "请输入正确的手机号码", trigger: "blur" }],
+};
+
+/**
+ * 加载用户列表数据
+ */
+async function fetchList(): Promise<void> {
   loading.value = true;
-  UserAPI.getPage(queryParams)
-    .then((data) => {
-      pageData.value = data.list;
-      total.value = data.total;
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+  try {
+    const data = await UserAPI.getPage(queryParams);
+    userList.value = data.list;
+    total.value = data.total ?? 0;
+  } finally {
+    loading.value = false;
+  }
 }
 
-// 重置查询
-function handleResetQuery() {
-  queryFormRef.value.resetFields();
+/**
+ * 加载表单下拉选项数据
+ */
+async function loadFormOptions(): Promise<void> {
+  [roleOptions.value, deptOptions.value] = await Promise.all([
+    RoleAPI.getOptions(),
+    DeptAPI.getOptions(),
+  ]);
+}
+
+const { selectedIds, hasSelection, handleSelectionChange } = useTableSelection<UserItem>();
+
+/**
+ * 执行查询（重置页码）
+ */
+function handleQuery(): void {
   queryParams.pageNum = 1;
+  fetchList();
+}
+
+/**
+ * 重置查询条件
+ */
+function resetQuery(): void {
+  queryFormRef.value?.resetFields();
   queryParams.deptId = undefined;
   queryParams.createTime = undefined;
+}
+
+/**
+ * 重置查询条件并重新查询
+ */
+function handleResetQuery(): void {
+  resetQuery();
   handleQuery();
 }
 
-// 选中项发生变化
-function handleSelectionChange(selection: any[]) {
-  selectIds.value = selection.map((item) => item.id);
+/**
+ * 重置用户密码
+ * @param userId 用户ID
+ * @param password 新密码
+ */
+async function resetPassword(userId: string, password: string): Promise<void> {
+  await UserAPI.resetPassword(userId, password);
+  ElMessage.success("密码重置成功");
 }
 
-// 重置密码
-function hancleResetPassword(row: UserPageVO) {
-  ElMessageBox.prompt("请输入用户【" + row.username + "】的新密码", "重置密码", {
+/**
+ * 删除用户
+ * @param userIds 用户ID列表，多个ID用逗号分隔
+ */
+async function deleteUsers(userIds: string): Promise<void> {
+  await UserAPI.deleteByIds(userIds);
+  ElMessage.success("删除成功");
+  handleQuery();
+}
+
+/**
+ * 打开表单弹窗
+ */
+function openDialog(): void {
+  dialogState.visible = true;
+}
+
+/**
+ * 关闭表单弹窗
+ */
+function closeDialog(): void {
+  dialogState.visible = false;
+  resetForm();
+}
+
+/**
+ * 重置表单数据和验证状态
+ */
+function resetForm(): void {
+  userFormRef.value?.resetFields();
+  userFormRef.value?.clearValidate();
+  Object.assign(formData, initialFormData);
+}
+
+/**
+ * 重置密码按钮点击事件
+ * @param row 用户数据
+ */
+function handleResetPassword(row: UserItem): void {
+  ElMessageBox.prompt(`请输入用户【${row.username}】的新密码`, "重置密码", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
+    inputPattern: /.{6,}/,
+    inputErrorMessage: "密码至少需要6位字符",
   }).then(
-    ({ value }) => {
-      if (!value || value.length < 6) {
-        ElMessage.warning("密码至少需要6位字符，请重新输入");
-        return false;
-      }
-      UserAPI.resetPassword(row.id, value).then(() => {
-        ElMessage.success("密码重置成功，新密码是：" + value);
-      });
-    },
+    (result: any) => resetPassword(row.id, result.value),
     () => {
-      ElMessage.info("已取消重置密码");
+      /* 用户取消 */
     }
   );
 }
 
 /**
- * 打开弹窗
- *
- * @param id 用户ID
+ * 新增按钮点击事件
  */
-async function handleOpenDialog(id?: string) {
-  dialog.visible = true;
-  // 加载角色下拉数据源
-  roleOptions.value = await RoleAPI.getOptions();
-  // 加载部门下拉数据源
-  deptOptions.value = await DeptAPI.getOptions();
-
-  if (id) {
-    dialog.title = "修改用户";
-    UserAPI.getFormData(id).then((data) => {
-      Object.assign(formData, { ...data });
-    });
-  } else {
-    dialog.title = "新增用户";
-  }
+async function handleCreateClick(): Promise<void> {
+  dialogState.title = "新增用户";
+  dialogState.mode = DialogMode.CREATE;
+  await loadFormOptions();
+  openDialog();
 }
-
-// 关闭弹窗
-function handleCloseDialog() {
-  dialog.visible = false;
-  userFormRef.value.resetFields();
-  userFormRef.value.clearValidate();
-
-  formData.id = undefined;
-  formData.status = 1;
-}
-
-// 提交用户表单（防抖）
-const handleSubmit = useDebounceFn(() => {
-  userFormRef.value.validate((valid: boolean) => {
-    if (valid) {
-      const userId = formData.id;
-      loading.value = true;
-      if (userId) {
-        UserAPI.update(userId, formData)
-          .then(() => {
-            ElMessage.success("修改用户成功");
-            handleCloseDialog();
-            handleResetQuery();
-          })
-          .finally(() => (loading.value = false));
-      } else {
-        UserAPI.create(formData)
-          .then(() => {
-            ElMessage.success("新增用户成功");
-            handleCloseDialog();
-            handleResetQuery();
-          })
-          .finally(() => (loading.value = false));
-      }
-    }
-  });
-}, 1000);
 
 /**
- * 删除用户
- *
- * @param id  用户ID
+ * 编辑按钮点击事件
+ * @param id 用户ID
  */
-function handleDelete(id?: string) {
-  const userIds = [id || selectIds.value].join(",");
+async function handleEditClick(id: string): Promise<void> {
+  dialogState.title = "修改用户";
+  dialogState.mode = DialogMode.EDIT;
+  await loadFormOptions();
+  const data = await UserAPI.getFormData(id);
+  Object.assign(formData, data);
+  openDialog();
+}
+
+/**
+ * 提交表单（防抖处理）
+ */
+const handleSubmit = useDebounceFn(async () => {
+  const valid = await userFormRef.value?.validate().then(
+    () => true,
+    () => false
+  );
+  if (!valid) return;
+
+  loading.value = true;
+  try {
+    if (formData.id) {
+      await UserAPI.update(formData.id, formData);
+      ElMessage.success("修改用户成功");
+    } else {
+      await UserAPI.create(formData);
+      ElMessage.success("新增用户成功");
+    }
+    closeDialog();
+    handleQuery();
+  } finally {
+    loading.value = false;
+  }
+}, 300);
+
+/**
+ * 删除按钮点击事件
+ * @param id 用户ID，不传则删除选中的用户
+ */
+function handleDelete(id?: string): void {
+  const userIds = id ?? selectedIds.value.join(",");
   if (!userIds) {
     ElMessage.warning("请勾选删除项");
     return;
   }
 
-  ElMessageBox.confirm("确认删除用户?", "警告", {
+  // 安全检查：防止删除当前登录用户
+  const currentUserId = userStore.userInfo?.userId;
+  if (currentUserId) {
+    const isCurrentUserInList = id
+      ? id === currentUserId
+      : selectedIds.value.some((selectedId) => String(selectedId) === currentUserId);
+    if (isCurrentUserInList) {
+      ElMessage.error("不能删除当前登录用户");
+      return;
+    }
+  }
+
+  ElMessageBox.confirm("确认删除选中的用户吗？", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   }).then(
-    function () {
-      loading.value = true;
-      UserAPI.deleteByIds(userIds)
-        .then(() => {
-          ElMessage.success("删除成功");
-          handleResetQuery();
-        })
-        .finally(() => (loading.value = false));
-    },
-    function () {
-      ElMessage.info("已取消删除");
+    () => deleteUsers(userIds),
+    () => {
+      /* 用户取消 */
     }
   );
 }
 
-// 打开导入弹窗
-function handleOpenImportDialog() {
-  importDialogVisible.value = true;
+/**
+ * 导出用户列表
+ */
+async function exportUsers(): Promise<void> {
+  const response = await UserAPI.export(queryParams);
+  downloadFile(response);
+  ElMessage.success("导出成功");
 }
 
-// 导出用户
-function handleExport() {
-  UserAPI.export(queryParams).then((response: any) => {
-    const fileData = response.data;
-    const fileName = decodeURI(response.headers["content-disposition"].split(";")[1].split("=")[1]);
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8";
-
-    const blob = new Blob([fileData], { type: fileType });
-    const downloadUrl = window.URL.createObjectURL(blob);
-
-    const downloadLink = document.createElement("a");
-    downloadLink.href = downloadUrl;
-    downloadLink.download = fileName;
-
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-
-    document.body.removeChild(downloadLink);
-    window.URL.revokeObjectURL(downloadUrl);
-  });
+/**
+ * 打开导入弹窗
+ */
+function openImportDialog(): void {
+  importDialogVisible.value = true;
 }
 
 onMounted(() => {
   handleQuery();
 });
 </script>
+
+<style scoped lang="scss"></style>

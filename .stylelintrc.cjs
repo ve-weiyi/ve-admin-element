@@ -7,9 +7,7 @@ module.exports = {
     "stylelint-config-recess-order",
   ],
 
-  plugins: [
-    "stylelint-prettier", // 统一代码风格，格式冲突时以 Prettier 规则为准
-  ],
+  plugins: ["stylelint-prettier"],
   overrides: [
     {
       files: ["**/*.{vue,html}"],
@@ -19,24 +17,25 @@ module.exports = {
       files: ["**/*.{css,scss}"],
       customSyntax: "postcss-scss",
     },
+    {
+      files: ["**/variables.module.scss"],
+      rules: {
+        "property-no-unknown": null,
+      },
+    },
   ],
   rules: {
-    "prettier/prettier": true, // 强制执行 Prettier 格式化规则（需配合 .prettierrc 配置文件）
-    "no-empty-source": null, //  允许空的样式文件
-    "declaration-property-value-no-unknown": null, // 允许非常规数值格式 ,如 height: calc(100% - 50)
-    // 允许使用未知伪类
+    "prettier/prettier": true,
+    "no-empty-source": null,
+    "declaration-property-value-no-unknown": null,
     "selector-pseudo-class-no-unknown": [
       true,
       {
         ignorePseudoClasses: ["global", "export", "deep"],
       },
     ],
-    // 允许使用未知伪元素
-    "at-rule-no-unknown": [
-      true,
-      {
-        ignoreAtRules: ["apply", "use", "forward", "extend"],
-      },
-    ],
+    "no-invalid-position-declaration": null,
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
   },
 };

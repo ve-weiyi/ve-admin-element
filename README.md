@@ -1,208 +1,183 @@
 <div align="center">
+  <img alt="blog-admin" width="64" height="64" src="./public/favicon.ico">
+  <h1>blog-admin</h1>
+  <p>🖥️ 基于 Vue 3 + Element Plus 的现代化博客后台管理</p>
 
-# <img alt="logo" width="40" valign="middle" src="./public/images/logo.png"> vue3-element-template
-
-**Vue3 + Vite + TypeScript 企业级后台管理前端模板**
-
-[![Vue](https://img.shields.io/badge/Vue-3.5.30-brightgreen.svg)](https://vuejs.org/)
-[![Element Plus](https://img.shields.io/badge/Element%20Plus-2.13.5-blue.svg)](https://element-plus.org/)
-[![Gitee Star](https://gitee.com/youlaiorg/vue3-element-template/badge/star.svg)](https://gitee.com/youlaiorg/vue3-element-template/stargazers)
-[![GitHub Star](https://img.shields.io/github/stars/youlaitech/vue3-element-template?style=social)](https://github.com/youlaitech/vue3-element-template)
-[![GitCode Star](https://gitcode.com/youlai/vue3-element-template/star/badge.svg)](https://gitcode.com/youlai/vue3-element-template/stargazers)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
+  <img src="https://img.shields.io/badge/Vue-3.5-brightgreen?logo=vuedotjs" />
+  <img src="https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript" />
+  <img src="https://img.shields.io/badge/Vite-8.0-purple?logo=vite" />
+  <img src="https://img.shields.io/badge/Pinia-3.0-yellow?logo=vuedotjs" />
+  <img src="https://img.shields.io/badge/Element_Plus-2.13-blue?logo=element" />
+  <img src="https://img.shields.io/badge/UnoCSS-66.6-red" />
 </div>
 
-<p align="center"><img src="./public/images/rainbow.png" alt="rainbow"></p>
+<br/>
 
 <div align="center">
 
-[![在线预览](https://img.shields.io/badge/在线预览-2D8CF0?style=for-the-badge&logo=google-chrome&logoColor=white)](https://vue.youlai.tech/template)
-[![文档](https://img.shields.io/badge/文档-8B5CF6?style=for-the-badge&logo=gitbook&logoColor=white)](https://www.youlai.tech/vue3-element-admin)
-[![官网](https://img.shields.io/badge/官网-FF9F1C?style=for-the-badge&logo=safari&logoColor=white)](https://www.youlai.tech/docs/web/)
-
+  <a target="_blank" href="https://admin.veweiyi.cn">
+    <img src="https://img.shields.io/badge/🖥️_在线预览-管理后台-e74c3c?style=for-the-badge" />
+  </a>
+  <br/>
+  <a target="_blank" href="https://admin.veweiyi.cn/admin-api/v1/swagger/index.html">📑 接口文档</a>
 </div>
 
-## 项目简介
+<br/>
 
-[vue3-element-template](https://gitee.com/youlaiorg/vue3-element-template) 是 [vue3-element-admin](https://gitee.com/youlaiorg/vue3-element-admin) 的精简版，基于 Vue 3、Vite、TypeScript、Element Plus 构建的企业级中后台前端模板，配套 [9 种后端实现](#生态矩阵)（覆盖 Java / Node.js / Go / Python / PHP / C# / Rust 7 种语言）及移动端 [youlai-app](https://gitee.com/youlaiorg/youlai-app)。其他前端版本：[TS 版](https://gitee.com/youlaiorg/vue3-element-admin) · [JS 版](https://gitee.com/youlaiorg/vue3-element-admin-js) · [NaiveUI 版](https://gitee.com/youlaiorg/vue3-naiveui-admin)。
+## 📚 项目简介
 
-## 项目特色
+blog-admin 是 blog 博客系统的管理后台项目，基于 Vue 3 + TypeScript + Element Plus 构建。覆盖内容管理、权限控制、数据统计、系统配置等完整的后台管理功能，配套 Husky + Commitlint 规范化的工程体系。
 
-- **简洁易用**：基于 [vue-element-admin](https://gitee.com/panjiachen/vue-element-admin) 升级的 Vue3 版本，无过度封装，易上手。
-- **权限体系**：动态路由、按钮权限、角色权限和数据权限。
-- **多租户**：支持多租户模式与租户隔离。
-- **基础设施**：国际化、多布局、暗黑模式、全屏、水印、接口文档、代码生成器。
-- **数据交互**：支持 Mock 数据与线上接口文档，配套 Java / Node 后端源码。
-- **持续更新**：项目持续开源更新，跟进主流技术栈。
+### ✨ 核心亮点
 
-## 系统预览
+- 🖥️ **企业级后台体验** — Element Plus 组件库 + 精心设计的布局，CRUD 操作高效流畅
+- 🔐 **精细化权限控制** — RBAC 角色权限 + 动态路由 + 按钮级鉴权，权限粒度到操作
+- 📝 **双编辑器支持** — Markdown 编辑器（md-editor-v3）+ 富文本，满足不同内容场景
+- 📊 **数据可视化** — ECharts 6 图表，首页仪表盘 + 访问统计 + 操作日志一目了然
+- 🛠️ **规范化工程体系** — Husky + Commitlint + ESLint + Prettier，代码质量有保障
+- 🔌 **即插即用** — 基于 vue3-element-template 二次开发，页面和组件模块化，快速扩展
 
-**PC 端**
+## 🛠️ 技术栈
 
-<table align="center">
-  <tr>
-    <td><img alt="PC预览1" width="400" src="./public/images/preview/pc-01.png"></td>
-    <td><img alt="PC预览2" width="400" src="./public/images/preview/pc-02.png"></td>
-  </tr>
-  <tr>
-    <td><img alt="PC预览3" width="400" src="./public/images/preview/pc-03.png"></td>
-    <td><img alt="PC预览4" width="400" src="./public/images/preview/pc-04.png"></td>
-  </tr>
-  <tr>
-    <td><img alt="PC预览5" width="400" src="./public/images/preview/pc-05.png"></td>
-    <td><img alt="PC预览6" width="400" src="./public/images/preview/pc-06.png"></td>
-  </tr>
-</table>
+| 技术 | 说明 | 版本 |
+|------|------|------|
+| Vue 3 | 渐进式框架 | 3.5 |
+| TypeScript | 类型安全 | 5.9 |
+| Vite | 构建工具 | 8.0 |
+| Element Plus | UI 组件库 | 2.13 |
+| Pinia | 状态管理 | 3.0 |
+| UnoCSS | 原子化 CSS | 66.6 |
+| Vue Router | 路由管理 | 5.0 |
+| Axios | HTTP 请求 | 1.13 |
+| ECharts | 数据可视化 | 6.0 |
+| md-editor-v3 | Markdown 编辑器 | 6.5 |
 
-**移动端**
+## 🎯 后台功能
 
-<table align="center">
-  <tr>
-    <td><img alt="APP预览1" width="200" src="./public/images/preview/app-01.png"></td>
-    <td><img alt="APP预览2" width="200" src="./public/images/preview/app-02.png"></td>
-    <td><img alt="APP预览3" width="200" src="./public/images/preview/app-03.png"></td>
-    <td><img alt="APP预览4" width="200" src="./public/images/preview/app-04.png"></td>
-  </tr>
-</table>
+| 模块 | 功能 | 状态 |
+|------|------|:--:|
+| 📝 内容管理 | 文章 CRUD、分类标签管理、回收站 | ✅ |
+| 💬 评论消息 | 评论审核、留言管理 | ✅ |
+| 🖼️ 资源管理 | 相册管理、文件上传、图片预览 | ✅ |
+| 👥 社交管理 | 友链审核、说说管理 | ✅ |
+| 🔐 系统管理 | 用户管理、角色权限、菜单路由、API 管理 | ✅ |
+| 🌐 网站管理 | 站点配置、关于页面、统计看板 | ✅ |
+| 📊 日志审计 | 登录日志、操作日志、访问日志、文件日志 | ✅ |
+| 🔔 消息通知 | 通知模板、消息记录、站内推送 | ✅ |
+| 🏠 仪表盘 | 数据看板、ECharts 图表 | ✅ |
+| 🛠️ 开发工具 | Swagger 文档集成、WebSocket 调试 | ✅ |
 
-## 快速开始
+## 📁 项目源码
 
-**环境要求**：Node.js `^20.19.0` 或 `>=22.12.0` · pnpm `>=8.0.0`
+| 项目 | 说明 | 仓库 |
+|------|------|------|
+| blog-cloud | 博客后端（go-zero 微服务版） | [GitHub](https://github.com/ve-weiyi/blog-cloud) |
+| ve-blog-gin | 博客后端（Gin 单体版） | [GitHub](https://github.com/ve-weiyi/ve-blog-gin) |
+| blog-app | 博客前台 | [GitHub](https://github.com/ve-weiyi/blog-app) |
+| blog-admin | 博客后台 | [GitHub](https://github.com/ve-weiyi/blog-admin) |
 
-| 环境类型 | 版本要求 | 备注 |
-| -------- | -------- | ---- |
-| **Node.js** | `^20.19.0` 或 `>=22.12.0` | 推荐 LTS 版本（主版本为偶数） |
-| **包管理器** | `pnpm >= 8.0.0` | 项目使用 pnpm 作为包管理器 |
-| **开发工具** | [Visual Studio Code](https://code.visualstudio.com/Download) | 推荐安装 Vue、TypeScript 相关插件 |
+## 🏗️ 项目结构
+
+```
+blog-admin/
+├── src/
+│   ├── api/              # API 接口定义
+│   ├── assets/           # 静态资源
+│   ├── components/       # 公共组件
+│   ├── hooks/            # 组合式函数
+│   ├── layout/           # 布局组件
+│   ├── router/           # 路由配置（动态路由）
+│   ├── store/            # Pinia 状态管理
+│   ├── styles/           # 全局样式
+│   ├── types/            # TypeScript 类型定义
+│   ├── utils/            # 工具函数
+│   └── views/            # 页面组件（按功能模块分目录）
+│       └── admin/        # 后台管理页面
+├── mock/                 # Mock 数据
+├── .husky/               # Git Hooks
+│   ├── deploy/              # 部署配置
+│   │   ├── docker/          # Docker 构建 (Dockerfile + nginx.conf)
+│   │   ├── docker-compose/  # Docker Compose 编排
+│   │   └── k8s/             # Kubernetes 部署 (预留)
+└── vite.config.ts        # Vite 配置
+```
+
+## ⚙️ 环境要求
+
+- **Node.js**: >= 20
+- **pnpm**: >= 9
+
+## 🚀 快速开始
 
 ```bash
-# 克隆代码
-git clone https://gitee.com/youlaiorg/vue3-element-template.git
-cd vue3-element-template
-
-# 安装 pnpm（已安装可跳过）
-npm install pnpm -g
-
-# 设置镜像源（可忽略）
-pnpm config set registry https://registry.npmmirror.com
-
-# 安装依赖
+# 1. 克隆 & 安装
+git clone https://github.com/ve-weiyi/blog-admin.git && cd blog-admin
 pnpm install
 
-# 启动运行
-pnpm run dev
+# 2. 启动开发服务器
+pnpm dev                     # → http://localhost:9421
 ```
 
-启动后访问 [http://localhost:3000](http://localhost:3000)，使用 `admin` / `123456` 登录。
-
-> 更多内容详见官方文档：[快速开始](https://www.youlai.tech/docs/web/) · [部署指南](https://www.youlai.tech/docs/web/deployment/deploy.html)
-
-## AI 编程
-
-本项目配套 [Agent Skill](https://skills.sh/youlaitech/youlai-skills)，安装后 AI 编程助手会自动遵循本项目的 Vue3 开发规范（命名、目录结构、BEM + UnoCSS、组件与 API 约定）。支持 CodeBuddy、Claude Code、Cursor、Codex、GitHub Copilot 等 70+ Agent。
+## 🐳 Docker 部署
 
 ```bash
-npx skills add https://github.com/youlaitech/youlai-skills --skill vue-admin
+# 在 monorepo 根目录执行
+docker build -f deploy/docker/frontend/Dockerfile \
+  --build-arg DIST_DIR=dist/admin \
+  --build-arg PROXY_PASS=admin.veweiyi.cn \
+  -t blog-admin-web:latest ./blog-admin
+docker run -d --name blog-admin-web --restart always -p 9520:80 blog-admin-web:latest
+
+# 或使用 Docker Compose
+docker compose -f deploy/docker/docker-compose.yml up -d admin-web
 ```
 
-## 生态矩阵
+## 📈 开发路线
 
-**前端**
+### 已完成 ✅
+- [x] 文章管理（CRUD + 回收站 + Markdown / 富文本编辑）
+- [x] 分类 / 标签管理
+- [x] 评论审核 + 留言管理
+- [x] 相册 + 文件上传管理
+- [x] 友链 + 说说管理
+- [x] 用户管理 + 角色权限（RBAC）
+- [x] 动态菜单 / 路由 + 按钮级鉴权
+- [x] 站点配置 + 关于页面
+- [x] 登录 / 操作 / 访问 / 文件日志审计
+- [x] 通知模板 + 消息推送
+- [x] 仪表盘数据看板（ECharts）
+- [x] API 管理 + Swagger 集成
+- [x] WebSocket 调试工具
+- [x] Husky + Commitlint 提交规范
+- [x] Mock 数据独立开发
 
-| 项目 | 技术栈 | 说明 | 更新状态 |
-|:-----|:-------|:-----|:---------|
-| [vue3-element-admin](https://gitee.com/youlaiorg/vue3-element-admin) | Vue 3 + Vite + TS + Element Plus | PC 管理前端（主推） | ✅️ |
-| [vue3-element-admin-js](https://gitee.com/youlaiorg/vue3-element-admin-js) | Vue 3 + Vite + JS + Element Plus | JavaScript 版本 | ✅️ |
-| [vue3-element-template](https://gitee.com/youlaiorg/vue3-element-template) | Vue 3 + Vite + TS + Element Plus | 精简模板 | ✅️ |
-| [vue3-naiveui-admin](https://gitee.com/youlaiorg/vue3-naiveui-admin) | Vue 3 + Vite + TS + Naive UI | Naive UI 版本 | ✅️ |
-| [youlai-app](https://gitee.com/youlaiorg/youlai-app) | Vue 3 + UniApp | 移动端 App | ✅️ |
+### 进行中 🚧
+- [ ] 多语言国际化
+- [ ] 首页布局优化
 
-**后端**
+### 计划中 📋
+- [ ] 单元测试 + E2E 测试
+- [ ] 主题换肤
+- [ ] Excel 批量导入导出
 
-| 项目 | 技术栈 | 说明 | 更新状态 |
-|:-----|:-------|:-----|:---------|
-| [youlai-boot](https://gitee.com/youlaiorg/youlai-boot) | Spring Boot + MyBatis-Plus | Java（主推） | ✅️ |
-| [youlai-nest](https://gitee.com/youlaiorg/youlai-nest) | NestJS + TypeORM | Node.js | ✅️ |
-| [youlai-gin](https://gitee.com/youlaiorg/youlai-gin) | Go + Gorm | Go | ✅️ |
-| [youlai-django](https://gitee.com/youlaiorg/youlai-django) | Django + DRF | Python | ✅️ |
-| [youlai-fastapi](https://gitee.com/youlaiorg/youlai-fastapi) | FastAPI + SQLAlchemy | Python | ✅️ |
-| [youlai-laravel](https://gitee.com/youlaiorg/youlai-laravel) | Laravel + Eloquent | PHP | ✅️ |
-| [youlai-think](https://gitee.com/youlaiorg/youlai-think) | ThinkPHP + ThinkORM | PHP | ✅️ |
-| [youlai-aspnet](https://gitee.com/youlaiorg/youlai-aspnet) | ASP.NET Core + EF Core | C# | ✅️ |
-| [youlai-axum](https://gitee.com/youlaiorg/youlai-axum) | Axum + SeaORM | Rust | ✅️ |
+## 🤝 参与贡献
 
-> 九种后端共享同一套 **RESTful API 规范** 和 **数据库结构**，前端可无缝切换。
+1. Fork 本仓库
+2. 创建分支：`git checkout -b feature/your-feature`
+3. 提交：`git commit -m 'feat: 添加某功能'`
+4. 推送：`git push origin feature/your-feature`
+5. 提交 Pull Request
 
-**变种与衍生版本**
+提交规范遵循 [Conventional Commits](https://www.conventionalcommits.org/)：
+`feat:` / `fix:` / `docs:` / `refactor:` / `style:` / `test:` / `chore:`
 
-| 项目 | 基础 | 说明 | 更新状态 |
-|:-----|:-----|:-----|:---------|
-| [youlai-boot-tenant](https://gitee.com/youlaiorg/youlai-boot-tenant) | youlai-boot | 多租户 SaaS，租户隔离与租户配置 | ✅️ |
-| [youlai-boot-flex](https://gitee.com/youlaiorg/youlai-boot-flex) | youlai-boot | 改用 MyBatis-Flex | ✅️ |
-| [youlai-boot (db-pg)](https://gitee.com/youlaiorg/youlai-boot/tree/db-pg) | youlai-boot | PostgreSQL 数据库分支 | ✅️ |
-| [youlai-boot (multi-module)](https://gitee.com/youlaiorg/youlai-boot/tree/multi-module) | youlai-boot | 多模块工程拆分 | ✅️ |
-| [youlai-boot (spring-boot-3)](https://gitee.com/youlaiorg/youlai-boot/tree/spring-boot-3) | youlai-boot | Spring Boot 3 兼容分支 | ✅️ |
-| [youlai-nest (multi-tenant)](https://gitee.com/youlaiorg/youlai-nest/tree/multi-tenant) | youlai-nest | 多租户 SaaS，租户隔离与租户配置 | ✅️ |
+## 📄 开源协议
 
-## 开发指南
+MIT License — 可自由使用、修改和分发。
 
-| 名称 | 地址 |
-| -------- | -------- |
-| 视频教程 | [https://www.bilibili.com/video/BV1eFUuYyEFj](https://www.bilibili.com/video/BV1eFUuYyEFj) |
-| 项目搭建 | [基于 Vue3 + Vite + TypeScript + Element-Plus 从0到1搭建后台管理系统](https://blog.csdn.net/u013737132/article/details/130191394) |
-| 官方文档 | [https://www.youlai.tech/docs/web/](https://www.youlai.tech/docs/web/) |
-| 部署指南 | [https://www.youlai.tech/docs/web/deployment/deploy.html](https://www.youlai.tech/docs/web/deployment/deploy.html) |
-| 常见问题 | [https://www.youlai.tech/docs/faq/](https://www.youlai.tech/docs/faq/) |
-| 代码规范 | [ESLint V9 + Prettier + Stylelint + EditorConfig 约束和统一前端代码规范](https://youlai.blog.csdn.net/article/details/145608723) |
-| 提交规范 | [Husky + Lint-staged + Commitlint + Commitizen + cz-git 配置 Git 提交规范](https://youlai.blog.csdn.net/article/details/145615236) |
-| 接口文档 | [https://www.apifox.cn](https://www.apifox.cn/apidoc/shared-195e783f-4d85-4235-a038-eec696de4ea5) |
+---
 
-## 项目部署
-
-执行 `pnpm run build` 打包生成 `dist` 目录，上传至服务器并配置 Nginx 反向代理。
-
-```bash
-pnpm run build
-```
-
-详细部署流程（Nginx 配置、反向代理、HTTPS 等）见 [部署指南](https://www.youlai.tech/docs/web/deployment/deploy.html)。
-
-## 数据接口
-
-前端默认使用线上接口，也可切换为本地 Mock 或对接本地后端。
-
-**本地 Mock**：将 `.env.development` 的 `VITE_MOCK_DEV_SERVER` 设为 `true` 即启用本地 Mock 接口，无需后端即可独立开发。
-
-**对接后端**：九种后端默认端口均为 `8000`，将 `.env.development` 的 `VITE_APP_API_URL` 改为 `http://localhost:8000` 并启动对应后端即可（主推 Java 后端 [youlai-boot](https://gitee.com/youlaiorg/youlai-boot.git)，其余见各自仓库 README）。
-
-## 提交规范
-
-执行 `pnpm run commit` 唤起 git commit 交互，根据提示完成信息的输入和选择。
-
-![](https://foruda.gitee.com/images/1687755823165218215/c1705416_716974.png)
-
-## 技术合作
-
-本项目采用 [MIT](LICENSE) 协议开源，可免费商用。欢迎在 [Issue](https://gitee.com/youlaiorg/vue3-element-admin/issues) 提交问题或反馈，也欢迎提交 [Pull Request](https://gitee.com/youlaiorg/vue3-element-admin/pulls) 共建。如需技术支持、商务合作、二次开发或项目定制，可联系作者微信（见下方二维码）。
-
-<table align="center">
-  <tr>
-    <td align="center">
-      <img src="./public/images/qrcode/wechat-official.jpg" height="180" alt="公众号「有来技术」"><br>
-      <sub>公众号「有来技术」</sub>
-    </td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td align="center">
-      <img src="./public/images/qrcode/wechat-mp.jpg" height="180" alt="小程序「有来技术」"><br>
-      <sub>小程序「有来技术」</sub>
-    </td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td align="center">
-      <img src="./public/images/qrcode/wechat-personal.png" height="180" alt="添加作者微信"><br>
-      <sub>添加作者微信</sub>
-    </td>
-  </tr>
-</table>
-
-<p align="center"><em>技术交流 · 问题反馈 · 商务合作</em></p>
+<div align="center">
+  <p>如果这个项目对你有帮助，请给个 ⭐ Star 支持一下！</p>
+  <p>Made with ❤️ by <a href="https://github.com/ve-weiyi">ve-weiyi</a></p>
+</div>

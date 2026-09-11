@@ -1,7 +1,7 @@
 {
-  "name": "vue3-element-template",
-  "description": "Vue3 + Vite + TypeScript + Element-Plus 的后台管理模板，基于 vue3-element-admin 的开发模板",
-  "version": "4.7.8",
+  "name": "blog-admin",
+  "description": "博客管理后台，基于 Vue 3 + Vite + TypeScript + Element Plus",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -119,7 +119,10 @@
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
-  "repository": "https://gitee.com/youlaiorg/vue3-element-admin.git",
-  "author": "有来开源组织",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ve-weiyi/blog-admin.git"
+  },
+  "author": "weiyi",
   "license": "MIT"
 }

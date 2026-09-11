@@ -1,4 +1,5 @@
 import vue from "@vitejs/plugin-vue";
+import type { PluginOption } from "vite";
 import { type ConfigEnv, type UserConfig, loadEnv, defineConfig } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
@@ -17,11 +18,13 @@ const __APP_INFO__ = {
   buildTimestamp: Date.now(),
 };
 
-const pathSrc = resolve(__dirname, "src");
+// ESM 模式下使用 import.meta.dirname（Node 20.11+）
+const pathSrc = resolve(import.meta.dirname, "src");
 
 // Vite配置  https://cn.vitejs.dev/config
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
+
   return {
     resolve: {
       alias: {
@@ -30,9 +33,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     css: {
       preprocessorOptions: {
-        // 定义全局 SCSS 变量
+        // 注入项目布局变量。
         scss: {
-          additionalData: `@use "@/styles/base/variables.scss" as *;`,
+          additionalData: `@use "@/styles/variables.scss" as *;`,
         },
       },
     },
@@ -50,7 +53,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      env.VITE_MOCK_DEV_SERVER === "true" ? mockDevServerPlugin() : null,
+      ...(env.VITE_MOCK_DEV_SERVER === "true" ? [mockDevServerPlugin()] : []),
       UnoCSS(),
       // API 自动导入
       AutoImport({
@@ -68,7 +71,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         vueTemplate: true,
         // 导入函数类型声明文件路径 (false:关闭自动生成)
         dts: false,
-        // dts: "src/types/auto-imports.d.ts",
+        // dts: "types/auto-imports.d.ts",
       }),
       // 组件自动导入
       Components({
@@ -80,9 +83,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         dirs: ["src/components", "src/**/components"],
         // 导入组件类型声明文件路径 (false:关闭自动生成)
         dts: false,
-        // dts: "src/types/components.d.ts",
       }),
-    ],
+    ] as PluginOption[],
     // 预加载项目必需的依赖
     optimizeDeps: {
       include: [
@@ -92,19 +94,20 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "pinia",
         "axios",
         "@vueuse/core",
-        "@element-plus/icons-vue",
         "codemirror-editor-vue3",
-        "nprogress",
-        "qs",
+        "exceljs",
         "path-to-regexp",
-        "echarts",
         "echarts/core",
+        "echarts/renderers",
         "echarts/charts",
         "echarts/components",
-        "echarts/renderers",
+        "nprogress",
+        "sortablejs",
+        "qs",
+        "vxe-table",
         "path-browserify",
-        "@wangeditor-next/editor-for-vue",
-        "vue-draggable-plus",
+        "lodash-es",
+        "@element-plus/icons-vue",
         "element-plus/es",
         "element-plus/es/locale/lang/en",
         "element-plus/es/locale/lang/zh-cn",
@@ -126,6 +129,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           "col",
           "color-picker",
           "config-provider",
+          "collapse-transition",
           "date-picker",
           "descriptions",
           "descriptions-item",
@@ -158,7 +162,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           "radio",
           "radio-button",
           "radio-group",
-          "rate",
           "row",
           "scrollbar",
           "select",
@@ -184,7 +187,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           "tree-select",
           "upload",
           "watermark",
-          "statistic",
         ].map((c) => `element-plus/es/components/${c}/style/index`),
       ],
     },
@@ -195,23 +197,29 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       cssMinify: "lightningcss", // Vite 8 默认使用 Lightning CSS 压缩
       // minify 默认使用 'oxc'，压缩速度比 terser 快 30-90 倍
       rolldownOptions: {
+        checks: {
+          pluginTimings: false,
+        },
         output: {
           // 用于从入口点创建的块的打包输出格式
           entryFileNames: "js/[name].[hash].js",
           // 用于命名代码拆分时创建的共享块的输出命名
           chunkFileNames: "js/[name].[hash].js",
           // 用于输出静态资源的命名
-          assetFileNames: (assetInfo: any) => {
-            if (!assetInfo.name) {
+          assetFileNames: (assetInfo) => {
+            const assetName = assetInfo.names[0];
+
+            if (!assetName) {
               return "assets/[name].[hash][extname]";
             }
-            const info = assetInfo.name.split(".");
+
+            const info = assetName.split(".");
             let extType = info[info.length - 1];
-            if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
+            if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetName)) {
               extType = "media";
-            } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/i.test(assetInfo.name)) {
+            } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/.test(assetName)) {
               extType = "img";
-            } else if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetInfo.name)) {
+            } else if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetName)) {
               extType = "fonts";
             }
             return `${extType}/[name].[hash].[ext]`;

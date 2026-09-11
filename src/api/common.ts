@@ -1,14 +1,12 @@
 /**
- * 通用 API 类型定义
+ * API 响应壳
  */
-
-/** API 响应结构 */
-export interface ApiResponse<T = any> {
-  /** 响应码 */
+export interface ApiResult<T = unknown> {
+  /** 业务状态码 */
   code: string;
-  /** 响应数据 */
+  /** 业务数据 */
   data: T;
-  /** 响应消息 */
+  /** 业务消息 */
   msg: string;
 }
 

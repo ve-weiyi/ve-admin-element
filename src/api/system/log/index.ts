@@ -13,7 +13,7 @@ const LOG_BASE_URL = "/api/v1/logs";
 const LogAPI = {
   /** 获取日志分页列表 */
   getPage(queryParams: LogQueryParams) {
-    return request<any, PageResult<LogItem>>({
+    return request<unknown, PageResult<LogItem>>({
       url: `${LOG_BASE_URL}`,
       method: "get",
       params: queryParams,
@@ -22,7 +22,7 @@ const LogAPI = {
 
   /** 获取访问趋势统计 */
   getVisitTrend(queryParams: VisitTrendQueryParams) {
-    return request<any, VisitTrendDetail>({
+    return request<unknown, VisitTrendDetail>({
       url: `${LOG_BASE_URL}/analytics/trend`,
       method: "get",
       params: queryParams,
@@ -31,7 +31,7 @@ const LogAPI = {
 
   /** 获取访问概览统计 */
   getVisitOverview() {
-    return request<any, VisitOverviewDetail>({
+    return request<unknown, VisitOverviewDetail>({
       url: `${LOG_BASE_URL}/analytics/overview`,
       method: "get",
     });

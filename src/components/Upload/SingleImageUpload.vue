@@ -82,10 +82,7 @@ const props = defineProps({
   },
 });
 
-const modelValue = defineModel("modelValue", {
-  type: String,
-  default: () => "",
-});
+const modelValue = defineModel<string>({ default: "" });
 
 /**
  * 限制用户上传文件的格式和大小

@@ -17,7 +17,7 @@
 
 </div>
 
-![](https://foruda.gitee.com/images/1708618984641188532/a7cca095_716974.png "rainbow.png")
+![](./public/images/rainbow.png "rainbow.png")
 
 <div align="center">
 
@@ -30,7 +30,7 @@
 
 ## Introduction
 
-[vue3-element-admin](https://gitee.com/youlaiorg/vue3-element-admin) is a free and open-source admin template for backend management frontend, built with popular technologies such as Vue3, Vite5, TypeScript, Element-Plus, and Pinia (with accompanying [backend source code](https://gitee.com/youlaiorg/youlai-boot)).
+[vue3-element-template](https://gitee.com/youlaiorg/vue3-element-template) is the lite version of [vue3-element-admin](https://gitee.com/youlaiorg/vue3-element-admin), built with Vue 3, Vite, TypeScript, and Element Plus, paired with [9 mainstream backends + derivatives](https://gitee.com/youlaiorg/vue3-element-admin#ecosystem) (covering Java / Node.js / Go / Python / PHP / C# / Rust 7 languages) and the mobile app [youlai-app](https://gitee.com/youlaiorg/youlai-app). Other frontend versions: [TypeScript](https://gitee.com/youlaiorg/vue3-element-admin) · [JavaScript](https://gitee.com/youlaiorg/vue3-element-admin-js) · [NaiveUI](https://gitee.com/youlaiorg/vue3-naiveui-admin).
 
 
 
@@ -92,16 +92,17 @@
 
 | Project | Tech Stack | Description |
 |:-----|:-------|:-----|
-| [youlai-boot](https://gitee.com/youlaiorg/youlai-boot) | Spring Boot + MyBatis-Plus | Java Backend (Main) |
+| [youlai-boot](https://gitee.com/youlaiorg/youlai-boot) | Spring Boot + MyBatis-Plus | Java (recommended) |
 | [youlai-nest](https://gitee.com/youlaiorg/youlai-nest) | NestJS + TypeORM | Node.js |
 | [youlai-gin](https://gitee.com/youlaiorg/youlai-gin) | Go + Gorm | Go |
 | [youlai-django](https://gitee.com/youlaiorg/youlai-django) | Django + DRF | Python |
-| [youlai-think](https://gitee.com/youlaiorg/youlai-think) | ThinkPHP 8 | PHP |
-| [youlai-aspnet](https://gitee.com/youlaiorg/youlai-aspnet) | ASP.NET Core | C# |
-
+| [youlai-fastapi](https://gitee.com/youlaiorg/youlai-fastapi) | FastAPI + SQLAlchemy | Python |
+| [youlai-think](https://gitee.com/youlaiorg/youlai-think) | ThinkPHP + ThinkORM | PHP |
+| [youlai-aspnet](https://gitee.com/youlaiorg/youlai-aspnet) | ASP.NET Core + EF Core | C# |
+| [youlai-axum](https://gitee.com/youlaiorg/youlai-axum) | Axum + SeaORM | Rust |
 > **youlai-boot** also provides variants: [Multi-tenant](https://gitee.com/youlaiorg/youlai-boot-tenant) · [MyBatis-Flex](https://gitee.com/youlaiorg/youlai-boot-flex) · [Spring Boot 3](https://gitee.com/youlaiorg/youlai-boot/tree/spring-boot-3) · [PostgreSQL](https://gitee.com/youlaiorg/youlai-boot/tree/db-pg) · [Multi-module](https://gitee.com/youlaiorg/youlai-boot/tree/multi-module)
 >
-> All six backends share the same **RESTful API** and **database schema**, frontends can switch seamlessly.
+> All eight backends share the same **RESTful API** and **database schema**, frontends can switch seamlessly.
 
 ## Project Setup
 
@@ -196,7 +197,7 @@ Execute `pnpm run commit` to invoke interactive git commit and complete the info
 <table align="center">
   <tr>
     <td align="center">
-      <img src="./src/assets/images/qr/wechat-offical.png" height="180" alt="WeChat Official Account"><br>
+      <img src="./src/assets/images/qr/wechat-official.jpg" height="180" alt="WeChat Official Account"><br>
       <sub>WeChat Official Account</sub>
     </td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>

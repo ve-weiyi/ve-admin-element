@@ -1,13 +1,11 @@
 <template>
-  <div class="navbar">
+  <div class="layout-navbar">
     <div class="flex-y-center">
-      <!-- 菜单折叠按钮 -->
-      <Hamburger :is-active="isSidebarOpened" @toggle-click="toggleSideBar" />
-      <!-- 面包屑导航 -->
+      <Hamburger :is-active="sidebarState.opened" @toggle-click="sidebarState.toggle" />
       <Breadcrumb />
     </div>
-    <!-- 导航栏操作区域 -->
-    <div class="navbar__actions">
+
+    <div class="layout-navbar__actions">
       <LayoutToolbar />
     </div>
   </div>
@@ -18,21 +16,37 @@ import { useAppStore } from "@/stores";
 import Hamburger from "@/components/Hamburger/index.vue";
 import Breadcrumb from "@/components/Breadcrumb/index.vue";
 
+const props = withDefaults(
+  defineProps<{
+    toggleTarget?: "primary" | "secondary";
+  }>(),
+  {
+    toggleTarget: "primary",
+  }
+);
+
 const appStore = useAppStore();
 
-const isSidebarOpened = computed(() => appStore.sidebar.opened);
-
-function toggleSideBar() {
-  appStore.toggleSidebar();
-}
+const sidebarState = computed(() =>
+  props.toggleTarget === "secondary"
+    ? {
+        opened: appStore.secondarySidebar?.opened ?? true,
+        toggle: () => appStore.toggleSecondarySidebar(),
+      }
+    : { opened: appStore.sidebar.opened, toggle: () => appStore.toggleSidebar() }
+);
 </script>
 
 <style lang="scss" scoped>
-.navbar {
+.layout-navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: $navbar-height;
+  padding: 0 14px 0 6px;
+  background-color: var(--content-bg);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 1px 0 rgb(15 23 42 / 3%);
 
   &__actions {
     display: flex;

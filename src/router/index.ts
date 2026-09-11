@@ -12,7 +12,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect/index.vue"),
+        component: () => import("@/views/redirect.vue"),
       },
     ],
   },
@@ -36,7 +36,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
         name: "Dashboard",
         meta: {
-          title: "首页",
+          title: "dashboard",
           icon: "homepage",
           affix: true,
           keepAlive: true,
@@ -59,7 +59,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: { title: "个人中心", icon: "user", hidden: true },
       },
       {
-        path: "my-notice",
+        path: "profile/notice",
         name: "MyNotice",
         component: () => import("@/views/profile/notice/index.vue"),
         meta: { title: "我的通知", icon: "user", hidden: true },

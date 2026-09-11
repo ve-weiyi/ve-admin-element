@@ -3,6 +3,7 @@ import type { FormProps, TableProps, ColProps, ButtonProps, CardProps } from "el
 import type PageContent from "./PageContent.vue";
 import type PageModal from "./PageModal.vue";
 import type PageSearch from "./PageSearch.vue";
+import type { PageResult } from "@/api/common";
 import type { CSSProperties } from "vue";
 
 export type PageSearchInstance = InstanceType<typeof PageSearch>;

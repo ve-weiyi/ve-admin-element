@@ -1,11 +1,14 @@
 import { useDictSync } from "./useDictSync";
 import { useOnlineCount } from "./useOnlineCount";
-import { cleanupSse } from "./useSse";
+import { useSse, cleanupSse } from "./useSse";
 
 /**
  * 初始化所有 SSE 服务
  */
 export function setupSse() {
+  const sse = useSse();
+  sse.connect();
+
   const dictSync = useDictSync();
   dictSync.initialize();
 
@@ -29,4 +32,6 @@ export function cleanupSseServices() {
 export { useDictSync } from "./useDictSync";
 export { useOnlineCount } from "./useOnlineCount";
 export { useSse, cleanupSse, SseConnectionState } from "./useSse";
-export type { DictMessage, DictChangeMessage, DictChangeCallback } from "./useDictSync";
+export { SseTopics } from "./sseTopics";
+export type { DictChangeMessage, DictChangeCallback } from "./useDictSync";
+export type { SseTopic } from "./sseTopics";

@@ -1,18 +1,17 @@
-<template>
-  <div class="app-container">
-    <!-- 搜索区域 -->
-    <div class="filter-section">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+﻿<template>
+  <div class="page-container">
+    <el-card class="page-search" shadow="never">
+      <el-form ref="queryFormRef" :model="params" :inline="true">
         <el-form-item label="通知标题" prop="title">
           <el-input
-            v-model="queryParams.title"
+            v-model="params.title"
             placeholder="关键字"
             clearable
             @keyup.enter="handleQuery"
           />
         </el-form-item>
 
-        <el-form-item class="search-buttons">
+        <el-form-item>
           <el-button type="primary" @click="handleQuery">
             <template #icon>
               <Search />
@@ -27,16 +26,11 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-card>
 
-    <el-card shadow="hover" class="table-section">
-      <el-table
-        ref="dataTableRef"
-        v-loading="loading"
-        :data="pageData"
-        highlight-current-row
-        class="table-section__content"
-      >
+    <el-card class="page-content" shadow="never">
+      <div class="page-table-wrapper">
+        <el-table v-loading="loading" :data="list" class="page-table" height="100%" highlight-current-row>
         <el-table-column type="index" label="序号" width="60" />
         <el-table-column label="通知标题" prop="title" min-width="200" />
         <el-table-column align="center" label="通知类型" width="150">
@@ -59,7 +53,7 @@
         <el-table-column align="center" label="发布人" prop="publisherName" width="150" />
         <el-table-column align="center" label="状态" width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.isRead == 1" type="success">已读</el-tag>
+            <el-tag v-if="scope.row.isRead === NOTICE_READ" type="success">已读</el-tag>
             <el-tag v-else type="info">未读</el-tag>
           </template>
         </el-table-column>
@@ -70,14 +64,15 @@
             </el-button>
           </template>
         </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
 
       <pagination
         v-if="total > 0"
         v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        @pagination="handleQuery"
+        v-model:page="params.pageNum"
+        v-model:limit="params.pageSize"
+        @pagination="fetchData"
       />
     </el-card>
 
@@ -90,15 +85,11 @@
       <div v-if="noticeDetail" class="notice-detail__wrapper">
         <div class="notice-detail__meta">
           <span>
-            <el-icon>
-              <User />
-            </el-icon>
+            <el-icon><User /></el-icon>
             {{ noticeDetail.publisherName }}
           </span>
           <span class="ml-2">
-            <el-icon>
-              <Timer />
-            </el-icon>
+            <el-icon><Timer /></el-icon>
             {{ noticeDetail.publishTime }}
           </span>
         </div>
@@ -112,54 +103,48 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { Refresh, Search, Timer, User } from "@element-plus/icons-vue";
+
+import NoticeAPI from "@/api/system/notice";
+import type { NoticeDetail, NoticeItem, NoticeQueryParams } from "@/api/system/notice";
+import { usePageTable } from "@/composables";
+
 defineOptions({
   name: "MyNotice",
   inheritAttrs: false,
 });
 
-import { onMounted, reactive, ref } from "vue";
-import { ElMessage } from "element-plus";
-import NoticeAPI, { type NoticeItem, type NoticeQueryParams } from "@/api/system/notice";
+/** 通知已读标记（1:已读;0:未读）。 */
+const NOTICE_READ = 1;
 
 const queryFormRef = ref();
-const pageData = ref<NoticeItem[]>([]);
-const loading = ref(false);
-const total = ref(0);
 
-const queryParams = reactive<NoticeQueryParams>({
-  pageNum: 1,
-  pageSize: 10,
+/** 分页表格数据管理 */
+const { loading, list, total, params, fetchData, handleQuery, handleResetQuery } = usePageTable<
+  NoticeItem,
+  NoticeQueryParams
+>({
+  initialParams: {
+    pageNum: 1,
+    pageSize: 10,
+  },
+  request: NoticeAPI.getMyNoticePage,
+  onBeforeReset: () => queryFormRef.value?.resetFields(),
 });
 
 const noticeDialogVisible = ref(false);
-const noticeDetail = ref<any>(null);
+const noticeDetail = ref<NoticeDetail | null>(null);
 
-async function handleQuery() {
-  loading.value = true;
-  try {
-    const data = await NoticeAPI.getMyNoticePage(queryParams);
-    pageData.value = data.list;
-    total.value = data.total ?? 0;
-  } finally {
-    loading.value = false;
-  }
-}
-
-function handleResetQuery() {
-  queryFormRef.value?.resetFields();
-  queryParams.pageNum = 1;
-  handleQuery();
-}
-
-async function handleReadNotice(id: string) {
-  try {
-    const data = await NoticeAPI.getDetail(id);
-    noticeDetail.value = data;
-    noticeDialogVisible.value = true;
-  } catch (error) {
-    ElMessage.error("获取通知详情失败");
-    console.error("获取通知详情失败", error);
-  }
+/**
+ * 查看通知详情。
+ *
+ * @param id 通知 ID
+ */
+async function handleReadNotice(id: string): Promise<void> {
+  const data = await NoticeAPI.getDetail(id);
+  noticeDetail.value = data;
+  noticeDialogVisible.value = true;
 }
 
 onMounted(() => {

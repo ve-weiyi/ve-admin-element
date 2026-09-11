@@ -1,5 +1,6 @@
-import { ref, onMounted, getCurrentInstance } from "vue";
+import { ref, readonly } from "vue";
 import { useSse } from "./useSse";
+import { SseTopics } from "./sseTopics";
 
 let globalInstance: ReturnType<typeof createOnlineCountComposable> | null = null;
 
@@ -11,18 +12,19 @@ function createOnlineCountComposable() {
 
   let unsubscribe: (() => void) | null = null;
 
-  const handleOnlineCountMessage = (count: number) => {
-    if (count !== undefined && !isNaN(count)) {
-      onlineUserCount.value = count;
-      lastUpdateTime.value = Date.now();
-    }
+  /** 处理在线用户数变更消息 */
+  const handleOnlineUsersMessage = (count: number) => {
+    if (!Number.isFinite(count) || count < 0) return;
+    onlineUserCount.value = count;
+    lastUpdateTime.value = Date.now();
   };
 
+  /** 订阅 SSE 在线用户数事件 */
   const initialize = () => {
-    sse.connect();
-    unsubscribe = sse.on("online-count", handleOnlineCountMessage);
+    unsubscribe = sse.on(SseTopics.ONLINE_USERS, handleOnlineUsersMessage);
   };
 
+  /** 取消 SSE 订阅并重置计数 */
   const cleanup = () => {
     if (unsubscribe) {
       unsubscribe();
@@ -42,24 +44,10 @@ function createOnlineCountComposable() {
   };
 }
 
-/**
- * 在线用户计数组合式函数（单例模式）
- */
-export function useOnlineCount(options: { autoInit?: boolean } = {}) {
-  const { autoInit = true } = options;
-
+/** 在线用户数组合式函数（单例模式） */
+export function useOnlineCount() {
   if (!globalInstance) {
     globalInstance = createOnlineCountComposable();
   }
-
-  const instance = getCurrentInstance();
-  if (autoInit && instance && globalInstance) {
-    onMounted(() => {
-      if (!globalInstance.isConnected.value) {
-        globalInstance.initialize();
-      }
-    });
-  }
-
   return globalInstance;
 }

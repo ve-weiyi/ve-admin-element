@@ -2,11 +2,10 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["esnext", "dom"],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
 
     // 严格性和类型检查相关配置
@@ -28,6 +27,14 @@
     "types": ["node", "vite/client", "element-plus/global"]
   },
 
-  "include": ["mock/**/*.ts", "src/**/*.ts", "src/**/*.vue", "vite.config.ts"],
-  "exclude": ["node_modules", "dist", "src/lang/**", "src/components/LangSelect/**"]
+  "include": [
+    "types/**/*.d.ts",
+    "mock/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "vite.config.ts",
+    "eslint.config.js",
+    "uno.config.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

@@ -85,10 +85,7 @@ const props = defineProps({
 const previewVisible = ref(false); // 是否显示预览
 const previewImageIndex = ref(0); // 预览图片的索引
 
-const modelValue = defineModel("modelValue", {
-  type: [Array] as PropType<string[]>,
-  default: () => [],
-});
+const modelValue = defineModel<string[]>({ default: () => [] });
 
 const fileList = ref<UploadUserFile[]>([]);
 

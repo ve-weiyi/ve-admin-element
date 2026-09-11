@@ -3,9 +3,7 @@ import {
   defineConfig,
   presetAttributify,
   presetIcons,
-  presetTypography,
   presetUno,
-  presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from "unocss";
@@ -45,6 +43,12 @@ export default defineConfig({
       primary: "var(--el-color-primary)",
       primary_dark: "var(--el-color-primary-light-5)",
     },
+    breakpoints: Object.fromEntries(
+      [640, 768, 1024, 1280, 1536, 1920, 2560].map((size, index) => [
+        ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl"][index],
+        `${size}px`,
+      ])
+    ),
   },
   presets: [
     presetUno(),
@@ -63,12 +67,6 @@ export default defineConfig({
           // 如果 `fill` 没有定义，则添加 `fill="currentColor"`
           return svg.includes('fill="') ? svg : svg.replace(/^<svg /, '<svg fill="currentColor" ');
         }),
-      },
-    }),
-    presetTypography(),
-    presetWebFonts({
-      fonts: {
-        // ...
       },
     }),
   ],

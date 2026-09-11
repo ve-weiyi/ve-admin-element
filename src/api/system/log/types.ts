@@ -34,10 +34,6 @@ export interface LogItem {
   requestMethod?: string;
   /** IP地址 */
   ip?: string;
-  /** 省份 */
-  province?: string;
-  /** 城市 */
-  city?: string;
   /** 地区 */
   region?: string;
   /** 设备 */

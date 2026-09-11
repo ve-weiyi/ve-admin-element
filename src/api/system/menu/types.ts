@@ -14,6 +14,8 @@ export interface MenuItem {
   children?: MenuItem[];
   /** 组件路径 */
   component?: string;
+  /** 外链地址 */
+  externalUrl?: string;
   /** ICON */
   icon?: string;
   /** 菜单ID */
@@ -22,15 +24,25 @@ export interface MenuItem {
   name?: string;
   /** 父菜单ID */
   parentId?: string;
+  /** 路由名称 */
+  routeName?: string;
+  /** 路由路径 */
+  routePath?: string;
   /** 路由路径 */
   path?: string;
   /** 按钮权限标识 */
   perm?: string;
   /** 跳转路径 */
   redirect?: string;
+  /** 是否始终显示 */
+  alwaysShow?: number | boolean;
+  /** 是否缓存 */
+  keepAlive?: number | boolean;
+  /** 路由参数 */
+  params?: { key?: string; value?: string }[];
   /** 菜单排序(数字越小排名越靠前) */
   sort?: number;
-  /** 菜单类型（C-目录 M-菜单 B-按钮） */
+  /** 菜单类型（C-目录 M-菜单 E-外链 B-按钮） */
   type?: string;
   /** 菜单是否可见(1:显示;0:隐藏) */
   visible?: number;
@@ -46,7 +58,7 @@ export interface MenuForm {
   parentId?: string;
   /** 菜单名称 */
   name?: string;
-  /** 菜单类型（C-目录 M-菜单 B-按钮） */
+  /** 菜单类型（C-目录 M-菜单 E-外链 B-按钮） */
   type?: string;
   /** 路由路径 */
   path?: string;
@@ -58,6 +70,8 @@ export interface MenuForm {
   redirect?: string;
   /** 组件路径 */
   component?: string;
+  /** 外链地址 */
+  externalUrl?: string;
   /** ICON */
   icon?: string;
   /** 排序 */
@@ -109,7 +123,9 @@ export interface Meta {
   /** 【菜单】是否开启页面缓存 */
   keepAlive?: boolean;
   /** 路由参数 */
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
+  /** 外链地址 */
+  externalUrl?: string;
   /** 角色集合 */
   roles?: string[];
   /** 路由title */

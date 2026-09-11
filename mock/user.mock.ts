@@ -1,346 +1,60 @@
 import { defineMock } from "./base";
 
+/** 演示头像，用于开发态展示非兜底路径 */
+const MOCK_AVATAR =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23409eff'/%3E%3Ctext x='20' y='27' font-size='20' font-family='sans-serif' text-anchor='middle' fill='%23fff'%3EA%3C/text%3E%3C/svg%3E";
+
+/** 模拟当前登录用户资料 */
+const mockProfile = {
+  user_id: "00000000-0000-0000-0000-000000000001",
+  username: "admin",
+  nickname: "管理员",
+  avatar: MOCK_AVATAR,
+  email: "admin@example.com",
+  mobile: "13800000000",
+  status: 1,
+  created_at: 1700000000000,
+  updated_at: 1700000000000,
+  third_party: [],
+  roles: ["ROOT"],
+  perms: ["*:*:*"],
+  gender: 1,
+  intro: "",
+  website: "",
+};
+
+/** 模拟当前登录用户角色 */
+const mockRole = {
+  id: 1,
+  parent_id: 0,
+  role_key: "ROOT",
+  role_label: "超级管理员",
+  role_comment: "拥有全部权限",
+};
+
 export default defineMock([
   {
-    url: "users/me",
+    url: "user/me/get_user_profile",
     method: ["GET"],
-    body: {
-      code: "00000",
-      data: {
-        userId: "2",
-        username: "admin",
-        nickname: "系统管理员",
-        avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-        roles: ["ADMIN"],
-        perms: [
-          "sys:user:list",
-          "sys:user:create",
-          "sys:user:update",
-          "sys:user:delete",
-          "sys:user:import",
-          "sys:user:export",
-          "sys:user:reset-password",
-
-          "sys:role:list",
-          "sys:role:create",
-          "sys:role:update",
-          "sys:role:delete",
-
-          "sys:dept:list",
-          "sys:dept:create",
-          "sys:dept:update",
-          "sys:dept:delete",
-
-          "sys:menu:list",
-          "sys:menu:create",
-          "sys:menu:update",
-          "sys:menu:delete",
-
-          "sys:dict:list",
-          "sys:dict:create",
-          "sys:dict:update",
-          "sys:dict:delete",
-
-          "sys:dict-item:list",
-          "sys:dict-item:create",
-          "sys:dict-item:update",
-          "sys:dict-item:delete",
-
-          "sys:notice:list",
-          "sys:notice:create",
-          "sys:notice:update",
-          "sys:notice:delete",
-          "sys:notice:revoke",
-          "sys:notice:publish",
-
-          "sys:config:list",
-          "sys:config:create",
-          "sys:config:update",
-          "sys:config:delete",
-          "sys:config:refresh",
-        ],
-      },
-      msg: "一切ok",
-    },
+    body: { code: 200, data: mockProfile, msg: "ok" },
   },
 
   {
-    url: "users",
+    url: "user/me/get_user_apis",
     method: ["GET"],
-    body: {
-      code: "00000",
-      data: {
-        list: [
-          {
-            id: "2",
-            username: "admin",
-            nickname: "系统管理员",
-            mobile: "17621210366",
-            gender: 1,
-            avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "",
-            status: 1,
-            deptId: "1",
-            roleIds: [2],
-          },
-          {
-            id: "3",
-            username: "test",
-            nickname: "测试小用户",
-            mobile: "17621210367",
-            gender: 1,
-            avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "youlaitech@163.com",
-            status: 1,
-            deptId: "3",
-            roleIds: [3],
-          },
-          {
-            id: "4",
-            username: "dept_manager",
-            nickname: "部门主管",
-            mobile: "18812345680",
-            gender: 1,
-            avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "manager@youlaitech.com",
-            status: 1,
-            deptId: "1",
-            roleIds: [4],
-          },
-          {
-            id: "5",
-            username: "dept_member",
-            nickname: "部门成员",
-            mobile: "18812345681",
-            gender: 1,
-            avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "member@youlaitech.com",
-            status: 1,
-            deptId: "1",
-            roleIds: [5],
-          },
-          {
-            id: "6",
-            username: "employee",
-            nickname: "普通员工",
-            mobile: "18812345682",
-            gender: 1,
-            avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "employee@youlaitech.com",
-            status: 1,
-            deptId: "2",
-            roleIds: [6],
-          },
-          {
-            id: "7",
-            username: "custom_user",
-            nickname: "自定义权限用户",
-            mobile: "18812345683",
-            gender: 1,
-            avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-            email: "custom@youlaitech.com",
-            status: 1,
-            deptId: "3",
-            roleIds: [7],
-          },
-        ],
-        total: 6,
-      },
-      msg: "一切ok",
-    },
+    body: { code: 200, data: { list: [] }, msg: "ok" },
   },
 
-  // 新增用户
   {
-    url: "users",
-    method: ["POST"],
-    body({ body }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "新增用户" + body.nickname + "成功",
-      };
-    },
-  },
-
-  // 获取用户表单数据
-  {
-    url: "users/:userId/form",
+    // 返回空列表，触发开发者模式下的本地静态路由
+    url: "user/me/get_user_menus",
     method: ["GET"],
-    body: ({ params }) => {
-      return {
-        code: "00000",
-        data: userMap[params.userId],
-        msg: "一切ok",
-      };
-    },
-  },
-  // 修改用户
-  {
-    url: "users/:userId",
-    method: ["PUT"],
-    body({ body }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "修改用户" + body.nickname + "成功",
-      };
-    },
+    body: { code: 200, data: { list: [] }, msg: "ok" },
   },
 
-  // 删除用户
   {
-    url: "users/:userId",
-    method: ["DELETE"],
-    body({ params }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "删除用户" + params.id + "成功",
-      };
-    },
-  },
-
-  // 重置密码
-  {
-    url: "users/:userId/password/reset",
-    method: ["PUT"],
-    body({ query }) {
-      return {
-        code: "00000",
-        data: null,
-        msg: "重置密码成功，新密码为：" + query.password,
-      };
-    },
-  },
-
-  // 导出Excel
-  {
-    url: "users/export",
+    url: "user/me/get_user_roles",
     method: ["GET"],
-    headers: {
-      "Content-Disposition": "attachment; filename=%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8.xlsx",
-      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    },
-  },
-
-  {
-    url: "users/profile",
-    method: ["GET"],
-    body: {
-      code: "00000",
-      data: {
-        id: "2",
-        username: "admin",
-        nickname: "系统管理员",
-        avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-        gender: 1,
-        mobile: "17621210366",
-        email: null,
-        deptName: "有来技术",
-        roleNames: "系统管理员",
-        createTime: "2019-10-10",
-      },
-    },
-  },
-
-  {
-    url: "users/profile",
-    method: ["PUT"],
-    body() {
-      return {
-        code: "00000",
-        data: null,
-        msg: "修改个人信息成功",
-      };
-    },
-  },
-
-  {
-    url: "users/password",
-    method: ["PUT"],
-    body() {
-      return {
-        code: "00000",
-        data: null,
-        msg: "修改密码成功",
-      };
-    },
+    body: { code: 200, data: { list: [mockRole] }, msg: "ok" },
   },
 ]);
-
-// 用户映射表数据
-const userMap: Record<string, any> = {
-  2: {
-    id: "2",
-    username: "admin",
-    nickname: "系统管理员",
-    mobile: "17621210366",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "",
-    status: 1,
-    deptId: "1",
-    roleIds: [2],
-  },
-  3: {
-    id: "3",
-    username: "test",
-    nickname: "测试小用户",
-    mobile: "17621210367",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "youlaitech@163.com",
-    status: 1,
-    deptId: "3",
-    roleIds: [3],
-  },
-  4: {
-    id: "4",
-    username: "dept_manager",
-    nickname: "部门主管",
-    mobile: "18812345680",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "manager@youlaitech.com",
-    status: 1,
-    deptId: "1",
-    roleIds: [4],
-  },
-  5: {
-    id: "5",
-    username: "dept_member",
-    nickname: "部门成员",
-    mobile: "18812345681",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "member@youlaitech.com",
-    status: 1,
-    deptId: "1",
-    roleIds: [5],
-  },
-  6: {
-    id: "6",
-    username: "employee",
-    nickname: "普通员工",
-    mobile: "18812345682",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "employee@youlaitech.com",
-    status: 1,
-    deptId: "2",
-    roleIds: [6],
-  },
-  7: {
-    id: "7",
-    username: "custom_user",
-    nickname: "自定义权限用户",
-    mobile: "18812345683",
-    gender: 1,
-    avatar: "https://foruda.gitee.com/images/1723603502796844527/03cdca2a_716974.gif",
-    email: "custom@youlaitech.com",
-    status: 1,
-    deptId: "3",
-    roleIds: [7],
-  },
-};

@@ -2,6 +2,10 @@ export const APP_PREFIX = "vea";
 
 export const ROLE_ROOT = "ROOT";
 
+/** 默认头像，用于用户未设置头像时的兜底 */
+export const DEFAULT_AVATAR =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23e5e7eb'/%3E%3Ccircle cx='20' cy='15' r='7' fill='%239ca3af'/%3E%3Cpath d='M6 40c0-7.7 6.3-14 14-14s14 6.3 14 14z' fill='%239ca3af'/%3E%3C/svg%3E";
+
 export const STORAGE_KEYS = {
   // 认证
   ACCESS_TOKEN: `${APP_PREFIX}:auth:access_token`,

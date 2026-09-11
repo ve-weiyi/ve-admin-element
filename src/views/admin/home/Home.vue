@@ -7,10 +7,7 @@
       <el-row class="h-80px">
         <el-col :span="18" :xs="24">
           <div class="flex-x-start">
-            <img
-              class="w80px h80px rounded-full"
-              :src="userStore.userInfo.avatar + '?imageView2/1/w/80/h/80'"
-            />
+            <img class="w80px h80px rounded-full" :src="avatarUrl" />
             <div class="ml-5">
               <p>{{ greetings }}</p>
               <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
@@ -46,7 +43,7 @@
                 未连接
               </span>
             </div>
-            <div class="i-svg:people w-8 h-8 animate-[pulse_2s_infinite]" />
+            <div class="i-svg:group w-8 h-8 animate-[pulse_2s_infinite]" />
           </div>
 
           <div class="flex-x-between mt-2 text-sm text-gray">
@@ -214,7 +211,7 @@
             <div class="flex-y-center">
               <span class="text-lg">{{ Math.round(transitionArticleCount) }}</span>
             </div>
-            <div class="i-svg:article w-8 h-8" />
+            <div class="i-svg:document w-8 h-8" />
           </div>
 
           <div class="flex-x-between mt-2 text-sm text-gray">
@@ -378,6 +375,7 @@ defineOptions({
 
 import { dayjs } from "element-plus";
 import { useUserStore } from "@/stores";
+import { DEFAULT_AVATAR } from "@/constants";
 import { useDateFormat, useTransition } from "@vueuse/core";
 import { Connection, Failed } from "@element-plus/icons-vue";
 import { useOnlineCount } from "@/hooks/websocket/services/useOnlineCount";
@@ -436,6 +434,15 @@ interface GitHubRelease {
 }
 
 const userStore = useUserStore();
+
+// 头像地址：未设置头像时用默认头像；图片处理参数仅对远程地址追加
+const avatarUrl = computed(() => {
+  const avatar = userStore.userInfo.avatar;
+  if (!avatar) {
+    return DEFAULT_AVATAR;
+  }
+  return avatar.startsWith("data:") ? avatar : `${avatar}?imageView2/1/w/80/h/80`;
+});
 
 // 版本列表数据
 const vesionList = ref<VersionItem[]>([]);

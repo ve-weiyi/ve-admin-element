@@ -18,18 +18,17 @@
       <el-dropdown trigger="click">
         <div class="layout-user">
           <div class="layout-user__avatar">
-            <img :src="userStore.userInfo.avatar" class="layout-user__avatar-img" />
+            <img
+              :src="userStore.userInfo.avatar || DEFAULT_AVATAR"
+              class="layout-user__avatar-img"
+            />
           </div>
           <span class="layout-user__name">{{ userStore.userInfo.username }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="handleProfileClick">
-              个人中心
-            </el-dropdown-item>
-            <el-dropdown-item divided @click="logout">
-              退出登录
-            </el-dropdown-item>
+            <el-dropdown-item @click="handleProfileClick">个人中心</el-dropdown-item>
+            <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -43,6 +42,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
+import { DEFAULT_AVATAR } from "@/constants";
 import { defaults } from "@/settings";
 import { DeviceEnum, SidebarColor, ThemeMode, LayoutMode } from "@/enums/settings";
 import { useAppStore, useSettingsStore, useUserStore } from "@/stores";

@@ -1,0 +1,60 @@
+import type { IModalConfig } from "@/components/CURD/types";
+import type { UpdateFriendReq } from "@/api/types";
+import { FriendAPI } from "@/api";
+
+const modalConfig: IModalConfig<UpdateFriendReq> = {
+  permPrefix: "website:friend",
+  component: "dialog",
+  dialog: {
+    title: "修改友链",
+    width: 600,
+    draggable: true,
+  },
+  pk: "id",
+  formAction(data) {
+    return FriendAPI.updateFriend(data);
+  },
+  beforeSubmit(data) {
+    console.log("提交之前处理", data);
+  },
+  formItems: [
+    {
+      label: "链接名称",
+      prop: "link_name",
+      rules: [{ required: true, message: "链接名称不能为空", trigger: "blur" }],
+      type: "input",
+      attrs: {
+        placeholder: "请输入链接名称",
+      },
+    },
+    {
+      label: "链接地址",
+      prop: "link_address",
+      rules: [{ required: true, message: "链接地址不能为空", trigger: "blur" }],
+      type: "input",
+      attrs: {
+        placeholder: "请输入链接地址",
+      },
+    },
+    {
+      label: "链接头像",
+      prop: "link_avatar",
+      rules: [{ required: true, message: "链接头像不能为空", trigger: "blur" }],
+      type: "input",
+      attrs: {
+        placeholder: "请输入链接头像",
+      },
+    },
+    {
+      label: "链接描述",
+      prop: "link_intro",
+      rules: [{ required: true, message: "链接描述不能为空", trigger: "blur" }],
+      type: "input",
+      attrs: {
+        placeholder: "请输入链接描述",
+      },
+    },
+  ],
+};
+
+export default modalConfig;

@@ -1043,7 +1043,7 @@ function handleCloseDrawer(): void {
   }
 }
 
-::deep(.copy-config-dialog) {
+:deep(.copy-config-dialog) {
   .el-message-box__content {
     max-height: 400px;
     overflow-y: auto;

@@ -44,7 +44,7 @@ export interface ArticleVO {
   status: number;
   created_at: number;
   updated_at: number;
-  category_name: string;
+  category_name: string | null;
   tag_name_list: string[];
   like_count: number;
   views_count: number;
@@ -143,7 +143,7 @@ export interface CreateArticleReq {
   original_url: string;
   is_top: number;
   status: number;
-  category_name?: string;
+  category_name?: string | null;
   tag_name_list?: string[];
 }
 
@@ -1173,7 +1173,7 @@ export interface UpdateArticleReq {
   original_url: string;
   is_top: number;
   status: number;
-  category_name?: string;
+  category_name?: string | null;
   tag_name_list?: string[];
 }
 

@@ -13,7 +13,7 @@ declare global {
   type ApiResponse<T = any> = IApiResponse<T>;
 
   /** 分页数据结构 */
-  interface PageResult<T> {
+  interface PageResult<T = any> {
     list: T[];
     total: number;
   }

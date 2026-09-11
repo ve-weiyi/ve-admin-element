@@ -12,5 +12,6 @@ export * from "./dict";
 export * from "./permission";
 export * from "./settings";
 export * from "./tags-view";
+export * from "./notification";
 export * from "./user";
 export { store };

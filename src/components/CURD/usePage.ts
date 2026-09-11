@@ -1,6 +1,21 @@
 import { ref } from "vue";
 import type { IObject, PageContentInstance, PageModalInstance, PageSearchInstance } from "./types";
 
+/** 过滤空值参数 */
+function cleanParams(params?: IObject): IObject {
+  const cleaned: IObject = {};
+  if (!params) {
+    return cleaned;
+  }
+  for (const key in params) {
+    const val = params[key];
+    if (val !== "" && val !== null && val !== undefined) {
+      cleaned[key] = val;
+    }
+  }
+  return cleaned;
+}
+
 function usePage() {
   const searchRef = ref<PageSearchInstance>();
   const contentRef = ref<PageContentInstance>();
@@ -9,13 +24,17 @@ function usePage() {
 
   // 搜索
   function handleQueryClick(queryParams: IObject) {
+    const searchParams = searchRef.value?.getQueryParams();
     const filterParams = contentRef.value?.getFilterParams();
-    contentRef.value?.fetchPageData({ ...queryParams, ...filterParams }, true);
+    contentRef.value?.fetchPageData(
+      cleanParams({ ...searchParams, ...queryParams, ...filterParams }),
+      true
+    );
   }
   // 重置
   function handleResetClick(queryParams: IObject) {
     const filterParams = contentRef.value?.getFilterParams();
-    contentRef.value?.fetchPageData({ ...queryParams, ...filterParams }, true);
+    contentRef.value?.fetchPageData(cleanParams({ ...queryParams, ...filterParams }), true);
   }
   // 新增
   function handleAddClick(RefImpl?: Ref<PageModalInstance>) {
@@ -67,13 +86,13 @@ function usePage() {
   function handleSubmitClick() {
     //根据检索条件刷新列表数据
     const queryParams = searchRef.value?.getQueryParams();
-    contentRef.value?.fetchPageData(queryParams, true);
+    contentRef.value?.fetchPageData(cleanParams(queryParams), true);
   }
   // 导出
   function handleExportClick() {
     // 根据检索条件导出数据
     const queryParams = searchRef.value?.getQueryParams();
-    contentRef.value?.exportPageData(queryParams);
+    contentRef.value?.exportPageData(cleanParams(queryParams));
   }
   // 搜索显隐
   function handleSearchClick() {
@@ -82,7 +101,7 @@ function usePage() {
   // 筛选数据
   function handleFilterChange(filterParams: IObject) {
     const queryParams = searchRef.value?.getQueryParams();
-    contentRef.value?.fetchPageData({ ...queryParams, ...filterParams }, true);
+    contentRef.value?.fetchPageData(cleanParams({ ...queryParams, ...filterParams }), true);
   }
 
   return {

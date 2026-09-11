@@ -2,7 +2,18 @@ import type { RouteRecordRaw } from "vue-router";
 import NProgress from "@/plugins/nprogress";
 import router from "@/router";
 import { usePermissionStore, useUserStore } from "@/stores";
-import { setupSse } from "@/composables";
+import { GuestAPI } from "@/api";
+import { AuthStorage } from "@/utils/auth";
+
+/** 获取游客信息，保存 device_id */
+const getGuestInfo = async (): Promise<void> => {
+  try {
+    const res = await GuestAPI.getGuest();
+    AuthStorage.setDeviceId(res.data.device_id);
+  } catch {
+    console.error("获取游客信息失败");
+  }
+};
 
 /**
  * 路由权限守卫
@@ -16,6 +27,11 @@ export function setupPermissionGuard() {
     NProgress.start();
 
     try {
+      // 首次进入获取终端标识
+      if (!AuthStorage.getDeviceId()) {
+        await getGuestInfo();
+      }
+
       const isLoggedIn = useUserStore().isLoggedIn();
 
       // 未登录处理
@@ -39,7 +55,6 @@ export function setupPermissionGuard() {
       if (!permissionStore.isRouteGenerated) {
         if (!userStore.userInfo?.roles?.length) {
           await userStore.getUserInfo();
-          setupSse();
         }
 
         const dynamicRoutes = await permissionStore.generateRoutes();

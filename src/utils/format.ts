@@ -1,6 +1,37 @@
+import { useDateFormat } from "@vueuse/core";
+
 /**
  * 数据格式化相关工具函数
  */
+
+function isSecondTimestamp(ts: number): boolean {
+  return ts.toString().length === 10;
+}
+
+/**
+ * 格式化日期
+ * @param date 时间戳（秒/毫秒）、日期字符串或 Date 对象
+ * @param format 格式，默认 "YYYY-MM-DD"
+ */
+export function formatDate(date: number | string | Date, format = "YYYY-MM-DD") {
+  if (!date) return "";
+  if (typeof date === "number") {
+    if (isSecondTimestamp(date)) {
+      date = date * 1000;
+    }
+    return formatDate(new Date(date), format);
+  }
+  return useDateFormat(date, format).value;
+}
+
+/**
+ * 格式化日期时间
+ * @param date 时间戳（秒/毫秒）、日期字符串或 Date 对象
+ * @param format 格式，默认 "YYYY-MM-DD HH:mm:ss"
+ */
+export function formatDateTime(date: number | string | Date, format = "YYYY-MM-DD HH:mm:ss") {
+  return formatDate(date, format);
+}
 
 /**
  * 格式化增长率

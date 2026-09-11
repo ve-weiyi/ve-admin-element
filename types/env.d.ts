@@ -4,12 +4,15 @@
  * Vite 环境变量类型定义
  */
 interface ImportMetaEnv {
+  readonly VITE_APP_TITLE?: string;
   readonly VITE_APP_PORT: number;
-  readonly VITE_APP_NAME: string;
+  readonly VITE_APP_BASE_PATH: string;
+  readonly VITE_APP_DIST_NAME: string;
   readonly VITE_APP_BASE_API: string;
   readonly VITE_APP_API_URL: string;
-  readonly VITE_APP_TITLE?: string;
-  readonly VITE_MOCK_DEV_SERVER: boolean;
+  readonly VITE_APP_WS_ENDPOINT: string;
+  readonly VITE_MOCK_DEV_SERVER: string;
+  readonly VITE_ENABLE_DEV_MODE: string;
 }
 
 interface ImportMeta {

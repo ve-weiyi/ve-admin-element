@@ -27,7 +27,7 @@
               :prop="item.prop"
               :attrs="{ style: { width: '100%' }, ...item.attrs }"
             />
-            <el-cascader
+            <ElCascader
               v-else-if="item.type === 'cascader'"
               v-model.trim="queryParams[item.prop]"
               v-bind="{ style: { width: '100%' }, ...item.attrs }"
@@ -42,7 +42,7 @@
             >
               <template v-if="item.type === 'select'">
                 <template v-for="opt in item.options" :key="opt.value">
-                  <el-option :label="opt.label" :value="opt.value" />
+                  <el-option :label="opt.label" :value="opt.value ?? ''" />
                 </template>
               </template>
             </component>

@@ -2,7 +2,7 @@
  * 菜单搜索逻辑
  */
 import { ref, onMounted, onBeforeUnmount, toRaw } from "vue";
-import { RouteRecordRaw, LocationQueryRaw } from "vue-router";
+import type { RouteRecordRaw, LocationQueryRaw } from "vue-router";
 import router from "@/router";
 import { usePermissionStore } from "@/stores";
 import { isExternal } from "@/utils";

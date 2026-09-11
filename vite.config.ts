@@ -44,10 +44,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       port: +env.VITE_APP_PORT,
       open: true,
       proxy: {
+        // 接口前缀是后端真实路径的一部分，原样转发即可，不做重写
         [env.VITE_APP_BASE_API]: {
           changeOrigin: true,
           target: env.VITE_APP_API_URL,
-          rewrite: (path: string) => path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), ""),
         },
       },
     },

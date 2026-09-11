@@ -1,7 +1,5 @@
 import { reactive, ref, type Ref } from "vue";
 
-import type { BaseQueryParams, PageResult } from "@/api/common";
-
 /**
  * 分页列表页通用状态管理
  *

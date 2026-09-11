@@ -1,298 +1,323 @@
-﻿<template>
-  <div class="profile-page">
-    <section class="profile-hero">
-      <div class="profile-hero__body">
-        <div class="profile-avatar">
-          <el-avatar :src="displayAvatar" :size="72">
-            <el-icon><UserFilled /></el-icon>
-          </el-avatar>
-          <el-button
-            type="info"
-            class="profile-avatar__action"
-            circle
-            :icon="Camera"
-            size="small"
-            title="更换头像"
-            @click="triggerFileUpload"
-          />
-          <input
-            ref="fileInput"
-            class="profile-avatar__input"
-            type="file"
-            accept="image/*"
-            @change="handleFileChange"
-          />
-        </div>
-
-        <div class="profile-hero__info">
-          <div class="profile-hero__title">
-            <h2 class="profile-hero__name">{{ displayName }}</h2>
-            <el-tag type="primary" effect="light" round>{{ primaryRole }}</el-tag>
-          </div>
-          <p class="profile-hero__desc">
-            {{ userProfile.username || "-" }} / {{ userProfile.deptName || "未分配部门" }}
-          </p>
-          <div class="profile-hero__meta">
-            <span class="profile-hero__meta-item">
-              <el-icon><Calendar /></el-icon>
-              加入 {{ formatValue(userProfile.createTime) }}
-            </span>
-            <span class="profile-hero__meta-item">
-              <el-icon><Location /></el-icon>
-              最近登录 {{ recentLoginRecords[0]?.time }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="profile-hero__actions">
-        <el-button :icon="Edit" @click="handleOpenDialog(DialogType.ACCOUNT)">编辑资料</el-button>
-        <el-button type="primary" :icon="Lock" @click="handleOpenDialog(DialogType.PASSWORD)">
-          修改密码
-        </el-button>
-      </div>
-    </section>
-
-    <div class="profile-page__layout">
-      <aside class="profile-page__side">
-        <section class="profile-card">
-          <header class="profile-card__header">
-            <h3 class="profile-card__title">个人资料</h3>
-            <el-tag size="small" effect="plain">{{ genderText }}</el-tag>
-          </header>
-
-          <dl class="profile-info">
-            <div v-for="item in profileInfoItems" :key="item.label" class="profile-info__item">
-              <dt class="profile-info__label">
-                <el-icon><component :is="item.icon" /></el-icon>
-                {{ item.label }}
-              </dt>
-              <dd class="profile-info__value" :class="{ 'is-muted': item.muted }">
-                {{ item.value }}
-              </dd>
+<template>
+  <div class="profile-container">
+    <el-row :gutter="20">
+      <!-- 左侧个人信息卡片 -->
+      <el-col :span="8">
+        <el-card class="user-card">
+          <div class="user-info">
+            <div class="avatar-wrapper">
+              <el-avatar :src="userProfile.avatar" :size="100" />
+              <el-button
+                type="info"
+                class="avatar-edit-btn"
+                circle
+                :icon="Camera"
+                size="small"
+                @click="triggerFileUpload"
+              />
+              <input
+                ref="fileInput"
+                type="file"
+                style="display: none"
+                accept="image/*"
+                @change="handleFileChange"
+              />
             </div>
-          </dl>
-        </section>
+            <div class="user-name">
+              <span class="nickname">{{ userProfile.nickname }}</span>
+              <el-icon class="edit-icon" @click="handleOpenDialog(DialogType.ACCOUNT)">
+                <Edit />
+              </el-icon>
+            </div>
+            <div class="user-role">{{ userProfile.roles }}</div>
+          </div>
+          <el-divider />
+          <div class="user-stats">
+            <div class="stat-item">
+              <div class="stat-value">0</div>
+              <div class="stat-label">待办</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">0</div>
+              <div class="stat-label">消息</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">0</div>
+              <div class="stat-label">通知</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
 
-        <section class="profile-card">
-          <header class="profile-card__header">
-            <h3 class="profile-card__title">账号概览</h3>
-          </header>
-
-          <div class="profile-stats">
-            <div v-for="item in profileStats" :key="item.label" class="profile-stats__item">
-              <span :class="['profile-icon', 'profile-icon--' + item.tone]">
-                <el-icon><component :is="item.icon" /></el-icon>
-              </span>
-              <div class="profile-stats__body">
-                <span class="profile-stats__label">{{ item.label }}</span>
-                <strong class="profile-stats__value">
-                  {{ item.value }}
-                  <em>{{ item.suffix }}</em>
-                </strong>
+      <!-- 右侧信息卡片 -->
+      <el-col :span="16">
+        <!-- 账号信息 -->
+        <el-card class="info-card">
+          <template #header>
+            <div class="card-header">
+              <span>账号信息</span>
+            </div>
+          </template>
+          <el-descriptions :column="1" border>
+            <el-descriptions-item label="用户名">
+              {{ userProfile.username }}
+              <el-icon v-if="userProfile.gender === 0" class="gender-icon male">
+                <Loading />
+              </el-icon>
+              <el-icon v-else-if="userProfile.gender === 1" class="gender-icon male">
+                <Male />
+              </el-icon>
+              <el-icon v-else class="gender-icon female">
+                <Female />
+              </el-icon>
+            </el-descriptions-item>
+            <el-descriptions-item label="手机号码">
+              {{ userProfile.mobile || "未绑定" }}
+            </el-descriptions-item>
+            <el-descriptions-item label="邮箱">
+              {{ userProfile.email || "未绑定" }}
+            </el-descriptions-item>
+            <el-descriptions-item label="个人介绍">
+              {{ userProfile.intro }}
+            </el-descriptions-item>
+            <el-descriptions-item label="个人网站">
+              {{ userProfile.website }}
+            </el-descriptions-item>
+            <el-descriptions-item label="创建时间">
+              {{ userProfile.created_at }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </el-card>
+        <!-- 安全设置 -->
+        <el-card class="security-card">
+          <template #header>
+            <div class="card-header">
+              <span>安全设置</span>
+            </div>
+          </template>
+          <!-- 账户密码 -->
+          <div class="security-item">
+            <div class="security-info">
+              <div class="security-title">账户密码</div>
+              <div class="security-desc">定期修改密码有助于保护账户安全</div>
+            </div>
+            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.PASSWORD)">
+              修改
+            </el-button>
+          </div>
+          <!-- 绑定手机 -->
+          <div class="security-item">
+            <div class="security-info">
+              <div class="security-title">绑定手机</div>
+              <div class="security-desc">
+                <span v-if="userProfile.mobile">已绑定手机号：{{ userProfile.mobile }}</span>
+                <span v-else>未绑定手机</span>
               </div>
             </div>
+            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.MOBILE)">
+              修改
+            </el-button>
           </div>
-        </section>
-
-        <section class="profile-card">
-          <header class="profile-card__header">
-            <h3 class="profile-card__title">角色权限</h3>
-            <span class="profile-card__extra">{{ permissionCount }} 个权限</span>
-          </header>
-
-          <div class="profile-tags">
-            <el-tag v-for="role in roleList" :key="role" class="m-0" size="small" effect="light">
-              {{ role }}
-            </el-tag>
-            <span v-if="!roleList.length" class="profile-empty">暂无角色</span>
-          </div>
-        </section>
-      </aside>
-
-      <main class="profile-page__main">
-        <section class="profile-card">
-          <header class="profile-card__header">
-            <div>
-              <h3 class="profile-card__title">安全设置</h3>
-              <p class="profile-card__desc">维护账号登录凭证与身份验证方式</p>
-            </div>
-            <el-tag :type="securityLevel.type" effect="light">
-              安全等级 {{ securityLevel.label }}
-            </el-tag>
-          </header>
-
-          <div class="profile-security">
-            <div v-for="item in securityItems" :key="item.key" class="profile-security__item">
-              <span :class="['profile-icon', 'profile-icon--large', 'profile-icon--' + item.tone]">
-                <el-icon><component :is="item.icon" /></el-icon>
-              </span>
-              <div class="profile-security__body">
-                <div class="profile-security__title">
-                  <span>{{ item.title }}</span>
-                  <el-tag size="small" :type="item.statusType" effect="plain">
-                    {{ item.status }}
-                  </el-tag>
-                </div>
-                <p class="profile-security__desc">{{ item.description }}</p>
-              </div>
-              <div class="profile-security__actions">
-                <el-button
-                  v-for="action in item.actions"
-                  :key="action.label"
-                  :type="action.type"
-                  link
-                  @click="action.onClick"
-                >
-                  {{ action.label }}
-                </el-button>
+          <!-- 绑定邮箱 -->
+          <div class="security-item">
+            <div class="security-info">
+              <div class="security-title">绑定邮箱</div>
+              <div class="security-desc">
+                <span v-if="userProfile.email">已绑定邮箱：{{ userProfile.email }}</span>
+                <span v-else>未绑定邮箱</span>
               </div>
             </div>
+            <el-button type="primary" link @click="() => handleOpenDialog(DialogType.EMAIL)">
+              修改
+            </el-button>
           </div>
-        </section>
+          <!-- 绑定第三方账号 -->
+          <div>
+            <div class="security-title">绑定第三方账号</div>
+            <p class="tip-text">
+              使用以下任一方式都可以登录到您的
+              <strong>blog</strong>
+              帐号
+            </p>
 
-        <div class="profile-page__grid">
-          <section class="profile-card">
-            <header class="profile-card__header">
-              <h3 class="profile-card__title">近期登录</h3>
-              <span class="profile-card__extra">最近 3 条</span>
-            </header>
-
-            <div class="profile-login">
-              <div
-                v-for="record in recentLoginRecords"
-                :key="record.time"
-                class="profile-login__item"
+            <el-table :data="userProfile.third_party" label-width="auto" border>
+              <el-table-column prop="index" label="序号" width="60" align="center">
+                <template #default="{ $index }">{{ $index + 1 }}</template>
+              </el-table-column>
+              <el-table-column
+                prop="platform"
+                label="平台"
+                width="100"
+                align="center"
+                show-overflow-tooltip
+              />
+              <el-table-column
+                prop="account"
+                label="详情"
+                width="150"
+                align="center"
+                show-overflow-tooltip
               >
-                <span class="profile-icon">
-                  <el-icon><Monitor /></el-icon>
-                </span>
-                <div class="profile-login__body">
-                  <strong class="profile-login__device">{{ record.device }}</strong>
-                  <span class="profile-login__meta">{{ record.location }} / {{ record.ip }}</span>
+                <template #default="{ row }">
+                  <div class="flex justify-center">
+                    <el-avatar :src="row.avatar" :size="24" />
+                    <span class="ml-2">{{ row.nickname }}</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="created_at" label="绑定时间" width="200" align="center">
+                <template #default="{ row }">
+                  {{ useDateFormat(row.created_at) }}
+                </template>
+              </el-table-column>
+              <el-table-column label="状态" width="100" align="center">
+                <template #default><span class="status-active">● 使用中</span></template>
+              </el-table-column>
+              <el-table-column label="操作" width="100" align="center" fixed="right">
+                <template #default="{ row }">
+                  <el-button type="danger" link @click="handleUnbindAccount(row.platform)">
+                    解除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <div class="bind-more">
+              <p class="bind-title">可绑定的第三方账号</p>
+              <div class="platform-list">
+                <div v-for="item in availablePlatforms" :key="item.platform" class="platform-tag">
+                  <div
+                    class="text-32px cursor-pointer"
+                    :class="item.icon"
+                    @click="handleBindAccount(item.platform)"
+                  />
+                  <span>{{ item.name }}</span>
                 </div>
-                <time class="profile-login__time">{{ record.time }}</time>
               </div>
             </div>
-          </section>
-
-          <section class="profile-card">
-            <header class="profile-card__header">
-              <h3 class="profile-card__title">账号状态</h3>
-              <span class="profile-card__extra">完善度 {{ profileCompletion }}%</span>
-            </header>
-
-            <div class="profile-status">
-              <div
-                v-for="item in accountStatusItems"
-                :key="item.label"
-                class="profile-status__item"
-                :class="{ 'is-warning': !item.done }"
+          </div>
+        </el-card>
+        <!-- 登录历史 -->
+        <el-card class="info-card">
+          <template #header>
+            <div class="card-header">
+              <span>登录历史</span>
+            </div>
+          </template>
+          <el-auto-resizer>
+            <template #default="{ width }">
+              <el-table-v2
+                :columns="loginHistoryColumns"
+                :data="tableData"
+                :width="width"
+                :height="600"
+                :fixed="true"
               >
-                <el-icon class="profile-status__icon">
-                  <CircleCheck v-if="item.done" />
-                  <Warning v-else />
-                </el-icon>
-                <div class="profile-status__body">
-                  <strong class="profile-status__title">{{ item.label }}</strong>
-                  <span class="profile-status__desc">{{ item.value }}</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </main>
-    </div>
+                <template #empty>
+                  <div class="flex items-center justify-center h-100%">
+                    <el-empty />
+                  </div>
+                </template>
+              </el-table-v2>
+            </template>
+          </el-auto-resizer>
+        </el-card>
+      </el-col>
+    </el-row>
 
-    <el-dialog v-model="dialogState.visible" :title="dialogState.title" width="520px">
+    <!-- 弹窗 -->
+    <el-dialog v-model="dialog.visible" :title="dialog.title" :width="500">
+      <!-- 账号资料 -->
       <el-form
-        v-if="dialogState.type === DialogType.ACCOUNT"
+        v-if="dialog.type === DialogType.ACCOUNT"
         ref="userProfileFormRef"
         :model="userProfileForm"
-        :rules="userProfileRules"
-        label-width="88px"
-        class="pr-10px"
+        :label-width="100"
       >
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="userProfileForm.nickname" placeholder="请输入昵称" />
+        <el-form-item label="昵称">
+          <el-input v-model="userProfileForm.nickname" />
         </el-form-item>
         <el-form-item label="性别">
-          <DictSelect v-model="userProfileForm.gender" code="gender" />
+          <el-select v-model="userProfileForm.gender">
+            <el-option label="保密" :value="0" />
+            <el-option label="男" :value="1" />
+            <el-option label="女" :value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="个人简介">
+          <el-input v-model="userProfileForm.intro" />
+        </el-form-item>
+        <el-form-item label="个人网站">
+          <el-input v-model="userProfileForm.website" />
         </el-form-item>
       </el-form>
 
+      <!-- 修改密码 -->
       <el-form
-        v-else-if="dialogState.type === DialogType.PASSWORD"
+        v-if="dialog.type === DialogType.PASSWORD"
         ref="passwordChangeFormRef"
         :model="passwordChangeForm"
         :rules="passwordChangeRules"
-        label-width="88px"
-        class="pr-10px"
+        :label-width="100"
       >
-        <el-form-item label="原密码" prop="oldPassword">
-          <el-input v-model="passwordChangeForm.oldPassword" type="password" show-password />
+        <el-form-item label="原密码" prop="old_password">
+          <el-input v-model="passwordChangeForm.old_password" type="password" show-password />
         </el-form-item>
-        <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="passwordChangeForm.newPassword" type="password" show-password />
+        <el-form-item label="新密码" prop="new_password">
+          <el-input v-model="passwordChangeForm.new_password" type="password" show-password />
         </el-form-item>
-        <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="passwordChangeForm.confirmPassword" type="password" show-password />
+        <el-form-item label="确认密码" prop="confirm_password">
+          <el-input v-model="passwordChangeForm.confirm_password" type="password" show-password />
         </el-form-item>
       </el-form>
 
+      <!-- 绑定手机 -->
       <el-form
-        v-else-if="dialogState.type === DialogType.MOBILE"
+        v-else-if="dialog.type === DialogType.MOBILE"
         ref="mobileBindingFormRef"
         :model="mobileUpdateForm"
         :rules="mobileBindingRules"
-        label-width="88px"
-        class="pr-10px"
+        :label-width="100"
       >
         <el-form-item label="手机号码" prop="mobile">
-          <el-input v-model="mobileUpdateForm.mobile" />
+          <el-input v-model="mobileUpdateForm.mobile" style="width: 250px" />
         </el-form-item>
-        <el-form-item label="验证码" prop="code">
-          <el-input v-model="mobileUpdateForm.code">
+        <el-form-item label="验证码" prop="verify_code">
+          <el-input v-model="mobileUpdateForm.verify_code" style="width: 250px">
             <template #append>
               <el-button :disabled="mobileCountdown > 0" @click="handleSendMobileCode">
-                {{ mobileCountdown > 0 ? mobileCountdown + "s后重新发送" : "发送验证码" }}
+                {{ mobileCountdown > 0 ? `${mobileCountdown}s后重新发送` : "发送验证码" }}
               </el-button>
             </template>
           </el-input>
-        </el-form-item>
-        <el-form-item label="当前密码" prop="password">
-          <el-input v-model="mobileUpdateForm.password" type="password" show-password />
         </el-form-item>
       </el-form>
 
+      <!-- 绑定邮箱 -->
       <el-form
-        v-else-if="dialogState.type === DialogType.EMAIL"
+        v-else-if="dialog.type === DialogType.EMAIL"
         ref="emailBindingFormRef"
         :model="emailUpdateForm"
         :rules="emailBindingRules"
-        label-width="88px"
-        class="pr-10px"
+        :label-width="100"
       >
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="emailUpdateForm.email" />
+          <el-input v-model="emailUpdateForm.email" style="width: 250px" />
         </el-form-item>
-        <el-form-item label="验证码" prop="code">
-          <el-input v-model="emailUpdateForm.code">
+        <el-form-item label="验证码" prop="verify_code">
+          <el-input v-model="emailUpdateForm.verify_code" style="width: 250px">
             <template #append>
               <el-button :disabled="emailCountdown > 0" @click="handleSendEmailCode">
-                {{ emailCountdown > 0 ? emailCountdown + "s后重新发送" : "发送验证码" }}
+                {{ emailCountdown > 0 ? `${emailCountdown}s后重新发送` : "发送验证码" }}
               </el-button>
             </template>
           </el-input>
-        </el-form-item>
-        <el-form-item label="当前密码" prop="password">
-          <el-input v-model="emailUpdateForm.password" type="password" show-password />
         </el-form-item>
       </el-form>
 
       <template #footer>
-        <span class="inline-flex gap-2">
-          <el-button @click="handleCancel">取消</el-button>
+        <span class="dialog-footer">
+          <el-button @click="dialog.visible = false">取消</el-button>
           <el-button type="primary" @click="handleSubmit">确定</el-button>
         </span>
       </template>
@@ -301,69 +326,21 @@
 </template>
 
 <script lang="ts" setup>
-import UserAPI from "@/api/system/user";
+import { Camera, Edit, Female, Loading, Male } from "@element-plus/icons-vue";
 import type {
-  UserProfileDetail,
-  PasswordChangeForm,
-  MobileUpdateForm,
-  EmailUpdateForm,
-  UserProfileForm,
-} from "@/api/system/user";
+  UpdateUserPasswordReq,
+  UpdateUserProfileReq,
+  UserProfile,
+  BindUserEmailReq,
+  BindUserPhoneReq,
+} from "@/api/types";
+import { MeAPI, AuthAPI } from "@/api";
+import { loginHistoryColumns } from "./columns";
+import { useDateFormat } from "@vueuse/core";
+import { uploadFile } from "@/utils/file";
 
-import type { Component } from "vue";
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
-import FileAPI from "@/api/file";
-import { useUserStoreHook } from "@/stores";
-import { redirectToLogin } from "@/utils/auth";
-
-import {
-  Calendar,
-  Camera,
-  CircleCheck,
-  DataLine,
-  Edit,
-  Female,
-  Iphone,
-  Key,
-  Location,
-  Lock,
-  Male,
-  Message,
-  Monitor,
-  OfficeBuilding,
-  Timer,
-  User,
-  UserFilled,
-  Warning,
-} from "@element-plus/icons-vue";
-
-interface ProfileInfoItem {
-  label: string;
-  value: string;
-  icon: Component;
-  muted?: boolean;
-}
-
-interface SecurityAction {
-  label: string;
-  type: "primary" | "danger";
-  onClick: () => void;
-}
-
-interface SecurityItem {
-  key: string;
-  title: string;
-  description: string;
-  status: string;
-  statusType: "success" | "warning" | "info";
-  icon: Component;
-  tone: "primary" | "success" | "warning";
-  actions: SecurityAction[];
-}
-
-const userStore = useUserStoreHook();
-
-const userProfile = ref<UserProfileDetail>({});
+// 用户信息
+const userProfile = ref<UserProfile>({} as UserProfile);
 
 const enum DialogType {
   ACCOUNT = "account",
@@ -372,83 +349,37 @@ const enum DialogType {
   EMAIL = "email",
 }
 
-const dialogState = reactive({
+const dialog = reactive({
   visible: false,
   title: "",
   type: "" as DialogType,
 });
 
-const userProfileFormRef = ref();
-const passwordChangeFormRef = ref();
-const mobileBindingFormRef = ref();
-const emailBindingFormRef = ref();
-
-const userProfileForm = reactive<UserProfileForm>({});
-const passwordChangeForm = reactive<PasswordChangeForm>({});
-const mobileUpdateForm = reactive<MobileUpdateForm>({});
-const emailUpdateForm = reactive<EmailUpdateForm>({});
+const userProfileForm = reactive<UpdateUserProfileReq>({} as UpdateUserProfileReq);
+const passwordChangeForm = reactive<UpdateUserPasswordReq>({} as UpdateUserPasswordReq);
+const mobileUpdateForm = reactive<BindUserPhoneReq>({} as BindUserPhoneReq);
+const emailUpdateForm = reactive<BindUserEmailReq>({} as BindUserEmailReq);
 
 const mobileCountdown = ref(0);
-const mobileTimer = ref();
+const mobileTimer = ref<ReturnType<typeof setInterval>>();
 
 const emailCountdown = ref(0);
-const emailTimer = ref();
+const emailTimer = ref<ReturnType<typeof setInterval>>();
 
-const recentLoginRecords = [
-  {
-    device: "Chrome / Windows",
-    location: "上海",
-    ip: "192.168.1.26",
-    time: "2026-06-20 09:32",
-  },
-  {
-    device: "Edge / Windows",
-    location: "杭州",
-    ip: "192.168.1.18",
-    time: "2026-06-19 18:46",
-  },
-  {
-    device: "Safari / iOS",
-    location: "深圳",
-    ip: "192.168.1.12",
-    time: "2026-06-18 14:08",
-  },
-];
-
-const userProfileRules = {
-  nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
-};
-
+// 修改密码校验规则
 const passwordChangeRules = {
-  oldPassword: [{ required: true, message: "请输入原密码", trigger: "blur" }],
-  newPassword: [{ required: true, message: "请输入新密码", trigger: "blur" }],
-  confirmPassword: [
-    { required: true, message: "请再次输入新密码", trigger: "blur" },
-    {
-      validator: (_rule: unknown, value: string, callback: (error?: Error) => void) => {
-        if (value !== passwordChangeForm.newPassword) {
-          callback(new Error("两次输入的密码不一致"));
-          return;
-        }
-        callback();
-      },
-      trigger: "blur",
-    },
-  ],
+  old_password: [{ required: true, message: "请输入原密码", trigger: "blur" }],
+  new_password: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+  confirm_password: [{ required: true, message: "请再次输入新密码", trigger: "blur" }],
 };
 
 // 手机号校验规则
 const mobileBindingRules = {
   mobile: [
     { required: true, message: "请输入手机号", trigger: "blur" },
-    {
-      pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-      message: "请输入正确的手机号码",
-      trigger: "blur",
-    },
+    { pattern: /^1[3-9]\d{9}$/, message: "请输入正确的手机号码", trigger: "blur" },
   ],
-  code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-  password: [{ required: true, message: "请输入当前密码", trigger: "blur" }],
+  verify_code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
 };
 
 // 邮箱校验规则
@@ -461,335 +392,38 @@ const emailBindingRules = {
       trigger: "blur",
     },
   ],
-  code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-  password: [{ required: true, message: "请输入当前密码", trigger: "blur" }],
+  verify_code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
 };
 
-const displayAvatar = computed(() => userProfile.value.avatar || userStore.userInfo.avatar || "");
-
-const displayName = computed(() => {
-  return (
-    userProfile.value.nickname ||
-    userStore.userInfo.nickname ||
-    userProfile.value.username ||
-    userStore.userInfo.username ||
-    "未命名用户"
-  );
-});
-
-const roleList = computed(() => {
-  return (userProfile.value.roleNames || "")
-    .split(/[,，]/)
-    .map((role) => role.trim())
-    .filter(Boolean);
-});
-
-const primaryRole = computed(() => roleList.value[0] || "普通用户");
-
-const permissionCount = computed(() => userStore.userInfo.perms?.length || 0);
-
-const genderText = computed(() => {
-  if (userProfile.value.gender === 1) return "男";
-  if (userProfile.value.gender === 2) return "女";
-  return "未设置";
-});
-
-const boundCount = computed(() => {
-  return [userProfile.value.mobile, userProfile.value.email].filter(Boolean).length;
-});
-
-const profileCompletion = computed(() => {
-  const fields = [
-    userProfile.value.username,
-    userProfile.value.nickname,
-    displayAvatar.value,
-    userProfile.value.mobile,
-    userProfile.value.email,
-    userProfile.value.deptName,
-    userProfile.value.roleNames,
-    userProfile.value.createTime,
-  ];
-  return Math.round((fields.filter(Boolean).length / fields.length) * 100);
-});
-
-const securityLevel = computed(() => {
-  const score = 60 + boundCount.value * 20;
-  if (score >= 100) {
-    return { score, label: "高", type: "success" as const };
-  }
-  if (score >= 80) {
-    return { score, label: "中", type: "warning" as const };
-  }
-  return { score, label: "低", type: "info" as const };
-});
-
-const profileInfoItems = computed<ProfileInfoItem[]>(() => [
-  {
-    label: "用户名",
-    value: userProfile.value.username || "-",
-    icon: userProfile.value.gender === 2 ? Female : userProfile.value.gender === 1 ? Male : User,
-  },
-  {
-    label: "手机号码",
-    value: userProfile.value.mobile || "未绑定",
-    icon: Iphone,
-    muted: !userProfile.value.mobile,
-  },
-  {
-    label: "邮箱",
-    value: userProfile.value.email || "未绑定",
-    icon: Message,
-    muted: !userProfile.value.email,
-  },
-  {
-    label: "部门",
-    value: userProfile.value.deptName || "-",
-    icon: OfficeBuilding,
-    muted: !userProfile.value.deptName,
-  },
-  {
-    label: "创建时间",
-    value: formatValue(userProfile.value.createTime),
-    icon: Timer,
-    muted: !userProfile.value.createTime,
-  },
-]);
-
-const profileStats = computed(() => [
-  {
-    label: "安全评分",
-    value: securityLevel.value.score,
-    suffix: "分",
-    icon: Key,
-    tone: "primary",
-  },
-  {
-    label: "绑定项目",
-    value: boundCount.value,
-    suffix: "/2",
-    icon: CircleCheck,
-    tone: "success",
-  },
-  {
-    label: "角色数量",
-    value: roleList.value.length,
-    suffix: "个",
-    icon: UserFilled,
-    tone: "warning",
-  },
-  {
-    label: "权限标识",
-    value: permissionCount.value,
-    suffix: "个",
-    icon: DataLine,
-    tone: "info",
-  },
-]);
-
-const accountStatusItems = computed(() => [
-  {
-    label: "登录账号",
-    value: userProfile.value.username || "未获取",
-    done: !!userProfile.value.username,
-  },
-  {
-    label: "手机号验证",
-    value: userProfile.value.mobile ? "已绑定" : "未绑定",
-    done: !!userProfile.value.mobile,
-  },
-  {
-    label: "邮箱验证",
-    value: userProfile.value.email ? "已绑定" : "未绑定",
-    done: !!userProfile.value.email,
-  },
-  {
-    label: "资料完善",
-    value: `${profileCompletion.value}%`,
-    done: profileCompletion.value >= 80,
-  },
-]);
-
-const securityItems = computed<SecurityItem[]>(() => [
-  {
-    key: "password",
-    title: "账户密码",
-    description: "定期修改密码有助于保护账户安全",
-    status: "已设置",
-    statusType: "success",
-    icon: Lock,
-    tone: "primary",
-    actions: [
-      {
-        label: "修改",
-        type: "primary",
-        onClick: () => handleOpenDialog(DialogType.PASSWORD),
-      },
-    ],
-  },
-  {
-    key: "mobile",
-    title: "手机号",
-    description: mobileSecurityDesc.value,
-    status: userProfile.value.mobile ? "已绑定" : "未绑定",
-    statusType: userProfile.value.mobile ? "success" : "warning",
-    icon: Iphone,
-    tone: "success",
-    actions: userProfile.value.mobile
-      ? [
-          {
-            label: "更换",
-            type: "primary",
-            onClick: () => handleOpenDialog(DialogType.MOBILE),
-          },
-          {
-            label: "解绑",
-            type: "danger",
-            onClick: handleUnbindMobile,
-          },
-        ]
-      : [
-          {
-            label: "绑定",
-            type: "primary",
-            onClick: () => handleOpenDialog(DialogType.MOBILE),
-          },
-        ],
-  },
-  {
-    key: "email",
-    title: "邮箱",
-    description: emailSecurityDesc.value,
-    status: userProfile.value.email ? "已绑定" : "未绑定",
-    statusType: userProfile.value.email ? "success" : "warning",
-    icon: Message,
-    tone: "warning",
-    actions: userProfile.value.email
-      ? [
-          {
-            label: "更换",
-            type: "primary",
-            onClick: () => handleOpenDialog(DialogType.EMAIL),
-          },
-          {
-            label: "解绑",
-            type: "danger",
-            onClick: handleUnbindEmail,
-          },
-        ]
-      : [
-          {
-            label: "绑定",
-            type: "primary",
-            onClick: () => handleOpenDialog(DialogType.EMAIL),
-          },
-        ],
-  },
-]);
-
-function formatValue(value?: Date | string) {
-  return value ? String(value) : "-";
-}
-
-function getPromptValue(result: unknown) {
-  if (result && typeof result === "object" && "value" in result) {
-    return String(result.value || "");
-  }
-  return "";
-}
-
-function maskMobile(mobile?: string) {
-  if (!mobile) return "";
-  return mobile.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2");
-}
-
-function maskEmail(email?: string) {
-  if (!email) return "";
-  const [name, domain] = email.split("@");
-  if (!domain) return email;
-  if (name.length <= 2) return `${name[0] || ""}***@${domain}`;
-  return `${name.slice(0, 2)}***@${domain}`;
-}
-
-const mobileSecurityDesc = computed(() => {
-  return userProfile.value.mobile
-    ? `已绑定：${maskMobile(userProfile.value.mobile)}`
-    : "未绑定手机号，建议立即绑定";
-});
-
-const emailSecurityDesc = computed(() => {
-  return userProfile.value.email
-    ? `已绑定：${maskEmail(userProfile.value.email)}`
-    : "未绑定邮箱，建议立即绑定";
-});
-
+/**
+ * 打开弹窗
+ */
 const handleOpenDialog = (type: DialogType) => {
-  dialogState.type = type;
-  dialogState.visible = true;
+  dialog.type = type;
+  dialog.visible = true;
   switch (type) {
     case DialogType.ACCOUNT:
-      dialogState.title = "编辑资料";
+      dialog.title = "账号资料";
       userProfileForm.nickname = userProfile.value.nickname;
-      userProfileForm.avatar = userProfile.value.avatar;
       userProfileForm.gender = userProfile.value.gender;
+      userProfileForm.intro = userProfile.value.intro;
+      userProfileForm.website = userProfile.value.website;
       break;
     case DialogType.PASSWORD:
-      dialogState.title = "修改密码";
+      dialog.title = "修改密码";
       break;
     case DialogType.MOBILE:
-      dialogState.title = userProfile.value.mobile ? "更换手机号" : "绑定手机号";
-      mobileUpdateForm.mobile = "";
-      mobileUpdateForm.code = "";
-      mobileUpdateForm.password = "";
+      dialog.title = "绑定手机";
       break;
     case DialogType.EMAIL:
-      dialogState.title = userProfile.value.email ? "更换邮箱" : "绑定邮箱";
-      emailUpdateForm.email = "";
-      emailUpdateForm.code = "";
-      emailUpdateForm.password = "";
+      dialog.title = "绑定邮箱";
       break;
   }
 };
 
-async function handleUnbindMobile() {
-  if (!userProfile.value.mobile) return;
-  try {
-    const result = await ElMessageBox.prompt("请输入当前密码以解绑手机号", "解绑手机号", {
-      type: "warning",
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      inputType: "password",
-      inputPlaceholder: "当前密码",
-      inputValidator: (val) => !!val || "请输入当前密码",
-    });
-    const value = getPromptValue(result);
-    await UserAPI.unbindMobile({ password: value });
-    ElMessage.success("手机号解绑成功");
-    await loadUserProfile();
-  } catch {
-    // ignore
-  }
-}
-
-async function handleUnbindEmail() {
-  if (!userProfile.value.email) return;
-  try {
-    const result = await ElMessageBox.prompt("请输入当前密码以解绑邮箱", "解绑邮箱", {
-      type: "warning",
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      inputType: "password",
-      inputPlaceholder: "当前密码",
-      inputValidator: (val) => !!val || "请输入当前密码",
-    });
-    const value = getPromptValue(result);
-    await UserAPI.unbindEmail({ password: value });
-    ElMessage.success("邮箱解绑成功");
-    await loadUserProfile();
-  } catch {
-    // ignore
-  }
-}
-
+/**
+ * 发送手机验证码
+ */
 function handleSendMobileCode() {
   if (!mobileUpdateForm.mobile) {
     ElMessage.error("请输入手机号");
@@ -800,7 +434,10 @@ function handleSendMobileCode() {
     ElMessage.error("手机号格式不正确");
     return;
   }
-  UserAPI.sendMobileCode(mobileUpdateForm.mobile).then(() => {
+  AuthAPI.sendMobileCode({
+    mobile: mobileUpdateForm.mobile,
+    type: "bind_mobile",
+  }).then(() => {
     ElMessage.success("验证码发送成功");
     mobileCountdown.value = 60;
     mobileTimer.value = setInterval(() => {
@@ -813,6 +450,9 @@ function handleSendMobileCode() {
   });
 }
 
+/**
+ * 发送邮箱验证码
+ */
 function handleSendEmailCode() {
   if (!emailUpdateForm.email) {
     ElMessage.error("请输入邮箱");
@@ -823,8 +463,10 @@ function handleSendEmailCode() {
     ElMessage.error("邮箱格式不正确");
     return;
   }
-
-  UserAPI.sendEmailCode(emailUpdateForm.email).then(() => {
+  AuthAPI.sendEmailCode({
+    email: emailUpdateForm.email,
+    type: "bind_email",
+  }).then(() => {
     ElMessage.success("验证码发送成功");
     emailCountdown.value = 60;
     emailTimer.value = setInterval(() => {
@@ -837,58 +479,37 @@ function handleSendEmailCode() {
   });
 }
 
+/**
+ * 提交表单
+ */
 const handleSubmit = async () => {
-  try {
-    if (dialogState.type === DialogType.ACCOUNT) {
-      const valid = await userProfileFormRef.value?.validate();
-      if (!valid) return;
-
-      await UserAPI.updateProfile(userProfileForm);
+  if (dialog.type === DialogType.ACCOUNT) {
+    MeAPI.updateUserProfile(userProfileForm).then(() => {
       ElMessage.success("账号资料修改成功");
-      dialogState.visible = false;
-      if (userProfileForm.nickname) {
-        userStore.userInfo.nickname = userProfileForm.nickname;
-      }
-      await loadUserProfile();
-    } else if (dialogState.type === DialogType.PASSWORD) {
-      const valid = await passwordChangeFormRef.value?.validate();
-      if (!valid) return;
-
-      await UserAPI.changePassword(passwordChangeForm);
-      dialogState.visible = false;
-      await redirectToLogin("密码已修改，请重新登录");
-    } else if (dialogState.type === DialogType.MOBILE) {
-      const valid = await mobileBindingFormRef.value?.validate();
-      if (!valid) return;
-
-      await UserAPI.bindOrChangeMobile(mobileUpdateForm);
-      ElMessage.success(userProfile.value.mobile ? "手机号更换成功" : "手机号绑定成功");
-      dialogState.visible = false;
-      await loadUserProfile();
-    } else if (dialogState.type === DialogType.EMAIL) {
-      const valid = await emailBindingFormRef.value?.validate();
-      if (!valid) return;
-
-      await UserAPI.bindOrChangeEmail(emailUpdateForm);
-      ElMessage.success(userProfile.value.email ? "邮箱更换成功" : "邮箱绑定成功");
-      dialogState.visible = false;
-      await loadUserProfile();
+      dialog.visible = false;
+      loadUserProfile();
+    });
+  } else if (dialog.type === DialogType.PASSWORD) {
+    if (passwordChangeForm.new_password !== passwordChangeForm.confirm_password) {
+      ElMessage.error("两次输入的密码不一致");
+      return;
     }
-  } catch {
-    // ignore
-  }
-};
-
-const handleCancel = () => {
-  dialogState.visible = false;
-  if (dialogState.type === DialogType.ACCOUNT) {
-    userProfileFormRef.value?.resetFields();
-  } else if (dialogState.type === DialogType.PASSWORD) {
-    passwordChangeFormRef.value?.resetFields();
-  } else if (dialogState.type === DialogType.MOBILE) {
-    mobileBindingFormRef.value?.resetFields();
-  } else if (dialogState.type === DialogType.EMAIL) {
-    emailBindingFormRef.value?.resetFields();
+    MeAPI.updateUserPassword(passwordChangeForm).then(() => {
+      ElMessage.success("密码修改成功");
+      dialog.visible = false;
+    });
+  } else if (dialog.type === DialogType.MOBILE) {
+    MeAPI.bindUserPhone(mobileUpdateForm).then(() => {
+      ElMessage.success("手机号绑定成功");
+      dialog.visible = false;
+      loadUserProfile();
+    });
+  } else if (dialog.type === DialogType.EMAIL) {
+    MeAPI.bindUserEmail(emailUpdateForm).then(() => {
+      ElMessage.success("邮箱绑定成功");
+      dialog.visible = false;
+      loadUserProfile();
+    });
   }
 };
 
@@ -902,33 +523,75 @@ const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files ? target.files[0] : null;
   if (file) {
-    const data = await FileAPI.uploadFile(file);
-    await UserAPI.updateProfile({
-      avatar: data.url,
-    });
-    userProfile.value.avatar = data.url;
-    userStore.userInfo.avatar = data.url;
-    ElMessage.success("头像更新成功");
+    try {
+      const res = await uploadFile(file, "blog/avatar/");
+      userProfile.value.avatar = res.data.file_info.file_url;
+      await MeAPI.updateUserAvatar({ avatar: res.data.file_info.file_url });
+      ElMessage.success("头像上传成功");
+    } catch (error) {
+      ElMessage.error("头像上传失败" + error);
+    }
   }
-  target.value = "";
 };
 
+/** 加载用户信息 */
 const loadUserProfile = async () => {
-  const data = await UserAPI.getProfile();
-  userProfile.value = data;
+  const res = await MeAPI.getUserProfile();
+  userProfile.value = res.data;
+};
+
+const loading = ref<boolean>(false);
+const tableData = ref<any[]>([]);
+
+const getHistory = async () => {
+  loading.value = true;
+  MeAPI.queryUserLoginHistory({})
+    .then((response) => {
+      tableData.value = response.data.list || [];
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+/** 解绑第三方平台账号 */
+const handleUnbindAccount = (platform: string) => {
+  ElMessageBox.confirm("确定要解绑吗？解除绑定后无法使用该平台登录", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    MeAPI.unbindUserThirdParty({ platform }).then(() => {
+      ElMessage.success("解绑成功");
+      loadUserProfile();
+    });
+  });
+};
+
+const availablePlatforms = [
+  { platform: "wechat", name: "微信", icon: "i-svg:wechat" },
+  { platform: "qq", name: "QQ", icon: "i-svg:qq" },
+  { platform: "github", name: "GitHub", icon: "i-svg:github" },
+  { platform: "gitee", name: "Gitee", icon: "i-svg:gitee" },
+];
+
+/** 绑定第三方平台账号 */
+const handleBindAccount = (platform: string) => {
+  AuthAPI.getOauthAuthorizeUrl({ platform }).then((res) => {
+    if (res.data?.authorize_url) {
+      window.open(res.data.authorize_url, "_self");
+    } else {
+      ElMessage.error("获取授权地址失败");
+    }
+  });
 };
 
 onMounted(async () => {
-  if (mobileTimer.value) {
-    clearInterval(mobileTimer.value);
-  }
-  if (emailTimer.value) {
-    clearInterval(emailTimer.value);
-  }
   await loadUserProfile();
+  await getHistory();
 });
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
   if (mobileTimer.value) {
     clearInterval(mobileTimer.value);
   }
@@ -939,436 +602,159 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.profile-page {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-height: 100%;
+.profile-container {
   padding: 16px;
 }
 
-.profile-hero,
-.profile-card {
-  background: var(--content-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
+.user-card {
+  .user-info {
+    padding: 10px 0;
+    text-align: center;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    display: inline-block;
+
+    .avatar-edit-btn {
+      position: absolute;
+      right: -5px;
+      bottom: 0;
+    }
+  }
+
+  .user-name {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+
+    .nickname {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+    }
+
+    .edit-icon {
+      color: var(--el-text-color-secondary);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--el-color-primary);
+      }
+    }
+  }
+
+  .user-role {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--el-text-color-secondary);
+  }
+
+  .user-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+
+    .stat-item {
+      .stat-value {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--el-text-color-primary);
+      }
+
+      .stat-label {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--el-text-color-secondary);
+      }
+    }
+  }
 }
 
-.profile-hero {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
+.info-card,
+.security-card {
+  margin-bottom: 20px;
 }
 
-.profile-hero__body,
-.profile-hero__title,
-.profile-hero__meta,
-.profile-hero__actions,
-.profile-hero__meta-item {
-  display: flex;
-  align-items: center;
-}
-
-.profile-hero__body {
-  gap: 16px;
-  min-width: 0;
-}
-
-.profile-hero__info {
-  min-width: 0;
-}
-
-.profile-hero__title {
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.profile-hero__name {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 30px;
-  color: var(--el-text-color-primary);
-}
-
-.profile-hero__desc {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-}
-
-.profile-hero__meta {
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-}
-
-.profile-hero__meta-item {
-  gap: 4px;
-}
-
-.profile-hero__actions {
-  flex-shrink: 0;
-  gap: 8px;
-}
-
-.profile-avatar {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.profile-avatar__action {
-  position: absolute;
-  right: -2px;
-  bottom: -2px;
-  border: 2px solid var(--content-bg);
-}
-
-.profile-avatar__input {
-  display: none;
-}
-
-.profile-page__layout {
-  display: grid;
-  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.profile-page__side,
-.profile-page__main {
-  display: grid;
-  gap: 16px;
-  min-width: 0;
-}
-
-.profile-page__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
-  gap: 16px;
-}
-
-.profile-card {
-  padding: 18px 20px;
-}
-
-.profile-card__header {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.profile-card__title {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 22px;
-  color: var(--el-text-color-primary);
-}
-
-.profile-card__desc {
-  margin: 3px 0 0;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-}
-
-.profile-card__extra,
-.profile-empty {
-  font-size: 12px;
-  color: var(--el-text-color-placeholder);
-}
-
-.profile-info {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-}
-
-.profile-info__item {
-  display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  min-height: 34px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--el-border-color-extra-light);
-}
-
-.profile-info__item:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.profile-info__label {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-}
-
-.profile-info__value {
-  min-width: 0;
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 13px;
-  color: var(--el-text-color-primary);
-  white-space: nowrap;
-}
-
-.profile-stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.profile-stats__item {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  min-width: 0;
-  padding: 12px;
-  background: var(--el-fill-color-lighter);
-  border: 1px solid var(--el-border-color-extra-light);
-  border-radius: 8px;
-}
-
-.profile-stats__body {
-  min-width: 0;
-}
-
-.profile-stats__label,
-.profile-stats__value {
-  display: block;
-}
-
-.profile-stats__label {
-  margin-bottom: 2px;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-}
-
-.profile-stats__value {
-  font-size: 20px;
-  line-height: 24px;
-  color: var(--el-text-color-primary);
-}
-
-.profile-stats__value em {
-  display: inline;
-  margin-left: 2px;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  color: var(--el-text-color-secondary);
-}
-
-.profile-icon {
-  display: flex;
-  flex: 0 0 36px;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 18px;
-  color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-  border-radius: 8px;
-}
-
-.profile-icon--large {
-  flex-basis: 40px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-}
-
-.profile-icon--success {
-  color: var(--el-color-success);
-  background: var(--el-color-success-light-9);
-}
-
-.profile-icon--warning {
-  color: var(--el-color-warning);
-  background: var(--el-color-warning-light-9);
-}
-
-.profile-icon--info {
-  color: var(--el-color-info);
-  background: var(--el-fill-color-light);
-}
-
-.profile-security,
-.profile-login,
-.profile-status {
-  display: grid;
-  gap: 12px;
-}
-
-.profile-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.profile-security__item {
-  display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 14px;
-  border: 1px solid var(--el-border-color-extra-light);
-  border-radius: 8px;
-}
-
-.profile-security__body,
-.profile-login__body,
-.profile-status__body {
-  min-width: 0;
-}
-
-.profile-security__title {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  font-size: 14px;
+.card-header {
   font-weight: 600;
-  color: var(--el-text-color-primary);
 }
 
-.profile-security__desc {
-  margin: 4px 0 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-  white-space: nowrap;
+.gender-icon {
+  margin-left: 8px;
+
+  &.male {
+    color: #409eff;
+  }
+
+  &.female {
+    color: #e45d7c;
+  }
 }
 
-.profile-security__actions {
+.security-item {
   display: flex;
-  gap: 8px;
   align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--el-border-color-lighter);
+  }
+
+  .security-info {
+    .security-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--el-text-color-primary);
+    }
+
+    .security-desc {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+    }
+  }
 }
 
-.profile-security__actions .el-button + .el-button {
-  margin-left: 0;
-}
-
-.profile-login__item {
-  display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
-  min-height: 44px;
-}
-
-.profile-login__device,
-.profile-login__meta,
-.profile-login__time,
-.profile-status__title,
-.profile-status__desc {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profile-login__device,
-.profile-status__title {
+.tip-text {
+  margin-bottom: 16px;
   font-size: 13px;
-  color: var(--el-text-color-primary);
-}
-
-.profile-login__meta,
-.profile-login__time,
-.profile-status__desc {
-  font-size: 12px;
   color: var(--el-text-color-secondary);
 }
 
-.profile-status__item {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  min-height: 38px;
-  color: var(--el-color-success);
+.status-active {
+  font-size: 12px;
+  color: #67c23a;
 }
 
-.profile-status__item.is-warning {
-  color: var(--el-color-warning);
-}
+.bind-more {
+  margin-top: 20px;
 
-.profile-status__title {
-  margin-bottom: 2px;
-}
-
-.is-muted {
-  color: var(--el-text-color-placeholder);
-}
-
-@media (width <= 1200px) {
-  .profile-page__layout,
-  .profile-page__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (width <= 768px) {
-  .profile-page {
-    padding: 12px;
+  .bind-title {
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
   }
 
-  .profile-hero {
-    align-items: flex-start;
-  }
+  .platform-list {
+    display: flex;
+    gap: 20px;
 
-  .profile-hero,
-  .profile-hero__body,
-  .profile-hero__actions {
-    flex-direction: column;
-  }
+    .platform-tag {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      cursor: pointer;
 
-  .profile-hero__actions {
-    align-items: stretch;
-    width: 100%;
-  }
-
-  .profile-hero__actions .el-button {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .profile-security__item,
-  .profile-login__item {
-    grid-template-columns: 40px minmax(0, 1fr);
-  }
-
-  .profile-security__actions,
-  .profile-login__time {
-    grid-column: 2;
-    justify-self: start;
-  }
-}
-
-@media (width <= 520px) {
-  .profile-stats,
-  .profile-info__item {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-info__item {
-    gap: 4px;
+      span {
+        font-size: 12px;
+        color: var(--el-text-color-secondary);
+      }
+    }
   }
 }
 </style>

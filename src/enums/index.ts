@@ -6,6 +6,6 @@
  */
 
 export * from "./api";
-export * from "./business";
+export * from "./blog";
 export * from "./common";
 export * from "./settings";

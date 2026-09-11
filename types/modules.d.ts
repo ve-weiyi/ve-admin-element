@@ -12,3 +12,8 @@ declare module "sockjs-client/dist/sockjs.min.js" {
   import Client from "sockjs-client";
   export default Client;
 }
+
+declare module "vue-cropper" {
+  import type { DefineComponent } from "vue";
+  export const VueCropper: DefineComponent<any, any, any>;
+}

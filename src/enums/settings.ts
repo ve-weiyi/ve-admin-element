@@ -2,8 +2,6 @@
  * 设置相关枚举
  */
 
-import type { OptionItem } from "@/api/common";
-
 /** 主题模式 */
 export const enum ThemeMode {
   LIGHT = "light",

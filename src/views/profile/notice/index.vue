@@ -1,78 +1,89 @@
-﻿<template>
-  <div class="page-container">
-    <el-card class="page-search" shadow="never">
-      <el-form ref="queryFormRef" :model="params" :inline="true">
+<template>
+  <div class="app-container">
+    <div class="filter-section">
+      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="通知标题" prop="title">
           <el-input
-            v-model="params.title"
+            v-model="queryParams.title"
             placeholder="关键字"
             clearable
             @keyup.enter="handleQuery"
           />
         </el-form-item>
 
-        <el-form-item>
+        <el-form-item class="search-buttons">
           <el-button type="primary" @click="handleQuery">
-            <template #icon>
-              <Search />
-            </template>
+            <template #icon><Search /></template>
             搜索
           </el-button>
           <el-button @click="handleResetQuery">
-            <template #icon>
-              <Refresh />
-            </template>
+            <template #icon><Refresh /></template>
             重置
           </el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
 
-    <el-card class="page-content" shadow="never">
-      <div class="page-table-wrapper">
-        <el-table v-loading="loading" :data="list" class="page-table" height="100%" highlight-current-row>
-        <el-table-column type="index" label="序号" width="60" />
-        <el-table-column label="通知标题" prop="title" min-width="200" />
-        <el-table-column align="center" label="通知类型" width="150">
+    <el-card shadow="hover" class="table-section">
+      <el-table
+        ref="dataTableRef"
+        v-loading="loading"
+        :data="pageData"
+        highlight-current-row
+        class="table-section__content"
+      >
+        <el-table-column align="center" label="状态" width="80">
           <template #default="scope">
-            <DictTag v-model="scope.row.type" code="notice_type" />
+            <el-badge v-if="scope.row.status === 'unread'" is-dot />
+            <el-tag v-else size="small" type="info">已读</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="通知标题" prop="title" min-width="200">
+          <template #default="scope">
+            <span :style="{ fontWeight: scope.row.status === 'unread' ? 'bold' : 'normal' }">
+              {{ scope.row.title }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="通知分类" width="120">
+          <template #default="scope">
+            <el-tag v-if="scope.row.category === 'system'" type="primary">系统</el-tag>
+            <el-tag v-else-if="scope.row.category === 'maintenance'" type="warning">维护</el-tag>
+            <el-tag v-else-if="scope.row.category === 'update'" type="success">更新</el-tag>
+            <el-tag v-else type="info">提醒</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="通知等级" width="100">
           <template #default="scope">
-            <DictTag v-model="scope.row.level" code="notice_level" />
+            <el-tag v-if="scope.row.level === 'info'" type="info">普通</el-tag>
+            <el-tag v-else-if="scope.row.level === 'warning'" type="warning">警告</el-tag>
+            <el-tag v-else type="danger">紧急</el-tag>
           </template>
         </el-table-column>
-        <el-table-column
-          key="releaseTime"
-          align="center"
-          label="发布时间"
-          prop="publishTime"
-          width="150"
-        />
-        <el-table-column align="center" label="发布人" prop="publisherName" width="150" />
-        <el-table-column align="center" label="状态" width="100">
+        <el-table-column key="publishedAt" align="center" label="发布时间" width="150">
           <template #default="scope">
-            <el-tag v-if="scope.row.isRead === NOTICE_READ" type="success">已读</el-tag>
-            <el-tag v-else type="info">未读</el-tag>
+            {{ formatDateTime(scope.row.published_at) }}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="80">
+        <el-table-column align="center" label="发布人" prop="published_by" width="150" />
+        <el-table-column align="center" fixed="right" label="操作" width="140">
           <template #default="scope">
-            <el-button type="primary" size="small" link @click="handleReadNotice(scope.row.id)">
+            <el-button type="primary" size="small" link @click="handleReadNotice(scope.row)">
               查看
+            </el-button>
+            <el-button type="danger" size="small" link @click="handleDeleteNotice(scope.row)">
+              删除
             </el-button>
           </template>
         </el-table-column>
-        </el-table>
-      </div>
+      </el-table>
 
       <pagination
         v-if="total > 0"
         v-model:total="total"
-        v-model:page="params.pageNum"
-        v-model:limit="params.pageSize"
-        @pagination="fetchData"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="handleQuery"
       />
     </el-card>
 
@@ -86,11 +97,11 @@
         <div class="notice-detail__meta">
           <span>
             <el-icon><User /></el-icon>
-            {{ noticeDetail.publisherName }}
+            {{ noticeDetail.published_by }}
           </span>
           <span class="ml-2">
             <el-icon><Timer /></el-icon>
-            {{ noticeDetail.publishTime }}
+            {{ formatDateTime(noticeDetail.published_at) }}
           </span>
         </div>
 
@@ -103,48 +114,75 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { Refresh, Search, Timer, User } from "@element-plus/icons-vue";
-
-import NoticeAPI from "@/api/system/notice";
-import type { NoticeDetail, NoticeItem, NoticeQueryParams } from "@/api/system/notice";
-import { usePageTable } from "@/composables";
-
 defineOptions({
   name: "MyNotice",
   inheritAttrs: false,
 });
 
-/** 通知已读标记（1:已读;0:未读）。 */
-const NOTICE_READ = 1;
+import { ElMessage, ElMessageBox } from "element-plus";
+import { NotifyRecordAPI } from "@/api";
+import { useUserStore } from "@/stores/user";
+import { useNotificationStore } from "@/stores/notification";
+import { formatDateTime } from "@/utils/format";
 
 const queryFormRef = ref();
+const pageData = ref<any[]>([]);
+const loading = ref(false);
+const total = ref(0);
 
-/** 分页表格数据管理 */
-const { loading, list, total, params, fetchData, handleQuery, handleResetQuery } = usePageTable<
-  NoticeItem,
-  NoticeQueryParams
->({
-  initialParams: {
-    pageNum: 1,
-    pageSize: 10,
-  },
-  request: NoticeAPI.getMyNoticePage,
-  onBeforeReset: () => queryFormRef.value?.resetFields(),
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  title: "" as string,
 });
 
 const noticeDialogVisible = ref(false);
-const noticeDetail = ref<NoticeDetail | null>(null);
+const noticeDetail = ref<any>(null);
 
-/**
- * 查看通知详情。
- *
- * @param id 通知 ID
- */
-async function handleReadNotice(id: string): Promise<void> {
-  const data = await NoticeAPI.getDetail(id);
-  noticeDetail.value = data;
+function handleQuery() {
+  const userStore = useUserStore();
+  const userId = userStore.userInfo.user_id;
+  if (!userId) return;
+
+  loading.value = true;
+  NotifyRecordAPI.queryUserInboxRecordList({
+    page: queryParams.pageNum,
+    page_size: queryParams.pageSize,
+    user_id: userId,
+    title: queryParams.title || undefined,
+  })
+    .then((res) => {
+      total.value = res.data.total;
+      useNotificationStore().unreadTotal = res.data.unread_total || 0;
+      pageData.value = res.data.list || [];
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+}
+
+function handleResetQuery() {
+  queryFormRef.value?.resetFields();
+  queryParams.pageNum = 1;
+  handleQuery();
+}
+
+function handleReadNotice(row: any) {
+  noticeDetail.value = row;
   noticeDialogVisible.value = true;
+  if (row.status === "unread") {
+    row.status = "read";
+    useNotificationStore().markAsRead(row.id);
+  }
+}
+
+function handleDeleteNotice(row: any) {
+  ElMessageBox.confirm("确认删除该通知？", "提示", { type: "warning" }).then(() => {
+    NotifyRecordAPI.deleteNotifyRecord({ ids: [row.id] }).then(() => {
+      ElMessage.success("删除成功");
+      handleQuery();
+    });
+  });
 }
 
 onMounted(() => {
@@ -168,14 +206,6 @@ onMounted(() => {
     margin-bottom: 16px;
     font-size: 13px;
     color: var(--el-text-color-secondary);
-  }
-
-  &__publisher {
-    margin-right: 24px;
-
-    i {
-      margin-right: 4px;
-    }
   }
 
   &__content {

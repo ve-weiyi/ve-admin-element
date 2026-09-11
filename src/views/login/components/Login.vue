@@ -8,11 +8,27 @@
       size="large"
       :validate-on-rule-change="false"
     >
-      <!-- 用户名 -->
-      <el-form-item prop="username">
-        <el-input v-model.trim="loginFormData.username" placeholder="用户名">
+      <el-form-item prop="account">
+        <el-input v-model.trim="loginFormData.account" placeholder="邮箱/手机号/用户名">
           <template #prefix>
-            <el-icon><User /></el-icon>
+            <el-dropdown>
+              <div>
+                <el-icon>
+                  <Message />
+                </el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="(item, index) in loginCredentials"
+                    :key="index"
+                    @click="setLoginCredentials(item.account, item.password)"
+                  >
+                    {{ item.nickname }}: {{ item.account }}/{{ item.password }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-input>
       </el-form-item>
@@ -36,10 +52,10 @@
       </el-tooltip>
 
       <!-- 验证码 -->
-      <el-form-item prop="captchaCode">
+      <el-form-item prop="captcha_code">
         <div flex items-center gap-10px>
           <el-input
-            v-model.trim="loginFormData.captchaCode"
+            v-model.trim="loginFormData.captcha_code"
             placeholder="验证码"
             clearable
             class="flex-1"
@@ -49,20 +65,18 @@
               <div class="i-svg:captcha" />
             </template>
           </el-input>
-          <div cursor-pointer h-44px w-140px flex-center @click="getCaptcha">
+          <div cursor-pointer h-40px w-120px flex-center @click="getCaptcha">
             <el-icon v-if="codeLoading" class="is-loading" size="20"><Loading /></el-icon>
             <img
               v-else-if="captchaBase64"
-              border-rd-4px
-              w-full
               h-full
+              w-full
               block
+              border-rd-4px
               object-cover
               shadow="[0_0_0_1px_var(--el-border-color)_inset]"
               :src="captchaBase64"
-              alt="captchaCode"
-              title="点击刷新验证码"
-              @error="getCaptcha"
+              alt="captcha_code"
             />
             <el-text v-else type="info" size="small">点击获取验证码</el-text>
           </div>
@@ -70,7 +84,7 @@
       </el-form-item>
 
       <div class="flex-x-between w-full">
-        <el-checkbox v-model="loginFormData.rememberMe">记住我</el-checkbox>
+        <el-checkbox v-model="rememberMe">记住我</el-checkbox>
         <el-link type="primary" underline="never" @click="toOtherForm('resetPwd')">
           忘记密码？
         </el-link>
@@ -84,9 +98,19 @@
       </el-form-item>
     </el-form>
 
+    <!-- 登录方式切换 -->
     <div flex-center gap-10px>
-      <el-text size="default">您没有账号？</el-text>
-      <el-link type="primary" underline="never" @click="toOtherForm('register')">注 册</el-link>
+      <div class="w-full h-[20px] flex justify-between items-center">
+        <el-button
+          v-for="(item, index) in operates"
+          :key="index"
+          class="w-full mt-4!"
+          size="default"
+          @click="toOtherForm(item.key)"
+        >
+          {{ item.title }}
+        </el-button>
+      </div>
     </div>
 
     <!-- 第三方登录 -->
@@ -98,27 +122,28 @@
       </div>
       <div class="social-login">
         <div class="social-login__item">
-          <div class="i-svg:wechat" />
+          <div class="i-svg:wechat" @click="onThirdPartyLogin('wechat')" />
         </div>
         <div class="social-login__item">
-          <div class="i-svg:qq" />
+          <div class="i-svg:qq" @click="onThirdPartyLogin('qq')" />
         </div>
         <div class="social-login__item">
-          <div class="i-svg:github" />
+          <div class="i-svg:github" @click="onThirdPartyLogin('github')" />
         </div>
         <div class="social-login__item">
-          <div class="i-svg:gitee" />
+          <div class="i-svg:gitee" @click="onThirdPartyLogin('gitee')" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { FormInstance } from "element-plus";
-import AuthAPI, { type LoginRequest } from "@/api/auth";
+import type { FormInstance, FormRules } from "element-plus";
+import { Message, Lock } from "@element-plus/icons-vue";
 import router from "@/router";
 import { useUserStore } from "@/stores";
 import { AuthStorage } from "@/utils/auth";
+import { AuthAPI } from "@/api";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -130,56 +155,39 @@ const isCapsLock = ref(false);
 // 验证码图片 Base64
 const captchaBase64 = ref();
 // 记住我
-const rememberMe = AuthStorage.getRememberMe();
-const loginFormData = ref<LoginRequest>({
-  username: "admin",
+const rememberMe = ref(AuthStorage.getRememberMe());
+
+watch(rememberMe, (val) => {
+  AuthStorage.setRememberMe(val);
+});
+
+const loginFormData = ref({
+  account: "root@qq.com",
   password: "123456",
-  captchaId: "",
-  captchaCode: "",
-  rememberMe,
+  captcha_key: "",
+  captcha_code: "",
 });
 
 onMounted(() => getCaptcha());
 
-const loginRules = computed(() => {
-  return {
-    username: [
-      {
-        required: true,
-        trigger: "blur",
-        message: "请输入用户名",
-      },
-    ],
-    password: [
-      {
-        required: true,
-        trigger: "blur",
-        message: "请输入密码",
-      },
-      {
-        min: 6,
-        message: "密码不能少于6位",
-        trigger: "blur",
-      },
-    ],
-    captchaCode: [
-      {
-        required: true,
-        trigger: "blur",
-        message: "请输入验证码",
-      },
-    ],
-  };
-});
+const loginRules = computed<FormRules>(() => ({
+  account: [{ required: true, trigger: "blur", message: "请输入邮箱/手机号/用户名" }],
+  password: [
+    { required: true, trigger: "blur", message: "请输入密码" },
+    { min: 6, message: "密码不能少于6位", trigger: "blur" },
+  ],
+  captcha_code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
+}));
 
 // 获取验证码
 const codeLoading = ref(false);
+
 function getCaptcha() {
   codeLoading.value = true;
   AuthAPI.getCaptcha()
-    .then((data) => {
-      loginFormData.value.captchaId = data.captchaId;
-      captchaBase64.value = data.captchaBase64;
+    .then((res) => {
+      loginFormData.value.captcha_key = res.data.captcha_key;
+      captchaBase64.value = res.data.captcha_base64;
     })
     .finally(() => (codeLoading.value = false));
 }
@@ -193,22 +201,33 @@ async function handleLoginSubmit() {
     const valid = await loginFormRef.value?.validate();
     if (!valid) return;
 
+    if (!loginFormData.value.captcha_key) {
+      getCaptcha();
+      ElMessage.warning("验证码已刷新，请重新输入");
+      return;
+    }
+
     loading.value = true;
 
     // 2. 执行登录
     try {
-      await userStore.login(loginFormData.value);
-      // 登录成功，跳转到目标页面
+      await userStore.login({
+        username: loginFormData.value.account,
+        password: loginFormData.value.password,
+        captchaId: loginFormData.value.captcha_key,
+        captchaCode: loginFormData.value.captcha_code,
+        rememberMe: rememberMe.value,
+      });
       const redirectPath = (route.query.redirect as string) || "/";
       await router.push(decodeURIComponent(redirectPath));
     } catch (error: any) {
-      // 登录失败，刷新验证码
+      // 其他错误，刷新验证码
       getCaptcha();
       throw error;
     }
   } catch (error) {
     // 统一错误处理
-    console.error("登录失败:", error);
+    ElMessage.error("登录失败。" + error);
   } finally {
     loading.value = false;
   }
@@ -223,9 +242,43 @@ function checkCapsLock(event: KeyboardEvent) {
 }
 
 const emit = defineEmits(["update:modelValue"]);
-function toOtherForm(type: "register" | "resetPwd") {
+
+function toOtherForm(type: string) {
   emit("update:modelValue", type);
 }
+
+const operates = [
+  { key: "phone_login", title: "手机号登录" },
+  { key: "register", title: "注册" },
+];
+
+const loginCredentials = [
+  { account: "root@qq.com", password: "123456", nickname: "超级管理员" },
+  { account: "admin@qq.com", password: "123456", nickname: "系统管理员" },
+  { account: "test@qq.com", password: "123456", nickname: "测试小游客" },
+];
+
+// 设置登录凭证
+const setLoginCredentials = (account: string, password: string) => {
+  loginFormData.value.account = account;
+  loginFormData.value.password = password;
+};
+
+// 跳转第三方登录地址
+const onThirdPartyLogin = (platform: string) => {
+  const state = route.query.redirect as string;
+  AuthAPI.getOauthAuthorizeUrl({ platform, state })
+    .then((res) => {
+      if (res.data?.authorize_url) {
+        window.open(res.data.authorize_url, "_self");
+      } else {
+        ElMessage.error("获取授权地址失败");
+      }
+    })
+    .catch((error) => {
+      ElMessage.error("第三方登录失败，请稍后重试。" + error);
+    });
+};
 </script>
 
 <style lang="scss" scoped>

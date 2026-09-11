@@ -1,5 +1,5 @@
 import type { App } from "vue";
-import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 
 export const Layout = () => import("@/layouts/index.vue");
 
@@ -12,7 +12,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect.vue"),
+        component: () => import("@/views/redirect/index.vue"),
       },
     ],
   },
@@ -27,16 +27,14 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/",
     name: "/",
     component: Layout,
-    redirect: "/dashboard",
+    redirect: "/home",
     children: [
       {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index.vue"),
-        // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
-        // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
-        name: "Dashboard",
+        path: "home",
+        component: () => import("@/views/admin/home/Home.vue"),
+        name: "Home",
         meta: {
-          title: "dashboard",
+          title: "首页",
           icon: "homepage",
           affix: true,
           keepAlive: true,
@@ -59,10 +57,10 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: { title: "个人中心", icon: "user", hidden: true },
       },
       {
-        path: "profile/notice",
+        path: "my-notice",
         name: "MyNotice",
         component: () => import("@/views/profile/notice/index.vue"),
-        meta: { title: "我的通知", icon: "user", hidden: true },
+        meta: { title: "我的通知", icon: "bell", hidden: true },
       },
     ],
   },
@@ -72,7 +70,8 @@ export const constantRoutes: RouteRecordRaw[] = [
  * 创建路由
  */
 const router = createRouter({
-  history: createWebHashHistory(),
+  // 使用createWebHashHistory模式会导致第三方授权回调无法识别查询参数
+  history: createWebHistory(),
   routes: constantRoutes,
   // 刷新时，滚动条位置还原
   scrollBehavior: () => ({ left: 0, top: 0 }),

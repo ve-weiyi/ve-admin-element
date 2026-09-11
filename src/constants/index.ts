@@ -7,6 +7,8 @@ export const STORAGE_KEYS = {
   ACCESS_TOKEN: `${APP_PREFIX}:auth:access_token`,
   REFRESH_TOKEN: `${APP_PREFIX}:auth:refresh_token`,
   REMEMBER_ME: `${APP_PREFIX}:auth:remember_me`,
+  UID: `${APP_PREFIX}:auth:uid`,
+  DEVICE_ID: `${APP_PREFIX}:auth:device_id`,
 
   // 系统
   DICT_CACHE: `${APP_PREFIX}:system:dict_cache`,

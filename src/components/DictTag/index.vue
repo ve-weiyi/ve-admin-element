@@ -37,7 +37,7 @@ const getLabelAndTagByValue = async (dictCode: string, value: any) => {
   // 从缓存中获取字典数据
   const dictItems = dictStore.getDictItems(dictCode);
   // 查找对应的字典项
-  const dictItem = dictItems.find((item) => item.value == value);
+  const dictItem = dictItems.find((item) => item.value === String(value));
   return {
     label: dictItem?.label || "",
     tagType: dictItem?.tagType,

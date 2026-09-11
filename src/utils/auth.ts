@@ -3,6 +3,9 @@ import { STORAGE_KEYS, ROLE_ROOT } from "@/constants";
 import { useUserStoreHook } from "@/stores/user";
 import router from "@/router";
 
+// 应用标识，随请求头下发
+export const APP_NAME = "blog";
+
 // 负责本地凭证与偏好的读写
 export const AuthStorage = {
   getAccessToken(): string {
@@ -19,14 +22,17 @@ export const AuthStorage = {
       : Storage.sessionGet(STORAGE_KEYS.REFRESH_TOKEN, "");
   },
 
-  setTokens(accessToken: string, refreshToken: string, rememberMe: boolean): void {
+  setTokens(uid: string, accessToken: string, refreshToken: string, rememberMe: boolean): void {
     Storage.set(STORAGE_KEYS.REMEMBER_ME, rememberMe);
     if (rememberMe) {
+      Storage.set(STORAGE_KEYS.UID, uid);
       Storage.set(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
       Storage.set(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
     } else {
+      Storage.sessionSet(STORAGE_KEYS.UID, uid);
       Storage.sessionSet(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
       Storage.sessionSet(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+      Storage.remove(STORAGE_KEYS.UID);
       Storage.remove(STORAGE_KEYS.ACCESS_TOKEN);
       Storage.remove(STORAGE_KEYS.REFRESH_TOKEN);
     }
@@ -35,12 +41,53 @@ export const AuthStorage = {
   clearAuth(): void {
     Storage.remove(STORAGE_KEYS.ACCESS_TOKEN);
     Storage.remove(STORAGE_KEYS.REFRESH_TOKEN);
+    Storage.remove(STORAGE_KEYS.UID);
+    Storage.remove(STORAGE_KEYS.DEVICE_ID);
+    Storage.sessionRemove(STORAGE_KEYS.UID);
     Storage.sessionRemove(STORAGE_KEYS.ACCESS_TOKEN);
     Storage.sessionRemove(STORAGE_KEYS.REFRESH_TOKEN);
+    Storage.sessionRemove(STORAGE_KEYS.DEVICE_ID);
   },
 
   getRememberMe(): boolean {
     return Storage.get<boolean>(STORAGE_KEYS.REMEMBER_ME, false);
+  },
+
+  setRememberMe(value: boolean): void {
+    Storage.set(STORAGE_KEYS.REMEMBER_ME, value);
+  },
+
+  getUid(): string {
+    const isRememberMe = Storage.get<boolean>(STORAGE_KEYS.REMEMBER_ME, false);
+    return isRememberMe
+      ? Storage.get(STORAGE_KEYS.UID, "")
+      : Storage.sessionGet(STORAGE_KEYS.UID, "");
+  },
+
+  setUid(uid: string, rememberMe: boolean): void {
+    if (rememberMe) {
+      Storage.set(STORAGE_KEYS.UID, uid);
+    } else {
+      Storage.sessionSet(STORAGE_KEYS.UID, uid);
+      Storage.remove(STORAGE_KEYS.UID);
+    }
+  },
+
+  getDeviceId(): string {
+    const isRememberMe = Storage.get<boolean>(STORAGE_KEYS.REMEMBER_ME, false);
+    return isRememberMe
+      ? Storage.get(STORAGE_KEYS.DEVICE_ID, "")
+      : Storage.sessionGet(STORAGE_KEYS.DEVICE_ID, "");
+  },
+
+  setDeviceId(did: string): void {
+    const isRememberMe = Storage.get<boolean>(STORAGE_KEYS.REMEMBER_ME, false);
+    if (isRememberMe) {
+      Storage.set(STORAGE_KEYS.DEVICE_ID, did);
+    } else {
+      Storage.sessionSet(STORAGE_KEYS.DEVICE_ID, did);
+      Storage.remove(STORAGE_KEYS.DEVICE_ID);
+    }
   },
 };
 

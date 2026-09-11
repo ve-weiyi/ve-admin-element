@@ -2,23 +2,26 @@
   <div
     class="rounded bg-[var(--el-bg-color)] border border-[var(--el-border-color)] p-5 h-full md:flex flex-1 flex-col md:overflow-auto"
   >
-    <!-- 表格工具 -->
+    <!-- 表格工具栏 -->
     <div class="flex flex-col md:flex-row justify-between gap-y-2.5 mb-2.5">
-      <!-- 左侧工具 -->
-      <div class="toolbar-left flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
-        <template v-for="(btn, index) in toolbarLeftBtn" :key="index">
-          <el-button
-            v-hasPerm="btn.perm ?? '*:*:*'"
-            v-bind="btn.attrs"
-            :disabled="btn.name === 'delete' && removeIds.length === 0"
-            @click="handleToolbar(btn.name)"
-          >
-            {{ btn.text }}
-          </el-button>
-        </template>
+      <!-- 左侧工具栏 -->
+      <div>
+        <a class="table-title">{{ contentConfig.pageTitle }}</a>
       </div>
-      <!-- 右侧工具 -->
+      <!-- 右侧工具栏 -->
       <div class="toolbar-right flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
+        <div class="toolbar-left flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
+          <template v-for="(btn, index) in toolbarLeftBtn" :key="index">
+            <el-button
+              v-hasPerm="btn.perm ?? '*:*:*'"
+              v-bind="btn.attrs"
+              :disabled="btn.name === 'delete' && removeIds.length === 0"
+              @click="handleToolbar(btn.name)"
+            >
+              {{ btn.text }}
+            </el-button>
+          </template>
+        </div>
         <template v-for="(btn, index) in toolbarRightBtn" :key="index">
           <el-popover v-if="btn.name === 'filter'" placement="bottom" trigger="click">
             <template #reference>
@@ -39,7 +42,7 @@
         </template>
       </div>
     </div>
-
+    <slot name="table-header"></slot>
     <!-- 列表 -->
     <el-table
       ref="tableRef"
@@ -472,8 +475,8 @@ const pagination = reactive(
 );
 // 分页相关的请求参数
 const request = props.contentConfig.request ?? {
-  pageName: "pageNum",
-  limitName: "pageSize",
+  pageName: "page",
+  limitName: "page_size",
 };
 
 const tableRef = ref<TableInstance>();
@@ -805,11 +808,7 @@ function handleOperate(data: IOperateData) {
 // 属性修改
 function handleModify(field: string, value: boolean | string | number, row: Record<string, any>) {
   if (props.contentConfig.modifyAction) {
-    props.contentConfig.modifyAction({
-      [pk]: row[pk],
-      field,
-      value,
-    });
+    props.contentConfig.modifyAction(row);
   } else {
     ElMessage.error("未配置modifyAction");
   }
@@ -870,11 +869,17 @@ function fetchPageData(formData: IObject = {}, isRestart = false) {
     )
     .then((data) => {
       if (showPagination) {
-        const pageResult = Array.isArray(data) ? { list: data, total: 0 } : data;
+        const pageResult = props.contentConfig.parseData
+          ? props.contentConfig.parseData(data)
+          : (() => {
+              const actual = (data as any)?.data ?? data;
+              return Array.isArray(actual) ? { list: actual, total: 0 } : actual;
+            })();
         pagination.total = pageResult?.total ?? 0;
         pageData.value = pageResult?.list ?? [];
       } else {
-        pageData.value = Array.isArray(data) ? data : (data?.list ?? (data as any)?.data ?? []);
+        const actualData = (data as any)?.data ?? data;
+        pageData.value = Array.isArray(actualData) ? actualData : (actualData?.list ?? []);
       }
     })
     .finally(() => {
@@ -928,5 +933,13 @@ defineExpose({ fetchPageData, exportPageData, getFilterParams, getSelectionData,
     margin-right: 0 !important;
     margin-left: 0 !important;
   }
+}
+//表头加粗，显示card标题
+.table-title {
+  margin-top: 0;
+  margin-left: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #202a34;
 }
 </style>

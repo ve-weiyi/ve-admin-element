@@ -3,7 +3,6 @@ import type { FormProps, TableProps, ColProps, ButtonProps, CardProps } from "el
 import type PageContent from "./PageContent.vue";
 import type PageModal from "./PageModal.vue";
 import type PageSearch from "./PageSearch.vue";
-import type { PageResult } from "@/api/common";
 import type { CSSProperties } from "vue";
 
 export type PageSearchInstance = InstanceType<typeof PageSearch>;
@@ -57,6 +56,8 @@ export interface ISearchConfig {
 }
 
 export interface IContentConfig<TQuery = any, TItem = any> {
+  // 页面标题
+  pageTitle?: string;
   // 权限前缀(如sys:user，用于组成权限标识)，不提供则不进行权限校验
   permPrefix?: string;
   // table组件属性
@@ -73,7 +74,9 @@ export interface IContentConfig<TQuery = any, TItem = any> {
         >
       >;
   // 列表的网络请求函数(需返回promise)
-  indexAction: (queryParams: TQuery) => Promise<PageResult<TItem> | TItem[]>;
+  indexAction: (queryParams: TQuery) => Promise<any>;
+  // 解析接口返回数据为 { total, list } 格式
+  parseData?: (res: any) => { total: number; list: any[] };
   // 默认的分页相关的请求参数
   request?: {
     pageName: string;
@@ -81,11 +84,7 @@ export interface IContentConfig<TQuery = any, TItem = any> {
   };
   // 分页接口统一返回 PageResult { list, total }
   // 修改属性的网络请求函数(需返回promise)
-  modifyAction?: (data: {
-    [key: string]: any;
-    field: string;
-    value: boolean | string | number;
-  }) => Promise<any>;
+  modifyAction?: (...args: any[]) => Promise<any>;
   // 删除的网络请求函数(需返回promise)
   deleteAction?: (ids: string) => Promise<any>;
   // 后端导出的网络请求函数(需返回promise)

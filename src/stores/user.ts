@@ -1,29 +1,50 @@
 import { store } from "@/stores";
 
-import AuthAPI from "@/api/auth";
-import UserAPI from "@/api/system/user";
-import type { LoginRequest } from "@/api/auth";
-import type { UserInfo } from "@/api/system/user";
+import { AuthAPI, MeAPI } from "@/api";
+import type { LoginResp, UserProfile } from "@/api/types";
 
 import { AuthStorage } from "@/utils/auth";
 import { usePermissionStoreHook } from "@/stores/permission";
 import { useDictStoreHook } from "@/stores/dict";
 import { useTagsViewStore } from "@/stores";
-import { cleanupSseServices } from "@/composables";
 
 export const useUserStore = defineStore("user", () => {
   // 用户信息
-  const userInfo = ref<UserInfo>({} as UserInfo);
+  const userInfo = ref<UserProfile>({} as UserProfile);
   // 记住我状态
   const rememberMe = ref(AuthStorage.getRememberMe());
 
   /**
    * 登录
    */
-  async function login(loginRequest: LoginRequest): Promise<void> {
-    const { accessToken, refreshToken } = await AuthAPI.login(loginRequest);
-    rememberMe.value = loginRequest.rememberMe ?? false;
-    AuthStorage.setTokens(accessToken, refreshToken, rememberMe.value);
+  function login(loginData: {
+    username: string;
+    password: string;
+    captchaId?: string;
+    captchaCode?: string;
+    rememberMe?: boolean;
+  }) {
+    return new Promise<LoginResp>((resolve, reject) => {
+      AuthAPI.passwordLogin({
+        account: loginData.username,
+        password: loginData.password,
+        captcha_key: loginData.captchaId,
+        captcha_code: loginData.captchaCode,
+      })
+        .then((res) => {
+          rememberMe.value = loginData.rememberMe ?? false;
+          AuthStorage.setTokens(
+            res.data.user_id ?? "",
+            res.data.token?.access_token ?? "",
+            res.data.token?.refresh_token ?? "",
+            rememberMe.value
+          );
+          resolve(res.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 
   let refreshPromise: Promise<void> | null = null;
@@ -46,21 +67,87 @@ export const useUserStore = defineStore("user", () => {
   /**
    * 获取用户信息
    */
-  async function getUserInfo(): Promise<UserInfo> {
-    const data = await UserAPI.getInfo();
-    if (!data) {
-      throw new Error("Verification failed, please Login again.");
-    }
-    Object.assign(userInfo.value, data);
-    return data;
+  function getUserInfo() {
+    return new Promise<UserProfile>((resolve, reject) => {
+      MeAPI.getUserProfile()
+        .then((res) => {
+          if (!res) {
+            reject("Verification failed, please Login again.");
+            return;
+          }
+          Object.assign(userInfo.value, { ...res.data });
+          resolve(res.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * 手机验证码登录
+   */
+  function mobileLogin(loginData: { mobile: string; code: string }) {
+    return new Promise<LoginResp>((resolve, reject) => {
+      AuthAPI.mobileLogin({
+        mobile: loginData.mobile,
+        code: loginData.code,
+      })
+        .then((res) => {
+          rememberMe.value = false;
+          AuthStorage.setTokens(
+            res.data.user_id ?? "",
+            res.data.token?.access_token ?? "",
+            res.data.token?.refresh_token ?? "",
+            false
+          );
+          resolve(res.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * 第三方登录（OAuth）
+   */
+  function thirdLogin(loginData: { platform: string; code: string }) {
+    return new Promise<LoginResp>((resolve, reject) => {
+      AuthAPI.oauthLogin({
+        platform: loginData.platform,
+        code: loginData.code,
+      })
+        .then((res) => {
+          rememberMe.value = false;
+          AuthStorage.setTokens(
+            res.data.user_id ?? "",
+            res.data.token?.access_token ?? "",
+            res.data.token?.refresh_token ?? "",
+            false
+          );
+          resolve(res.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 
   /**
    * 登出
    */
-  async function logout(): Promise<void> {
-    await AuthAPI.logout();
-    resetAllState();
+  function logout() {
+    return new Promise<void>((resolve, reject) => {
+      AuthAPI.logout()
+        .then(() => {
+          resetAllState();
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 
   /**
@@ -76,9 +163,6 @@ export const useUserStore = defineStore("user", () => {
     usePermissionStoreHook().resetRouter();
     useDictStoreHook().clearDictCache();
     useTagsViewStore().delAllViews();
-
-    // 3. 清理 SSE 连接
-    cleanupSseServices();
   }
 
   /**
@@ -88,7 +172,7 @@ export const useUserStore = defineStore("user", () => {
    */
   function resetUserState(): void {
     AuthStorage.clearAuth();
-    userInfo.value = {} as UserInfo;
+    userInfo.value = {} as UserProfile;
   }
 
   /**
@@ -101,9 +185,23 @@ export const useUserStore = defineStore("user", () => {
       throw new Error("没有有效的刷新令牌");
     }
 
-    const { accessToken, refreshToken: newRefreshToken } =
-      await AuthAPI.refreshToken(currentRefreshToken);
-    AuthStorage.setTokens(accessToken, newRefreshToken, AuthStorage.getRememberMe());
+    const res = await AuthAPI.refreshToken({
+      user_id: userInfo.value.user_id,
+      grant_type: "refresh_token",
+      refresh_token: currentRefreshToken,
+    });
+
+    const token = res.data?.token;
+    if (!token || !token.access_token) {
+      throw new Error("令牌刷新失败");
+    }
+
+    AuthStorage.setTokens(
+      res.data.user_id ?? "",
+      token.access_token,
+      token.refresh_token ?? "",
+      AuthStorage.getRememberMe()
+    );
   }
 
   return {
@@ -111,6 +209,8 @@ export const useUserStore = defineStore("user", () => {
     rememberMe,
     isLoggedIn: () => !!AuthStorage.getAccessToken(),
     login,
+    mobileLogin,
+    thirdLogin,
     logout,
     getUserInfo,
     resetAllState,

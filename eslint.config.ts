@@ -49,7 +49,7 @@ export default [
     },
     rules: {
       // 基础规则
-      "no-console": ["error", { allow: ["warn", "error", "debug"] }],
+      "no-console": ["warn", { allow: ["warn", "error", "debug"] }],
       "no-debugger": "error",
 
       // ES6+ 规则

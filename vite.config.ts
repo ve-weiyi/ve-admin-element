@@ -94,7 +94,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "pinia",
         "axios",
         "@vueuse/core",
-        "codemirror-editor-vue3",
         "exceljs",
         "path-to-regexp",
         "echarts/core",
@@ -104,7 +103,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         "nprogress",
         "sortablejs",
         "qs",
-        "vxe-table",
         "path-browserify",
         "lodash-es",
         "@element-plus/icons-vue",
@@ -192,6 +190,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     // 构建配置（Vite 8 使用 Rolldown + Oxc）
     build: {
+      outDir: env.VITE_APP_DIST_NAME, // 构建输出目录，由 .env 配置
       chunkSizeWarningLimit: 1200, // chunk 大小警告阈值
       reportCompressedSize: false,
       cssMinify: "lightningcss", // Vite 8 默认使用 Lightning CSS 压缩

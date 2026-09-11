@@ -115,9 +115,6 @@ declare module 'vue' {
     TableSelect: typeof import('./../src/components/TableSelect/index.vue')['default']
     TextScroll: typeof import('./../src/components/TextScroll/index.vue')['default']
     ThemeSwitch: typeof import('./../src/components/ThemeSwitch/index.vue')['default']
-    UserDeptTree: typeof import('./../src/views/system/user/components/UserDeptTree.vue')['default']
-    UserImportDialog: typeof import('./../src/views/system/user/components/UserImportDialog.vue')['default']
-    WangEditor: typeof import('./../src/components/WangEditor/index.vue')['default']
   }
   export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
